@@ -12,12 +12,14 @@ import {
   Heart,
   Menu,
   X,
-  User
+  User,
+  LogOut
 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Will be managed by auth context later
+  const { user, signOut } = useAuth();
 
   const navigation = [
     { name: "Home", href: "/", icon: Home },
@@ -27,6 +29,10 @@ const Navbar = () => {
     { name: "Donations", href: "/donations", icon: Gift },
     { name: "Messages", href: "/messages", icon: MessageCircle },
   ];
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
 
   return (
     <nav className="bg-white shadow-sm border-b sticky top-0 z-50">
@@ -62,14 +68,23 @@ const Navbar = () => {
             <Button variant="ghost" size="sm">
               <ShoppingCart size={16} />
             </Button>
-            {isLoggedIn ? (
-              <Button variant="ghost" size="sm">
-                <User size={16} />
-              </Button>
+            {user ? (
+              <div className="flex items-center space-x-2">
+                <Button variant="ghost" size="sm">
+                  <User size={16} />
+                </Button>
+                <Button variant="outline" size="sm" onClick={handleSignOut}>
+                  <LogOut size={16} />
+                </Button>
+              </div>
             ) : (
               <div className="flex space-x-2">
-                <Button variant="outline" size="sm">Login</Button>
-                <Button size="sm">Sign Up</Button>
+                <Link to="/auth">
+                  <Button variant="outline" size="sm">Login</Button>
+                </Link>
+                <Link to="/auth">
+                  <Button size="sm">Sign Up</Button>
+                </Link>
               </div>
             )}
           </div>
@@ -100,10 +115,19 @@ const Navbar = () => {
               </Link>
             ))}
             <div className="pt-4 space-y-2">
-              {!isLoggedIn && (
+              {user ? (
+                <Button variant="outline" className="w-full" onClick={handleSignOut}>
+                  <LogOut size={16} className="mr-2" />
+                  Sign Out
+                </Button>
+              ) : (
                 <>
-                  <Button variant="outline" className="w-full">Login</Button>
-                  <Button className="w-full">Sign Up</Button>
+                  <Link to="/auth" onClick={() => setIsMenuOpen(false)}>
+                    <Button variant="outline" className="w-full">Login</Button>
+                  </Link>
+                  <Link to="/auth" onClick={() => setIsMenuOpen(false)}>
+                    <Button className="w-full">Sign Up</Button>
+                  </Link>
                 </>
               )}
             </div>

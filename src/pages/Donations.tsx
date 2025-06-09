@@ -1,15 +1,16 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Gift, Calendar, Package, Heart } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 const Donations = () => {
-  const [donationCount, setDonationCount] = useState(2456);
+  const [donationCount, setDonationCount] = useState(0);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -19,21 +20,72 @@ const Donations = () => {
     preferredDate: "",
     notes: ""
   });
+  const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
+  const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    fetchDonationCount();
+  }, []);
+
+  const fetchDonationCount = async () => {
+    try {
+      const { count, error } = await supabase
+        .from('donations')
+        .select('*', { count: 'exact', head: true });
+
+      if (error) throw error;
+      setDonationCount(count || 0);
+    } catch (error) {
+      console.error('Error fetching donation count:', error);
+      setDonationCount(2456); // Fallback number
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Donation request submitted:", formData);
-    // Here we would submit to Supabase
-    setDonationCount(prev => prev + 1);
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      address: "",
-      items: "",
-      preferredDate: "",
-      notes: ""
-    });
+    setLoading(true);
+
+    try {
+      const { error } = await supabase
+        .from('donations')
+        .insert({
+          user_id: user?.id || null,
+          full_name: formData.name,
+          email: formData.email,
+          phone_number: formData.phone,
+          address: formData.address,
+          item_description: formData.items,
+          pickup_date: formData.preferredDate || null,
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "Success!",
+        description: "Your donation pickup request has been submitted successfully.",
+      });
+
+      setDonationCount(prev => prev + 1);
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        address: "",
+        items: "",
+        preferredDate: "",
+        notes: ""
+      });
+    } catch (error) {
+      console.error('Error submitting donation:', error);
+      toast({
+        title: "Error",
+        description: "There was an error submitting your donation request. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleInputChange = (field: string, value: string) => {
@@ -154,8 +206,8 @@ const Donations = () => {
                 />
               </div>
 
-              <Button type="submit" className="w-full">
-                Schedule Pickup
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? "Submitting..." : "Schedule Pickup"}
               </Button>
             </form>
           </CardContent>

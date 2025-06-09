@@ -1,40 +1,147 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Heart, ShoppingCart, Search } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+
+interface Product {
+  id: string;
+  title: string;
+  description: string;
+  price: number;
+  images: string[];
+  user_id: string;
+  profiles: {
+    profile_name: string;
+  };
+}
 
 const Marketplace = () => {
+  const [products, setProducts] = useState<Product[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [favorites, setFavorites] = useState<string[]>([]);
+  const [cart, setCart] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
 
   const categories = ["All", "Books", "Electronics", "Furniture", "Clothing", "Sports", "Other"];
 
-  // Sample products data
-  const products = [
-    { id: "1", title: "Calculus Textbook", price: 45, category: "Books", seller: "Sarah M.", image: "/placeholder.svg" },
-    { id: "2", title: "Mini Fridge", price: 120, category: "Furniture", seller: "Mike R.", image: "/placeholder.svg" },
-    { id: "3", title: "MacBook Pro", price: 800, category: "Electronics", seller: "Emma L.", image: "/placeholder.svg" },
-    { id: "4", title: "Winter Jacket", price: 60, category: "Clothing", seller: "Tom W.", image: "/placeholder.svg" },
-    { id: "5", title: "Basketball", price: 15, category: "Sports", seller: "Alex K.", image: "/placeholder.svg" },
-    { id: "6", title: "Desk Chair", price: 85, category: "Furniture", seller: "Lisa H.", image: "/placeholder.svg" },
-  ];
+  useEffect(() => {
+    fetchProducts();
+    if (user) {
+      fetchFavorites();
+      fetchCart();
+    }
+  }, [user]);
+
+  const fetchProducts = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('listings')
+        .select(`
+          *,
+          profiles!listings_user_id_fkey(profile_name)
+        `)
+        .eq('category', 'marketplace')
+        .eq('status', 'active')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setProducts(data || []);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchFavorites = async () => {
+    if (!user) return;
+    
+    try {
+      const { data, error } = await supabase
+        .from('favorites')
+        .select('listing_id')
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+      setFavorites(data?.map(fav => fav.listing_id) || []);
+    } catch (error) {
+      console.error('Error fetching favorites:', error);
+    }
+  };
+
+  const fetchCart = async () => {
+    if (!user) return;
+    
+    try {
+      const { data, error } = await supabase
+        .from('cart_items')
+        .select('listing_id')
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+      setCart(data?.map(item => item.listing_id) || []);
+    } catch (error) {
+      console.error('Error fetching cart:', error);
+    }
+  };
+
+  const toggleFavorite = async (id: string) => {
+    if (!user) return;
+
+    try {
+      if (favorites.includes(id)) {
+        await supabase
+          .from('favorites')
+          .delete()
+          .eq('user_id', user.id)
+          .eq('listing_id', id);
+        setFavorites(prev => prev.filter(item => item !== id));
+      } else {
+        await supabase
+          .from('favorites')
+          .insert({ user_id: user.id, listing_id: id });
+        setFavorites(prev => [...prev, id]);
+      }
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+    }
+  };
+
+  const addToCart = async (id: string) => {
+    if (!user) return;
+
+    try {
+      if (!cart.includes(id)) {
+        await supabase
+          .from('cart_items')
+          .insert({ user_id: user.id, listing_id: id });
+        setCart(prev => [...prev, id]);
+      }
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+    }
+  };
 
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.title.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === "All" || product.category === selectedCategory;
+    // For now, we'll match all categories since we don't have a category field
+    const matchesCategory = selectedCategory === "All";
     return matchesSearch && matchesCategory;
   });
 
-  const toggleFavorite = (id: string) => {
-    setFavorites(prev => 
-      prev.includes(id) 
-        ? prev.filter(item => item !== id)
-        : [...prev, id]
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center">Loading products...</div>
+      </div>
     );
-  };
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -75,29 +182,38 @@ const Marketplace = () => {
           <Card key={product.id} className="hover:shadow-lg transition-shadow">
             <CardHeader className="p-0">
               <img 
-                src={product.image} 
+                src={product.images?.[0] || "/placeholder.svg"} 
                 alt={product.title}
                 className="w-full h-48 object-cover rounded-t-lg"
               />
             </CardHeader>
             <CardContent className="p-4">
               <CardTitle className="text-lg mb-2">{product.title}</CardTitle>
-              <p className="text-sm text-muted-foreground mb-2">by {product.seller}</p>
-              <p className="text-sm text-muted-foreground mb-2">{product.category}</p>
+              <p className="text-sm text-muted-foreground mb-2">by {product.profiles?.profile_name}</p>
+              <p className="text-sm mb-3 line-clamp-2">{product.description}</p>
               <p className="text-xl font-bold text-green-600 mb-3">${product.price}</p>
               <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => toggleFavorite(product.id)}
-                  className={favorites.includes(product.id) ? "text-red-500" : ""}
-                >
-                  <Heart size={16} className={favorites.includes(product.id) ? "fill-current" : ""} />
-                </Button>
-                <Button size="sm" className="flex-1">
-                  <ShoppingCart size={16} className="mr-1" />
-                  Add to Cart
-                </Button>
+                {user && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => toggleFavorite(product.id)}
+                    className={favorites.includes(product.id) ? "text-red-500" : ""}
+                  >
+                    <Heart size={16} className={favorites.includes(product.id) ? "fill-current" : ""} />
+                  </Button>
+                )}
+                {user && (
+                  <Button 
+                    size="sm" 
+                    onClick={() => addToCart(product.id)}
+                    className="flex-1"
+                    disabled={cart.includes(product.id)}
+                  >
+                    <ShoppingCart size={16} className="mr-1" />
+                    {cart.includes(product.id) ? "In Cart" : "Add to Cart"}
+                  </Button>
+                )}
                 <Button variant="outline" size="sm">
                   Message
                 </Button>
