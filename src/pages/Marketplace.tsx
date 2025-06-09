@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Heart, ShoppingCart, Search } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import PostingForm from "@/components/PostingForm";
 
 interface Product {
   id: string;
@@ -26,6 +27,7 @@ const Marketplace = () => {
   const [favorites, setFavorites] = useState<string[]>([]);
   const [cart, setCart] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showPostingForm, setShowPostingForm] = useState(false);
   const { user } = useAuth();
 
   const categories = ["All", "Books", "Electronics", "Furniture", "Clothing", "Sports", "Other"];
@@ -147,7 +149,9 @@ const Marketplace = () => {
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Marketplace</h1>
-        <Button>+ Post Item</Button>
+        {user && (
+          <Button onClick={() => setShowPostingForm(true)}>+ Post Item</Button>
+        )}
       </div>
 
       {/* Search and Filters */}
@@ -227,6 +231,14 @@ const Marketplace = () => {
         <div className="text-center py-12">
           <p className="text-gray-500">No products found matching your criteria.</p>
         </div>
+      )}
+
+      {showPostingForm && (
+        <PostingForm
+          category="marketplace"
+          onClose={() => setShowPostingForm(false)}
+          onSuccess={fetchProducts}
+        />
       )}
     </div>
   );

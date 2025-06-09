@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Search, Users, Heart, MessageCircle, Star } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import PostingForm from "@/components/PostingForm";
 
 interface ServiceListing {
   id: string;
@@ -25,6 +26,7 @@ const Services = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [favorites, setFavorites] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showPostingForm, setShowPostingForm] = useState(false);
   const { user } = useAuth();
 
   const serviceCategories = ["Academic", "Music", "Tutoring", "Tech", "Design", "Other"];
@@ -112,7 +114,9 @@ const Services = () => {
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Services</h1>
-        <Button>+ Post Service</Button>
+        {user && (
+          <Button onClick={() => setShowPostingForm(true)}>+ Post Service</Button>
+        )}
       </div>
 
       {/* Search */}
@@ -188,6 +192,14 @@ const Services = () => {
         <div className="text-center py-12">
           <p className="text-gray-500">No services found matching your criteria.</p>
         </div>
+      )}
+
+      {showPostingForm && (
+        <PostingForm
+          category="services"
+          onClose={() => setShowPostingForm(false)}
+          onSuccess={fetchServiceListings}
+        />
       )}
     </div>
   );

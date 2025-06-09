@@ -4,9 +4,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Search, Filter, Heart, MessageCircle } from "lucide-react";
+import { MapPin, Search, Heart, MessageCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import PostingForm from "@/components/PostingForm";
 
 interface HousingListing {
   id: string;
@@ -28,6 +29,7 @@ const Housing = () => {
   const [selectedType, setSelectedType] = useState("All");
   const [favorites, setFavorites] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showPostingForm, setShowPostingForm] = useState(false);
   const { user } = useAuth();
 
   const housingTypes = ["All", "sublease", "for_rent", "roommate_wanted"];
@@ -117,7 +119,9 @@ const Housing = () => {
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Housing</h1>
-        <Button>+ Post Housing</Button>
+        {user && (
+          <Button onClick={() => setShowPostingForm(true)}>+ Post Housing</Button>
+        )}
       </div>
 
       {/* Search and Filters */}
@@ -215,6 +219,14 @@ const Housing = () => {
         <div className="text-center py-12">
           <p className="text-gray-500">No housing listings found matching your criteria.</p>
         </div>
+      )}
+
+      {showPostingForm && (
+        <PostingForm
+          category="housing"
+          onClose={() => setShowPostingForm(false)}
+          onSuccess={fetchHousingListings}
+        />
       )}
     </div>
   );
