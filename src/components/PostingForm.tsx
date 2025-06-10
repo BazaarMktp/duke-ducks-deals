@@ -10,6 +10,7 @@ import { X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import ImageUpload from "./ImageUpload";
 
 interface PostingFormProps {
   category: 'marketplace' | 'housing' | 'services';
@@ -79,6 +80,10 @@ const PostingForm: React.FC<PostingFormProps> = ({ category, onClose, onSuccess 
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
+  const handleImagesChange = (images: string[]) => {
+    setFormData(prev => ({ ...prev, images }));
+  };
+
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -113,6 +118,12 @@ const PostingForm: React.FC<PostingFormProps> = ({ category, onClose, onSuccess 
                 placeholder="Describe your listing..."
               />
             </div>
+
+            <ImageUpload
+              images={formData.images}
+              onImagesChange={handleImagesChange}
+              maxImages={5}
+            />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>

@@ -12,6 +12,8 @@ import Housing from "./pages/Housing";
 import Services from "./pages/Services";
 import Donations from "./pages/Donations";
 import Messages from "./pages/Messages";
+import Favorites from "./pages/Favorites";
+import Cart from "./pages/Cart";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -39,6 +41,22 @@ const App = () => (
                 element={
                   <ProtectedRoute>
                     <Messages />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/favorites" 
+                element={
+                  <ProtectedRoute>
+                    <Favorites />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/cart" 
+                element={
+                  <ProtectedRoute>
+                    <Cart />
                   </ProtectedRoute>
                 } 
               />

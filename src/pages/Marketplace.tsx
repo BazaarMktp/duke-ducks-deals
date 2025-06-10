@@ -3,9 +3,10 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Heart, ShoppingCart, Search } from "lucide-react";
+import { Heart, ShoppingCart, Search, MessageCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 import PostingForm from "@/components/PostingForm";
 
 interface Product {
@@ -29,6 +30,7 @@ const Marketplace = () => {
   const [loading, setLoading] = useState(true);
   const [showPostingForm, setShowPostingForm] = useState(false);
   const { user } = useAuth();
+  const { toast } = useToast();
 
   const categories = ["All", "Books", "Electronics", "Furniture", "Clothing", "Sports", "Other"];
 
@@ -124,9 +126,69 @@ const Marketplace = () => {
           .from('cart_items')
           .insert({ user_id: user.id, listing_id: id });
         setCart(prev => [...prev, id]);
+        
+        toast({
+          title: "Added to cart",
+          description: "Item added to your cart successfully.",
+        });
       }
     } catch (error) {
       console.error('Error adding to cart:', error);
+    }
+  };
+
+  const startConversation = async (sellerId: string, listingId: string) => {
+    if (!user) return;
+
+    try {
+      // Check if conversation already exists
+      const { data: existingConv } = await supabase
+        .from('conversations')
+        .select('id')
+        .eq('buyer_id', user.id)
+        .eq('seller_id', sellerId)
+        .eq('listing_id', listingId)
+        .single();
+
+      let conversationId = existingConv?.id;
+
+      if (!conversationId) {
+        // Create new conversation
+        const { data: newConv, error: convError } = await supabase
+          .from('conversations')
+          .insert({
+            buyer_id: user.id,
+            seller_id: sellerId,
+            listing_id: listingId
+          })
+          .select('id')
+          .single();
+
+        if (convError) throw convError;
+        conversationId = newConv.id;
+      }
+
+      // Send initial message
+      await supabase
+        .from('messages')
+        .insert({
+          conversation_id: conversationId,
+          sender_id: user.id,
+          message: "I am interested"
+        });
+
+      toast({
+        title: "Message sent!",
+        description: "Your interest has been sent to the seller.",
+      });
+
+    } catch (error) {
+      console.error('Error starting conversation:', error);
+      toast({
+        title: "Error",
+        description: "Failed to send message.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -218,9 +280,15 @@ const Marketplace = () => {
                     {cart.includes(product.id) ? "In Cart" : "Add to Cart"}
                   </Button>
                 )}
-                <Button variant="outline" size="sm">
-                  Message
-                </Button>
+                {user && product.user_id !== user.id && (
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => startConversation(product.user_id, product.id)}
+                  >
+                    <MessageCircle size={16} />
+                  </Button>
+                )}
               </div>
             </CardContent>
           </Card>
