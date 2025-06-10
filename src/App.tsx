@@ -8,8 +8,11 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Marketplace from "./pages/Marketplace";
+import MarketplaceItemDetail from "./pages/MarketplaceItemDetail";
 import Housing from "./pages/Housing";
+import HousingDetail from "./pages/HousingDetail";
 import Services from "./pages/Services";
+import ServiceDetail from "./pages/ServiceDetail";
 import Donations from "./pages/Donations";
 import Messages from "./pages/Messages";
 import Favorites from "./pages/Favorites";
@@ -32,8 +35,11 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/marketplace" element={<Marketplace />} />
+              <Route path="/marketplace/:id" element={<MarketplaceItemDetail />} />
               <Route path="/housing" element={<Housing />} />
+              <Route path="/housing/:id" element={<HousingDetail />} />
               <Route path="/services" element={<Services />} />
+              <Route path="/services/:id" element={<ServiceDetail />} />
               <Route path="/donations" element={<Donations />} />
               <Route path="/auth" element={<Auth />} />
               <Route 

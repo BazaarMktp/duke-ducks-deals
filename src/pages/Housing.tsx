@@ -170,15 +170,19 @@ const Housing = () => {
         {filteredListings.map((listing) => (
           <Card key={listing.id} className="hover:shadow-lg transition-shadow">
             <CardHeader className="p-0">
-              <img 
-                src={listing.images?.[0] || "/placeholder.svg"} 
-                alt={listing.title}
-                className="w-full h-48 object-cover rounded-t-lg"
-              />
+              <Link to={`/housing/${listing.id}`}>
+                <img 
+                  src={listing.images?.[0] || "/placeholder.svg"} 
+                  alt={listing.title}
+                  className="w-full h-48 object-cover rounded-t-lg hover:opacity-90 transition-opacity"
+                />
+              </Link>
             </CardHeader>
             <CardContent className="p-4">
               <div className="flex justify-between items-start mb-2">
-                <CardTitle className="text-lg">{listing.title}</CardTitle>
+                <Link to={`/housing/${listing.id}`}>
+                  <CardTitle className="text-lg hover:text-blue-600 transition-colors">{listing.title}</CardTitle>
+                </Link>
                 <Badge variant="secondary">
                   {listing.housing_type?.replace("_", " ").replace(/\b\w/g, l => l.toUpperCase())}
                 </Badge>
@@ -201,9 +205,11 @@ const Housing = () => {
                     <Heart size={16} className={favorites.includes(listing.id) ? "fill-current" : ""} />
                   </Button>
                 )}
-                <Button size="sm" className="flex-1">
-                  View Details
-                </Button>
+                <Link to={`/housing/${listing.id}`} className="flex-1">
+                  <Button size="sm" className="w-full">
+                    View Details
+                  </Button>
+                </Link>
                 {user && (
                   <Button variant="outline" size="sm">
                     <MessageCircle size={16} />

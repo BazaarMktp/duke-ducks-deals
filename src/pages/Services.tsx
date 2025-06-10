@@ -151,7 +151,9 @@ const Services = () => {
           <Card key={listing.id} className="hover:shadow-lg transition-shadow">
             <CardContent className="p-4">
               <div className="flex justify-between items-start mb-3">
-                <CardTitle className="text-lg">{listing.title}</CardTitle>
+                <Link to={`/services/${listing.id}`}>
+                  <CardTitle className="text-lg hover:text-blue-600 transition-colors">{listing.title}</CardTitle>
+                </Link>
                 <div className="flex items-center text-yellow-500">
                   <Star size={16} className="fill-current" />
                   <span className="text-sm ml-1">4.8</span>
@@ -174,9 +176,11 @@ const Services = () => {
                     <Heart size={16} className={favorites.includes(listing.id) ? "fill-current" : ""} />
                   </Button>
                 )}
-                <Button size="sm" className="flex-1">
-                  Contact Provider
-                </Button>
+                <Link to={`/services/${listing.id}`} className="flex-1">
+                  <Button size="sm" className="w-full">
+                    Contact Provider
+                  </Button>
+                </Link>
                 {user && (
                   <Button variant="outline" size="sm">
                     <MessageCircle size={16} />

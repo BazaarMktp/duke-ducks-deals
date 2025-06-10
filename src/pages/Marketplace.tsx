@@ -247,14 +247,18 @@ const Marketplace = () => {
         {filteredProducts.map((product) => (
           <Card key={product.id} className="hover:shadow-lg transition-shadow">
             <CardHeader className="p-0">
-              <img 
-                src={product.images?.[0] || "/placeholder.svg"} 
-                alt={product.title}
-                className="w-full h-48 object-cover rounded-t-lg"
-              />
+              <Link to={`/marketplace/${product.id}`}>
+                <img 
+                  src={product.images?.[0] || "/placeholder.svg"} 
+                  alt={product.title}
+                  className="w-full h-48 object-cover rounded-t-lg hover:opacity-90 transition-opacity"
+                />
+              </Link>
             </CardHeader>
             <CardContent className="p-4">
-              <CardTitle className="text-lg mb-2">{product.title}</CardTitle>
+              <Link to={`/marketplace/${product.id}`}>
+                <CardTitle className="text-lg mb-2 hover:text-blue-600 transition-colors">{product.title}</CardTitle>
+              </Link>
               <p className="text-sm text-muted-foreground mb-2">by {product.profiles?.profile_name}</p>
               <p className="text-sm mb-3 line-clamp-2">{product.description}</p>
               <p className="text-xl font-bold text-green-600 mb-3">${product.price}</p>
