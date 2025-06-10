@@ -39,11 +39,13 @@ const Navbar = () => {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">DM</span>
-            </div>
-            <span className="font-bold text-xl text-gray-900">Duke Marketplace</span>
+          <Link to="/" className="flex items-center space-x-3">
+            <img 
+              src="/lovable-uploads/ab5a5857-7332-4da1-b76a-f8de90b92080.png" 
+              alt="Bazaar Logo" 
+              className="h-8 w-auto"
+            />
+            <span className="font-bold text-xl text-gray-900">Bazaar</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -62,12 +64,16 @@ const Navbar = () => {
 
           {/* Right side buttons */}
           <div className="hidden md:flex items-center space-x-3">
-            <Button variant="ghost" size="sm">
-              <Heart size={16} />
-            </Button>
-            <Button variant="ghost" size="sm">
-              <ShoppingCart size={16} />
-            </Button>
+            <Link to="/favorites">
+              <Button variant="ghost" size="sm">
+                <Heart size={16} />
+              </Button>
+            </Link>
+            <Link to="/cart">
+              <Button variant="ghost" size="sm">
+                <ShoppingCart size={16} />
+              </Button>
+            </Link>
             {user ? (
               <div className="flex items-center space-x-2">
                 <Button variant="ghost" size="sm">

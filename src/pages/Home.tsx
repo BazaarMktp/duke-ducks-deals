@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -200,7 +199,7 @@ const Home = () => {
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="relative z-10 text-center text-white">
-          <h1 className="text-4xl md:text-6xl font-bold mb-4">Duke Marketplace</h1>
+          <h1 className="text-4xl md:text-6xl font-bold mb-4">Bazaar</h1>
           <p className="text-xl md:text-2xl mb-6">Buy, Sell, Share - Built for Blue Devils</p>
           {user ? (
             <Link to="/marketplace">
