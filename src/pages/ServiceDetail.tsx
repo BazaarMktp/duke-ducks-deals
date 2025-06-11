@@ -1,13 +1,14 @@
 
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Heart, MessageCircle, ArrowLeft, User, Star, Calendar } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import ServiceInfo from "@/components/services/ServiceInfo";
+import ServiceProvider from "@/components/services/ServiceProvider";
+import ServiceActions from "@/components/services/ServiceActions";
 
 interface ServiceListing {
   id: string;
@@ -191,124 +192,31 @@ const ServiceDetail = () => {
       </Link>
 
       <div className="max-w-4xl mx-auto">
-        <div className="mb-6">
-          <div className="flex items-center justify-between mb-4">
-            <h1 className="text-3xl font-bold">{service.title}</h1>
-            <div className="flex items-center text-yellow-500">
-              <Star size={20} className="fill-current" />
-              <span className="ml-1 font-medium">4.8</span>
-            </div>
-          </div>
-          
-          <p className="text-3xl font-bold text-green-600 mb-4">${service.price}/hour</p>
-          <Badge variant="outline" className="mb-4">Available</Badge>
-        </div>
-
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Service Details */}
-          <div className="lg:col-span-2">
-            <Card className="mb-6">
-              <CardHeader>
-                <CardTitle>Service Description</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-700 leading-relaxed">{service.description}</p>
-                {service.location && (
-                  <div className="mt-4 pt-4 border-t">
-                    <h4 className="font-medium mb-2">Service Area</h4>
-                    <p className="text-gray-600">{service.location}</p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+          <ServiceInfo
+            title={service.title}
+            price={service.price}
+            description={service.description}
+            location={service.location}
+            createdAt={service.created_at}
+          />
 
-            <Card>
-              <CardHeader>
-                <CardTitle>What's Included</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <ul className="list-disc list-inside space-y-2 text-gray-700">
-                  <li>Professional service delivery</li>
-                  <li>Flexible scheduling</li>
-                  <li>Quality guarantee</li>
-                  <li>Direct communication with provider</li>
-                </ul>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Provider Info & Actions */}
           <div>
-            <Card className="mb-6">
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <User size={20} className="mr-2" />
-                  Service Provider
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center mb-4">
-                  <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                    <User size={24} className="text-blue-600" />
-                  </div>
-                  <h3 className="font-bold text-lg">{service.profiles.profile_name}</h3>
-                  <p className="text-sm text-gray-600">{service.profiles.email}</p>
-                  {service.profiles.phone_number && (
-                    <p className="text-sm text-gray-600">{service.profiles.phone_number}</p>
-                  )}
-                </div>
-                
-                <div className="space-y-2 text-sm">
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600">Rating:</span>
-                    <div className="flex items-center">
-                      <Star size={14} className="fill-current text-yellow-500" />
-                      <span className="ml-1">4.8 (24 reviews)</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600">Response time:</span>
-                    <span>Within 2 hours</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-gray-600">Member since:</span>
-                    <span>{new Date(service.created_at).getFullYear()}</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <ServiceProvider
+              profileName={service.profiles.profile_name}
+              email={service.profiles.email}
+              phoneNumber={service.profiles.phone_number}
+              createdAt={service.created_at}
+            />
 
-            {/* Action Buttons */}
-            <div className="space-y-3">
-              {user && service.user_id !== user.id && (
-                <Button 
-                  onClick={startConversation}
-                  className="w-full"
-                  size="lg"
-                >
-                  <MessageCircle size={16} className="mr-2" />
-                  Contact Now
-                </Button>
-              )}
-              
-              {user && (
-                <Button
-                  variant="outline"
-                  onClick={toggleFavorite}
-                  className={`w-full ${isFavorite ? "text-red-500" : ""}`}
-                >
-                  <Heart size={16} className={`mr-2 ${isFavorite ? "fill-current" : ""}`} />
-                  {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
-                </Button>
-              )}
-            </div>
-
-            <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-              <div className="flex items-center text-xs text-gray-500">
-                <Calendar size={12} className="mr-1" />
-                Listed on {new Date(service.created_at).toLocaleDateString()}
-              </div>
-            </div>
+            <ServiceActions
+              user={user}
+              isFavorite={isFavorite}
+              onToggleFavorite={toggleFavorite}
+              onStartConversation={startConversation}
+              isOwner={service.user_id === user?.id}
+              createdAt={service.created_at}
+            />
           </div>
         </div>
       </div>
