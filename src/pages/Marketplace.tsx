@@ -1,71 +1,68 @@
+
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Heart, ShoppingCart, Search, MessageCircle } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { Heart, Search, Filter, Plus, Package } from "lucide-react";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { useToast } from "@/hooks/use-toast";
-import PostingForm from "@/components/PostingForm";
-
-interface Product {
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  images: string[];
-  user_id: string;
-  profiles: {
-    profile_name: string;
-  };
-}
+import { toast } from "sonner";
+import ListingTypeToggle from "@/components/services/ListingTypeToggle";
 
 const Marketplace = () => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [favorites, setFavorites] = useState<string[]>([]);
-  const [cart, setCart] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [showPostingForm, setShowPostingForm] = useState(false);
   const { user } = useAuth();
-  const { toast } = useToast();
-
-  const categories = ["All", "Books", "Electronics", "Furniture", "Clothing", "Sports", "Other"];
+  const [listings, setListings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState("newest");
+  const [favorites, setFavorites] = useState([]);
+  const [activeListingType, setActiveListingType] = useState<'offer' | 'wanted'>('offer');
 
   useEffect(() => {
-    fetchProducts();
+    fetchListings();
     if (user) {
       fetchFavorites();
-      fetchCart();
     }
-  }, [user]);
+  }, [user, searchQuery, sortBy, activeListingType]);
 
-  const fetchProducts = async () => {
+  const fetchListings = async () => {
     try {
-      const { data, error } = await supabase
+      setLoading(true);
+      let query = supabase
         .from('listings')
         .select(`
           *,
-          profiles!listings_user_id_fkey(profile_name)
+          profiles(profile_name)
         `)
         .eq('category', 'marketplace')
         .eq('status', 'active')
-        .order('created_at', { ascending: false });
+        .eq('listing_type', activeListingType);
+
+      if (searchQuery) {
+        query = query.or(`title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`);
+      }
+
+      const orderColumn = sortBy === 'price_low' ? 'price' : 
+                         sortBy === 'price_high' ? 'price' : 'created_at';
+      const ascending = sortBy === 'price_low' ? true : 
+                       sortBy === 'price_high' ? false : false;
+
+      const { data, error } = await query.order(orderColumn, { ascending });
 
       if (error) throw error;
-      setProducts(data || []);
+      setListings(data || []);
     } catch (error) {
-      console.error('Error fetching products:', error);
+      console.error('Error fetching listings:', error);
+      toast.error("Failed to load marketplace items");
     } finally {
       setLoading(false);
     }
   };
 
   const fetchFavorites = async () => {
-    if (!user) return;
-    
     try {
       const { data, error } = await supabase
         .from('favorites')
@@ -79,238 +76,192 @@ const Marketplace = () => {
     }
   };
 
-  const fetchCart = async () => {
-    if (!user) return;
-    
-    try {
-      const { data, error } = await supabase
-        .from('cart_items')
-        .select('listing_id')
-        .eq('user_id', user.id);
-
-      if (error) throw error;
-      setCart(data?.map(item => item.listing_id) || []);
-    } catch (error) {
-      console.error('Error fetching cart:', error);
+  const toggleFavorite = async (listingId) => {
+    if (!user) {
+      toast.error("Please log in to save favorites");
+      return;
     }
-  };
-
-  const toggleFavorite = async (id: string) => {
-    if (!user) return;
 
     try {
-      if (favorites.includes(id)) {
+      const isFavorited = favorites.includes(listingId);
+      
+      if (isFavorited) {
         await supabase
           .from('favorites')
           .delete()
           .eq('user_id', user.id)
-          .eq('listing_id', id);
-        setFavorites(prev => prev.filter(item => item !== id));
+          .eq('listing_id', listingId);
+        
+        setFavorites(prev => prev.filter(id => id !== listingId));
+        toast.success("Removed from favorites");
       } else {
         await supabase
           .from('favorites')
-          .insert({ user_id: user.id, listing_id: id });
-        setFavorites(prev => [...prev, id]);
+          .insert({ user_id: user.id, listing_id: listingId });
+        
+        setFavorites(prev => [...prev, listingId]);
+        toast.success("Added to favorites");
       }
     } catch (error) {
       console.error('Error toggling favorite:', error);
+      toast.error("Failed to update favorites");
     }
   };
-
-  const addToCart = async (id: string) => {
-    if (!user) return;
-
-    try {
-      if (!cart.includes(id)) {
-        await supabase
-          .from('cart_items')
-          .insert({ user_id: user.id, listing_id: id });
-        setCart(prev => [...prev, id]);
-        
-        toast({
-          title: "Added to cart",
-          description: "Item added to your cart successfully.",
-        });
-      }
-    } catch (error) {
-      console.error('Error adding to cart:', error);
-    }
-  };
-
-  const startConversation = async (sellerId: string, listingId: string) => {
-    if (!user) return;
-
-    try {
-      // Check if conversation already exists
-      const { data: existingConv } = await supabase
-        .from('conversations')
-        .select('id')
-        .eq('buyer_id', user.id)
-        .eq('seller_id', sellerId)
-        .eq('listing_id', listingId)
-        .single();
-
-      let conversationId = existingConv?.id;
-
-      if (!conversationId) {
-        // Create new conversation
-        const { data: newConv, error: convError } = await supabase
-          .from('conversations')
-          .insert({
-            buyer_id: user.id,
-            seller_id: sellerId,
-            listing_id: listingId
-          })
-          .select('id')
-          .single();
-
-        if (convError) throw convError;
-        conversationId = newConv.id;
-      }
-
-      // Send initial message
-      await supabase
-        .from('messages')
-        .insert({
-          conversation_id: conversationId,
-          sender_id: user.id,
-          message: "I am interested"
-        });
-
-      toast({
-        title: "Message sent!",
-        description: "Your interest has been sent to the seller.",
-      });
-
-    } catch (error) {
-      console.error('Error starting conversation:', error);
-      toast({
-        title: "Error",
-        description: "Failed to send message.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const filteredProducts = products.filter(product => {
-    const matchesSearch = product.title.toLowerCase().includes(searchTerm.toLowerCase());
-    // For now, we'll match all categories since we don't have a category field
-    const matchesCategory = selectedCategory === "All";
-    return matchesSearch && matchesCategory;
-  });
-
-  if (loading) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center">Loading products...</div>
-      </div>
-    );
-  }
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Marketplace</h1>
+      {/* Header */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">
+            {activeListingType === 'offer' ? 'Marketplace' : 'Wanted Items'}
+          </h1>
+          <p className="text-gray-600 mt-2">
+            {activeListingType === 'offer' 
+              ? 'Buy and sell items with fellow Duke students'
+              : 'See what items Duke students are looking for'
+            }
+          </p>
+        </div>
+        
         {user && (
-          <Button onClick={() => setShowPostingForm(true)}>+ Post Item</Button>
+          <Link to="/create-listing">
+            <Button className="flex items-center gap-2">
+              {activeListingType === 'offer' ? (
+                <>
+                  <Plus size={16} />
+                  Sell Item
+                </>
+              ) : (
+                <>
+                  <Search size={16} />
+                  Post Request
+                </>
+              )}
+            </Button>
+          </Link>
         )}
       </div>
 
+      {/* Listing Type Toggle */}
+      <ListingTypeToggle 
+        activeType={activeListingType}
+        onTypeChange={setActiveListingType}
+      />
+
       {/* Search and Filters */}
-      <div className="mb-6 space-y-4">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+      <div className="flex flex-col md:flex-row gap-4 mb-6">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
           <Input
-            placeholder="Search products..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder={activeListingType === 'offer' ? "Search marketplace items..." : "Search wanted items..."}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10"
           />
         </div>
-        
-        <div className="flex flex-wrap gap-2">
-          {categories.map((category) => (
-            <Button
-              key={category}
-              variant={selectedCategory === category ? "default" : "outline"}
-              size="sm"
-              onClick={() => setSelectedCategory(category)}
-            >
-              {category}
-            </Button>
-          ))}
-        </div>
+        <Select value={sortBy} onValueChange={setSortBy}>
+          <SelectTrigger className="w-48">
+            <SelectValue placeholder="Sort by" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="newest">Newest First</SelectItem>
+            <SelectItem value="oldest">Oldest First</SelectItem>
+            {activeListingType === 'offer' && (
+              <>
+                <SelectItem value="price_low">Price: Low to High</SelectItem>
+                <SelectItem value="price_high">Price: High to Low</SelectItem>
+              </>
+            )}
+          </SelectContent>
+        </Select>
       </div>
 
-      {/* Products Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredProducts.map((product) => (
-          <Card key={product.id} className="hover:shadow-lg transition-shadow">
-            <CardHeader className="p-0">
-              <Link to={`/marketplace/${product.id}`}>
-                <img 
-                  src={product.images?.[0] || "/placeholder.svg"} 
-                  alt={product.title}
-                  className="w-full h-48 object-cover rounded-t-lg hover:opacity-90 transition-opacity"
-                />
-              </Link>
-            </CardHeader>
-            <CardContent className="p-4">
-              <Link to={`/marketplace/${product.id}`}>
-                <CardTitle className="text-lg mb-2 hover:text-blue-600 transition-colors">{product.title}</CardTitle>
-              </Link>
-              <p className="text-sm text-muted-foreground mb-2">by {product.profiles?.profile_name}</p>
-              <p className="text-sm mb-3 line-clamp-2">{product.description}</p>
-              <p className="text-xl font-bold text-green-600 mb-3">${product.price}</p>
-              <div className="flex gap-2">
+      {/* Listings Grid */}
+      {loading ? (
+        <div className="text-center py-12">
+          <p className="text-gray-500">Loading...</p>
+        </div>
+      ) : listings.length === 0 ? (
+        <div className="text-center py-12">
+          <p className="text-gray-500">
+            {activeListingType === 'offer' 
+              ? "No marketplace items found matching your criteria."
+              : "No wanted items found matching your criteria."
+            }
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {listings.map((listing) => (
+            <Card 
+              key={listing.id} 
+              className={`hover:shadow-lg transition-shadow ${
+                listing.listing_type === 'wanted' ? 'border-blue-200 bg-blue-50/50' : ''
+              }`}
+            >
+              <div className="relative">
+                {listing.images && listing.images.length > 0 ? (
+                  <img 
+                    src={listing.images[0]} 
+                    alt={listing.title}
+                    className="w-full h-48 object-cover rounded-t-lg"
+                  />
+                ) : (
+                  <div className="w-full h-48 bg-gray-200 rounded-t-lg flex items-center justify-center">
+                    <Package className="h-12 w-12 text-gray-400" />
+                  </div>
+                )}
                 {user && (
                   <Button
-                    variant="outline"
+                    variant="ghost"
                     size="sm"
-                    onClick={() => toggleFavorite(product.id)}
-                    className={favorites.includes(product.id) ? "text-red-500" : ""}
+                    className="absolute top-2 right-2 bg-white/80 hover:bg-white"
+                    onClick={() => toggleFavorite(listing.id)}
                   >
-                    <Heart size={16} className={favorites.includes(product.id) ? "fill-current" : ""} />
-                  </Button>
-                )}
-                {user && (
-                  <Button 
-                    size="sm" 
-                    onClick={() => addToCart(product.id)}
-                    className="flex-1"
-                    disabled={cart.includes(product.id)}
-                  >
-                    <ShoppingCart size={16} className="mr-1" />
-                    {cart.includes(product.id) ? "In Cart" : "Add to Cart"}
-                  </Button>
-                )}
-                {user && product.user_id !== user.id && (
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => startConversation(product.user_id, product.id)}
-                  >
-                    <MessageCircle size={16} />
+                    <Heart 
+                      size={16} 
+                      className={favorites.includes(listing.id) ? "fill-red-500 text-red-500" : "text-gray-600"} 
+                    />
                   </Button>
                 )}
               </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {filteredProducts.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-gray-500">No products found matching your criteria.</p>
+              <CardContent className="p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  {listing.listing_type === 'wanted' && (
+                    <Badge variant="outline" className="text-blue-600 border-blue-300">
+                      <Search size={12} className="mr-1" />
+                      Looking For
+                    </Badge>
+                  )}
+                </div>
+                <Link to={`/marketplace/${listing.id}`}>
+                  <CardTitle className="text-lg hover:text-blue-600 transition-colors mb-2">
+                    {listing.listing_type === 'wanted' ? `Looking for: ${listing.title}` : listing.title}
+                  </CardTitle>
+                </Link>
+                <p className="text-sm text-gray-600 mb-2">by {listing.profiles?.profile_name || 'Unknown'}</p>
+                <p className="text-sm mb-3 line-clamp-2">{listing.description}</p>
+                <div className="flex justify-between items-center">
+                  {listing.listing_type === 'offer' ? (
+                    <p className="text-xl font-bold text-green-600">
+                      {listing.price ? `$${listing.price}` : 'Contact for price'}
+                    </p>
+                  ) : (
+                    <p className="text-lg font-bold text-blue-600">
+                      {listing.price ? `Budget: $${listing.price}` : 'Budget: Negotiable'}
+                    </p>
+                  )}
+                  <Link to={`/marketplace/${listing.id}`}>
+                    <Button size="sm">
+                      {listing.listing_type === 'wanted' ? 'I Have This' : 'View Details'}
+                    </Button>
+                  </Link>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
-      )}
-
-      {showPostingForm && (
-        <PostingForm
-          category="marketplace"
-          onClose={() => setShowPostingForm(false)}
-          onSuccess={fetchProducts}
-        />
       )}
     </div>
   );

@@ -1,9 +1,8 @@
-
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ShoppingCart, MapPin, Users, Gift, TrendingUp, MessageCircle, Plus, Loader2 } from "lucide-react";
+import { ShoppingCart, MapPin, Users, Gift, TrendingUp, MessageCircle, Plus, Loader2, Search } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -18,6 +17,7 @@ type Listing = {
   user_id: string;
   created_at: string;
   featured: boolean;
+  listing_type: 'offer' | 'wanted';
 };
 
 // Define the structure of a user profile
@@ -37,6 +37,7 @@ type Stats = {
 const Home = () => {
   const { user } = useAuth();
   const [featuredListings, setFeaturedListings] = useState<(Listing & { seller?: string })[]>([]);
+  const [featuredRequests, setFeaturedRequests] = useState<(Listing & { requester?: string })[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [profiles, setProfiles] = useState<Record<string, Profile>>({});
   const [stats, setStats] = useState<Stats>({
@@ -80,6 +81,7 @@ const Home = () => {
   useEffect(() => {
     if (user) {
       fetchFeaturedListings();
+      fetchFeaturedRequests();
     }
     fetchStats();
   }, [user]);
@@ -113,10 +115,10 @@ const Home = () => {
 
   // Fetch profiles for all user IDs in the listings
   useEffect(() => {
-    if (featuredListings.length > 0) {
+    if (featuredListings.length > 0 || featuredRequests.length > 0) {
       fetchSellerProfiles();
     }
-  }, [featuredListings]);
+  }, [featuredListings, featuredRequests]);
 
   const fetchStats = async () => {
     try {
@@ -153,7 +155,8 @@ const Home = () => {
         .from('listings')
         .select('*')
         .eq('status', 'active')
-        .eq('category', 'marketplace') // Only fetch marketplace items
+        .eq('listing_type', 'offer')
+        .eq('category', 'marketplace')
         .order('created_at', { ascending: false })
         .limit(4);
 
@@ -166,10 +169,31 @@ const Home = () => {
     }
   };
 
+  const fetchFeaturedRequests = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('listings')
+        .select('*')
+        .eq('status', 'active')
+        .eq('listing_type', 'wanted')
+        .in('category', ['marketplace', 'housing', 'services'])
+        .order('created_at', { ascending: false })
+        .limit(4);
+
+      if (error) throw error;
+      setFeaturedRequests(data || []);
+    } catch (error) {
+      console.error('Error fetching featured requests:', error);
+    }
+  };
+
   const fetchSellerProfiles = async () => {
     try {
-      // Extract unique user IDs from listings
-      const userIds = [...new Set(featuredListings.map(item => item.user_id))];
+      // Extract unique user IDs from both listings and requests
+      const userIds = [...new Set([
+        ...featuredListings.map(item => item.user_id),
+        ...featuredRequests.map(item => item.user_id)
+      ])];
       
       if (userIds.length === 0) return;
 
@@ -194,6 +218,15 @@ const Home = () => {
           const profile = profileMap[listing.user_id];
           const sellerName = profile?.profile_name || profile?.full_name || 'Unknown seller';
           return { ...listing, seller: sellerName };
+        })
+      );
+
+      // Update featuredRequests with requester names
+      setFeaturedRequests(prev => 
+        prev.map(request => {
+          const profile = profileMap[request.user_id];
+          const requesterName = profile?.profile_name || profile?.full_name || 'Unknown requester';
+          return { ...request, requester: requesterName };
         })
       );
     } catch (error) {
@@ -299,6 +332,58 @@ const Home = () => {
                       </p>
                       <p className="text-sm text-gray-600 mb-2 line-clamp-2">{item.description || 'No description available'}</p>
                       <p className="text-sm text-gray-500">by {item.seller || 'Unknown'}</p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* Featured Requests */}
+        <section className="py-8 bg-white">
+          <div className="container mx-auto px-4">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold">Recent Requests</h2>
+              <div className="flex gap-2">
+                <Link to="/marketplace">
+                  <Button variant="outline" size="sm">Marketplace</Button>
+                </Link>
+                <Link to="/housing">
+                  <Button variant="outline" size="sm">Housing</Button>
+                </Link>
+                <Link to="/services">
+                  <Button variant="outline" size="sm">Services</Button>
+                </Link>
+              </div>
+            </div>
+            
+            {featuredRequests.length === 0 ? (
+              <Card>
+                <CardContent className="py-12 text-center">
+                  <p className="text-gray-500">No requests available at the moment.</p>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {featuredRequests.map((request) => (
+                  <Card key={request.id} className="hover:shadow-lg transition-shadow border-blue-200 bg-blue-50/50">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Search size={12} className="text-blue-600" />
+                        <span className="text-xs text-blue-600 font-medium">
+                          {request.category.charAt(0).toUpperCase() + request.category.slice(1)} Request
+                        </span>
+                      </div>
+                      <h3 className="font-semibold mb-2 line-clamp-1">Looking for: {request.title}</h3>
+                      <p className="text-blue-600 font-bold mb-1">
+                        {request.price ? `Budget: $${request.price}` : 'Budget: Negotiable'}
+                      </p>
+                      <p className="text-sm text-gray-600 mb-2 line-clamp-2">{request.description || 'No description available'}</p>
+                      <p className="text-sm text-gray-500">by {request.requester || 'Unknown'}</p>
+                      <Link to={`/${request.category}/${request.id}`} className="block mt-3">
+                        <Button size="sm" className="w-full">I Can Help</Button>
+                      </Link>
                     </CardContent>
                   </Card>
                 ))}
@@ -468,3 +553,5 @@ const Home = () => {
 };
 
 export default Home;
+
+}
