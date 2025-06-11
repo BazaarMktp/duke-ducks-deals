@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Listing, Profile, Stats } from "../types";
 
@@ -14,7 +14,7 @@ export const useHomeData = (user: any) => {
     totalDonations: 0
   });
 
-  const fetchStats = async () => {
+  const fetchStats = useCallback(async () => {
     try {
       const { count: listingsCount } = await supabase
         .from('listings')
@@ -37,9 +37,9 @@ export const useHomeData = (user: any) => {
     } catch (error) {
       console.error('Error fetching stats:', error);
     }
-  };
+  }, []);
 
-  const fetchFeaturedListings = async () => {
+  const fetchFeaturedListings = useCallback(async () => {
     try {
       setIsLoading(true);
       const { data, error } = await supabase
@@ -58,9 +58,9 @@ export const useHomeData = (user: any) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
-  const fetchFeaturedRequests = async () => {
+  const fetchFeaturedRequests = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('listings')
@@ -76,17 +76,21 @@ export const useHomeData = (user: any) => {
     } catch (error) {
       console.error('Error fetching featured requests:', error);
     }
-  };
+  }, []);
 
-  const fetchSellerProfiles = async () => {
+  // Memoize the user IDs to prevent unnecessary profile fetches
+  const userIds = useMemo(() => {
+    const allUserIds = [
+      ...featuredListings.map(item => item.user_id),
+      ...featuredRequests.map(item => item.user_id)
+    ];
+    return [...new Set(allUserIds)];
+  }, [featuredListings, featuredRequests]);
+
+  const fetchSellerProfiles = useCallback(async () => {
+    if (userIds.length === 0) return;
+
     try {
-      const userIds = [...new Set([
-        ...featuredListings.map(item => item.user_id),
-        ...featuredRequests.map(item => item.user_id)
-      ])];
-      
-      if (userIds.length === 0) return;
-
       const { data, error } = await supabase
         .from('profiles')
         .select('id, profile_name, full_name')
@@ -101,6 +105,7 @@ export const useHomeData = (user: any) => {
 
       setProfiles(profileMap);
       
+      // Update listings with seller names
       setFeaturedListings(prev => 
         prev.map(listing => {
           const profile = profileMap[listing.user_id];
@@ -109,6 +114,7 @@ export const useHomeData = (user: any) => {
         })
       );
 
+      // Update requests with requester names
       setFeaturedRequests(prev => 
         prev.map(request => {
           const profile = profileMap[request.user_id];
@@ -119,19 +125,30 @@ export const useHomeData = (user: any) => {
     } catch (error) {
       console.error('Error fetching seller profiles:', error);
     }
-  };
+  }, [userIds]);
 
+  // Initial data fetch
   useEffect(() => {
     if (user) {
       fetchFeaturedListings();
       fetchFeaturedRequests();
     }
     fetchStats();
-  }, [user]);
+  }, [user, fetchFeaturedListings, fetchFeaturedRequests, fetchStats]);
 
+  // Fetch profiles when user IDs change
+  useEffect(() => {
+    if (userIds.length > 0) {
+      fetchSellerProfiles();
+    }
+  }, [fetchSellerProfiles, userIds]);
+
+  // Real-time subscription (only when user is authenticated)
   useEffect(() => {
     if (!user) return;
 
+    console.log('Setting up realtime subscription for user:', user.id);
+    
     const channel = supabase
       .channel('listings-changes')
       .on(
@@ -150,15 +167,10 @@ export const useHomeData = (user: any) => {
       .subscribe();
 
     return () => {
+      console.log('Cleaning up realtime subscription');
       supabase.removeChannel(channel);
     };
-  }, [user]);
-
-  useEffect(() => {
-    if (featuredListings.length > 0 || featuredRequests.length > 0) {
-      fetchSellerProfiles();
-    }
-  }, [featuredListings, featuredRequests]);
+  }, [user?.id, fetchFeaturedListings, fetchStats]);
 
   return {
     featuredListings,
