@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -125,19 +124,17 @@ const UserManagement = () => {
 
   const deleteUser = async (userId: string) => {
     try {
-      // Delete from profiles first (cascading will handle other tables)
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .delete()
-        .eq('id', userId);
+      // Use Supabase admin API to delete user from auth.users
+      // This will cascade delete from all related tables including profiles
+      const { error } = await supabase.auth.admin.deleteUser(userId);
 
-      if (profileError) throw profileError;
+      if (error) throw error;
 
       toast.success('User deleted successfully');
       fetchUsers();
     } catch (error) {
       console.error('Error deleting user:', error);
-      toast.error('Failed to delete user');
+      toast.error('Failed to delete user. Make sure you have admin privileges.');
     }
   };
 
