@@ -1,13 +1,15 @@
 
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Heart, MessageCircle, ArrowLeft, User, MapPin, Calendar } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import HousingImageGallery from "@/components/housing/HousingImageGallery";
+import HousingInfo from "@/components/housing/HousingInfo";
+import { SellerInfo } from "@/components/marketplace/SellerInfo";
+import HousingActions from "@/components/housing/HousingActions";
 
 interface HousingListing {
   id: string;
@@ -194,99 +196,36 @@ const HousingDetail = () => {
       </Link>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Images */}
+        <HousingImageGallery
+          images={listing.images}
+          title={listing.title}
+          currentImageIndex={currentImageIndex}
+          onImageChange={setCurrentImageIndex}
+        />
+
         <div>
-          <div className="mb-4">
-            <img
-              src={listing.images?.[currentImageIndex] || "/placeholder.svg"}
-              alt={listing.title}
-              className="w-full h-96 object-cover rounded-lg"
-            />
-          </div>
-          {listing.images && listing.images.length > 1 && (
-            <div className="flex gap-2">
-              {listing.images.map((image, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentImageIndex(index)}
-                  className={`w-20 h-20 rounded-md overflow-hidden ${
-                    index === currentImageIndex ? 'ring-2 ring-blue-500' : ''
-                  }`}
-                >
-                  <img
-                    src={image}
-                    alt={`${listing.title} ${index + 1}`}
-                    className="w-full h-full object-cover"
-                  />
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
+          <HousingInfo
+            title={listing.title}
+            housingType={listing.housing_type}
+            location={listing.location}
+            price={listing.price}
+            description={listing.description}
+          />
 
-        {/* Listing Details */}
-        <div>
-          <div className="flex items-center gap-2 mb-2">
-            <h1 className="text-3xl font-bold">{listing.title}</h1>
-            <Badge variant="secondary">
-              {listing.housing_type?.replace("_", " ").replace(/\b\w/g, l => l.toUpperCase())}
-            </Badge>
-          </div>
-          
-          <div className="flex items-center text-gray-600 mb-4">
-            <MapPin size={16} className="mr-1" />
-            {listing.location}
-          </div>
-          
-          <p className="text-3xl font-bold text-green-600 mb-6">${listing.price}/month</p>
-          
-          <div className="mb-6">
-            <h3 className="text-lg font-semibold mb-2">Description</h3>
-            <p className="text-gray-700">{listing.description}</p>
-          </div>
+          <SellerInfo
+            profileName={listing.profiles.profile_name}
+            email={listing.profiles.email}
+            phoneNumber={listing.profiles.phone_number}
+            createdAt={listing.created_at}
+          />
 
-          {/* Poster Info */}
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <User size={20} className="mr-2" />
-                Posted by
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="font-medium">{listing.profiles.profile_name}</p>
-              <p className="text-sm text-gray-600">{listing.profiles.email}</p>
-              {listing.profiles.phone_number && (
-                <p className="text-sm text-gray-600">{listing.profiles.phone_number}</p>
-              )}
-              <div className="flex items-center text-xs text-gray-500 mt-2">
-                <Calendar size={12} className="mr-1" />
-                Listed on {new Date(listing.created_at).toLocaleDateString()}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Action Buttons */}
-          <div className="flex gap-3">
-            {user && (
-              <Button
-                variant="outline"
-                onClick={toggleFavorite}
-                className={isFavorite ? "text-red-500" : ""}
-              >
-                <Heart size={16} className={isFavorite ? "fill-current" : ""} />
-              </Button>
-            )}
-            {user && listing.user_id !== user.id && (
-              <Button 
-                onClick={startConversation}
-                className="flex-1"
-              >
-                <MessageCircle size={16} className="mr-2" />
-                Contact Now
-              </Button>
-            )}
-          </div>
+          <HousingActions
+            user={user}
+            isFavorite={isFavorite}
+            onToggleFavorite={toggleFavorite}
+            onStartConversation={startConversation}
+            isOwner={listing.user_id === user?.id}
+          />
         </div>
       </div>
     </div>
