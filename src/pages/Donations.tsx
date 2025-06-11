@@ -66,7 +66,9 @@ const Donations = () => {
         description: "Your donation pickup request has been submitted successfully.",
       });
 
-      setDonationCount(prev => prev + 1);
+      // Refresh the donation count from the database
+      await fetchDonationCount();
+      
       setFormData({
         name: "",
         email: "",
