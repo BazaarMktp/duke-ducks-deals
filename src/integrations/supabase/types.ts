@@ -245,11 +245,13 @@ export type Database = {
           category: Database["public"]["Enums"]["listing_category"]
           created_at: string | null
           description: string | null
+          expires_at: string | null
           featured: boolean | null
           housing_type: Database["public"]["Enums"]["housing_type"] | null
           id: string
           images: string[] | null
           latitude: number | null
+          listing_type: Database["public"]["Enums"]["listing_type"]
           location: string | null
           longitude: number | null
           price: number | null
@@ -262,11 +264,13 @@ export type Database = {
           category: Database["public"]["Enums"]["listing_category"]
           created_at?: string | null
           description?: string | null
+          expires_at?: string | null
           featured?: boolean | null
           housing_type?: Database["public"]["Enums"]["housing_type"] | null
           id?: string
           images?: string[] | null
           latitude?: number | null
+          listing_type?: Database["public"]["Enums"]["listing_type"]
           location?: string | null
           longitude?: number | null
           price?: number | null
@@ -279,11 +283,13 @@ export type Database = {
           category?: Database["public"]["Enums"]["listing_category"]
           created_at?: string | null
           description?: string | null
+          expires_at?: string | null
           featured?: boolean | null
           housing_type?: Database["public"]["Enums"]["housing_type"] | null
           id?: string
           images?: string[] | null
           latitude?: number | null
+          listing_type?: Database["public"]["Enums"]["listing_type"]
           location?: string | null
           longitude?: number | null
           price?: number | null
@@ -488,6 +494,7 @@ export type Database = {
       housing_type: "sublease" | "for_rent" | "roommate_wanted"
       listing_category: "marketplace" | "housing" | "services"
       listing_status: "active" | "sold" | "inactive"
+      listing_type: "offer" | "wanted"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -607,6 +614,7 @@ export const Constants = {
       housing_type: ["sublease", "for_rent", "roommate_wanted"],
       listing_category: ["marketplace", "housing", "services"],
       listing_status: ["active", "sold", "inactive"],
+      listing_type: ["offer", "wanted"],
     },
   },
 } as const

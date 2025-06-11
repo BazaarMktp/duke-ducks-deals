@@ -19,6 +19,7 @@ const CreateListing = () => {
     price: "",
     location: "",
     category: "marketplace" as 'marketplace' | 'housing' | 'services',
+    listingType: "offer" as 'offer' | 'wanted',
     housingType: "",
     images: [] as string[]
   });
@@ -38,6 +39,7 @@ const CreateListing = () => {
         description: formData.description,
         price: formData.price ? parseFloat(formData.price) : null,
         category: formData.category,
+        listing_type: formData.listingType,
         location: formData.location || null,
         images: formData.images.length > 0 ? formData.images : null,
       };
@@ -52,7 +54,8 @@ const CreateListing = () => {
 
       if (error) throw error;
 
-      toast.success(`Your ${formData.category} listing has been posted successfully.`);
+      const actionText = formData.listingType === 'wanted' ? 'request' : 'listing';
+      toast.success(`Your ${formData.category} ${actionText} has been posted successfully.`);
       navigate('/my-listings');
     } catch (error) {
       console.error('Error creating listing:', error);
@@ -75,44 +78,71 @@ const CreateListing = () => {
       <Card className="max-w-2xl mx-auto">
         <CardHeader>
           <CardTitle>
-            Create New Listing
+            Create New {formData.listingType === 'wanted' ? 'Request' : 'Listing'}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <Label htmlFor="category">Category</Label>
-              <Select value={formData.category} onValueChange={(value) => handleInputChange("category", value)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select category" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="marketplace">Marketplace</SelectItem>
-                  <SelectItem value="housing">Housing</SelectItem>
-                  <SelectItem value="services">Services</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="category">Category</Label>
+                <Select value={formData.category} onValueChange={(value) => handleInputChange("category", value)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="marketplace">Marketplace</SelectItem>
+                    <SelectItem value="housing">Housing</SelectItem>
+                    <SelectItem value="services">Services</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label htmlFor="listingType">Type</Label>
+                <Select value={formData.listingType} onValueChange={(value) => handleInputChange("listingType", value)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="offer">Offering</SelectItem>
+                    <SelectItem value="wanted">Looking For</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
             <div>
-              <Label htmlFor="title">Title</Label>
+              <Label htmlFor="title">
+                {formData.listingType === 'wanted' ? 'What are you looking for?' : 'Title'}
+              </Label>
               <Input
                 id="title"
                 value={formData.title}
                 onChange={(e) => handleInputChange("title", e.target.value)}
                 required
-                placeholder={`Enter ${formData.category} title...`}
+                placeholder={
+                  formData.listingType === 'wanted' 
+                    ? `What ${formData.category} are you looking for?`
+                    : `Enter ${formData.category} title...`
+                }
               />
             </div>
 
             <div>
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description">
+                {formData.listingType === 'wanted' ? 'Additional details' : 'Description'}
+              </Label>
               <Textarea
                 id="description"
                 value={formData.description}
                 onChange={(e) => handleInputChange("description", e.target.value)}
                 rows={4}
-                placeholder="Describe your listing..."
+                placeholder={
+                  formData.listingType === 'wanted' 
+                    ? "Provide more details about what you're looking for..."
+                    : "Describe your listing..."
+                }
               />
             </div>
 
@@ -125,7 +155,8 @@ const CreateListing = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="price">
-                  Price {formData.category === 'services' ? '(per hour)' : formData.category === 'housing' ? '(per month)' : ''}
+                  {formData.listingType === 'wanted' ? 'Budget' : 'Price'} {formData.category === 'services' ? '(per hour)' : formData.category === 'housing' ? '(per month)' : ''}
+                  {formData.listingType === 'wanted' && ' (Optional)'}
                 </Label>
                 <Input
                   id="price"
@@ -174,7 +205,7 @@ const CreateListing = () => {
                 Cancel
               </Button>
               <Button type="submit" disabled={loading} className="flex-1">
-                {loading ? "Creating..." : "Create Listing"}
+                {loading ? "Creating..." : `Create ${formData.listingType === 'wanted' ? 'Request' : 'Listing'}`}
               </Button>
             </div>
           </form>

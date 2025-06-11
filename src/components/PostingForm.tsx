@@ -16,9 +16,15 @@ interface PostingFormProps {
   category: 'marketplace' | 'housing' | 'services';
   onClose: () => void;
   onSuccess: () => void;
+  listingType?: 'offer' | 'wanted';
 }
 
-const PostingForm: React.FC<PostingFormProps> = ({ category, onClose, onSuccess }) => {
+const PostingForm: React.FC<PostingFormProps> = ({ 
+  category, 
+  onClose, 
+  onSuccess, 
+  listingType = 'offer' 
+}) => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -45,6 +51,7 @@ const PostingForm: React.FC<PostingFormProps> = ({ category, onClose, onSuccess 
         category,
         location: formData.location || null,
         images: formData.images.length > 0 ? formData.images : null,
+        listing_type: listingType,
       };
 
       if (category === 'housing' && formData.housingType) {
@@ -57,9 +64,10 @@ const PostingForm: React.FC<PostingFormProps> = ({ category, onClose, onSuccess 
 
       if (error) throw error;
 
+      const actionText = listingType === 'wanted' ? 'request' : 'listing';
       toast({
         title: "Success!",
-        description: `Your ${category} listing has been posted successfully.`,
+        description: `Your ${category} ${actionText} has been posted successfully.`,
       });
 
       onSuccess();
@@ -68,7 +76,7 @@ const PostingForm: React.FC<PostingFormProps> = ({ category, onClose, onSuccess 
       console.error('Error creating listing:', error);
       toast({
         title: "Error",
-        description: "Failed to create listing. Please try again.",
+        description: `Failed to create ${listingType === 'wanted' ? 'request' : 'listing'}. Please try again.`,
         variant: "destructive",
       });
     } finally {
@@ -84,13 +92,25 @@ const PostingForm: React.FC<PostingFormProps> = ({ category, onClose, onSuccess 
     setFormData(prev => ({ ...prev, images }));
   };
 
+  const getFormTitle = () => {
+    if (listingType === 'wanted') {
+      return `Post ${category === 'marketplace' ? 'Item' : category === 'housing' ? 'Housing' : 'Service'} Request`;
+    }
+    return `Post New ${category === 'marketplace' ? 'Item' : category === 'housing' ? 'Housing' : 'Service'}`;
+  };
+
+  const getPricePlaceholder = () => {
+    if (listingType === 'wanted') {
+      return category === 'services' ? 'Budget per hour' : category === 'housing' ? 'Budget per month' : 'Budget';
+    }
+    return category === 'services' ? 'Price per hour' : category === 'housing' ? 'Price per month' : 'Price';
+  };
+
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>
-            Post New {category === 'marketplace' ? 'Item' : category === 'housing' ? 'Housing' : 'Service'}
-          </CardTitle>
+          <CardTitle>{getFormTitle()}</CardTitle>
           <Button variant="ghost" size="sm" onClick={onClose}>
             <X size={16} />
           </Button>
@@ -98,24 +118,36 @@ const PostingForm: React.FC<PostingFormProps> = ({ category, onClose, onSuccess 
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <Label htmlFor="title">Title</Label>
+              <Label htmlFor="title">
+                {listingType === 'wanted' ? 'What are you looking for?' : 'Title'}
+              </Label>
               <Input
                 id="title"
                 value={formData.title}
                 onChange={(e) => handleInputChange("title", e.target.value)}
                 required
-                placeholder={`Enter ${category} title...`}
+                placeholder={
+                  listingType === 'wanted' 
+                    ? `What ${category} are you looking for?`
+                    : `Enter ${category} title...`
+                }
               />
             </div>
 
             <div>
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description">
+                {listingType === 'wanted' ? 'Additional details' : 'Description'}
+              </Label>
               <Textarea
                 id="description"
                 value={formData.description}
                 onChange={(e) => handleInputChange("description", e.target.value)}
                 rows={4}
-                placeholder="Describe your listing..."
+                placeholder={
+                  listingType === 'wanted' 
+                    ? "Provide more details about what you're looking for..."
+                    : "Describe your listing..."
+                }
               />
             </div>
 
@@ -128,7 +160,7 @@ const PostingForm: React.FC<PostingFormProps> = ({ category, onClose, onSuccess 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="price">
-                  Price {category === 'services' ? '(per hour)' : category === 'housing' ? '(per month)' : ''}
+                  {getPricePlaceholder()} {listingType === 'wanted' && '(Optional)'}
                 </Label>
                 <Input
                   id="price"
@@ -172,7 +204,7 @@ const PostingForm: React.FC<PostingFormProps> = ({ category, onClose, onSuccess 
                 Cancel
               </Button>
               <Button type="submit" disabled={loading} className="flex-1">
-                {loading ? "Posting..." : "Post Listing"}
+                {loading ? "Posting..." : `Post ${listingType === 'wanted' ? 'Request' : 'Listing'}`}
               </Button>
             </div>
           </form>

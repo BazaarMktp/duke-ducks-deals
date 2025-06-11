@@ -13,13 +13,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Trash2, Search, Eye } from "lucide-react";
+import { Trash2, Search } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 interface Listing {
   id: string;
   title: string;
   category: string;
+  listing_type: string;
   price: number;
   location: string;
   status: string;
@@ -47,6 +48,7 @@ const ListingManagement = () => {
           id,
           title,
           category,
+          listing_type,
           price,
           location,
           status,
@@ -104,6 +106,7 @@ const ListingManagement = () => {
   const filteredListings = listings.filter(listing =>
     listing.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     listing.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    listing.listing_type.toLowerCase().includes(searchTerm.toLowerCase()) ||
     listing.profiles?.profile_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     listing.profiles?.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -132,6 +135,7 @@ const ListingManagement = () => {
             <TableRow>
               <TableHead>Title</TableHead>
               <TableHead>Category</TableHead>
+              <TableHead>Type</TableHead>
               <TableHead>Price</TableHead>
               <TableHead>Owner</TableHead>
               <TableHead>Status</TableHead>
@@ -145,7 +149,15 @@ const ListingManagement = () => {
                 <TableCell>
                   <Badge variant="outline">{listing.category}</Badge>
                 </TableCell>
-                <TableCell>${listing.price}</TableCell>
+                <TableCell>
+                  <Badge 
+                    variant={listing.listing_type === 'wanted' ? 'secondary' : 'outline'}
+                    className={listing.listing_type === 'wanted' ? 'text-blue-600' : ''}
+                  >
+                    {listing.listing_type === 'wanted' ? 'Looking For' : 'Offering'}
+                  </Badge>
+                </TableCell>
+                <TableCell>${listing.price || 'N/A'}</TableCell>
                 <TableCell>
                   <div>
                     <div className="font-medium">{listing.profiles?.profile_name}</div>

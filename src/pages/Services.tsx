@@ -9,6 +9,7 @@ import ServicesHeader from "@/components/services/ServicesHeader";
 import ServicesSearch from "@/components/services/ServicesSearch";
 import ServicesCategories from "@/components/services/ServicesCategories";
 import ServicesList from "@/components/services/ServicesList";
+import ListingTypeToggle from "@/components/services/ListingTypeToggle";
 
 interface ServiceListing {
   id: string;
@@ -17,6 +18,7 @@ interface ServiceListing {
   price: number;
   location: string;
   user_id: string;
+  listing_type: 'offer' | 'wanted';
   profiles: {
     profile_name: string;
   };
@@ -28,6 +30,7 @@ const Services = () => {
   const [favorites, setFavorites] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [showPostingForm, setShowPostingForm] = useState(false);
+  const [activeListingType, setActiveListingType] = useState<'offer' | 'wanted'>('offer');
   const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -39,7 +42,7 @@ const Services = () => {
     if (user) {
       fetchFavorites();
     }
-  }, [user]);
+  }, [user, activeListingType]);
 
   const fetchServiceListings = async () => {
     try {
@@ -50,6 +53,7 @@ const Services = () => {
           profiles!listings_user_id_fkey(profile_name)
         `)
         .eq('category', 'services')
+        .eq('listing_type', activeListingType)
         .eq('status', 'active')
         .order('created_at', { ascending: false });
 
@@ -129,12 +133,16 @@ const Services = () => {
         conversationId = newConv.id;
       }
 
+      const defaultMessage = listing.listing_type === 'wanted' 
+        ? "I can help with what you're looking for!" 
+        : "I am interested";
+
       await supabase
         .from('messages')
         .insert({
           conversation_id: conversationId,
           sender_id: user.id,
-          message: "I am interested"
+          message: defaultMessage
         });
 
       toast({
@@ -172,6 +180,12 @@ const Services = () => {
       <ServicesHeader 
         user={user} 
         onPostService={() => setShowPostingForm(true)} 
+        activeListingType={activeListingType}
+      />
+
+      <ListingTypeToggle 
+        activeType={activeListingType}
+        onTypeChange={setActiveListingType}
       />
 
       <ServicesSearch 
@@ -194,6 +208,7 @@ const Services = () => {
           category="services"
           onClose={() => setShowPostingForm(false)}
           onSuccess={fetchServiceListings}
+          listingType={activeListingType}
         />
       )}
     </div>
