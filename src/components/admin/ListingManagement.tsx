@@ -10,8 +10,8 @@ const ListingManagement = () => {
     loading,
     searchTerm,
     setSearchTerm,
-    deleteListing,
-    toggleListingStatus,
+    handleDelete,
+    handleToggleStatus,
   } = useListingManagement();
 
   if (loading) {
@@ -30,8 +30,8 @@ const ListingManagement = () => {
       <CardContent>
         <ListingsTable
           listings={listings}
-          onToggleStatus={toggleListingStatus}
-          onDelete={deleteListing}
+          onToggleStatus={handleToggleStatus}
+          onDelete={handleDelete}
         />
       </CardContent>
     </Card>

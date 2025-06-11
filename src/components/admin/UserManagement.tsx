@@ -6,14 +6,15 @@ import UsersTable from "./user-management/UsersTable";
 import { useUserManagement } from "./user-management/useUserManagement";
 
 const UserManagement = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const { users, loading, banUser, unbanUser, deleteUser } = useUserManagement();
-
-  const filteredUsers = users.filter(user =>
-    user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.profile_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.full_name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const { 
+    users, 
+    loading, 
+    searchTerm,
+    setSearchTerm,
+    handleBanUser, 
+    handleUnbanUser, 
+    handleDeleteUser 
+  } = useUserManagement();
 
   if (loading) {
     return <div className="text-center py-8">Loading users...</div>;
@@ -30,10 +31,10 @@ const UserManagement = () => {
       </CardHeader>
       <CardContent>
         <UsersTable
-          users={filteredUsers}
-          onBanUser={banUser}
-          onUnbanUser={unbanUser}
-          onDeleteUser={deleteUser}
+          users={users}
+          onBanUser={handleBanUser}
+          onUnbanUser={handleUnbanUser}
+          onDeleteUser={handleDeleteUser}
         />
       </CardContent>
     </Card>
