@@ -59,7 +59,7 @@ const ServiceDetail = () => {
       if (error) throw error;
       setService(data);
     } catch (error) {
-      console.error('Error fetching service:', error);
+      // Secure error handling - don't expose sensitive details
       toast({
         title: "Error",
         description: "Failed to load service details.",
@@ -83,7 +83,7 @@ const ServiceDetail = () => {
       
       setIsFavorite(!!data);
     } catch (error) {
-      // Not a favorite
+      // Not a favorite - no action needed
     }
   };
 
@@ -105,7 +105,11 @@ const ServiceDetail = () => {
         setIsFavorite(true);
       }
     } catch (error) {
-      console.error('Error toggling favorite:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update favorites.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -154,7 +158,6 @@ const ServiceDetail = () => {
       navigate('/messages');
 
     } catch (error) {
-      console.error('Error starting conversation:', error);
       toast({
         title: "Error",
         description: "Failed to send message.",

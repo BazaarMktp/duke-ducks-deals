@@ -1,74 +1,87 @@
 
-import { useState, useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
-import { User } from "./types";
+import { useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
+import { User } from './types';
 
 export const useUserManagement = () => {
   const [users, setUsers] = useState<User[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
 
   const fetchUsers = async () => {
     try {
-      const { data: profiles, error } = await supabase
+      setLoading(true);
+      const { data, error } = await supabase
         .from('profiles')
         .select(`
-          id,
-          email,
-          profile_name,
-          full_name,
-          created_at
+          *,
+          user_roles(role),
+          banned_users(is_active, reason, banned_at)
         `)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        throw error;
+      }
 
-      // Check which users are banned
-      const userIds = profiles?.map(p => p.id) || [];
-      const { data: bannedUsers } = await supabase
-        .from('banned_users')
-        .select('user_id')
-        .in('user_id', userIds)
-        .eq('is_active', true);
-
-      const bannedUserIds = new Set(bannedUsers?.map(b => b.user_id) || []);
-
-      const usersWithBanStatus = profiles?.map(user => ({
-        ...user,
-        is_banned: bannedUserIds.has(user.id)
-      })) || [];
-
-      setUsers(usersWithBanStatus);
+      setUsers(data || []);
     } catch (error) {
-      console.error('Error fetching users:', error);
+      // Secure error logging - don't expose sensitive details
       toast.error('Failed to fetch users');
     } finally {
       setLoading(false);
     }
   };
 
-  const banUser = async (userId: string, reason: string) => {
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const handleBanUser = async (userId: string, reason: string) => {
     try {
+      const { data: currentUser } = await supabase.auth.getUser();
+      if (!currentUser.user) throw new Error('Not authenticated');
+
+      // Check if user is already banned
+      const { data: existingBan } = await supabase
+        .from('banned_users')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('is_active', true)
+        .single();
+
+      if (existingBan) {
+        toast.error('User is already banned');
+        return;
+      }
+
+      // Insert ban record
       const { error } = await supabase
         .from('banned_users')
         .insert({
           user_id: userId,
-          banned_by: (await supabase.auth.getUser()).data.user?.id,
+          banned_by: currentUser.user.id,
           reason,
           is_active: true
         });
 
       if (error) throw error;
 
+      // Audit log the action
+      await logAdminAction('BAN_USER', 'banned_users', userId, {
+        reason,
+        banned_by: currentUser.user.id
+      });
+
       toast.success('User banned successfully');
-      fetchUsers();
+      await fetchUsers(); // Refresh the list
     } catch (error) {
-      console.error('Error banning user:', error);
       toast.error('Failed to ban user');
     }
   };
 
-  const unbanUser = async (userId: string) => {
+  const handleUnbanUser = async (userId: string) => {
     try {
       const { error } = await supabase
         .from('banned_users')
@@ -78,40 +91,98 @@ export const useUserManagement = () => {
 
       if (error) throw error;
 
+      // Audit log the action
+      await logAdminAction('UNBAN_USER', 'banned_users', userId);
+
       toast.success('User unbanned successfully');
-      fetchUsers();
+      await fetchUsers(); // Refresh the list
     } catch (error) {
-      console.error('Error unbanning user:', error);
       toast.error('Failed to unban user');
     }
   };
 
-  const deleteUser = async (userId: string) => {
+  const handleDeleteUser = async (userId: string) => {
     try {
-      // Use Supabase admin API to delete user from auth.users
-      // This will cascade delete from all related tables including profiles
-      const { error } = await supabase.auth.admin.deleteUser(userId);
+      // Instead of hard deletion, we'll deactivate the user
+      // by updating their profile and banning them permanently
+      const { data: currentUser } = await supabase.auth.getUser();
+      if (!currentUser.user) throw new Error('Not authenticated');
 
-      if (error) throw error;
+      // Mark user as deleted by updating their profile
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .update({ 
+          email: `deleted_${userId}@deleted.local`,
+          profile_name: 'Deleted User',
+          full_name: 'Deleted User'
+        })
+        .eq('id', userId);
 
-      toast.success('User deleted successfully');
-      fetchUsers();
+      if (profileError) throw profileError;
+
+      // Add a permanent ban record
+      await supabase
+        .from('banned_users')
+        .upsert({
+          user_id: userId,
+          banned_by: currentUser.user.id,
+          reason: 'Account deleted by admin',
+          is_active: true
+        });
+
+      // Audit log the action
+      await logAdminAction('DELETE_USER', 'profiles', userId, {
+        action: 'soft_delete'
+      });
+
+      toast.success('User account deactivated successfully');
+      await fetchUsers(); // Refresh the list
     } catch (error) {
-      console.error('Error deleting user:', error);
-      toast.error('Failed to delete user. Make sure you have admin privileges.');
+      toast.error('Failed to delete user account');
     }
   };
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
+  // Helper function to log admin actions
+  const logAdminAction = async (
+    action: string, 
+    targetTable: string, 
+    targetId: string, 
+    values?: Record<string, any>
+  ) => {
+    try {
+      const { data: user } = await supabase.auth.getUser();
+      if (!user.user) return;
+
+      await supabase
+        .from('admin_audit_log')
+        .insert({
+          admin_user_id: user.user.id,
+          action,
+          target_table: targetTable,
+          target_id: targetId,
+          new_values: values || null,
+          ip_address: null, // Would need additional setup to capture
+          user_agent: navigator.userAgent
+        });
+    } catch (error) {
+      // Silent fail for audit logging to not interrupt main operations
+    }
+  };
+
+  const filteredUsers = users.filter(user =>
+    user.profile_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.full_name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return {
-    users,
+    users: filteredUsers,
+    searchTerm,
+    setSearchTerm,
     loading,
-    banUser,
-    unbanUser,
-    deleteUser,
-    fetchUsers
+    handleBanUser,
+    handleUnbanUser,
+    handleDeleteUser,
+    refetch: fetchUsers
   };
 };
