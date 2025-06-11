@@ -69,6 +69,12 @@ const ListingManagement = () => {
 
   const deleteListing = async (listingId: string) => {
     try {
+      // First delete related records that might reference this listing
+      await supabase.from('favorites').delete().eq('listing_id', listingId);
+      await supabase.from('cart_items').delete().eq('listing_id', listingId);
+      await supabase.from('conversations').delete().eq('listing_id', listingId);
+      
+      // Then delete the listing itself
       const { error } = await supabase
         .from('listings')
         .delete()
