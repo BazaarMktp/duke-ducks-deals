@@ -27,11 +27,25 @@ type Profile = {
   full_name?: string;
 };
 
+// Define the structure for stats
+type Stats = {
+  activeListings: number;
+  totalUsers: number;
+  totalDonations: number;
+  totalMessages: number;
+};
+
 const Home = () => {
   const { user } = useAuth();
   const [featuredListings, setFeaturedListings] = useState<(Listing & { seller?: string })[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [profiles, setProfiles] = useState<Record<string, Profile>>({});
+  const [stats, setStats] = useState<Stats>({
+    activeListings: 0,
+    totalUsers: 0,
+    totalDonations: 0,
+    totalMessages: 0
+  });
 
   const categories = [
     {
@@ -64,18 +78,12 @@ const Home = () => {
     }
   ];
 
-  const stats = [
-    { label: "Active Listings", value: "1,234" },
-    { label: "Happy Students", value: "5,678" },
-    { label: "Items Sold", value: "2,456" },
-    { label: "Services Provided", value: "892" }
-  ];
-
   // Fetch featured listings when component mounts
   useEffect(() => {
     if (user) {
       fetchFeaturedListings();
     }
+    fetchStats();
   }, [user]);
 
   // Fetch profiles for all user IDs in the listings
@@ -85,12 +93,48 @@ const Home = () => {
     }
   }, [featuredListings]);
 
+  const fetchStats = async () => {
+    try {
+      // Fetch active listings count
+      const { count: listingsCount } = await supabase
+        .from('listings')
+        .select('*', { count: 'exact', head: true })
+        .eq('status', 'active');
+
+      // Fetch total users count
+      const { count: usersCount } = await supabase
+        .from('profiles')
+        .select('*', { count: 'exact', head: true });
+
+      // Fetch donations count
+      const { count: donationsCount } = await supabase
+        .from('donations')
+        .select('*', { count: 'exact', head: true });
+
+      // Fetch messages count
+      const { count: messagesCount } = await supabase
+        .from('messages')
+        .select('*', { count: 'exact', head: true });
+
+      setStats({
+        activeListings: listingsCount || 0,
+        totalUsers: usersCount || 0,
+        totalDonations: donationsCount || 0,
+        totalMessages: messagesCount || 0
+      });
+    } catch (error) {
+      console.error('Error fetching stats:', error);
+    }
+  };
+
   const fetchFeaturedListings = async () => {
     try {
       setIsLoading(true);
       const { data, error } = await supabase
         .from('listings')
         .select('*')
+        .eq('status', 'active')
+        .neq('user_id', user?.id) // Exclude current user's listings
         .order('created_at', { ascending: false })
         .limit(4);
 
@@ -137,6 +181,13 @@ const Home = () => {
       console.error('Error fetching seller profiles:', error);
     }
   };
+
+  const statsDisplay = [
+    { label: "Active Listings", value: stats.activeListings.toString() },
+    { label: "Students", value: stats.totalUsers.toString() },
+    { label: "Donations", value: stats.totalDonations.toString() },
+    { label: "Messages", value: stats.totalMessages.toString() }
+  ];
 
   // If user is logged in, show the dashboard view
   if (user) {
@@ -243,7 +294,7 @@ const Home = () => {
           <div className="container mx-auto px-4">
             <h2 className="text-2xl font-bold mb-6 text-center">Bazaar Stats</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              {stats.map((stat, index) => (
+              {statsDisplay.map((stat, index) => (
                 <div key={index} className="text-center">
                   <div className="text-2xl md:text-3xl font-bold text-blue-600 mb-2">
                     {stat.value}
@@ -299,7 +350,7 @@ const Home = () => {
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
+            {statsDisplay.map((stat, index) => (
               <div key={index} className="text-center">
                 <div className="text-3xl md:text-4xl font-bold text-blue-600 mb-2">
                   {stat.value}
