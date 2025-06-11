@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -467,5 +468,3 @@ const Home = () => {
 };
 
 export default Home;
-
-</edits_to_apply>
