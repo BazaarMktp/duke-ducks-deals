@@ -6,10 +6,18 @@ import { useHomeData } from "./home/hooks/useHomeData";
 
 const Home = () => {
   const { user } = useAuth();
-  const { stats } = useHomeData(user);
+  const { featuredListings, featuredRequests, isLoading, stats } = useHomeData(user);
 
   if (user) {
-    return <Dashboard user={user} />;
+    return (
+      <Dashboard 
+        user={user}
+        featuredListings={featuredListings}
+        featuredRequests={featuredRequests}
+        isLoading={isLoading}
+        stats={stats}
+      />
+    );
   }
 
   return <MarketingPage stats={stats} />;

@@ -4,15 +4,23 @@ import { QuickActions } from "./QuickActions";
 import { FeaturedItems } from "./FeaturedItems";
 import { FeaturedRequests } from "./FeaturedRequests";
 import { StatsSection } from "./StatsSection";
-import { useHomeData } from "../hooks/useHomeData";
+import { Stats, Listing } from "../types";
 
 interface DashboardProps {
   user: any;
+  featuredListings: (Listing & { seller?: string })[];
+  featuredRequests: (Listing & { requester?: string })[];
+  isLoading: boolean;
+  stats: Stats;
 }
 
-export const Dashboard = ({ user }: DashboardProps) => {
-  const { featuredListings, featuredRequests, isLoading, stats } = useHomeData(user);
-
+export const Dashboard = ({ 
+  user, 
+  featuredListings, 
+  featuredRequests, 
+  isLoading, 
+  stats 
+}: DashboardProps) => {
   return (
     <div className="min-h-screen bg-gray-50">
       <WelcomeSection user={user} />
