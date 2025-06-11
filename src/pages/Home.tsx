@@ -441,7 +441,7 @@ const Home = () => {
               </Button>
             </Link>
             <Link to="/auth">
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600">
+              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-purple-700 bg-transparent">
                 Join Bazaar
               </Button>
             </Link>
@@ -553,3 +553,5 @@ const Home = () => {
 };
 
 export default Home;
+
+}
