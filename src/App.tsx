@@ -44,14 +44,12 @@ function App() {
           <Route path="/donations" element={<Donations />} />
           
           {/* Protected routes */}
-          <Route element={<ProtectedRoute />}>
-            <Route path="/messages" element={<Messages />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/favorites" element={<Favorites />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/my-listings" element={<MyListings />} />
-            <Route path="/settings" element={<Settings />} />
-          </Route>
+          <Route path="/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
+          <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
+          <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
+          <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path="/my-listings" element={<ProtectedRoute><MyListings /></ProtectedRoute>} />
+          <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
           
           <Route path="*" element={<NotFound />} />
         </Routes>
