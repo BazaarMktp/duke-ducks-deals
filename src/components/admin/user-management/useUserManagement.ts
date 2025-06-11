@@ -11,24 +11,51 @@ export const useUserManagement = () => {
 
   const fetchUsers = async () => {
     try {
+      console.log('Fetching users...');
       setLoading(true);
-      const { data, error } = await supabase
+      
+      // First fetch all profiles
+      const { data: profiles, error: profilesError } = await supabase
         .from('profiles')
-        .select(`
-          *,
-          user_roles(role),
-          banned_users(is_active, reason, banned_at)
-        `)
+        .select('*')
         .order('created_at', { ascending: false });
 
-      if (error) {
-        throw error;
+      if (profilesError) {
+        console.error('Error fetching profiles:', profilesError);
+        throw profilesError;
       }
 
-      setUsers(data || []);
+      console.log('Profiles fetched:', profiles?.length);
+
+      // Then fetch banned users separately
+      const { data: bannedUsers, error: bannedError } = await supabase
+        .from('banned_users')
+        .select('user_id, is_active, reason, banned_at')
+        .eq('is_active', true);
+
+      if (bannedError) {
+        console.error('Error fetching banned users:', bannedError);
+        // Don't throw here, just log the error and continue without banned data
+      }
+
+      console.log('Banned users fetched:', bannedUsers?.length);
+
+      // Combine the data
+      const usersWithBanStatus = profiles?.map(profile => {
+        const banInfo = bannedUsers?.find(ban => ban.user_id === profile.id);
+        return {
+          ...profile,
+          is_banned: !!banInfo?.is_active,
+          ban_reason: banInfo?.reason,
+          banned_at: banInfo?.banned_at
+        };
+      }) || [];
+
+      console.log('Users with ban status:', usersWithBanStatus.length);
+      setUsers(usersWithBanStatus);
     } catch (error) {
-      // Secure error logging - don't expose sensitive details
-      toast.error('Failed to fetch users');
+      console.error('Failed to fetch users:', error);
+      toast.error('Failed to fetch users. Please check your permissions.');
     } finally {
       setLoading(false);
     }
@@ -68,15 +95,10 @@ export const useUserManagement = () => {
 
       if (error) throw error;
 
-      // TODO: Add audit logging once database types are updated
-      // await logAdminAction('BAN_USER', 'banned_users', userId, {
-      //   reason,
-      //   banned_by: currentUser.user.id
-      // });
-
       toast.success('User banned successfully');
       await fetchUsers(); // Refresh the list
     } catch (error) {
+      console.error('Error banning user:', error);
       toast.error('Failed to ban user');
     }
   };
@@ -91,12 +113,10 @@ export const useUserManagement = () => {
 
       if (error) throw error;
 
-      // TODO: Add audit logging once database types are updated
-      // await logAdminAction('UNBAN_USER', 'banned_users', userId);
-
       toast.success('User unbanned successfully');
       await fetchUsers(); // Refresh the list
     } catch (error) {
+      console.error('Error unbanning user:', error);
       toast.error('Failed to unban user');
     }
   };
@@ -130,22 +150,18 @@ export const useUserManagement = () => {
           is_active: true
         });
 
-      // TODO: Add audit logging once database types are updated
-      // await logAdminAction('DELETE_USER', 'profiles', userId, {
-      //   action: 'soft_delete'
-      // });
-
       toast.success('User account deactivated successfully');
       await fetchUsers(); // Refresh the list
     } catch (error) {
+      console.error('Error deleting user:', error);
       toast.error('Failed to delete user account');
     }
   };
 
   const filteredUsers = users.filter(user =>
-    user.profile_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.full_name.toLowerCase().includes(searchTerm.toLowerCase())
+    user.profile_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    user.full_name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return {
