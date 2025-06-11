@@ -1,14 +1,14 @@
+
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Search, Users, Heart, MessageCircle, Star } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import PostingForm from "@/components/PostingForm";
+import ServicesHeader from "@/components/services/ServicesHeader";
+import ServicesSearch from "@/components/services/ServicesSearch";
+import ServicesCategories from "@/components/services/ServicesCategories";
+import ServicesList from "@/components/services/ServicesList";
 
 interface ServiceListing {
   id: string;
@@ -169,95 +169,25 @@ const Services = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Services</h1>
-        {user && (
-          <Button onClick={() => setShowPostingForm(true)}>+ Post Service</Button>
-        )}
-      </div>
+      <ServicesHeader 
+        user={user} 
+        onPostService={() => setShowPostingForm(true)} 
+      />
 
-      {/* Search */}
-      <div className="mb-6">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-          <Input
-            placeholder="Search services..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10"
-          />
-        </div>
-      </div>
+      <ServicesSearch 
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+      />
 
-      {/* Service Categories */}
-      <div className="mb-6">
-        <h3 className="text-lg font-semibold mb-3">Popular Categories</h3>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-          {serviceCategories.map((category) => (
-            <Card key={category} className="p-4 text-center hover:shadow-md cursor-pointer transition-shadow">
-              <Users className="mx-auto mb-2 text-blue-600" size={24} />
-              <p className="text-sm font-medium">{category}</p>
-            </Card>
-          ))}
-        </div>
-      </div>
+      <ServicesCategories categories={serviceCategories} />
 
-      {/* Services Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredListings.map((listing) => (
-          <Card key={listing.id} className="hover:shadow-lg transition-shadow">
-            <CardContent className="p-4">
-              <div className="flex justify-between items-start mb-3">
-                <Link to={`/services/${listing.id}`}>
-                  <CardTitle className="text-lg hover:text-blue-600 transition-colors">{listing.title}</CardTitle>
-                </Link>
-                <div className="flex items-center text-yellow-500">
-                  <Star size={16} className="fill-current" />
-                  <span className="text-sm ml-1">4.8</span>
-                </div>
-              </div>
-              <p className="text-sm text-muted-foreground mb-2">by {listing.profiles?.profile_name}</p>
-              <p className="text-sm mb-3 line-clamp-3">{listing.description}</p>
-              <div className="flex justify-between items-center mb-3">
-                <p className="text-xl font-bold text-green-600">${listing.price}/hour</p>
-                <Badge variant="outline">Available</Badge>
-              </div>
-              <div className="flex gap-2">
-                {user && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => toggleFavorite(listing.id)}
-                    className={favorites.includes(listing.id) ? "text-red-500" : ""}
-                  >
-                    <Heart size={16} className={favorites.includes(listing.id) ? "fill-current" : ""} />
-                  </Button>
-                )}
-                <Link to={`/services/${listing.id}`} className="flex-1">
-                  <Button size="sm" className="w-full">
-                    Contact Provider
-                  </Button>
-                </Link>
-                {user && listing.user_id !== user.id && (
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => startConversation(listing)}
-                  >
-                    <MessageCircle size={16} />
-                  </Button>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {filteredListings.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-gray-500">No services found matching your criteria.</p>
-        </div>
-      )}
+      <ServicesList
+        listings={filteredListings}
+        user={user}
+        favorites={favorites}
+        onToggleFavorite={toggleFavorite}
+        onStartConversation={startConversation}
+      />
 
       {showPostingForm && (
         <PostingForm
