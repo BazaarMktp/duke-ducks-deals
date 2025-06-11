@@ -1,12 +1,37 @@
 
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ShoppingCart, MapPin, Users, Gift, TrendingUp, MessageCircle, Plus } from "lucide-react";
+import { ShoppingCart, MapPin, Users, Gift, TrendingUp, MessageCircle, Plus, Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+
+// Define the structure of a listing
+type Listing = {
+  id: string;
+  title: string;
+  description?: string;
+  price?: number;
+  category: 'marketplace' | 'housing' | 'services';
+  images?: string[];
+  user_id: string;
+  created_at: string;
+  featured: boolean;
+};
+
+// Define the structure of a user profile
+type Profile = {
+  id: string;
+  profile_name?: string;
+  full_name?: string;
+};
 
 const Home = () => {
   const { user } = useAuth();
+  const [featuredListings, setFeaturedListings] = useState<(Listing & { seller?: string })[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [profiles, setProfiles] = useState<Record<string, Profile>>({});
 
   const categories = [
     {
@@ -46,57 +71,94 @@ const Home = () => {
     { label: "Services Provided", value: "892" }
   ];
 
-  // Mock featured items for logged-in users
-  const featuredItems = [
-    {
-      id: 1,
-      title: "MacBook Pro 2021",
-      price: "$1,200",
-      category: "Electronics",
-      image: "/placeholder.svg",
-      seller: "John D."
-    },
-    {
-      id: 2,
-      title: "Single Room Available",
-      price: "$800/month",
-      category: "Housing",
-      image: "/placeholder.svg",
-      seller: "Sarah M."
-    },
-    {
-      id: 3,
-      title: "Math Tutoring",
-      price: "$25/hour",
-      category: "Services",
-      image: "/placeholder.svg",
-      seller: "Mike R."
-    },
-    {
-      id: 4,
-      title: "Free Textbooks",
-      price: "Free",
-      category: "Donations",
-      image: "/placeholder.svg",
-      seller: "Lisa K."
+  // Fetch featured listings when component mounts
+  useEffect(() => {
+    if (user) {
+      fetchFeaturedListings();
     }
-  ];
+  }, [user]);
+
+  // Fetch profiles for all user IDs in the listings
+  useEffect(() => {
+    if (featuredListings.length > 0) {
+      fetchSellerProfiles();
+    }
+  }, [featuredListings]);
+
+  const fetchFeaturedListings = async () => {
+    try {
+      setIsLoading(true);
+      const { data, error } = await supabase
+        .from('listings')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(4);
+
+      if (error) throw error;
+      setFeaturedListings(data || []);
+    } catch (error) {
+      console.error('Error fetching featured listings:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchSellerProfiles = async () => {
+    try {
+      // Extract unique user IDs from listings
+      const userIds = [...new Set(featuredListings.map(item => item.user_id))];
+      
+      if (userIds.length === 0) return;
+
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('id, profile_name, full_name')
+        .in('id', userIds);
+
+      if (error) throw error;
+
+      // Create a map of user_id to profile information
+      const profileMap: Record<string, Profile> = {};
+      data?.forEach(profile => {
+        profileMap[profile.id] = profile;
+      });
+
+      setProfiles(profileMap);
+      
+      // Update featuredListings with seller names
+      setFeaturedListings(prev => 
+        prev.map(listing => {
+          const profile = profileMap[listing.user_id];
+          const sellerName = profile?.profile_name || profile?.full_name || 'Unknown seller';
+          return { ...listing, seller: sellerName };
+        })
+      );
+    } catch (error) {
+      console.error('Error fetching seller profiles:', error);
+    }
+  };
 
   // If user is logged in, show the dashboard view
   if (user) {
     return (
       <div className="min-h-screen bg-gray-50">
-        {/* Welcome Section */}
-        <section className="bg-white py-8 border-b">
-          <div className="container mx-auto px-4">
+        {/* Welcome Section with Background Image */}
+        <section className="relative bg-blue-600 py-8 border-b">
+          <div 
+            className="absolute inset-0 bg-cover bg-center opacity-20"
+            style={{
+              backgroundImage: `url('/lovable-uploads/b78b0861-a175-4fd0-835e-08d13103ea11.png')`
+            }}
+          />
+          <div className="container relative mx-auto px-4">
             <div className="flex justify-between items-center">
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">
+                <h1 className="text-3xl font-bold text-white">
                   Welcome back, {user.user_metadata?.profile_name || user.email?.split('@')[0]}!
                 </h1>
-                <p className="text-gray-600 mt-2">What would you like to do today?</p>
+                <p className="text-blue-100 mt-2">What would you like to do today?</p>
               </div>
-              <Button className="flex items-center space-x-2">
+              <Button className="flex items-center space-x-2 bg-white text-blue-600 hover:bg-blue-50">
                 <Plus size={16} />
                 <span>Create Listing</span>
               </Button>
@@ -134,25 +196,45 @@ const Home = () => {
               </Link>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {featuredItems.map((item) => (
-                <Card key={item.id} className="hover:shadow-lg transition-shadow">
-                  <CardHeader className="p-0">
-                    <img 
-                      src={item.image} 
-                      alt={item.title}
-                      className="w-full h-48 object-cover rounded-t-lg"
-                    />
-                  </CardHeader>
-                  <CardContent className="p-4">
-                    <h3 className="font-semibold mb-2">{item.title}</h3>
-                    <p className="text-blue-600 font-bold mb-1">{item.price}</p>
-                    <p className="text-sm text-gray-600 mb-2">{item.category}</p>
-                    <p className="text-sm text-gray-500">by {item.seller}</p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+            {isLoading ? (
+              <div className="flex justify-center py-12">
+                <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+              </div>
+            ) : featuredListings.length === 0 ? (
+              <Card>
+                <CardContent className="py-12 text-center">
+                  <p className="text-gray-500">No listings available at the moment.</p>
+                </CardContent>
+              </Card>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {featuredListings.map((item) => (
+                  <Card key={item.id} className="hover:shadow-lg transition-shadow">
+                    <div className="h-48 bg-gray-100">
+                      {item.images && item.images.length > 0 ? (
+                        <img 
+                          src={item.images[0]} 
+                          alt={item.title}
+                          className="w-full h-full object-cover rounded-t-lg"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                          <span className="text-gray-400">No image</span>
+                        </div>
+                      )}
+                    </div>
+                    <CardContent className="p-4">
+                      <h3 className="font-semibold mb-2 line-clamp-1">{item.title}</h3>
+                      <p className="text-blue-600 font-bold mb-1">
+                        {item.price !== undefined ? `$${item.price.toFixed(2)}` : 'Contact for price'}
+                      </p>
+                      <p className="text-sm text-gray-600 mb-2 line-clamp-2">{item.description || 'No description available'}</p>
+                      <p className="text-sm text-gray-500">by {item.seller || 'Unknown'}</p>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
           </div>
         </section>
 

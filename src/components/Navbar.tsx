@@ -13,9 +13,20 @@ import {
   Heart,
   Menu,
   X,
-  LogOut
+  LogOut,
+  User,
+  Settings,
+  ListFilter
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -95,15 +106,43 @@ const Navbar = () => {
                 </Link>
                 <div className="flex items-center space-x-3">
                   <div className="flex items-center space-x-2">
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src={user?.user_metadata?.avatar_url} />
-                      <AvatarFallback>{getUserInitials()}</AvatarFallback>
-                    </Avatar>
                     <span className="text-sm text-gray-700">Hi, {getUserDisplayName()}</span>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Avatar className="h-8 w-8 cursor-pointer">
+                          <AvatarImage src={user?.user_metadata?.avatar_url} />
+                          <AvatarFallback>{getUserInitials()}</AvatarFallback>
+                        </Avatar>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem asChild>
+                          <Link to="/profile" className="flex items-center w-full">
+                            <User size={16} className="mr-2" />
+                            Profile
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link to="/my-listings" className="flex items-center w-full">
+                            <ListFilter size={16} className="mr-2" />
+                            My Listings
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link to="/settings" className="flex items-center w-full">
+                            <Settings size={16} className="mr-2" />
+                            Settings
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={handleSignOut} className="flex items-center">
+                          <LogOut size={16} className="mr-2" />
+                          Sign Out
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </div>
-                  <Button variant="outline" size="sm" onClick={handleSignOut}>
-                    <LogOut size={16} />
-                  </Button>
                 </div>
               </>
             ) : (
@@ -152,6 +191,26 @@ const Navbar = () => {
                 <span>{item.name}</span>
               </Link>
             ))}
+            {user && (
+              <>
+                <Link
+                  to="/profile"
+                  className="flex items-center space-x-2 py-2 text-gray-600 hover:text-blue-600 transition-colors"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <User size={16} />
+                  <span>Profile</span>
+                </Link>
+                <Link
+                  to="/my-listings"
+                  className="flex items-center space-x-2 py-2 text-gray-600 hover:text-blue-600 transition-colors"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <ListFilter size={16} />
+                  <span>My Listings</span>
+                </Link>
+              </>
+            )}
             <div className="pt-4 space-y-2">
               {user ? (
                 <Button variant="outline" className="w-full" onClick={handleSignOut}>
