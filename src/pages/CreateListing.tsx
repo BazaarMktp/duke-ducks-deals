@@ -12,16 +12,13 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import ImageUpload from "@/components/ImageUpload";
 
-interface CreateListingProps {
-  category: 'marketplace' | 'housing' | 'services';
-}
-
-const CreateListing: React.FC<CreateListingProps> = ({ category }) => {
+const CreateListing = () => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     price: "",
     location: "",
+    category: "marketplace" as 'marketplace' | 'housing' | 'services',
     housingType: "",
     images: [] as string[]
   });
@@ -40,12 +37,12 @@ const CreateListing: React.FC<CreateListingProps> = ({ category }) => {
         title: formData.title,
         description: formData.description,
         price: formData.price ? parseFloat(formData.price) : null,
-        category,
+        category: formData.category,
         location: formData.location || null,
         images: formData.images.length > 0 ? formData.images : null,
       };
 
-      if (category === 'housing' && formData.housingType) {
+      if (formData.category === 'housing' && formData.housingType) {
         insertData.housing_type = formData.housingType;
       }
 
@@ -55,7 +52,7 @@ const CreateListing: React.FC<CreateListingProps> = ({ category }) => {
 
       if (error) throw error;
 
-      toast.success(`Your ${category} listing has been posted successfully.`);
+      toast.success(`Your ${formData.category} listing has been posted successfully.`);
       navigate('/my-listings');
     } catch (error) {
       console.error('Error creating listing:', error);
@@ -78,11 +75,25 @@ const CreateListing: React.FC<CreateListingProps> = ({ category }) => {
       <Card className="max-w-2xl mx-auto">
         <CardHeader>
           <CardTitle>
-            Create New {category === 'marketplace' ? 'Item' : category === 'housing' ? 'Housing' : 'Service'} Listing
+            Create New Listing
           </CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <Label htmlFor="category">Category</Label>
+              <Select value={formData.category} onValueChange={(value) => handleInputChange("category", value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="marketplace">Marketplace</SelectItem>
+                  <SelectItem value="housing">Housing</SelectItem>
+                  <SelectItem value="services">Services</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
             <div>
               <Label htmlFor="title">Title</Label>
               <Input
@@ -90,7 +101,7 @@ const CreateListing: React.FC<CreateListingProps> = ({ category }) => {
                 value={formData.title}
                 onChange={(e) => handleInputChange("title", e.target.value)}
                 required
-                placeholder={`Enter ${category} title...`}
+                placeholder={`Enter ${formData.category} title...`}
               />
             </div>
 
@@ -114,7 +125,7 @@ const CreateListing: React.FC<CreateListingProps> = ({ category }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="price">
-                  Price {category === 'services' ? '(per hour)' : category === 'housing' ? '(per month)' : ''}
+                  Price {formData.category === 'services' ? '(per hour)' : formData.category === 'housing' ? '(per month)' : ''}
                 </Label>
                 <Input
                   id="price"
@@ -137,7 +148,7 @@ const CreateListing: React.FC<CreateListingProps> = ({ category }) => {
               </div>
             </div>
 
-            {category === 'housing' && (
+            {formData.category === 'housing' && (
               <div>
                 <Label htmlFor="housingType">Housing Type</Label>
                 <Select onValueChange={(value) => handleInputChange("housingType", value)}>

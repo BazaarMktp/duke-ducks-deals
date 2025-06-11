@@ -13,17 +13,14 @@ import { toast } from "sonner";
 import ImageUpload from "@/components/ImageUpload";
 import { Loader2 } from "lucide-react";
 
-interface EditListingProps {
-  category: 'marketplace' | 'housing' | 'services';
-}
-
-const EditListing: React.FC<EditListingProps> = ({ category }) => {
+const EditListing = () => {
   const { id } = useParams<{ id: string }>();
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     price: "",
     location: "",
+    category: "marketplace" as 'marketplace' | 'housing' | 'services',
     housingType: "",
     images: [] as string[]
   });
@@ -56,6 +53,7 @@ const EditListing: React.FC<EditListingProps> = ({ category }) => {
           description: data.description || "",
           price: data.price ? data.price.toString() : "",
           location: data.location || "",
+          category: data.category || "marketplace",
           housingType: data.housing_type || "",
           images: data.images || []
         });
@@ -79,12 +77,13 @@ const EditListing: React.FC<EditListingProps> = ({ category }) => {
         title: formData.title,
         description: formData.description,
         price: formData.price ? parseFloat(formData.price) : null,
+        category: formData.category,
         location: formData.location || null,
         images: formData.images.length > 0 ? formData.images : null,
         updated_at: new Date().toISOString()
       };
 
-      if (category === 'housing' && formData.housingType) {
+      if (formData.category === 'housing' && formData.housingType) {
         updateData.housing_type = formData.housingType;
       }
 
@@ -129,11 +128,25 @@ const EditListing: React.FC<EditListingProps> = ({ category }) => {
       <Card className="max-w-2xl mx-auto">
         <CardHeader>
           <CardTitle>
-            Edit {category === 'marketplace' ? 'Item' : category === 'housing' ? 'Housing' : 'Service'} Listing
+            Edit Listing
           </CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <Label htmlFor="category">Category</Label>
+              <Select value={formData.category} onValueChange={(value) => handleInputChange("category", value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="marketplace">Marketplace</SelectItem>
+                  <SelectItem value="housing">Housing</SelectItem>
+                  <SelectItem value="services">Services</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
             <div>
               <Label htmlFor="title">Title</Label>
               <Input
@@ -141,7 +154,7 @@ const EditListing: React.FC<EditListingProps> = ({ category }) => {
                 value={formData.title}
                 onChange={(e) => handleInputChange("title", e.target.value)}
                 required
-                placeholder={`Enter ${category} title...`}
+                placeholder={`Enter ${formData.category} title...`}
               />
             </div>
 
@@ -165,7 +178,7 @@ const EditListing: React.FC<EditListingProps> = ({ category }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="price">
-                  Price {category === 'services' ? '(per hour)' : category === 'housing' ? '(per month)' : ''}
+                  Price {formData.category === 'services' ? '(per hour)' : formData.category === 'housing' ? '(per month)' : ''}
                 </Label>
                 <Input
                   id="price"
@@ -188,7 +201,7 @@ const EditListing: React.FC<EditListingProps> = ({ category }) => {
               </div>
             </div>
 
-            {category === 'housing' && (
+            {formData.category === 'housing' && (
               <div>
                 <Label htmlFor="housingType">Housing Type</Label>
                 <Select value={formData.housingType} onValueChange={(value) => handleInputChange("housingType", value)}>
