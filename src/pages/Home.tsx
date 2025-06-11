@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -84,6 +83,33 @@ const Home = () => {
       fetchFeaturedListings();
     }
     fetchStats();
+  }, [user]);
+
+  // Set up real-time subscription for listings updates
+  useEffect(() => {
+    if (!user) return;
+
+    const channel = supabase
+      .channel('listings-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*', // Listen to all events (INSERT, UPDATE, DELETE)
+          schema: 'public',
+          table: 'listings'
+        },
+        (payload) => {
+          console.log('Listings changed:', payload);
+          // Refetch featured listings when any listing changes
+          fetchFeaturedListings();
+          fetchStats(); // Also update stats
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [user]);
 
   // Fetch profiles for all user IDs in the listings
@@ -450,3 +476,5 @@ const Home = () => {
 };
 
 export default Home;
+
+</edits_to_apply>
