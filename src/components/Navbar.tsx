@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
   Home, 
   ShoppingCart, 
@@ -32,6 +33,23 @@ const Navbar = () => {
 
   const handleSignOut = async () => {
     await signOut();
+  };
+
+  // Get user's profile name or email for greeting
+  const getUserDisplayName = () => {
+    if (user?.user_metadata?.profile_name) {
+      return user.user_metadata.profile_name;
+    }
+    if (user?.email) {
+      return user.email.split('@')[0];
+    }
+    return 'User';
+  };
+
+  // Get user's initials for avatar fallback
+  const getUserInitials = () => {
+    const name = getUserDisplayName();
+    return name.slice(0, 2).toUpperCase();
   };
 
   return (
@@ -75,10 +93,14 @@ const Navbar = () => {
               </Button>
             </Link>
             {user ? (
-              <div className="flex items-center space-x-2">
-                <Button variant="ghost" size="sm">
-                  <User size={16} />
-                </Button>
+              <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-2">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={user?.user_metadata?.avatar_url} />
+                    <AvatarFallback>{getUserInitials()}</AvatarFallback>
+                  </Avatar>
+                  <span className="text-sm text-gray-700">Hi, {getUserDisplayName()}</span>
+                </div>
                 <Button variant="outline" size="sm" onClick={handleSignOut}>
                   <LogOut size={16} />
                 </Button>
@@ -109,6 +131,15 @@ const Navbar = () => {
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <div className="md:hidden py-4 space-y-2">
+            {user && (
+              <div className="flex items-center space-x-2 py-2 border-b">
+                <Avatar className="h-8 w-8">
+                  <AvatarImage src={user?.user_metadata?.avatar_url} />
+                  <AvatarFallback>{getUserInitials()}</AvatarFallback>
+                </Avatar>
+                <span className="text-sm text-gray-700">Hi, {getUserDisplayName()}</span>
+              </div>
+            )}
             {navigation.map((item) => (
               <Link
                 key={item.name}

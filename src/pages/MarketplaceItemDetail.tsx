@@ -1,6 +1,5 @@
-
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -26,6 +25,7 @@ interface Product {
 
 const MarketplaceItemDetail = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -183,8 +183,11 @@ const MarketplaceItemDetail = () => {
 
       toast({
         title: "Message sent!",
-        description: "Your interest has been sent to the seller.",
+        description: "Redirecting to chat...",
       });
+
+      // Redirect to chat
+      navigate('/messages');
 
     } catch (error) {
       console.error('Error starting conversation:', error);
