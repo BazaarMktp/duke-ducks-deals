@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { MapPin, Search, Heart, MessageCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 import PostingForm from "@/components/PostingForm";
 
 interface HousingListing {
@@ -31,6 +32,8 @@ const Housing = () => {
   const [loading, setLoading] = useState(true);
   const [showPostingForm, setShowPostingForm] = useState(false);
   const { user } = useAuth();
+  const navigate = useNavigate();
+  const { toast } = useToast();
 
   const housingTypes = ["All", "sublease", "for_rent", "roommate_wanted"];
 
@@ -97,6 +100,60 @@ const Housing = () => {
       }
     } catch (error) {
       console.error('Error toggling favorite:', error);
+    }
+  };
+
+  const startConversation = async (listing: HousingListing) => {
+    if (!user) return;
+
+    try {
+      const { data: existingConv } = await supabase
+        .from('conversations')
+        .select('id')
+        .eq('buyer_id', user.id)
+        .eq('seller_id', listing.user_id)
+        .eq('listing_id', listing.id)
+        .single();
+
+      let conversationId = existingConv?.id;
+
+      if (!conversationId) {
+        const { data: newConv, error: convError } = await supabase
+          .from('conversations')
+          .insert({
+            buyer_id: user.id,
+            seller_id: listing.user_id,
+            listing_id: listing.id
+          })
+          .select('id')
+          .single();
+
+        if (convError) throw convError;
+        conversationId = newConv.id;
+      }
+
+      await supabase
+        .from('messages')
+        .insert({
+          conversation_id: conversationId,
+          sender_id: user.id,
+          message: "I am interested"
+        });
+
+      toast({
+        title: "Message sent!",
+        description: "Redirecting to chat...",
+      });
+
+      navigate('/messages');
+
+    } catch (error) {
+      console.error('Error starting conversation:', error);
+      toast({
+        title: "Error",
+        description: "Failed to send message.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -210,8 +267,12 @@ const Housing = () => {
                     View Details
                   </Button>
                 </Link>
-                {user && (
-                  <Button variant="outline" size="sm">
+                {user && listing.user_id !== user.id && (
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => startConversation(listing)}
+                  >
                     <MessageCircle size={16} />
                   </Button>
                 )}
