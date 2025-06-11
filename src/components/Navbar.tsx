@@ -67,13 +67,12 @@ const Navbar = () => {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3">
+          <Link to="/" className="flex items-center">
             <img 
               src="/lovable-uploads/ab5a5857-7332-4da1-b76a-f8de90b92080.png" 
               alt="Bazaar Logo" 
-              className="h-8 w-auto"
+              className="h-12 w-auto"
             />
-            <span className="font-bold text-xl text-gray-900">Bazaar</span>
           </Link>
 
           {/* Desktop Navigation */}
