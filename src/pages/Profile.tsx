@@ -6,14 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import ProfilePictureUpload from "@/components/ProfilePictureUpload";
 
 const Profile = () => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [uploading, setUploading] = useState(false);
   const [profile, setProfile] = useState({
     full_name: "",
     profile_name: "",
@@ -46,7 +45,7 @@ const Profile = () => {
           profile_name: data.profile_name || "",
           email: data.email || user?.email || "",
           phone_number: data.phone_number || "",
-          avatar_url: user?.user_metadata?.avatar_url || "",
+          avatar_url: data.avatar_url || user?.user_metadata?.avatar_url || "",
         });
       }
     } catch (error) {
@@ -66,13 +65,14 @@ const Profile = () => {
         .update({
           full_name: profile.full_name,
           profile_name: profile.profile_name,
-          phone_number: profile.phone_number
+          phone_number: profile.phone_number,
+          avatar_url: profile.avatar_url
         })
         .eq("id", user?.id);
       
       if (error) throw error;
 
-      // Update user metadata for avatar_url
+      // Update user metadata
       if (user) {
         const { error: metadataError } = await supabase.auth.updateUser({
           data: { 
@@ -93,46 +93,8 @@ const Profile = () => {
     }
   };
 
-  const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    try {
-      if (!event.target.files || event.target.files.length === 0) {
-        return;
-      }
-      
-      setUploading(true);
-      const file = event.target.files[0];
-      const fileExt = file.name.split(".").pop();
-      const filePath = `${user?.id}/avatar.${fileExt}`;
-
-      // Check if storage bucket exists and create if not
-      const { data: bucketExists } = await supabase.storage.getBucket('avatars');
-      
-      if (!bucketExists) {
-        // If bucket doesn't exist yet, we'll assume it's handled by backend
-        toast.error("Avatar storage not configured. Please contact admin.");
-        return;
-      }
-
-      const { error: uploadError } = await supabase.storage
-        .from('avatars')
-        .upload(filePath, file, { upsert: true });
-
-      if (uploadError) throw uploadError;
-
-      const { data } = supabase.storage
-        .from('avatars')
-        .getPublicUrl(filePath);
-
-      if (data) {
-        setProfile(prev => ({ ...prev, avatar_url: data.publicUrl }));
-        toast.success("Avatar uploaded successfully");
-      }
-    } catch (error) {
-      console.error("Error uploading avatar:", error);
-      toast.error("Failed to upload avatar");
-    } finally {
-      setUploading(false);
-    }
+  const handleAvatarUpdate = (avatarUrl: string) => {
+    setProfile(prev => ({ ...prev, avatar_url: avatarUrl }));
   };
 
   if (!user) {
@@ -154,27 +116,11 @@ const Profile = () => {
           <CardTitle>Profile Settings</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="flex flex-col items-center space-y-4">
-            <Avatar className="h-24 w-24">
-              <AvatarImage src={profile.avatar_url} />
-              <AvatarFallback>
-                {profile.profile_name ? profile.profile_name.slice(0, 2).toUpperCase() : "U"}
-              </AvatarFallback>
-            </Avatar>
-            <div className="flex items-center space-x-2">
-              <Label htmlFor="avatar" className="cursor-pointer bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-                {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Change Avatar"}
-              </Label>
-              <Input 
-                id="avatar" 
-                type="file" 
-                className="hidden" 
-                accept="image/*"
-                onChange={handleAvatarUpload}
-                disabled={uploading}
-              />
-            </div>
-          </div>
+          <ProfilePictureUpload
+            currentAvatarUrl={profile.avatar_url}
+            profileName={profile.profile_name}
+            onAvatarUpdate={handleAvatarUpdate}
+          />
 
           <div className="space-y-4">
             <div className="space-y-2">

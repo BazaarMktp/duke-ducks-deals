@@ -50,24 +50,36 @@ export type Database = {
       }
       conversations: {
         Row: {
+          archived_by_buyer: boolean | null
+          archived_by_seller: boolean | null
           buyer_id: string
           created_at: string | null
+          deleted_by_buyer: boolean | null
+          deleted_by_seller: boolean | null
           id: string
           listing_id: string
           seller_id: string
           updated_at: string | null
         }
         Insert: {
+          archived_by_buyer?: boolean | null
+          archived_by_seller?: boolean | null
           buyer_id: string
           created_at?: string | null
+          deleted_by_buyer?: boolean | null
+          deleted_by_seller?: boolean | null
           id?: string
           listing_id: string
           seller_id: string
           updated_at?: string | null
         }
         Update: {
+          archived_by_buyer?: boolean | null
+          archived_by_seller?: boolean | null
           buyer_id?: string
           created_at?: string | null
+          deleted_by_buyer?: boolean | null
+          deleted_by_seller?: boolean | null
           id?: string
           listing_id?: string
           seller_id?: string
@@ -283,6 +295,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          avatar_url: string | null
           created_at: string | null
           email: string
           full_name: string
@@ -293,6 +306,7 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          avatar_url?: string | null
           created_at?: string | null
           email: string
           full_name: string
@@ -303,6 +317,7 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          avatar_url?: string | null
           created_at?: string | null
           email?: string
           full_name?: string

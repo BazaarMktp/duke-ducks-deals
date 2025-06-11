@@ -1,12 +1,17 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Send } from "lucide-react";
+import { Send, Archive, Trash2, MoreVertical } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface Message {
   id: string;
@@ -23,6 +28,10 @@ interface Conversation {
   buyer_id: string;
   seller_id: string;
   listing_id: string;
+  archived_by_buyer: boolean;
+  archived_by_seller: boolean;
+  deleted_by_buyer: boolean;
+  deleted_by_seller: boolean;
   listings: {
     title: string;
   };
@@ -40,6 +49,7 @@ const ChatInterface = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [loading, setLoading] = useState(true);
+  const [showArchived, setShowArchived] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
   const { toast } = useToast();
@@ -48,7 +58,7 @@ const ChatInterface = () => {
     if (user) {
       fetchConversations();
     }
-  }, [user]);
+  }, [user, showArchived]);
 
   useEffect(() => {
     if (selectedConversation) {
@@ -69,19 +79,38 @@ const ChatInterface = () => {
     if (!user) return;
 
     try {
-      const { data, error } = await supabase
+      let query = supabase
         .from('conversations')
         .select(`
           id,
           buyer_id,
           seller_id,
           listing_id,
+          archived_by_buyer,
+          archived_by_seller,
+          deleted_by_buyer,
+          deleted_by_seller,
           listings(title),
           buyer_profile:profiles!conversations_buyer_id_fkey(profile_name),
           seller_profile:profiles!conversations_seller_id_fkey(profile_name)
         `)
         .or(`buyer_id.eq.${user.id},seller_id.eq.${user.id}`)
         .order('updated_at', { ascending: false });
+
+      // Filter out deleted conversations
+      if (user.id) {
+        query = query.or(`deleted_by_buyer.eq.false,deleted_by_seller.eq.false`);
+        query = query.not('and', `buyer_id.eq.${user.id},deleted_by_buyer.eq.true`);
+        query = query.not('and', `seller_id.eq.${user.id},deleted_by_seller.eq.true`);
+      }
+
+      // Filter archived conversations based on toggle
+      if (!showArchived && user.id) {
+        query = query.not('and', `buyer_id.eq.${user.id},archived_by_buyer.eq.true`);
+        query = query.not('and', `seller_id.eq.${user.id},archived_by_seller.eq.true`);
+      }
+
+      const { data, error } = await query;
 
       if (error) throw error;
       setConversations(data || []);
@@ -158,6 +187,87 @@ const ChatInterface = () => {
     }
   };
 
+  const archiveConversation = async (conversationId: string) => {
+    if (!user) return;
+
+    try {
+      const conversation = conversations.find(c => c.id === conversationId);
+      if (!conversation) return;
+
+      const updateData = conversation.buyer_id === user.id 
+        ? { archived_by_buyer: true }
+        : { archived_by_seller: true };
+
+      const { error } = await supabase
+        .from('conversations')
+        .update(updateData)
+        .eq('id', conversationId);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Conversation archived successfully.",
+      });
+
+      fetchConversations();
+      if (selectedConversation === conversationId) {
+        setSelectedConversation(null);
+      }
+    } catch (error) {
+      console.error('Error archiving conversation:', error);
+      toast({
+        title: "Error",
+        description: "Failed to archive conversation.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const deleteConversation = async (conversationId: string) => {
+    if (!user) return;
+
+    try {
+      const conversation = conversations.find(c => c.id === conversationId);
+      if (!conversation) return;
+
+      const updateData = conversation.buyer_id === user.id 
+        ? { deleted_by_buyer: true }
+        : { deleted_by_seller: true };
+
+      const { error } = await supabase
+        .from('conversations')
+        .update(updateData)
+        .eq('id', conversationId);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Conversation deleted successfully.",
+      });
+
+      fetchConversations();
+      if (selectedConversation === conversationId) {
+        setSelectedConversation(null);
+      }
+    } catch (error) {
+      console.error('Error deleting conversation:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete conversation.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const isConversationArchived = (conversation: Conversation) => {
+    if (!user) return false;
+    return conversation.buyer_id === user.id 
+      ? conversation.archived_by_buyer 
+      : conversation.archived_by_seller;
+  };
+
   if (!user) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -178,31 +288,70 @@ const ChatInterface = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Messages</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold">Messages</h1>
+        <Button
+          variant={showArchived ? "default" : "outline"}
+          onClick={() => setShowArchived(!showArchived)}
+        >
+          {showArchived ? "Show Active" : "Show Archived"}
+        </Button>
+      </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[600px]">
         {/* Conversations List */}
         <Card className="md:col-span-1">
           <CardHeader>
-            <CardTitle>Conversations</CardTitle>
+            <CardTitle>{showArchived ? "Archived Conversations" : "Active Conversations"}</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
             {conversations.length === 0 ? (
-              <p className="p-4 text-gray-500 text-center">No conversations yet</p>
+              <p className="p-4 text-gray-500 text-center">
+                {showArchived ? "No archived conversations" : "No conversations yet"}
+              </p>
             ) : (
               <div className="space-y-2">
                 {conversations.map((conv) => (
                   <div
                     key={conv.id}
-                    className={`p-4 cursor-pointer hover:bg-gray-50 border-b ${
+                    className={`p-4 cursor-pointer hover:bg-gray-50 border-b flex justify-between items-center ${
                       selectedConversation === conv.id ? 'bg-blue-50' : ''
-                    }`}
-                    onClick={() => setSelectedConversation(conv.id)}
+                    } ${isConversationArchived(conv) ? 'opacity-75' : ''}`}
                   >
-                    <h4 className="font-semibold">{conv.listings.title}</h4>
-                    <p className="text-sm text-gray-600">
-                      with {conv.buyer_id === user.id ? conv.seller_profile.profile_name : conv.buyer_profile.profile_name}
-                    </p>
+                    <div 
+                      className="flex-1"
+                      onClick={() => setSelectedConversation(conv.id)}
+                    >
+                      <h4 className="font-semibold">{conv.listings.title}</h4>
+                      <p className="text-sm text-gray-600">
+                        with {conv.buyer_id === user.id ? conv.seller_profile.profile_name : conv.buyer_profile.profile_name}
+                      </p>
+                      {isConversationArchived(conv) && (
+                        <p className="text-xs text-gray-500">Archived</p>
+                      )}
+                    </div>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="sm">
+                          <MoreVertical size={16} />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        {!isConversationArchived(conv) && (
+                          <DropdownMenuItem onClick={() => archiveConversation(conv.id)}>
+                            <Archive className="mr-2 h-4 w-4" />
+                            Archive
+                          </DropdownMenuItem>
+                        )}
+                        <DropdownMenuItem 
+                          onClick={() => deleteConversation(conv.id)}
+                          className="text-red-600"
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </div>
                 ))}
               </div>
