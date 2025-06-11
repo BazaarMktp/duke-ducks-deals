@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -144,7 +145,7 @@ const HousingDetail = () => {
         .insert({
           conversation_id: conversationId,
           sender_id: user.id,
-          message: "I am interested in this housing listing"
+          message: "Hi, I am interested in this housing listing"
         });
 
       toast({
@@ -152,7 +153,6 @@ const HousingDetail = () => {
         description: "Redirecting to chat...",
       });
 
-      // Redirect to chat
       navigate('/messages');
 
     } catch (error) {
@@ -283,7 +283,7 @@ const HousingDetail = () => {
                 className="flex-1"
               >
                 <MessageCircle size={16} className="mr-2" />
-                Contact About Housing
+                Contact Now
               </Button>
             )}
           </div>

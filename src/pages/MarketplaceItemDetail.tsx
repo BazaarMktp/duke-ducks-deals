@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -178,7 +179,7 @@ const MarketplaceItemDetail = () => {
         .insert({
           conversation_id: conversationId,
           sender_id: user.id,
-          message: "I am interested in this item"
+          message: "Hi, I am interested in this item"
         });
 
       toast({
@@ -186,7 +187,6 @@ const MarketplaceItemDetail = () => {
         description: "Redirecting to chat...",
       });
 
-      // Redirect to chat
       navigate('/messages');
 
     } catch (error) {
@@ -311,11 +311,11 @@ const MarketplaceItemDetail = () => {
             )}
             {user && product.user_id !== user.id && (
               <Button 
-                variant="outline" 
                 onClick={startConversation}
+                variant="outline"
               >
                 <MessageCircle size={16} className="mr-2" />
-                Contact Seller
+                Contact Now
               </Button>
             )}
           </div>

@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -141,7 +142,7 @@ const ServiceDetail = () => {
         .insert({
           conversation_id: conversationId,
           sender_id: user.id,
-          message: "I am interested in your service"
+          message: "Hi, I am interested in your service"
         });
 
       toast({
@@ -149,7 +150,6 @@ const ServiceDetail = () => {
         description: "Redirecting to chat...",
       });
 
-      // Redirect to chat
       navigate('/messages');
 
     } catch (error) {
@@ -287,7 +287,7 @@ const ServiceDetail = () => {
                   size="lg"
                 >
                   <MessageCircle size={16} className="mr-2" />
-                  Contact Provider
+                  Contact Now
                 </Button>
               )}
               
