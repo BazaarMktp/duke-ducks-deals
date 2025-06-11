@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -11,6 +12,7 @@ const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [profileName, setProfileName] = useState("");
   const [phone, setPhone] = useState("");
@@ -48,6 +50,17 @@ const Auth = () => {
           navigate("/");
         }
       } else {
+        // Validate password confirmation
+        if (password !== confirmPassword) {
+          toast({
+            title: "Error",
+            description: "Passwords do not match",
+            variant: "destructive",
+          });
+          setLoading(false);
+          return;
+        }
+
         const { error } = await signUp(email, password, fullName, profileName);
         if (error) {
           toast({
@@ -144,6 +157,22 @@ const Auth = () => {
                 placeholder="Enter your password"
               />
             </div>
+            {!isLogin && (
+              <div>
+                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                  placeholder="Confirm your password"
+                />
+                {confirmPassword && password !== confirmPassword && (
+                  <p className="text-sm text-red-500 mt-1">Passwords do not match</p>
+                )}
+              </div>
+            )}
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? "Please wait..." : (isLogin ? "Sign In" : "Create Account")}
             </Button>
