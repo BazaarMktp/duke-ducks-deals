@@ -8,7 +8,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import HousingImageGallery from "@/components/housing/HousingImageGallery";
 import HousingInfo from "@/components/housing/HousingInfo";
-import { SellerInfo } from "@/components/marketplace/SellerInfo";
+import SellerInfo from "@/components/marketplace/SellerInfo";
 import HousingActions from "@/components/housing/HousingActions";
 
 interface HousingListing {
