@@ -34,29 +34,31 @@ export const FeaturedItems = ({ featuredListings, isLoading }: FeaturedItemsProp
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {featuredListings.map((item) => (
-              <Card key={item.id} className="hover:shadow-lg transition-shadow">
-                <div className="h-48 bg-gray-100">
-                  {item.images && item.images.length > 0 ? (
-                    <img 
-                      src={item.images[0]} 
-                      alt={item.title}
-                      className="w-full h-full object-cover rounded-t-lg"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gray-200">
-                      <span className="text-gray-400">No image</span>
-                    </div>
-                  )}
-                </div>
-                <CardContent className="p-4">
-                  <h3 className="font-semibold mb-2 line-clamp-1">{item.title}</h3>
-                  <p className="text-blue-600 font-bold mb-1">
-                    {item.price !== undefined ? `$${item.price.toFixed(2)}` : 'Contact for price'}
-                  </p>
-                  <p className="text-sm text-gray-600 mb-2 line-clamp-2">{item.description || 'No description available'}</p>
-                  <p className="text-sm text-gray-500">by {item.seller || 'Unknown'}</p>
-                </CardContent>
-              </Card>
+              <Link key={item.id} to={`/marketplace/${item.id}`}>
+                <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                  <div className="h-48 bg-gray-100">
+                    {item.images && item.images.length > 0 ? (
+                      <img 
+                        src={item.images[0]} 
+                        alt={item.title}
+                        className="w-full h-full object-cover rounded-t-lg"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                        <span className="text-gray-400">No image</span>
+                      </div>
+                    )}
+                  </div>
+                  <CardContent className="p-4">
+                    <h3 className="font-semibold mb-2 line-clamp-1">{item.title}</h3>
+                    <p className="text-blue-600 font-bold mb-1">
+                      {item.price !== undefined ? `$${item.price.toFixed(2)}` : 'Contact for price'}
+                    </p>
+                    <p className="text-sm text-gray-600 mb-2 line-clamp-2">{item.description || 'No description available'}</p>
+                    <p className="text-sm text-gray-500">by {item.seller || 'Unknown'}</p>
+                  </CardContent>
+                </Card>
+              </Link>
             ))}
           </div>
         )}
