@@ -22,6 +22,8 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import Profile from "@/pages/Profile";
 import MyListings from "@/pages/MyListings";
 import Settings from "@/pages/Settings";
+import CreateListing from "@/pages/CreateListing";
+import EditListing from "@/pages/EditListing";
 
 import Navbar from "@/components/Navbar";
 
@@ -50,6 +52,15 @@ function App() {
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           <Route path="/my-listings" element={<ProtectedRoute><MyListings /></ProtectedRoute>} />
           <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+          
+          {/* Create and Edit Listing Routes */}
+          <Route path="/marketplace/create" element={<ProtectedRoute><CreateListing category="marketplace" /></ProtectedRoute>} />
+          <Route path="/housing/create" element={<ProtectedRoute><CreateListing category="housing" /></ProtectedRoute>} />
+          <Route path="/services/create" element={<ProtectedRoute><CreateListing category="services" /></ProtectedRoute>} />
+          
+          <Route path="/marketplace/edit/:id" element={<ProtectedRoute><EditListing category="marketplace" /></ProtectedRoute>} />
+          <Route path="/housing/edit/:id" element={<ProtectedRoute><EditListing category="housing" /></ProtectedRoute>} />
+          <Route path="/services/edit/:id" element={<ProtectedRoute><EditListing category="services" /></ProtectedRoute>} />
           
           <Route path="*" element={<NotFound />} />
         </Routes>

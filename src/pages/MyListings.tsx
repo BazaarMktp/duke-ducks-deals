@@ -12,7 +12,9 @@ import {
   ShoppingCart,
   MapPin,
   Users,
-  Loader2
+  Loader2,
+  Pause,
+  Play
 } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
@@ -79,12 +81,33 @@ const MyListings = () => {
 
       if (error) throw error;
       
-      // Update the listings state after successful deletion
       setListings(listings.filter(listing => listing.id !== id));
       toast.success("Listing deleted successfully");
     } catch (error) {
       console.error("Error deleting listing:", error);
       toast.error("Failed to delete listing");
+    }
+  };
+
+  const handleStatusToggle = async (id: string, currentStatus: string) => {
+    try {
+      const newStatus = currentStatus === 'active' ? 'paused' : 'active';
+      
+      const { error } = await supabase
+        .from("listings")
+        .update({ status: newStatus, updated_at: new Date().toISOString() })
+        .eq("id", id);
+
+      if (error) throw error;
+      
+      setListings(listings.map(listing => 
+        listing.id === id ? { ...listing, status: newStatus } : listing
+      ));
+      
+      toast.success(`Listing ${newStatus === 'active' ? 'activated' : 'paused'} successfully`);
+    } catch (error) {
+      console.error("Error updating listing status:", error);
+      toast.error("Failed to update listing status");
     }
   };
 
@@ -127,6 +150,10 @@ const MyListings = () => {
     }
   };
 
+  const getCreateUrl = (category: string) => {
+    return `/${category}/create`;
+  };
+
   if (!user) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -146,7 +173,17 @@ const MyListings = () => {
         <div className="flex space-x-2">
           <Button asChild>
             <Link to="/marketplace/create" className="flex items-center">
-              <Plus size={16} className="mr-1" /> New Listing
+              <Plus size={16} className="mr-1" /> New Marketplace
+            </Link>
+          </Button>
+          <Button asChild variant="outline">
+            <Link to="/housing/create" className="flex items-center">
+              <Plus size={16} className="mr-1" /> New Housing
+            </Link>
+          </Button>
+          <Button asChild variant="outline">
+            <Link to="/services/create" className="flex items-center">
+              <Plus size={16} className="mr-1" /> New Service
             </Link>
           </Button>
         </div>
@@ -160,9 +197,17 @@ const MyListings = () => {
         <Card>
           <CardContent className="py-12 text-center">
             <p className="text-gray-500 mb-4">You haven't created any listings yet.</p>
-            <Button asChild>
-              <Link to="/marketplace/create">Create Your First Listing</Link>
-            </Button>
+            <div className="space-x-2">
+              <Button asChild>
+                <Link to="/marketplace/create">Create Marketplace Listing</Link>
+              </Button>
+              <Button asChild variant="outline">
+                <Link to="/housing/create">Create Housing Listing</Link>
+              </Button>
+              <Button asChild variant="outline">
+                <Link to="/services/create">Create Service Listing</Link>
+              </Button>
+            </div>
           </CardContent>
         </Card>
       ) : (
@@ -211,6 +256,15 @@ const MyListings = () => {
                     <Link to={getViewUrl(listing)}>View</Link>
                   </Button>
                   <div className="flex space-x-2">
+                    <Button 
+                      size="icon" 
+                      variant="outline"
+                      onClick={() => handleStatusToggle(listing.id, listing.status)}
+                      title={listing.status === 'active' ? 'Pause listing' : 'Activate listing'}
+                    >
+                      {listing.status === 'active' ? <Pause size={16} /> : <Play size={16} />}
+                    </Button>
+                    
                     <Button size="icon" variant="outline" asChild>
                       <Link to={getEditUrl(listing)}>
                         <Pencil size={16} />
