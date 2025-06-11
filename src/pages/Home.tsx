@@ -2,9 +2,12 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ShoppingCart, MapPin, Users, Gift, TrendingUp, MessageCircle } from "lucide-react";
+import { ShoppingCart, MapPin, Users, Gift, TrendingUp, MessageCircle, Plus } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Home = () => {
+  const { user } = useAuth();
+
   const categories = [
     {
       title: "Marketplace",
@@ -43,6 +46,137 @@ const Home = () => {
     { label: "Services Provided", value: "892" }
   ];
 
+  // Mock featured items for logged-in users
+  const featuredItems = [
+    {
+      id: 1,
+      title: "MacBook Pro 2021",
+      price: "$1,200",
+      category: "Electronics",
+      image: "/placeholder.svg",
+      seller: "John D."
+    },
+    {
+      id: 2,
+      title: "Single Room Available",
+      price: "$800/month",
+      category: "Housing",
+      image: "/placeholder.svg",
+      seller: "Sarah M."
+    },
+    {
+      id: 3,
+      title: "Math Tutoring",
+      price: "$25/hour",
+      category: "Services",
+      image: "/placeholder.svg",
+      seller: "Mike R."
+    },
+    {
+      id: 4,
+      title: "Free Textbooks",
+      price: "Free",
+      category: "Donations",
+      image: "/placeholder.svg",
+      seller: "Lisa K."
+    }
+  ];
+
+  // If user is logged in, show the dashboard view
+  if (user) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        {/* Welcome Section */}
+        <section className="bg-white py-8 border-b">
+          <div className="container mx-auto px-4">
+            <div className="flex justify-between items-center">
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">
+                  Welcome back, {user.user_metadata?.profile_name || user.email?.split('@')[0]}!
+                </h1>
+                <p className="text-gray-600 mt-2">What would you like to do today?</p>
+              </div>
+              <Button className="flex items-center space-x-2">
+                <Plus size={16} />
+                <span>Create Listing</span>
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        {/* Quick Actions */}
+        <section className="py-8">
+          <div className="container mx-auto px-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {categories.map((category, index) => (
+                <Link key={index} to={category.href}>
+                  <Card className="hover:shadow-md transition-shadow cursor-pointer">
+                    <CardContent className="p-4 text-center">
+                      <div className={`${category.color} w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3`}>
+                        <category.icon className="text-white" size={24} />
+                      </div>
+                      <h3 className="font-semibold text-sm">{category.title}</h3>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Featured Items */}
+        <section className="py-8">
+          <div className="container mx-auto px-4">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold">Featured Items</h2>
+              <Link to="/marketplace">
+                <Button variant="outline">View All</Button>
+              </Link>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {featuredItems.map((item) => (
+                <Card key={item.id} className="hover:shadow-lg transition-shadow">
+                  <CardHeader className="p-0">
+                    <img 
+                      src={item.image} 
+                      alt={item.title}
+                      className="w-full h-48 object-cover rounded-t-lg"
+                    />
+                  </CardHeader>
+                  <CardContent className="p-4">
+                    <h3 className="font-semibold mb-2">{item.title}</h3>
+                    <p className="text-blue-600 font-bold mb-1">{item.price}</p>
+                    <p className="text-sm text-gray-600 mb-2">{item.category}</p>
+                    <p className="text-sm text-gray-500">by {item.seller}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Quick Stats */}
+        <section className="py-8 bg-white">
+          <div className="container mx-auto px-4">
+            <h2 className="text-2xl font-bold mb-6 text-center">Bazaar Stats</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              {stats.map((stat, index) => (
+                <div key={index} className="text-center">
+                  <div className="text-2xl md:text-3xl font-bold text-blue-600 mb-2">
+                    {stat.value}
+                  </div>
+                  <div className="text-gray-600">{stat.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+  }
+
+  // Marketing homepage for non-authenticated users
   return (
     <div className="min-h-screen">
       {/* Hero Section with Background Image */}

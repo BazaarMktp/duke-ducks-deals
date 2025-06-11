@@ -13,7 +13,6 @@ import {
   Heart,
   Menu,
   X,
-  User,
   LogOut
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -82,29 +81,31 @@ const Navbar = () => {
 
           {/* Right side buttons */}
           <div className="hidden md:flex items-center space-x-3">
-            <Link to="/favorites">
-              <Button variant="ghost" size="sm">
-                <Heart size={16} />
-              </Button>
-            </Link>
-            <Link to="/cart">
-              <Button variant="ghost" size="sm">
-                <ShoppingCart size={16} />
-              </Button>
-            </Link>
             {user ? (
-              <div className="flex items-center space-x-3">
-                <div className="flex items-center space-x-2">
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage src={user?.user_metadata?.avatar_url} />
-                    <AvatarFallback>{getUserInitials()}</AvatarFallback>
-                  </Avatar>
-                  <span className="text-sm text-gray-700">Hi, {getUserDisplayName()}</span>
+              <>
+                <Link to="/favorites">
+                  <Button variant="ghost" size="sm">
+                    <Heart size={16} />
+                  </Button>
+                </Link>
+                <Link to="/cart">
+                  <Button variant="ghost" size="sm">
+                    <ShoppingCart size={16} />
+                  </Button>
+                </Link>
+                <div className="flex items-center space-x-3">
+                  <div className="flex items-center space-x-2">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src={user?.user_metadata?.avatar_url} />
+                      <AvatarFallback>{getUserInitials()}</AvatarFallback>
+                    </Avatar>
+                    <span className="text-sm text-gray-700">Hi, {getUserDisplayName()}</span>
+                  </div>
+                  <Button variant="outline" size="sm" onClick={handleSignOut}>
+                    <LogOut size={16} />
+                  </Button>
                 </div>
-                <Button variant="outline" size="sm" onClick={handleSignOut}>
-                  <LogOut size={16} />
-                </Button>
-              </div>
+              </>
             ) : (
               <div className="flex space-x-2">
                 <Link to="/auth">
