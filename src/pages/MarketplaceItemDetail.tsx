@@ -1,13 +1,15 @@
 
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Heart, ShoppingCart, MessageCircle, ArrowLeft, User } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import ProductImageGallery from "@/components/marketplace/ProductImageGallery";
+import ProductInfo from "@/components/marketplace/ProductInfo";
+import SellerInfo from "@/components/marketplace/SellerInfo";
+import ProductActions from "@/components/marketplace/ProductActions";
 
 interface Product {
   id: string;
@@ -228,97 +230,36 @@ const MarketplaceItemDetail = () => {
       </Link>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Images */}
+        <ProductImageGallery
+          images={product.images}
+          title={product.title}
+          currentImageIndex={currentImageIndex}
+          onImageChange={setCurrentImageIndex}
+        />
+
         <div>
-          <div className="mb-4">
-            <img
-              src={product.images?.[currentImageIndex] || "/placeholder.svg"}
-              alt={product.title}
-              className="w-full h-96 object-cover rounded-lg"
-            />
-          </div>
-          {product.images && product.images.length > 1 && (
-            <div className="flex gap-2">
-              {product.images.map((image, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentImageIndex(index)}
-                  className={`w-20 h-20 rounded-md overflow-hidden ${
-                    index === currentImageIndex ? 'ring-2 ring-blue-500' : ''
-                  }`}
-                >
-                  <img
-                    src={image}
-                    alt={`${product.title} ${index + 1}`}
-                    className="w-full h-full object-cover"
-                  />
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
+          <ProductInfo
+            title={product.title}
+            price={product.price}
+            description={product.description}
+          />
 
-        {/* Product Details */}
-        <div>
-          <h1 className="text-3xl font-bold mb-4">{product.title}</h1>
-          <p className="text-3xl font-bold text-green-600 mb-6">${product.price}</p>
-          
-          <div className="mb-6">
-            <h3 className="text-lg font-semibold mb-2">Description</h3>
-            <p className="text-gray-700">{product.description}</p>
-          </div>
+          <SellerInfo
+            profileName={product.profiles.profile_name}
+            email={product.profiles.email}
+            phoneNumber={product.profiles.phone_number}
+            createdAt={product.created_at}
+          />
 
-          {/* Seller Info */}
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <User size={20} className="mr-2" />
-                Seller Information
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="font-medium">{product.profiles.profile_name}</p>
-              <p className="text-sm text-gray-600">{product.profiles.email}</p>
-              {product.profiles.phone_number && (
-                <p className="text-sm text-gray-600">{product.profiles.phone_number}</p>
-              )}
-              <p className="text-xs text-gray-500 mt-2">
-                Listed on {new Date(product.created_at).toLocaleDateString()}
-              </p>
-            </CardContent>
-          </Card>
-
-          {/* Action Buttons */}
-          <div className="flex gap-3">
-            {user && (
-              <Button
-                variant="outline"
-                onClick={toggleFavorite}
-                className={isFavorite ? "text-red-500" : ""}
-              >
-                <Heart size={16} className={isFavorite ? "fill-current" : ""} />
-              </Button>
-            )}
-            {user && (
-              <Button 
-                onClick={addToCart}
-                disabled={isInCart}
-                className="flex-1"
-              >
-                <ShoppingCart size={16} className="mr-2" />
-                {isInCart ? "In Cart" : "Add to Cart"}
-              </Button>
-            )}
-            {user && product.user_id !== user.id && (
-              <Button 
-                onClick={startConversation}
-                variant="outline"
-              >
-                <MessageCircle size={16} className="mr-2" />
-                Contact Now
-              </Button>
-            )}
-          </div>
+          <ProductActions
+            user={user}
+            isFavorite={isFavorite}
+            isInCart={isInCart}
+            isOwnProduct={product.user_id === user?.id}
+            onToggleFavorite={toggleFavorite}
+            onAddToCart={addToCart}
+            onStartConversation={startConversation}
+          />
         </div>
       </div>
     </div>
