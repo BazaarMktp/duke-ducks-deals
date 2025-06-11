@@ -106,7 +106,7 @@ const MyListings = () => {
         )
       );
 
-      toast.success(`Listing ${newStatus === 'active' ? 'activated' : 'deactivated'} successfully!`);
+      toast.success(`Listing ${newStatus === 'active' ? 'activated' : 'paused'} successfully!`);
     } catch (error) {
       console.error('Error updating listing status:', error);
       toast.error("Failed to update listing status.");
@@ -149,17 +149,9 @@ const MyListings = () => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">My Listings</h1>
         <div className="flex gap-2">
-          <Button onClick={() => navigate('/marketplace/create')} size="sm">
+          <Button onClick={() => navigate('/create-listing')} size="sm">
             <Plus size={16} className="mr-1" />
-            Marketplace
-          </Button>
-          <Button onClick={() => navigate('/housing/create')} size="sm" variant="outline">
-            <Plus size={16} className="mr-1" />
-            Housing
-          </Button>
-          <Button onClick={() => navigate('/services/create')} size="sm" variant="outline">
-            <Plus size={16} className="mr-1" />
-            Services
+            Create Listing
           </Button>
         </div>
       </div>
@@ -167,7 +159,7 @@ const MyListings = () => {
       {listings.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-gray-500 mb-4">You haven't created any listings yet.</p>
-          <Button onClick={() => navigate('/marketplace/create')}>
+          <Button onClick={() => navigate('/create-listing')}>
             <Plus size={16} className="mr-1" />
             Create Your First Listing
           </Button>
@@ -216,7 +208,7 @@ const MyListings = () => {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => navigate(`/${listing.category}/edit/${listing.id}`)}
+                    onClick={() => navigate(`/edit-listing/${listing.id}`)}
                   >
                     <Edit size={16} />
                   </Button>
