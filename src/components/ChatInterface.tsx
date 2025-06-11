@@ -1,8 +1,9 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Send, Archive, Trash2, MoreVertical } from "lucide-react";
+import { Send, Archive, Trash2, MoreVertical, HeadphonesIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
@@ -79,7 +80,7 @@ const ChatInterface = () => {
     if (!user) return;
 
     try {
-      const { data, error } = await supabase
+      let query = supabase
         .from('conversations')
         .select(`
           id,
@@ -94,14 +95,16 @@ const ChatInterface = () => {
           buyer_profile:profiles!conversations_buyer_id_fkey(profile_name),
           seller_profile:profiles!conversations_seller_id_fkey(profile_name)
         `)
-        .or(`buyer_id.eq.${user.id},seller_id.eq.${user.id}`)
-        .or(user.id === user.id ? 
-          (showArchived ? 
-            `and(buyer_id.eq.${user.id},archived_by_buyer.eq.true),and(seller_id.eq.${user.id},archived_by_seller.eq.true)` :
-            `and(buyer_id.eq.${user.id},archived_by_buyer.eq.false,deleted_by_buyer.eq.false),and(seller_id.eq.${user.id},archived_by_seller.eq.false,deleted_by_seller.eq.false)`
-          ) : ''
-        )
-        .order('updated_at', { ascending: false });
+        .or(`buyer_id.eq.${user.id},seller_id.eq.${user.id}`);
+
+      // Filter based on current view and user role
+      if (showArchived) {
+        query = query.or(`and(buyer_id.eq.${user.id},archived_by_buyer.eq.true),and(seller_id.eq.${user.id},archived_by_seller.eq.true)`);
+      } else {
+        query = query.or(`and(buyer_id.eq.${user.id},archived_by_buyer.eq.false,deleted_by_buyer.eq.false),and(seller_id.eq.${user.id},archived_by_seller.eq.false,deleted_by_seller.eq.false)`);
+      }
+
+      const { data, error } = await query.order('updated_at', { ascending: false });
 
       if (error) throw error;
       setConversations(data || []);
@@ -201,7 +204,8 @@ const ChatInterface = () => {
         description: "Conversation archived successfully.",
       });
 
-      fetchConversations();
+      // Remove from current view and refresh
+      setConversations(prev => prev.filter(c => c.id !== conversationId));
       if (selectedConversation === conversationId) {
         setSelectedConversation(null);
       }
@@ -238,7 +242,8 @@ const ChatInterface = () => {
         description: "Conversation deleted successfully.",
       });
 
-      fetchConversations();
+      // Remove from current view immediately
+      setConversations(prev => prev.filter(c => c.id !== conversationId));
       if (selectedConversation === conversationId) {
         setSelectedConversation(null);
       }
@@ -252,11 +257,23 @@ const ChatInterface = () => {
     }
   };
 
-  const isConversationArchived = (conversation: Conversation) => {
-    if (!user) return false;
-    return conversation.buyer_id === user.id 
-      ? conversation.archived_by_buyer 
-      : conversation.archived_by_seller;
+  const contactSupport = async () => {
+    if (!user) return;
+
+    try {
+      // For now, just show a message. In a real app, you'd create a conversation with admin
+      toast({
+        title: "Support",
+        description: "Contact support feature coming soon! Please email admin@bazaar.com for assistance.",
+      });
+    } catch (error) {
+      console.error('Error contacting support:', error);
+      toast({
+        title: "Error",
+        description: "Failed to contact support.",
+        variant: "destructive",
+      });
+    }
   };
 
   if (!user) {
@@ -281,12 +298,25 @@ const ChatInterface = () => {
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Messages</h1>
-        <Button
-          variant={showArchived ? "default" : "outline"}
-          onClick={() => setShowArchived(!showArchived)}
-        >
-          {showArchived ? "Show Active" : "Show Archived"}
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={contactSupport}
+            className="flex items-center gap-2"
+          >
+            <HeadphonesIcon size={16} />
+            Contact Support
+          </Button>
+          <Button
+            variant={showArchived ? "default" : "outline"}
+            onClick={() => {
+              setShowArchived(!showArchived);
+              setSelectedConversation(null); // Clear selection when switching views
+            }}
+          >
+            {showArchived ? "Show Active" : "Show Archived"}
+          </Button>
+        </div>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-[600px]">
@@ -307,7 +337,7 @@ const ChatInterface = () => {
                     key={conv.id}
                     className={`p-4 cursor-pointer hover:bg-gray-50 border-b flex justify-between items-center ${
                       selectedConversation === conv.id ? 'bg-blue-50' : ''
-                    } ${isConversationArchived(conv) ? 'opacity-75' : ''}`}
+                    }`}
                   >
                     <div 
                       className="flex-1"
@@ -317,9 +347,6 @@ const ChatInterface = () => {
                       <p className="text-sm text-gray-600">
                         with {conv.buyer_id === user.id ? conv.seller_profile.profile_name : conv.buyer_profile.profile_name}
                       </p>
-                      {isConversationArchived(conv) && (
-                        <p className="text-xs text-gray-500">Archived</p>
-                      )}
                     </div>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -328,7 +355,7 @@ const ChatInterface = () => {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        {!isConversationArchived(conv) && (
+                        {!showArchived && (
                           <DropdownMenuItem onClick={() => archiveConversation(conv.id)}>
                             <Archive className="mr-2 h-4 w-4" />
                             Archive
