@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -99,14 +100,17 @@ const ChatInterface = () => {
 
       // Filter out deleted conversations
       if (user.id) {
-        query = query.or(`deleted_by_buyer.eq.false,deleted_by_seller.eq.false`);
+        // If user is buyer and has deleted the conversation, exclude it
         query = query.not('and', `buyer_id.eq.${user.id},deleted_by_buyer.eq.true`);
+        // If user is seller and has deleted the conversation, exclude it
         query = query.not('and', `seller_id.eq.${user.id},deleted_by_seller.eq.true`);
       }
 
       // Filter archived conversations based on toggle
       if (!showArchived && user.id) {
+        // If user is buyer and has archived the conversation, exclude it from active view
         query = query.not('and', `buyer_id.eq.${user.id},archived_by_buyer.eq.true`);
+        // If user is seller and has archived the conversation, exclude it from active view  
         query = query.not('and', `seller_id.eq.${user.id},archived_by_seller.eq.true`);
       }
 
