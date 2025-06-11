@@ -153,7 +153,6 @@ const Home = () => {
         .select('*')
         .eq('status', 'active')
         .eq('category', 'marketplace') // Only fetch marketplace items
-        .neq('user_id', user?.id) // Exclude current user's listings
         .order('created_at', { ascending: false })
         .limit(4);
 
@@ -468,3 +467,5 @@ const Home = () => {
 };
 
 export default Home;
+
+</edits_to_apply>
