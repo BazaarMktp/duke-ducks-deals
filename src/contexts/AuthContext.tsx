@@ -22,22 +22,6 @@ export const useAuth = () => {
   return context;
 };
 
-// Utility function to clean up auth state
-const cleanupAuthState = () => {
-  // Remove all Supabase auth keys from localStorage
-  Object.keys(localStorage).forEach((key) => {
-    if (key.startsWith('supabase.auth.') || key.includes('sb-')) {
-      localStorage.removeItem(key);
-    }
-  });
-  // Remove from sessionStorage if in use
-  Object.keys(sessionStorage || {}).forEach((key) => {
-    if (key.startsWith('supabase.auth.') || key.includes('sb-')) {
-      sessionStorage.removeItem(key);
-    }
-  });
-};
-
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -68,16 +52,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signIn = async (email: string, password: string) => {
     console.log('Attempting to sign in with:', email);
     
-    // Clean up existing state first
-    cleanupAuthState();
-    
-    try {
-      // Attempt global sign out first
-      await supabase.auth.signOut({ scope: 'global' });
-    } catch (err) {
-      console.log('Cleanup signout failed, continuing...');
-    }
-
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -90,7 +64,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signUp = async (email: string, password: string, fullName: string, profileName: string) => {
     console.log('Attempting to sign up with:', email);
     
-    // Validate Duke email or admin email - be more explicit about the validation
+    // Validate Duke email or admin email
     const isDukeEmail = email.endsWith('@duke.edu');
     const isAdminEmail = email === 'info@thebazaarapp.com';
     
@@ -100,16 +74,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const errorMessage = 'Please use your Duke email address (@duke.edu) or the admin email (info@thebazaarapp.com)';
       console.log('Email validation failed:', errorMessage);
       return { error: { message: errorMessage } };
-    }
-
-    // Clean up existing state first
-    cleanupAuthState();
-    
-    try {
-      // Attempt global sign out first
-      await supabase.auth.signOut({ scope: 'global' });
-    } catch (err) {
-      console.log('Cleanup signout failed, continuing...');
     }
 
     const redirectUrl = `${window.location.origin}/`;
@@ -133,16 +97,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signOut = async () => {
     console.log('Signing out...');
-    cleanupAuthState();
-    
-    try {
-      await supabase.auth.signOut({ scope: 'global' });
-    } catch (err) {
-      console.log('Sign out error:', err);
-    }
-    
-    // Force page reload for clean state
-    window.location.href = '/auth';
+    await supabase.auth.signOut();
   };
 
   const value = {
