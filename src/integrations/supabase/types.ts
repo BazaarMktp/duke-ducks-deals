@@ -9,6 +9,54 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      app_stats: {
+        Row: {
+          id: string
+          recorded_at: string | null
+          stat_name: string
+          stat_value: number
+        }
+        Insert: {
+          id?: string
+          recorded_at?: string | null
+          stat_name: string
+          stat_value: number
+        }
+        Update: {
+          id?: string
+          recorded_at?: string | null
+          stat_name?: string
+          stat_value?: number
+        }
+        Relationships: []
+      }
+      banned_users: {
+        Row: {
+          banned_at: string | null
+          banned_by: string
+          id: string
+          is_active: boolean | null
+          reason: string | null
+          user_id: string
+        }
+        Insert: {
+          banned_at?: string | null
+          banned_by: string
+          id?: string
+          is_active?: boolean | null
+          reason?: string | null
+          user_id: string
+        }
+        Update: {
+          banned_at?: string | null
+          banned_by?: string
+          id?: string
+          is_active?: boolean | null
+          reason?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       cart_items: {
         Row: {
           created_at: string | null
@@ -329,14 +377,114 @@ export type Database = {
         }
         Relationships: []
       }
+      support_responses: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_admin_response: boolean | null
+          message: string
+          responder_id: string
+          ticket_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_admin_response?: boolean | null
+          message: string
+          responder_id: string
+          ticket_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_admin_response?: boolean | null
+          message?: string
+          responder_id?: string
+          ticket_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "support_responses_ticket_id_fkey"
+            columns: ["ticket_id"]
+            isOneToOne: false
+            referencedRelation: "support_tickets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      support_tickets: {
+        Row: {
+          created_at: string | null
+          id: string
+          message: string
+          priority: string | null
+          status: string | null
+          subject: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          message: string
+          priority?: string | null
+          status?: string | null
+          subject: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          message?: string
+          priority?: string | null
+          status?: string | null
+          subject?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_platform_stats: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
+      }
+      has_role: {
+        Args: {
+          _user_id: string
+          _role: Database["public"]["Enums"]["app_role"]
+        }
+        Returns: boolean
+      }
     }
     Enums: {
+      app_role: "admin" | "user"
       housing_type: "sublease" | "for_rent" | "roommate_wanted"
       listing_category: "marketplace" | "housing" | "services"
       listing_status: "active" | "sold" | "inactive"
@@ -455,6 +603,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      app_role: ["admin", "user"],
       housing_type: ["sublease", "for_rent", "roommate_wanted"],
       listing_category: ["marketplace", "housing", "services"],
       listing_status: ["active", "sold", "inactive"],

@@ -1,0 +1,60 @@
+
+import { useAdmin } from "@/contexts/AdminContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Navigate } from "react-router-dom";
+import UserManagement from "@/components/admin/UserManagement";
+import ListingManagement from "@/components/admin/ListingManagement";
+import SupportTickets from "@/components/admin/SupportTickets";
+import AdminStats from "@/components/admin/AdminStats";
+
+const AdminDashboard = () => {
+  const { user, loading: authLoading } = useAuth();
+  const { isAdmin, loading: adminLoading } = useAdmin();
+
+  if (authLoading || adminLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!user || !isAdmin) {
+    return <Navigate to="/" replace />;
+  }
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
+      
+      <Tabs defaultValue="stats" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="stats">Statistics</TabsTrigger>
+          <TabsTrigger value="users">Users</TabsTrigger>
+          <TabsTrigger value="listings">Listings</TabsTrigger>
+          <TabsTrigger value="support">Support</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="stats">
+          <AdminStats />
+        </TabsContent>
+
+        <TabsContent value="users">
+          <UserManagement />
+        </TabsContent>
+
+        <TabsContent value="listings">
+          <ListingManagement />
+        </TabsContent>
+
+        <TabsContent value="support">
+          <SupportTickets />
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+};
+
+export default AdminDashboard;

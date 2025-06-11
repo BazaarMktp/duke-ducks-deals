@@ -56,8 +56,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signUp = async (email: string, password: string, fullName: string, profileName: string) => {
-    // Validate Duke email
-    if (!email.endsWith('@duke.edu')) {
+    // Validate Duke email or admin email
+    if (!email.endsWith('@duke.edu') && email !== 'admin@bazaar.com') {
       return { error: { message: 'Please use your Duke email address (@duke.edu)' } };
     }
 
