@@ -50,7 +50,7 @@ const Services = () => {
         .from('listings')
         .select(`
           *,
-          profiles!listings_user_id_fkey(profile_name)
+          profiles!listings_user_id_fkey(profile_name, full_name)
         `)
         .eq('category', 'services')
         .eq('listing_type', activeListingType)

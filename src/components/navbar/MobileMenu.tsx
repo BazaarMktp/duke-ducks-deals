@@ -31,11 +31,17 @@ const MobileMenu = ({ user, isOpen, onClose, onSignOut }: MobileMenuProps) => {
     { name: "Messages", href: "/messages", icon: MessageCircle },
   ];
 
-  // Get user's profile name or email for greeting
+  // Get user's first name or fallback to profile name/email
   const getUserDisplayName = () => {
+    // First try to get first name from full_name
+    if (user?.user_metadata?.full_name) {
+      return user.user_metadata.full_name.split(' ')[0];
+    }
+    // Fallback to profile_name
     if (user?.user_metadata?.profile_name) {
       return user.user_metadata.profile_name;
     }
+    // Final fallback to email prefix
     if (user?.email) {
       return user.email.split('@')[0];
     }

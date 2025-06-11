@@ -21,9 +21,15 @@ const UserMenu = ({ user, onSignOut }: UserMenuProps) => {
   const { isAdmin } = useAdmin();
 
   const getUserDisplayName = () => {
+    // First try to get first name from full_name
+    if (user?.user_metadata?.full_name) {
+      return user.user_metadata.full_name.split(' ')[0];
+    }
+    // Fallback to profile_name
     if (user?.user_metadata?.profile_name) {
       return user.user_metadata.profile_name;
     }
+    // Final fallback to email prefix
     if (user?.email) {
       return user.email.split('@')[0];
     }

@@ -38,7 +38,7 @@ const Housing = () => {
         .from('listings')
         .select(`
           *,
-          profiles(profile_name)
+          profiles(profile_name, full_name)
         `)
         .eq('category', 'housing')
         .eq('status', 'active')
@@ -212,87 +212,97 @@ const Housing = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {listings.map((listing) => (
-            <Card 
-              key={listing.id} 
-              className={`hover:shadow-lg transition-shadow ${
-                listing.listing_type === 'wanted' ? 'border-blue-200 bg-blue-50/50' : ''
-              }`}
-            >
-              <div className="relative">
-                {listing.images && listing.images.length > 0 ? (
-                  <img 
-                    src={listing.images[0]} 
-                    alt={listing.title}
-                    className="w-full h-48 object-cover rounded-t-lg"
-                  />
-                ) : (
-                  <div className="w-full h-48 bg-gray-200 rounded-t-lg flex items-center justify-center">
-                    <Home className="h-12 w-12 text-gray-400" />
-                  </div>
-                )}
-                {user && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="absolute top-2 right-2 bg-white/80 hover:bg-white"
-                    onClick={() => toggleFavorite(listing.id)}
-                  >
-                    <Heart 
-                      size={16} 
-                      className={favorites.includes(listing.id) ? "fill-red-500 text-red-500" : "text-gray-600"} 
+          {listings.map((listing) => {
+            // Extract first name from full_name or fallback to profile_name
+            const getDisplayName = () => {
+              if (listing.profiles?.full_name) {
+                return listing.profiles.full_name.split(' ')[0];
+              }
+              return listing.profiles?.profile_name || 'Unknown';
+            };
+
+            return (
+              <Card 
+                key={listing.id} 
+                className={`hover:shadow-lg transition-shadow ${
+                  listing.listing_type === 'wanted' ? 'border-blue-200 bg-blue-50/50' : ''
+                }`}
+              >
+                <div className="relative">
+                  {listing.images && listing.images.length > 0 ? (
+                    <img 
+                      src={listing.images[0]} 
+                      alt={listing.title}
+                      className="w-full h-48 object-cover rounded-t-lg"
                     />
-                  </Button>
-                )}
-              </div>
-              <CardContent className="p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    {listing.listing_type === 'wanted' && (
-                      <Badge variant="outline" className="text-blue-600 border-blue-300">
-                        <Search size={12} className="mr-1" />
-                        Looking For
-                      </Badge>
-                    )}
-                    {listing.housing_type && (
-                      <Badge variant="secondary">
-                        {listing.housing_type.replace('_', ' ')}
-                      </Badge>
-                    )}
-                  </div>
-                </div>
-                <Link to={`/housing/${listing.id}`}>
-                  <CardTitle className="text-lg hover:text-blue-600 transition-colors mb-2">
-                    {listing.listing_type === 'wanted' ? `Looking for: ${listing.title}` : listing.title}
-                  </CardTitle>
-                </Link>
-                <p className="text-sm text-gray-600 mb-2">by {listing.profiles?.profile_name || 'Unknown'}</p>
-                {listing.location && (
-                  <div className="flex items-center text-sm text-gray-500 mb-2">
-                    <MapPin size={14} className="mr-1" />
-                    {listing.location}
-                  </div>
-                )}
-                <p className="text-sm mb-3 line-clamp-2">{listing.description}</p>
-                <div className="flex justify-between items-center">
-                  {listing.listing_type === 'offer' ? (
-                    <p className="text-xl font-bold text-green-600">
-                      {listing.price ? `$${listing.price}/month` : 'Contact for price'}
-                    </p>
                   ) : (
-                    <p className="text-lg font-bold text-blue-600">
-                      {listing.price ? `Budget: $${listing.price}/month` : 'Budget: Negotiable'}
-                    </p>
+                    <div className="w-full h-48 bg-gray-200 rounded-t-lg flex items-center justify-center">
+                      <Home className="h-12 w-12 text-gray-400" />
+                    </div>
                   )}
-                  <Link to={`/housing/${listing.id}`}>
-                    <Button size="sm">
-                      {listing.listing_type === 'wanted' ? 'I Can Help' : 'View Details'}
+                  {user && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="absolute top-2 right-2 bg-white/80 hover:bg-white"
+                      onClick={() => toggleFavorite(listing.id)}
+                    >
+                      <Heart 
+                        size={16} 
+                        className={favorites.includes(listing.id) ? "fill-red-500 text-red-500" : "text-gray-600"} 
+                      />
                     </Button>
-                  </Link>
+                  )}
                 </div>
-              </CardContent>
-            </Card>
-          ))}
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      {listing.listing_type === 'wanted' && (
+                        <Badge variant="outline" className="text-blue-600 border-blue-300">
+                          <Search size={12} className="mr-1" />
+                          Looking For
+                        </Badge>
+                      )}
+                      {listing.housing_type && (
+                        <Badge variant="secondary">
+                          {listing.housing_type.replace('_', ' ')}
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                  <Link to={`/housing/${listing.id}`}>
+                    <CardTitle className="text-lg hover:text-blue-600 transition-colors mb-2">
+                      {listing.listing_type === 'wanted' ? `Looking for: ${listing.title}` : listing.title}
+                    </CardTitle>
+                  </Link>
+                  <p className="text-sm text-gray-600 mb-2">by {getDisplayName()}</p>
+                  {listing.location && (
+                    <div className="flex items-center text-sm text-gray-500 mb-2">
+                      <MapPin size={14} className="mr-1" />
+                      {listing.location}
+                    </div>
+                  )}
+                  <p className="text-sm mb-3 line-clamp-2">{listing.description}</p>
+                  <div className="flex justify-between items-center">
+                    {listing.listing_type === 'offer' ? (
+                      <p className="text-xl font-bold text-green-600">
+                        {listing.price ? `$${listing.price}/month` : 'Contact for price'}
+                      </p>
+                    ) : (
+                      <p className="text-lg font-bold text-blue-600">
+                        {listing.price ? `Budget: $${listing.price}/month` : 'Budget: Negotiable'}
+                      </p>
+                    )}
+                    <Link to={`/housing/${listing.id}`}>
+                      <Button size="sm">
+                        {listing.listing_type === 'wanted' ? 'I Can Help' : 'View Details'}
+                      </Button>
+                    </Link>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       )}
     </div>
