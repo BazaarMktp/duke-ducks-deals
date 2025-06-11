@@ -26,7 +26,7 @@ const AdminStats = () => {
     try {
       const { data, error } = await supabase.rpc('get_platform_stats');
       if (error) throw error;
-      setStats(data);
+      setStats(data as PlatformStats);
     } catch (error) {
       console.error('Error fetching stats:', error);
     } finally {
