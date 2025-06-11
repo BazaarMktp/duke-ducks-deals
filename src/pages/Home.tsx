@@ -26,7 +26,7 @@ type Profile = {
   full_name?: string;
 };
 
-// Define the structure for stats (removed totalMessages)
+// Define the structure for stats
 type Stats = {
   activeListings: number;
   totalUsers: number;
@@ -152,6 +152,7 @@ const Home = () => {
         .from('listings')
         .select('*')
         .eq('status', 'active')
+        .eq('category', 'marketplace') // Only fetch marketplace items
         .neq('user_id', user?.id) // Exclude current user's listings
         .order('created_at', { ascending: false })
         .limit(4);
@@ -258,7 +259,7 @@ const Home = () => {
         <section className="py-8">
           <div className="container mx-auto px-4">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold">Featured Items</h2>
+              <h2 className="text-2xl font-bold">Featured Marketplace Items</h2>
               <Link to="/marketplace">
                 <Button variant="outline">View All</Button>
               </Link>
@@ -271,7 +272,7 @@ const Home = () => {
             ) : featuredListings.length === 0 ? (
               <Card>
                 <CardContent className="py-12 text-center">
-                  <p className="text-gray-500">No listings available at the moment.</p>
+                  <p className="text-gray-500">No marketplace items available at the moment.</p>
                 </CardContent>
               </Card>
             ) : (
