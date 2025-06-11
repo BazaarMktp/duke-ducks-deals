@@ -22,6 +22,22 @@ export const useAuth = () => {
   return context;
 };
 
+// Utility function to clean up auth state
+const cleanupAuthState = () => {
+  // Remove all Supabase auth keys from localStorage
+  Object.keys(localStorage).forEach((key) => {
+    if (key.startsWith('supabase.auth.') || key.includes('sb-')) {
+      localStorage.removeItem(key);
+    }
+  });
+  // Remove from sessionStorage if in use
+  Object.keys(sessionStorage || {}).forEach((key) => {
+    if (key.startsWith('supabase.auth.') || key.includes('sb-')) {
+      sessionStorage.removeItem(key);
+    }
+  });
+};
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -31,6 +47,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
+        console.log('Auth state change:', event, session?.user?.email);
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
@@ -39,6 +56,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('Initial session:', session?.user?.email);
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
@@ -48,20 +66,54 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const signIn = async (email: string, password: string) => {
+    console.log('Attempting to sign in with:', email);
+    
+    // Clean up existing state first
+    cleanupAuthState();
+    
+    try {
+      // Attempt global sign out first
+      await supabase.auth.signOut({ scope: 'global' });
+    } catch (err) {
+      console.log('Cleanup signout failed, continuing...');
+    }
+
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
+    
+    console.log('Sign in result:', error ? error.message : 'Success');
     return { error };
   };
 
   const signUp = async (email: string, password: string, fullName: string, profileName: string) => {
-    // Validate Duke email or admin email
-    if (!email.endsWith('@duke.edu') && email !== 'info@thebazaarapp.com') {
-      return { error: { message: 'Please use your Duke email address (@duke.edu)' } };
+    console.log('Attempting to sign up with:', email);
+    
+    // Validate Duke email or admin email - be more explicit about the validation
+    const isDukeEmail = email.endsWith('@duke.edu');
+    const isAdminEmail = email === 'info@thebazaarapp.com';
+    
+    console.log('Email validation:', { isDukeEmail, isAdminEmail, email });
+    
+    if (!isDukeEmail && !isAdminEmail) {
+      const errorMessage = 'Please use your Duke email address (@duke.edu) or the admin email (info@thebazaarapp.com)';
+      console.log('Email validation failed:', errorMessage);
+      return { error: { message: errorMessage } };
+    }
+
+    // Clean up existing state first
+    cleanupAuthState();
+    
+    try {
+      // Attempt global sign out first
+      await supabase.auth.signOut({ scope: 'global' });
+    } catch (err) {
+      console.log('Cleanup signout failed, continuing...');
     }
 
     const redirectUrl = `${window.location.origin}/`;
+    console.log('Using redirect URL:', redirectUrl);
     
     const { error } = await supabase.auth.signUp({
       email,
@@ -74,11 +126,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         },
       },
     });
+    
+    console.log('Sign up result:', error ? error.message : 'Success');
     return { error };
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    console.log('Signing out...');
+    cleanupAuthState();
+    
+    try {
+      await supabase.auth.signOut({ scope: 'global' });
+    } catch (err) {
+      console.log('Sign out error:', err);
+    }
+    
+    // Force page reload for clean state
+    window.location.href = '/auth';
   };
 
   const value = {
