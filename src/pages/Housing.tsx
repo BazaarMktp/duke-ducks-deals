@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -12,13 +11,16 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import ListingTypeToggle from "@/components/services/ListingTypeToggle";
 
+// Define valid housing types
+type HousingType = "sublease" | "for_rent" | "roommate_wanted";
+
 const Housing = () => {
   const { user } = useAuth();
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("newest");
-  const [housingTypeFilter, setHousingTypeFilter] = useState("all");
+  const [housingTypeFilter, setHousingTypeFilter] = useState<"all" | HousingType>("all");
   const [favorites, setFavorites] = useState([]);
   const [activeListingType, setActiveListingType] = useState<'offer' | 'wanted'>('offer');
 
@@ -152,6 +154,7 @@ const Housing = () => {
       <ListingTypeToggle 
         activeType={activeListingType}
         onTypeChange={setActiveListingType}
+        category="housing"
       />
 
       {/* Search and Filters */}
@@ -165,7 +168,7 @@ const Housing = () => {
             className="pl-10"
           />
         </div>
-        <Select value={housingTypeFilter} onValueChange={setHousingTypeFilter}>
+        <Select value={housingTypeFilter} onValueChange={(value: "all" | HousingType) => setHousingTypeFilter(value)}>
           <SelectTrigger className="w-48">
             <SelectValue placeholder="Housing Type" />
           </SelectTrigger>
