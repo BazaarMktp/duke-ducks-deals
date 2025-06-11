@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -80,7 +79,7 @@ const ChatInterface = () => {
     if (!user) return;
 
     try {
-      let query = supabase
+      const { data, error } = await supabase
         .from('conversations')
         .select(`
           id,
@@ -96,25 +95,13 @@ const ChatInterface = () => {
           seller_profile:profiles!conversations_seller_id_fkey(profile_name)
         `)
         .or(`buyer_id.eq.${user.id},seller_id.eq.${user.id}`)
+        .or(user.id === user.id ? 
+          (showArchived ? 
+            `and(buyer_id.eq.${user.id},archived_by_buyer.eq.true),and(seller_id.eq.${user.id},archived_by_seller.eq.true)` :
+            `and(buyer_id.eq.${user.id},archived_by_buyer.eq.false,deleted_by_buyer.eq.false),and(seller_id.eq.${user.id},archived_by_seller.eq.false,deleted_by_seller.eq.false)`
+          ) : ''
+        )
         .order('updated_at', { ascending: false });
-
-      // Filter out deleted conversations
-      if (user.id) {
-        // If user is buyer and has deleted the conversation, exclude it
-        query = query.not('and', `buyer_id.eq.${user.id},deleted_by_buyer.eq.true`);
-        // If user is seller and has deleted the conversation, exclude it
-        query = query.not('and', `seller_id.eq.${user.id},deleted_by_seller.eq.true`);
-      }
-
-      // Filter archived conversations based on toggle
-      if (!showArchived && user.id) {
-        // If user is buyer and has archived the conversation, exclude it from active view
-        query = query.not('and', `buyer_id.eq.${user.id},archived_by_buyer.eq.true`);
-        // If user is seller and has archived the conversation, exclude it from active view  
-        query = query.not('and', `seller_id.eq.${user.id},archived_by_seller.eq.true`);
-      }
-
-      const { data, error } = await query;
 
       if (error) throw error;
       setConversations(data || []);

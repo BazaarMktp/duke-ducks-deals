@@ -26,12 +26,11 @@ type Profile = {
   full_name?: string;
 };
 
-// Define the structure for stats
+// Define the structure for stats (removed totalMessages)
 type Stats = {
   activeListings: number;
   totalUsers: number;
   totalDonations: number;
-  totalMessages: number;
 };
 
 const Home = () => {
@@ -42,8 +41,7 @@ const Home = () => {
   const [stats, setStats] = useState<Stats>({
     activeListings: 0,
     totalUsers: 0,
-    totalDonations: 0,
-    totalMessages: 0
+    totalDonations: 0
   });
 
   const categories = [
@@ -137,16 +135,10 @@ const Home = () => {
         .from('donations')
         .select('*', { count: 'exact', head: true });
 
-      // Fetch messages count
-      const { count: messagesCount } = await supabase
-        .from('messages')
-        .select('*', { count: 'exact', head: true });
-
       setStats({
         activeListings: listingsCount || 0,
         totalUsers: usersCount || 0,
-        totalDonations: donationsCount || 0,
-        totalMessages: messagesCount || 0
+        totalDonations: donationsCount || 0
       });
     } catch (error) {
       console.error('Error fetching stats:', error);
@@ -211,8 +203,7 @@ const Home = () => {
   const statsDisplay = [
     { label: "Active Listings", value: stats.activeListings.toString() },
     { label: "Students", value: stats.totalUsers.toString() },
-    { label: "Donations", value: stats.totalDonations.toString() },
-    { label: "Messages", value: stats.totalMessages.toString() }
+    { label: "Donations", value: stats.totalDonations.toString() }
   ];
 
   // If user is logged in, show the dashboard view
@@ -319,7 +310,7 @@ const Home = () => {
         <section className="py-8 bg-white">
           <div className="container mx-auto px-4">
             <h2 className="text-2xl font-bold mb-6 text-center">Bazaar Stats</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {statsDisplay.map((stat, index) => (
                 <div key={index} className="text-center">
                   <div className="text-2xl md:text-3xl font-bold text-blue-600 mb-2">
@@ -375,7 +366,7 @@ const Home = () => {
       {/* Stats Section */}
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {statsDisplay.map((stat, index) => (
               <div key={index} className="text-center">
                 <div className="text-3xl md:text-4xl font-bold text-blue-600 mb-2">
@@ -446,10 +437,10 @@ const Home = () => {
             
             <div className="text-center">
               <div className="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <MessageCircle className="text-purple-600" size={32} />
+                <Gift className="text-purple-600" size={32} />
               </div>
-              <h3 className="text-xl font-bold mb-2">Direct Messaging</h3>
-              <p className="text-gray-600">Chat directly with buyers and sellers</p>
+              <h3 className="text-xl font-bold mb-2">Give Back</h3>
+              <p className="text-gray-600">Donate items to help fellow students in need</p>
             </div>
           </div>
         </div>
