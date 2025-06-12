@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
@@ -25,6 +24,8 @@ interface HousingListing {
     profile_name: string;
     email: string;
     phone_number?: string;
+    avatar_url?: string;
+    full_name?: string;
   };
 }
 
@@ -53,7 +54,7 @@ const HousingDetail = () => {
         .from('listings')
         .select(`
           *,
-          profiles!listings_user_id_fkey(profile_name, email, phone_number)
+          profiles!listings_user_id_fkey(profile_name, email, phone_number, avatar_url, full_name)
         `)
         .eq('id', id)
         .eq('category', 'housing')
@@ -217,6 +218,8 @@ const HousingDetail = () => {
             email={listing.profiles.email}
             phoneNumber={listing.profiles.phone_number}
             createdAt={listing.created_at}
+            avatarUrl={listing.profiles.avatar_url}
+            fullName={listing.profiles.full_name}
           />
 
           <HousingActions

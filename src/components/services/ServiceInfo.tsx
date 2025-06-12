@@ -1,7 +1,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Star, Calendar } from "lucide-react";
+import { Calendar } from "lucide-react";
 
 interface ServiceInfoProps {
   title: string;
@@ -17,10 +17,6 @@ const ServiceInfo = ({ title, price, description, location, createdAt }: Service
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-3xl font-bold">{title}</h1>
-          <div className="flex items-center text-yellow-500">
-            <Star size={20} className="fill-current" />
-            <span className="ml-1 font-medium">4.8</span>
-          </div>
         </div>
         
         <p className="text-3xl font-bold text-green-600 mb-4">${price}/hour</p>

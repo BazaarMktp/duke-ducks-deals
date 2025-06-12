@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -23,6 +22,8 @@ interface Product {
     profile_name: string;
     email: string;
     phone_number?: string;
+    avatar_url?: string;
+    full_name?: string;
   };
 }
 
@@ -53,7 +54,7 @@ const MarketplaceItemDetail = () => {
         .from('listings')
         .select(`
           *,
-          profiles!listings_user_id_fkey(profile_name, email, phone_number)
+          profiles!listings_user_id_fkey(profile_name, email, phone_number, avatar_url, full_name)
         `)
         .eq('id', id)
         .eq('category', 'marketplace')
@@ -249,6 +250,8 @@ const MarketplaceItemDetail = () => {
             email={product.profiles.email}
             phoneNumber={product.profiles.phone_number}
             createdAt={product.created_at}
+            avatarUrl={product.profiles.avatar_url}
+            fullName={product.profiles.full_name}
           />
 
           <ProductActions
