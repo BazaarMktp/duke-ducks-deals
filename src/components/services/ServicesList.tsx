@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Heart, MessageCircle, Star, Search } from "lucide-react";
+import { Heart, MessageCircle, Search } from "lucide-react";
 
 interface ServiceListing {
   id: string;
@@ -77,12 +77,6 @@ const ServicesList = ({
                     </CardTitle>
                   </Link>
                 </div>
-                {listing.listing_type === 'offer' && (
-                  <div className="flex items-center text-yellow-500">
-                    <Star size={16} className="fill-current" />
-                    <span className="text-sm ml-1">4.8</span>
-                  </div>
-                )}
               </div>
               <p className="text-sm text-muted-foreground mb-2">by {getDisplayName()}</p>
               <p className="text-sm mb-3 line-clamp-3">{listing.description}</p>

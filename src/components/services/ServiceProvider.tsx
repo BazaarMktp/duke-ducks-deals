@@ -1,15 +1,38 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { User, Star, Calendar } from "lucide-react";
+import { User, Calendar } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface ServiceProviderProps {
   profileName: string;
   email: string;
   phoneNumber?: string;
   createdAt: string;
+  avatarUrl?: string;
+  fullName?: string;
 }
 
-const ServiceProvider = ({ profileName, email, phoneNumber, createdAt }: ServiceProviderProps) => {
+const ServiceProvider = ({ 
+  profileName, 
+  email, 
+  phoneNumber, 
+  createdAt, 
+  avatarUrl,
+  fullName 
+}: ServiceProviderProps) => {
+  // Get first name from full_name or fallback to profile_name
+  const getFirstName = () => {
+    if (fullName) {
+      return fullName.split(' ')[0];
+    }
+    return profileName;
+  };
+
+  const getInitials = () => {
+    const firstName = getFirstName();
+    return firstName.slice(0, 2).toUpperCase();
+  };
+
   return (
     <Card className="mb-6">
       <CardHeader>
@@ -20,10 +43,13 @@ const ServiceProvider = ({ profileName, email, phoneNumber, createdAt }: Service
       </CardHeader>
       <CardContent>
         <div className="text-center mb-4">
-          <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
-            <User size={24} className="text-blue-600" />
-          </div>
-          <h3 className="font-bold text-lg">{profileName}</h3>
+          <Avatar className="w-16 h-16 mx-auto mb-3">
+            <AvatarImage src={avatarUrl} />
+            <AvatarFallback className="bg-blue-100 text-blue-600">
+              {getInitials()}
+            </AvatarFallback>
+          </Avatar>
+          <h3 className="font-bold text-lg">{getFirstName()}</h3>
           <p className="text-sm text-gray-600">{email}</p>
           {phoneNumber && (
             <p className="text-sm text-gray-600">{phoneNumber}</p>
@@ -33,14 +59,11 @@ const ServiceProvider = ({ profileName, email, phoneNumber, createdAt }: Service
         <div className="space-y-2 text-sm">
           <div className="flex items-center justify-between">
             <span className="text-gray-600">Rating:</span>
-            <div className="flex items-center">
-              <Star size={14} className="fill-current text-yellow-500" />
-              <span className="ml-1">4.8 (24 reviews)</span>
-            </div>
+            <span>No reviews yet</span>
           </div>
           <div className="flex items-center justify-between">
             <span className="text-gray-600">Response time:</span>
-            <span>Within 2 hours</span>
+            <span>New provider</span>
           </div>
           <div className="flex items-center justify-between">
             <span className="text-gray-600">Member since:</span>

@@ -1,4 +1,5 @@
 
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 
@@ -23,10 +24,12 @@ export const WelcomeSection = ({ user }: WelcomeSectionProps) => {
             </h1>
             <p className="text-blue-100 mt-2">What would you like to do today?</p>
           </div>
-          <Button className="flex items-center space-x-2 bg-white text-blue-600 hover:bg-blue-50">
-            <Plus size={16} />
-            <span>Create Listing</span>
-          </Button>
+          <Link to="/create-listing">
+            <Button className="flex items-center space-x-2 bg-white text-blue-600 hover:bg-blue-50">
+              <Plus size={16} />
+              <span>Create Listing</span>
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

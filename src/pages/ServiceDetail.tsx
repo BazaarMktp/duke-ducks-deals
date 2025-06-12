@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -22,6 +21,8 @@ interface ServiceListing {
     profile_name: string;
     email: string;
     phone_number?: string;
+    avatar_url?: string;
+    full_name?: string;
   };
 }
 
@@ -49,7 +50,7 @@ const ServiceDetail = () => {
         .from('listings')
         .select(`
           *,
-          profiles!listings_user_id_fkey(profile_name, email, phone_number)
+          profiles!listings_user_id_fkey(profile_name, email, phone_number, avatar_url, full_name)
         `)
         .eq('id', id)
         .eq('category', 'services')
@@ -210,6 +211,8 @@ const ServiceDetail = () => {
               email={service.profiles.email}
               phoneNumber={service.profiles.phone_number}
               createdAt={service.created_at}
+              avatarUrl={service.profiles.avatar_url}
+              fullName={service.profiles.full_name}
             />
 
             <ServiceActions
