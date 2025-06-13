@@ -9,6 +9,7 @@ import ProductImageGallery from "@/components/marketplace/ProductImageGallery";
 import ProductInfo from "@/components/marketplace/ProductInfo";
 import SellerInfo from "@/components/marketplace/SellerInfo";
 import ProductActions from "@/components/marketplace/ProductActions";
+import ReportListing from "@/components/common/ReportListing";
 
 interface Product {
   id: string;
@@ -225,10 +226,13 @@ const MarketplaceItemDetail = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <Link to="/marketplace" className="inline-flex items-center mb-6 text-blue-600 hover:text-blue-800">
-        <ArrowLeft size={20} className="mr-2" />
-        Back to Marketplace
-      </Link>
+      <div className="flex justify-between items-center mb-6">
+        <Link to="/marketplace" className="inline-flex items-center text-blue-600 hover:text-blue-800">
+          <ArrowLeft size={20} className="mr-2" />
+          Back to Marketplace
+        </Link>
+        <ReportListing listingId={product.id} listingType="marketplace" />
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <ProductImageGallery

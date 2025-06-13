@@ -39,7 +39,7 @@ const Footer = () => {
             <ul className="space-y-2 text-sm text-gray-400">
               <li><Link to="/about" className="hover:text-white transition-colors">About Us</Link></li>
               <li><Link to="/faq" className="hover:text-white transition-colors">FAQ</Link></li>
-              <li><a href="mailto:support@bazaar.edu" className="hover:text-white transition-colors">Contact</a></li>
+              <li><a href="mailto:info@thebazaarapp.com" className="hover:text-white transition-colors">Contact</a></li>
             </ul>
           </div>
 

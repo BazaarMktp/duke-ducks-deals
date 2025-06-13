@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import ServiceInfo from "@/components/services/ServiceInfo";
 import ServiceProvider from "@/components/services/ServiceProvider";
 import ServiceActions from "@/components/services/ServiceActions";
+import ReportListing from "@/components/common/ReportListing";
 
 interface ServiceListing {
   id: string;
@@ -190,10 +191,13 @@ const ServiceDetail = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <Link to="/services" className="inline-flex items-center mb-6 text-blue-600 hover:text-blue-800">
-        <ArrowLeft size={20} className="mr-2" />
-        Back to Services
-      </Link>
+      <div className="flex justify-between items-center mb-6">
+        <Link to="/services" className="inline-flex items-center text-blue-600 hover:text-blue-800">
+          <ArrowLeft size={20} className="mr-2" />
+          Back to Services
+        </Link>
+        <ReportListing listingId={service.id} listingType="services" />
+      </div>
 
       <div className="max-w-4xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
