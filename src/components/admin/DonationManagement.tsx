@@ -154,7 +154,7 @@ const DonationManagement = () => {
                             <Button
                               size="sm"
                               variant="outline"
-                              className="text-green-600"
+                              className="text-green-600 hover:bg-green-50"
                               onClick={() => updateDonationStatus(donation.id, 'approved')}
                             >
                               Approve
@@ -162,12 +162,32 @@ const DonationManagement = () => {
                             <Button
                               size="sm"
                               variant="outline"
-                              className="text-red-600"
+                              className="text-red-600 hover:bg-red-50"
                               onClick={() => updateDonationStatus(donation.id, 'rejected')}
                             >
                               Reject
                             </Button>
                           </>
+                        )}
+                        {donation.status === 'approved' && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="text-red-600 hover:bg-red-50"
+                            onClick={() => updateDonationStatus(donation.id, 'rejected')}
+                          >
+                            Reject
+                          </Button>
+                        )}
+                        {donation.status === 'rejected' && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="text-green-600 hover:bg-green-50"
+                            onClick={() => updateDonationStatus(donation.id, 'approved')}
+                          >
+                            Approve
+                          </Button>
                         )}
                       </div>
                     </TableCell>

@@ -9,6 +9,7 @@ import { AdminProvider } from "@/contexts/AdminContext";
 import Navbar from "@/components/Navbar";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
+import EmailValidation from "./pages/EmailValidation";
 import Marketplace from "./pages/Marketplace";
 import MarketplaceItemDetail from "./pages/MarketplaceItemDetail";
 import Housing from "./pages/Housing";
@@ -44,6 +45,7 @@ function App() {
                 <Routes>
                   <Route path="/" element={<Index />} />
                   <Route path="/auth" element={<Auth />} />
+                  <Route path="/email-validation" element={<EmailValidation />} />
                   <Route path="/marketplace" element={<Marketplace />} />
                   <Route path="/marketplace/:id" element={<MarketplaceItemDetail />} />
                   <Route path="/housing" element={<Housing />} />
