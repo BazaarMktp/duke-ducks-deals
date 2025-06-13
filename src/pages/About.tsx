@@ -1,31 +1,30 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, Target, Eye, Heart } from "lucide-react";
 
 const About = () => {
   const teamMembers = [
     {
-      name: "Sarah Johnson",
+      name: "William Peña",
       role: "Co-Founder & CEO",
-      bio: "Computer Science senior passionate about connecting students and building community.",
+      bio: "Industrial Engineer with UX/UI design and backend development experience, passionate about creating seamless student experiences.",
       image: "/placeholder.svg"
     },
     {
-      name: "Michael Chen",
-      role: "Co-Founder & CTO", 
-      bio: "Full-stack developer focused on creating seamless user experiences.",
+      name: "Ann Marie",
+      role: "Co-Founder & Strategic Lead", 
+      bio: "Strategic visionary focused on building sustainable growth and fostering campus community connections.",
       image: "/placeholder.svg"
     },
     {
-      name: "Emily Rodriguez",
+      name: "Sumeet Batra",
       role: "Product Manager",
-      bio: "Business major dedicated to understanding student needs and improving the platform.",
+      bio: "Product strategist dedicated to understanding student needs and delivering innovative platform solutions.",
       image: "/placeholder.svg"
     },
     {
-      name: "David Kim",
-      role: "Community Manager",
-      bio: "Psychology student building connections and fostering a supportive campus environment.",
+      name: "Sathvika Gandavarapu",
+      role: "Marketing Lead",
+      bio: "Marketing specialist building brand awareness and connecting with student communities across campuses.",
       image: "/placeholder.svg"
     }
   ];
