@@ -252,6 +252,7 @@ const MarketplaceItemDetail = () => {
             createdAt={product.created_at}
             avatarUrl={product.profiles.avatar_url}
             fullName={product.profiles.full_name}
+            isAuthenticated={!!user}
           />
 
           <ProductActions

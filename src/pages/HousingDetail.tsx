@@ -220,6 +220,7 @@ const HousingDetail = () => {
             createdAt={listing.created_at}
             avatarUrl={listing.profiles.avatar_url}
             fullName={listing.profiles.full_name}
+            isAuthenticated={!!user}
           />
 
           <HousingActions

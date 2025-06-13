@@ -1,6 +1,6 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { User, Calendar } from "lucide-react";
+import { User } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface ServiceProviderProps {
@@ -10,6 +10,7 @@ interface ServiceProviderProps {
   createdAt: string;
   avatarUrl?: string;
   fullName?: string;
+  isAuthenticated?: boolean;
 }
 
 const ServiceProvider = ({ 
@@ -18,7 +19,8 @@ const ServiceProvider = ({
   phoneNumber, 
   createdAt, 
   avatarUrl,
-  fullName 
+  fullName,
+  isAuthenticated = false
 }: ServiceProviderProps) => {
   // Get first name from full_name or fallback to profile_name
   const getFirstName = () => {
@@ -50,26 +52,20 @@ const ServiceProvider = ({
             </AvatarFallback>
           </Avatar>
           <h3 className="font-bold text-lg">{getFirstName()}</h3>
-          <p className="text-sm text-gray-600">{email}</p>
-          {phoneNumber && (
-            <p className="text-sm text-gray-600">{phoneNumber}</p>
+          {isAuthenticated ? (
+            <>
+              <p className="text-sm text-gray-600">{email}</p>
+              {phoneNumber && (
+                <p className="text-sm text-gray-600">{phoneNumber}</p>
+              )}
+            </>
+          ) : (
+            <p className="text-sm text-gray-500 italic">Login to see contact details</p>
           )}
         </div>
-        
-        <div className="space-y-2 text-sm">
-          <div className="flex items-center justify-between">
-            <span className="text-gray-600">Rating:</span>
-            <span>No reviews yet</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-gray-600">Response time:</span>
-            <span>New provider</span>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-gray-600">Member since:</span>
-            <span>{new Date(createdAt).getFullYear()}</span>
-          </div>
-        </div>
+        <p className="text-xs text-gray-500 mt-2">
+          Listed on {new Date(createdAt).toLocaleDateString()}
+        </p>
       </CardContent>
     </Card>
   );

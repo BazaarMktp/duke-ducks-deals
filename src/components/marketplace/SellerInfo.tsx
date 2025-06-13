@@ -10,6 +10,7 @@ interface SellerInfoProps {
   createdAt: string;
   avatarUrl?: string;
   fullName?: string;
+  isAuthenticated?: boolean;
 }
 
 const SellerInfo = ({ 
@@ -18,7 +19,8 @@ const SellerInfo = ({
   phoneNumber, 
   createdAt, 
   avatarUrl,
-  fullName 
+  fullName,
+  isAuthenticated = false
 }: SellerInfoProps) => {
   // Get first name from full_name or fallback to profile_name
   const getFirstName = () => {
@@ -50,9 +52,15 @@ const SellerInfo = ({
             </AvatarFallback>
           </Avatar>
           <h3 className="font-bold text-lg">{getFirstName()}</h3>
-          <p className="text-sm text-gray-600">{email}</p>
-          {phoneNumber && (
-            <p className="text-sm text-gray-600">{phoneNumber}</p>
+          {isAuthenticated ? (
+            <>
+              <p className="text-sm text-gray-600">{email}</p>
+              {phoneNumber && (
+                <p className="text-sm text-gray-600">{phoneNumber}</p>
+              )}
+            </>
+          ) : (
+            <p className="text-sm text-gray-500 italic">Login to see contact details</p>
           )}
         </div>
         <p className="text-xs text-gray-500 mt-2">
