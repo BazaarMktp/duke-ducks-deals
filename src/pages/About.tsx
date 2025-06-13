@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, Target, Eye, Heart } from "lucide-react";
 
@@ -5,7 +6,7 @@ const About = () => {
   const teamMembers = [
     {
       name: "William Peña",
-      role: "Co-Founder & CEO",
+      role: "Founder & CEO",
       bio: "Industrial Engineer with UX/UI design and backend development experience, passionate about creating seamless student experiences.",
       image: "/placeholder.svg"
     },
