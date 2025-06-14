@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -121,13 +122,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signOut = async () => {
     console.log('Signing out...');
+    
+    // Clear local state immediately
+    setUser(null);
+    setSession(null);
+    
     try {
+      // Attempt to sign out from Supabase
       await supabase.auth.signOut({ scope: 'global' });
     } catch (error) {
-      console.error('Global sign out failed, but proceeding with client-side cleanup:', error);
+      console.error('Sign out error (continuing anyway):', error);
     }
     
-    // Force a reload to clear all state and redirect to the home page.
+    // Clear any remaining auth data from storage
+    try {
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('supabase.auth.') || key.includes('sb-')) {
+          localStorage.removeItem(key);
+        }
+      });
+    } catch (error) {
+      console.error('Storage cleanup error:', error);
+    }
+    
+    // Force reload to ensure clean state
     window.location.href = '/';
   };
 

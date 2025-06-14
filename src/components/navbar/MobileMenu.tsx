@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -53,6 +54,15 @@ const MobileMenu = ({ user, isOpen, onClose, onSignOut, unreadMessages }: Mobile
   const getUserInitials = () => {
     const name = getUserDisplayName();
     return name.slice(0, 2).toUpperCase();
+  };
+
+  const handleSignOut = () => {
+    console.log('Mobile sign out clicked');
+    onClose();
+    // Use a small delay to ensure menu closes before sign out
+    setTimeout(() => {
+      onSignOut();
+    }, 100);
   };
 
   if (!isOpen) return null;
@@ -125,10 +135,7 @@ const MobileMenu = ({ user, isOpen, onClose, onSignOut, unreadMessages }: Mobile
           <Button
             variant="outline"
             className="w-full"
-            onClick={() => {
-              onClose();
-              setTimeout(onSignOut, 150);
-            }}
+            onClick={handleSignOut}
           >
             <LogOut size={16} className="mr-2" />
             Sign Out
