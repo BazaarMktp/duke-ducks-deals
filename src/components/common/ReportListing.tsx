@@ -13,6 +13,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 
 interface ReportListingProps {
   listingId: string;
@@ -20,6 +22,7 @@ interface ReportListingProps {
 }
 
 const ReportListing = ({ listingId, listingType }: ReportListingProps) => {
+  const { user } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [reason, setReason] = useState("");
   const [description, setDescription] = useState("");
@@ -45,11 +48,29 @@ const ReportListing = ({ listingId, listingType }: ReportListingProps) => {
       return;
     }
 
+    if (!user) {
+      toast({
+        title: "Authentication Error",
+        description: "You must be logged in to report a listing.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsSubmitting(true);
     
     try {
-      // For now, we'll just show a success message
-      // In a real implementation, this would send the report to the backend
+      const { error } = await supabase.from('reports').insert({
+        listing_id: listingId,
+        reporter_id: user.id,
+        reason: reason,
+        description: description,
+      });
+
+      if (error) {
+        throw error;
+      }
+      
       toast({
         title: "Report submitted",
         description: "Thank you for reporting this listing. We'll review it shortly.",
@@ -68,6 +89,10 @@ const ReportListing = ({ listingId, listingType }: ReportListingProps) => {
       setIsSubmitting(false);
     }
   };
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
