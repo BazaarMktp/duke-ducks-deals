@@ -33,8 +33,22 @@ const CreateListing = () => {
 
     setLoading(true);
     try {
+      // Fetch user's college_id from their profile
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('college_id')
+        .eq('id', user.id)
+        .single();
+      
+      if (profileError || !profile?.college_id) {
+        toast.error("Could not verify your college association. Please contact support if this issue persists.");
+        setLoading(false);
+        return;
+      }
+
       const insertData: any = {
         user_id: user.id,
+        college_id: profile.college_id,
         title: formData.title,
         description: formData.description,
         price: formData.price ? parseFloat(formData.price) : null,

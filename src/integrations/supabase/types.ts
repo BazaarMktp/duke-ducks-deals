@@ -96,6 +96,27 @@ export type Database = {
           },
         ]
       }
+      colleges: {
+        Row: {
+          created_at: string
+          domain: string
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          domain: string
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          domain?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
       conversations: {
         Row: {
           archived_by_buyer: boolean | null
@@ -243,6 +264,7 @@ export type Database = {
       listings: {
         Row: {
           category: Database["public"]["Enums"]["listing_category"]
+          college_id: string
           created_at: string | null
           description: string | null
           expires_at: string | null
@@ -262,6 +284,7 @@ export type Database = {
         }
         Insert: {
           category: Database["public"]["Enums"]["listing_category"]
+          college_id: string
           created_at?: string | null
           description?: string | null
           expires_at?: string | null
@@ -281,6 +304,7 @@ export type Database = {
         }
         Update: {
           category?: Database["public"]["Enums"]["listing_category"]
+          college_id?: string
           created_at?: string | null
           description?: string | null
           expires_at?: string | null
@@ -299,6 +323,13 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "listings_college_id_fkey"
+            columns: ["college_id"]
+            isOneToOne: false
+            referencedRelation: "colleges"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "listings_user_id_fkey"
             columns: ["user_id"]
@@ -353,6 +384,7 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          college_id: string
           created_at: string | null
           email: string
           full_name: string
@@ -365,6 +397,7 @@ export type Database = {
         }
         Insert: {
           avatar_url?: string | null
+          college_id: string
           created_at?: string | null
           email: string
           full_name: string
@@ -377,6 +410,7 @@ export type Database = {
         }
         Update: {
           avatar_url?: string | null
+          college_id?: string
           created_at?: string | null
           email?: string
           full_name?: string
@@ -387,7 +421,15 @@ export type Database = {
           profile_name?: string
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_college_id_fkey"
+            columns: ["college_id"]
+            isOneToOne: false
+            referencedRelation: "colleges"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       reports: {
         Row: {
@@ -550,6 +592,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_current_user_college_id: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
       get_platform_stats: {
         Args: Record<PropertyKey, never>
         Returns: Json
