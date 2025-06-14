@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -123,7 +122,7 @@ const MobileMenu = ({ user, isOpen, onClose, onSignOut, unreadMessages }: Mobile
       )}
       <div className="pt-4 space-y-2">
         {user ? (
-          <Button variant="outline" className="w-full" onClick={onSignOut}>
+          <Button variant="outline" className="w-full" onClick={() => { onSignOut(); onClose(); }}>
             <LogOut size={16} className="mr-2" />
             Sign Out
           </Button>
