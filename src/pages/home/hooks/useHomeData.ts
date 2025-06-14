@@ -1,6 +1,5 @@
 
-import { useEffect, useMemo } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Listing, Profile, Stats } from "../types";
 
@@ -97,38 +96,48 @@ const fetchProfiles = async (userIds: string[]): Promise<Record<string, Profile>
 };
 
 export const useHomeData = (user: any) => {
-  const queryClient = useQueryClient();
+  const [stats, setStats] = useState<Stats>({ activeListings: 0, totalUsers: 0, totalDonations: 0, totalColleges: 0 });
+  const [rawFeaturedListings, setRawFeaturedListings] = useState<Listing[]>([]);
+  const [rawFeaturedRequests, setRawFeaturedRequests] = useState<Listing[]>([]);
+  const [profiles, setProfiles] = useState<Record<string, Profile>>({});
+  const [isLoading, setIsLoading] = useState(true);
 
-  const { data: stats, isLoading: isStatsLoading } = useQuery({
-    queryKey: ['stats'],
-    queryFn: fetchStats,
-  });
+  const fetchData = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const statsData = await fetchStats();
+      setStats(statsData);
 
-  const { data: rawFeaturedListings, isLoading: isListingsLoading } = useQuery({
-    queryKey: ['featuredListings'],
-    queryFn: fetchFeaturedListings,
-    enabled: !!user,
-  });
+      if (user) {
+        const [listingsData, requestsData] = await Promise.all([
+          fetchFeaturedListings(),
+          fetchFeaturedRequests(),
+        ]);
+        setRawFeaturedListings(listingsData);
+        setRawFeaturedRequests(requestsData);
 
-  const { data: rawFeaturedRequests, isLoading: isRequestsLoading } = useQuery({
-    queryKey: ['featuredRequests'],
-    queryFn: fetchFeaturedRequests,
-    enabled: !!user,
-  });
+        const userIds = [...new Set([
+          ...listingsData.map(item => item.user_id),
+          ...requestsData.map(item => item.user_id),
+        ])];
+        
+        if (userIds.length > 0) {
+          const profilesData = await fetchProfiles(userIds);
+          setProfiles(profilesData);
+        } else {
+          setProfiles({});
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching home data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [user]);
 
-  const userIds = useMemo(() => {
-    const allUserIds = [
-      ...(rawFeaturedListings || []).map(item => item.user_id),
-      ...(rawFeaturedRequests || []).map(item => item.user_id),
-    ];
-    return [...new Set(allUserIds)];
-  }, [rawFeaturedListings, rawFeaturedRequests]);
-
-  const { data: profiles } = useQuery({
-    queryKey: ['profiles', userIds],
-    queryFn: () => fetchProfiles(userIds),
-    enabled: userIds.length > 0,
-  });
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   const featuredListings = useMemo(() => {
     if (!rawFeaturedListings || !profiles) return [];
@@ -157,8 +166,7 @@ export const useHomeData = (user: any) => {
         'postgres_changes',
         { event: '*', schema: 'public', table: 'listings' },
         () => {
-          queryClient.invalidateQueries({ queryKey: ['featuredListings'] });
-          queryClient.invalidateQueries({ queryKey: ['stats'] });
+          fetchData();
         }
       )
       .subscribe();
@@ -166,12 +174,12 @@ export const useHomeData = (user: any) => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [user, queryClient]);
+  }, [user, fetchData]);
 
   return {
     featuredListings,
     featuredRequests,
-    isLoading: isStatsLoading || (!!user && (isListingsLoading || isRequestsLoading)),
-    stats: stats || { activeListings: 0, totalUsers: 0, totalDonations: 0, totalColleges: 0 },
+    isLoading,
+    stats,
   };
 };
