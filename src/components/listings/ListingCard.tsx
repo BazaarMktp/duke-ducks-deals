@@ -3,9 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Edit, Trash2, Play, Pause, MapPin } from "lucide-react";
+import { Edit, Trash2, Play, Pause, MapPin, AlertTriangle } from "lucide-react";
 import { DeleteListingDialog } from "./DeleteListingDialog";
 import { Listing } from "@/hooks/useMyListings";
+import { differenceInDays, parseISO } from "date-fns";
 
 interface ListingCardProps {
   listing: Listing;
@@ -28,6 +29,7 @@ const getStatusColor = (status: string) => {
 
 export const ListingCard = ({ listing, onDelete, onStatusToggle }: ListingCardProps) => {
   const navigate = useNavigate();
+  const isOldListing = differenceInDays(new Date(), parseISO(listing.created_at)) > 30;
 
   return (
     <Card className="hover:shadow-lg transition-shadow">
@@ -60,6 +62,16 @@ export const ListingCard = ({ listing, onDelete, onStatusToggle }: ListingCardPr
         
         <p className="text-sm mb-3 line-clamp-2">{listing.description}</p>
         
+        {isOldListing && listing.status === 'active' && (
+          <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-3 my-3 rounded-md flex items-start">
+            <AlertTriangle size={32} className="mr-3 flex-shrink-0" />
+            <div>
+              <p className="font-bold text-sm">Still available?</p>
+              <p className="text-xs">This listing is over a month old. Please update its status if it's sold.</p>
+            </div>
+          </div>
+        )}
+
         {listing.price && (
           <p className="text-xl font-bold text-green-600 mb-3">
             ${listing.price}
