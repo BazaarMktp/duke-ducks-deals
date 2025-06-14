@@ -2,7 +2,10 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, FileText, MessageSquare, Ban, AlertTriangle } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Users, FileText, MessageSquare, Ban, AlertTriangle, Activity, BarChart } from "lucide-react";
+import UserAnalytics from "./analytics/UserAnalytics";
+import ListingAnalytics from "./analytics/ListingAnalytics";
 
 interface PlatformStats {
   total_users: number;
@@ -89,6 +92,7 @@ const AdminStats = () => {
 
   return (
     <div className="space-y-6">
+      {/* Overview Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {statCards.map((stat, index) => (
           <Card key={index}>
@@ -102,6 +106,28 @@ const AdminStats = () => {
           </Card>
         ))}
       </div>
+
+      {/* Detailed Analytics */}
+      <Tabs defaultValue="users" className="space-y-4">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="users" className="flex items-center gap-2">
+            <Activity className="h-4 w-4" />
+            User Analytics
+          </TabsTrigger>
+          <TabsTrigger value="listings" className="flex items-center gap-2">
+            <BarChart className="h-4 w-4" />
+            Listing Analytics
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="users">
+          <UserAnalytics />
+        </TabsContent>
+
+        <TabsContent value="listings">
+          <ListingAnalytics />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

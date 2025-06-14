@@ -29,11 +29,14 @@ const AdminDashboard = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold mb-2">Admin Dashboard</h1>
+        <p className="text-gray-600">Monitor and manage your platform's performance</p>
+      </div>
       
-      <Tabs defaultValue="stats" className="space-y-6">
+      <Tabs defaultValue="analytics" className="space-y-6">
         <TabsList className="grid w-full grid-cols-6">
-          <TabsTrigger value="stats">Statistics</TabsTrigger>
+          <TabsTrigger value="analytics">Analytics</TabsTrigger>
           <TabsTrigger value="users">Users</TabsTrigger>
           <TabsTrigger value="listings">Listings</TabsTrigger>
           <TabsTrigger value="reports">Reports</TabsTrigger>
@@ -41,7 +44,7 @@ const AdminDashboard = () => {
           <TabsTrigger value="support">Support</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="stats">
+        <TabsContent value="analytics">
           <AdminStats />
         </TabsContent>
 
