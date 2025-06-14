@@ -122,7 +122,14 @@ const MobileMenu = ({ user, isOpen, onClose, onSignOut, unreadMessages }: Mobile
       )}
       <div className="pt-4 space-y-2">
         {user ? (
-          <Button variant="outline" className="w-full" onClick={() => { onSignOut(); onClose(); }}>
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={() => {
+              onClose();
+              setTimeout(onSignOut, 150);
+            }}
+          >
             <LogOut size={16} className="mr-2" />
             Sign Out
           </Button>
