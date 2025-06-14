@@ -73,9 +73,32 @@ export const useMarketplace = (user: any, searchQuery: string, sortBy: string, a
   }, [fetchListings]);
   
   useEffect(() => {
-    if (user) {
-      fetchFavorites();
+    if (!user) {
+      setFavorites([]);
+      return;
     }
+
+    fetchFavorites();
+
+    const channel = supabase
+      .channel('marketplace-favorites-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'favorites',
+          filter: `user_id=eq.${user.id}`,
+        },
+        () => {
+          fetchFavorites();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [user, fetchFavorites]);
 
   const toggleFavorite = async (listingId: string) => {

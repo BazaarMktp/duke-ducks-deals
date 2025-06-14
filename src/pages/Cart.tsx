@@ -1,5 +1,4 @@
-
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -31,13 +30,7 @@ const Cart = () => {
   const { user } = useAuth();
   const { toast } = useToast();
 
-  useEffect(() => {
-    if (user) {
-      fetchCartItems();
-    }
-  }, [user]);
-
-  const fetchCartItems = async () => {
+  const fetchCartItems = useCallback(async () => {
     if (!user) return;
 
     try {
@@ -87,7 +80,34 @@ const Cart = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user, toast]);
+
+  useEffect(() => {
+    if (!user) {
+      setLoading(false);
+      return;
+    }
+
+    fetchCartItems();
+
+    const channel = supabase
+      .channel('cart-items-page-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'cart_items',
+          filter: `user_id=eq.${user.id}`,
+        },
+        () => fetchCartItems()
+      )
+      .subscribe();
+    
+    return () => {
+      supabase.removeChannel(channel);
+    }
+  }, [user, fetchCartItems]);
 
   const removeFromCart = async (cartItemId: string) => {
     try {
