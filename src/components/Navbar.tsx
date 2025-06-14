@@ -7,10 +7,12 @@ import Logo from "./navbar/Logo";
 import Navigation from "./navbar/Navigation";
 import UserMenu from "./navbar/UserMenu";
 import MobileMenu from "./navbar/MobileMenu";
+import { useUnreadMessages } from "@/hooks/useUnreadMessages";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, signOut } = useAuth();
+  const { unreadCount } = useUnreadMessages();
 
   const handleSignOut = async () => {
     await signOut();
@@ -26,7 +28,7 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           <Logo />
           <Navigation />
-          <UserMenu user={user} onSignOut={handleSignOut} />
+          <UserMenu user={user} onSignOut={handleSignOut} unreadMessages={unreadCount} />
 
           {/* Mobile menu button */}
           <Button
@@ -44,6 +46,7 @@ const Navbar = () => {
           isOpen={isMenuOpen}
           onClose={handleMobileMenuClose}
           onSignOut={handleSignOut}
+          unreadMessages={unreadCount}
         />
       </div>
     </nav>

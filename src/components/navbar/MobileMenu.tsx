@@ -20,9 +20,10 @@ interface MobileMenuProps {
   isOpen: boolean;
   onClose: () => void;
   onSignOut: () => void;
+  unreadMessages: number;
 }
 
-const MobileMenu = ({ user, isOpen, onClose, onSignOut }: MobileMenuProps) => {
+const MobileMenu = ({ user, isOpen, onClose, onSignOut, unreadMessages }: MobileMenuProps) => {
   const navigation = [
     { name: "Home", href: "/", icon: Home },
     { name: "Marketplace", href: "/marketplace", icon: ShoppingCart },
@@ -77,6 +78,11 @@ const MobileMenu = ({ user, isOpen, onClose, onSignOut }: MobileMenuProps) => {
         >
           <item.icon size={16} />
           <span>{item.name}</span>
+          {item.name === "Messages" && unreadMessages > 0 && (
+            <span className="ml-auto bg-red-500 text-white text-xs font-semibold rounded-full h-5 w-5 flex items-center justify-center">
+              {unreadMessages}
+            </span>
+          )}
         </Link>
       ))}
       {user && (

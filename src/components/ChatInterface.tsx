@@ -1,5 +1,4 @@
-
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,6 +18,7 @@ interface Message {
   message: string;
   sender_id: string;
   created_at: string;
+  is_read: boolean;
   profiles: {
     profile_name: string;
   };
@@ -55,6 +55,24 @@ const ChatInterface = () => {
   const { user } = useAuth();
   const { toast } = useToast();
 
+  const markMessagesAsRead = useCallback(async (conversationId: string) => {
+    if (!user) return;
+    try {
+      await supabase
+        .from('messages')
+        .update({ is_read: true })
+        .eq('conversation_id', conversationId)
+        .neq('sender_id', user.id);
+    } catch (error) {
+      console.error('Error marking messages as read:', error);
+      toast({
+        title: "Error",
+        description: "Failed to mark messages as read.",
+        variant: "destructive",
+      });
+    }
+  }, [user, toast]);
+
   useEffect(() => {
     if (user) {
       fetchConversations();
@@ -64,9 +82,16 @@ const ChatInterface = () => {
   useEffect(() => {
     if (selectedConversation) {
       fetchMessages();
-      subscribeToMessages();
+      markMessagesAsRead(selectedConversation);
+      const subscription = subscribeToMessages();
+      
+      return () => {
+        if (subscription) {
+          subscription.unsubscribe();
+        }
+      };
     }
-  }, [selectedConversation]);
+  }, [selectedConversation, markMessagesAsRead]);
 
   useEffect(() => {
     scrollToBottom();
@@ -126,6 +151,7 @@ const ChatInterface = () => {
           message,
           sender_id,
           created_at,
+          is_read,
           profiles!messages_sender_id_fkey(profile_name)
         `)
         .eq('conversation_id', selectedConversation)
@@ -146,14 +172,13 @@ const ChatInterface = () => {
       .on('postgres_changes', 
         { event: 'INSERT', schema: 'public', table: 'messages', filter: `conversation_id=eq.${selectedConversation}` },
         (payload) => {
-          fetchMessages(); // Refetch to get profile data
+          fetchMessages();
+          markMessagesAsRead(selectedConversation);
         }
       )
       .subscribe();
 
-    return () => {
-      subscription.unsubscribe();
-    };
+    return subscription;
   };
 
   const sendMessage = async () => {
@@ -276,6 +301,10 @@ const ChatInterface = () => {
     }
   };
 
+  const handleSelectConversation = (convId: string) => {
+    setSelectedConversation(convId);
+  }
+
   if (!user) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -341,7 +370,7 @@ const ChatInterface = () => {
                   >
                     <div 
                       className="flex-1"
-                      onClick={() => setSelectedConversation(conv.id)}
+                      onClick={() => handleSelectConversation(conv.id)}
                     >
                       <h4 className="font-semibold">{conv.listings.title}</h4>
                       <p className="text-sm text-gray-600">

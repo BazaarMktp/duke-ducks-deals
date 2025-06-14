@@ -313,6 +313,7 @@ export type Database = {
           conversation_id: string
           created_at: string | null
           id: string
+          is_read: boolean
           message: string
           sender_id: string
         }
@@ -320,6 +321,7 @@ export type Database = {
           conversation_id: string
           created_at?: string | null
           id?: string
+          is_read?: boolean
           message: string
           sender_id: string
         }
@@ -327,6 +329,7 @@ export type Database = {
           conversation_id?: string
           created_at?: string | null
           id?: string
+          is_read?: boolean
           message?: string
           sender_id?: string
         }
@@ -550,6 +553,10 @@ export type Database = {
       get_platform_stats: {
         Args: Record<PropertyKey, never>
         Returns: Json
+      }
+      get_unread_message_count: {
+        Args: { _user_id: string }
+        Returns: number
       }
       has_role: {
         Args: {

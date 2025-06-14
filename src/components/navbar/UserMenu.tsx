@@ -9,15 +9,16 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { User, Settings, ListFilter, LogOut, Shield, Heart, ShoppingCart } from "lucide-react";
+import { User, Settings, ListFilter, LogOut, Shield, Heart, ShoppingCart, MessageCircle } from "lucide-react";
 import { useAdmin } from "@/contexts/AdminContext";
 
 interface UserMenuProps {
   user: any;
   onSignOut: () => void;
+  unreadMessages: number;
 }
 
-const UserMenu = ({ user, onSignOut }: UserMenuProps) => {
+const UserMenu = ({ user, onSignOut, unreadMessages }: UserMenuProps) => {
   const { isAdmin } = useAdmin();
 
   const getUserDisplayName = () => {
@@ -66,7 +67,7 @@ const UserMenu = ({ user, onSignOut }: UserMenuProps) => {
             <span className="text-sm">{getUserDisplayName()}</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-48">
+        <DropdownMenuContent align="end" className="w-56">
           <DropdownMenuItem asChild>
             <Link to="/profile" className="flex items-center space-x-2">
               <User size={16} />
@@ -77,6 +78,17 @@ const UserMenu = ({ user, onSignOut }: UserMenuProps) => {
             <Link to="/my-listings" className="flex items-center space-x-2">
               <ListFilter size={16} />
               <span>My Listings</span>
+            </Link>
+          </DropdownMenuItem>
+           <DropdownMenuItem asChild>
+            <Link to="/messages" className="flex items-center space-x-2">
+              <MessageCircle size={16} />
+              <span className="flex-grow">Messages</span>
+              {unreadMessages > 0 && (
+                <span className="bg-red-500 text-white text-xs font-semibold rounded-full h-5 w-5 flex items-center justify-center">
+                  {unreadMessages}
+                </span>
+              )}
             </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
