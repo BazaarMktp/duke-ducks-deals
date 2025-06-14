@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useListingManagement } from "./listing-management/useListingManagement";
 import ListingSearch from "./listing-management/ListingSearch";
 import ListingsTable from "./listing-management/ListingsTable";
-import CollegeFilter from "../common/CollegeFilter";
+import CollegeFilter from "./common/CollegeFilter";
 
 const ListingManagement = () => {
   const {

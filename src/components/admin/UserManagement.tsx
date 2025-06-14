@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import UserSearch from "./user-management/UserSearch";
 import UsersTable from "./user-management/UsersTable";
 import { useUserManagement } from "./user-management/useUserManagement";
-import CollegeFilter from "../common/CollegeFilter";
+import CollegeFilter from "./common/CollegeFilter";
 
 const UserManagement = () => {
   const { 
