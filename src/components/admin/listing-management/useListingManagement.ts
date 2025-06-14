@@ -4,10 +4,17 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Listing } from './types';
 
+interface College {
+  id: string;
+  name: string;
+}
+
 export const useListingManagement = () => {
   const [listings, setListings] = useState<Listing[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
+  const [colleges, setColleges] = useState<College[]>([]);
+  const [collegeFilter, setCollegeFilter] = useState('all');
 
   const fetchListings = async () => {
     try {
@@ -16,6 +23,7 @@ export const useListingManagement = () => {
         .from('listings')
         .select(`
           *,
+          college_id,
           profiles!listings_user_id_fkey(profile_name, email)
         `)
         .order('created_at', { ascending: false });
@@ -35,6 +43,15 @@ export const useListingManagement = () => {
 
   useEffect(() => {
     fetchListings();
+    const fetchColleges = async () => {
+      const { data, error } = await supabase.from('colleges').select('id, name');
+      if (error) {
+        toast.error('Failed to fetch colleges');
+      } else if (data) {
+        setColleges(data);
+      }
+    };
+    fetchColleges();
   }, []);
 
   const handleToggleStatus = async (listingId: string, currentStatus: string) => {
@@ -93,9 +110,10 @@ export const useListingManagement = () => {
   };
 
   const filteredListings = listings.filter(listing =>
-    listing.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    listing.profiles.profile_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    listing.profiles.email.toLowerCase().includes(searchTerm.toLowerCase())
+    (listing.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (listing.profiles?.profile_name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (listing.profiles?.email || '').toLowerCase().includes(searchTerm.toLowerCase())) &&
+    (collegeFilter === 'all' || (listing as any).college_id === collegeFilter)
   );
 
   return {
@@ -105,6 +123,9 @@ export const useListingManagement = () => {
     loading,
     handleToggleStatus,
     handleDelete,
-    refetch: fetchListings
+    refetch: fetchListings,
+    colleges,
+    collegeFilter,
+    setCollegeFilter,
   };
 };

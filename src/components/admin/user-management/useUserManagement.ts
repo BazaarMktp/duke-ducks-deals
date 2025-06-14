@@ -4,10 +4,17 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { User } from './types';
 
+interface College {
+  id: string;
+  name: string;
+}
+
 export const useUserManagement = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
+  const [colleges, setColleges] = useState<College[]>([]);
+  const [collegeFilter, setCollegeFilter] = useState('all');
 
   const fetchUsers = async () => {
     try {
@@ -17,7 +24,7 @@ export const useUserManagement = () => {
       // First fetch all profiles
       const { data: profiles, error: profilesError } = await supabase
         .from('profiles')
-        .select('*')
+        .select('*, college_id')
         .order('created_at', { ascending: false });
 
       if (profilesError) {
@@ -63,6 +70,16 @@ export const useUserManagement = () => {
 
   useEffect(() => {
     fetchUsers();
+
+    const fetchColleges = async () => {
+      const { data, error } = await supabase.from('colleges').select('id, name');
+      if (error) {
+        toast.error('Failed to fetch colleges');
+      } else if (data) {
+        setColleges(data);
+      }
+    };
+    fetchColleges();
   }, []);
 
   const handleBanUser = async (userId: string, reason: string) => {
@@ -159,9 +176,10 @@ export const useUserManagement = () => {
   };
 
   const filteredUsers = users.filter(user =>
-    user.profile_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (user.profile_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.full_name?.toLowerCase().includes(searchTerm.toLowerCase())
+    user.full_name?.toLowerCase().includes(searchTerm.toLowerCase())) &&
+    (collegeFilter === 'all' || (user as any).college_id === collegeFilter)
   );
 
   return {
@@ -172,6 +190,9 @@ export const useUserManagement = () => {
     handleBanUser,
     handleUnbanUser,
     handleDeleteUser,
-    refetch: fetchUsers
+    refetch: fetchUsers,
+    colleges,
+    collegeFilter,
+    setCollegeFilter,
   };
 };

@@ -1,9 +1,9 @@
 
-import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import UserSearch from "./user-management/UserSearch";
 import UsersTable from "./user-management/UsersTable";
 import { useUserManagement } from "./user-management/useUserManagement";
+import CollegeFilter from "../common/CollegeFilter";
 
 const UserManagement = () => {
   const { 
@@ -13,7 +13,10 @@ const UserManagement = () => {
     setSearchTerm,
     handleBanUser, 
     handleUnbanUser, 
-    handleDeleteUser 
+    handleDeleteUser,
+    colleges,
+    collegeFilter,
+    setCollegeFilter,
   } = useUserManagement();
 
   if (loading) {
@@ -24,14 +27,22 @@ const UserManagement = () => {
     <Card>
       <CardHeader>
         <CardTitle>User Management</CardTitle>
-        <UserSearch 
-          searchTerm={searchTerm} 
-          onSearchChange={setSearchTerm} 
-        />
+        <div className="flex flex-col md:flex-row md:items-center gap-2 mt-4">
+          <UserSearch 
+            searchTerm={searchTerm} 
+            onSearchChange={setSearchTerm} 
+          />
+          <CollegeFilter
+            colleges={colleges}
+            selectedCollege={collegeFilter}
+            onCollegeChange={setCollegeFilter}
+          />
+        </div>
       </CardHeader>
       <CardContent>
         <UsersTable
           users={users}
+          colleges={colleges}
           onBanUser={handleBanUser}
           onUnbanUser={handleUnbanUser}
           onDeleteUser={handleDeleteUser}

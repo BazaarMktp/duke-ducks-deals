@@ -11,22 +11,31 @@ import { Badge } from "@/components/ui/badge";
 import { Listing } from "./types";
 import ListingActions from "./ListingActions";
 
+interface College {
+  id: string;
+  name: string;
+}
+
 interface ListingsTableProps {
   listings: Listing[];
+  colleges: College[];
   onToggleStatus: (listingId: string, currentStatus: string) => void;
   onDelete: (listingId: string) => void;
 }
 
-const ListingsTable = ({ listings, onToggleStatus, onDelete }: ListingsTableProps) => {
+const ListingsTable = ({ listings, colleges, onToggleStatus, onDelete }: ListingsTableProps) => {
+  const getCollegeName = (collegeId: string) => {
+    return colleges.find(c => c.id === collegeId)?.name || 'N/A';
+  }
+
   return (
     <Table>
       <TableHeader>
         <TableRow>
           <TableHead>Title</TableHead>
           <TableHead>Category</TableHead>
-          <TableHead>Type</TableHead>
-          <TableHead>Price</TableHead>
           <TableHead>Owner</TableHead>
+          <TableHead>College</TableHead>
           <TableHead>Status</TableHead>
           <TableHead>Actions</TableHead>
         </TableRow>
@@ -39,20 +48,12 @@ const ListingsTable = ({ listings, onToggleStatus, onDelete }: ListingsTableProp
               <Badge variant="outline">{listing.category}</Badge>
             </TableCell>
             <TableCell>
-              <Badge 
-                variant={listing.listing_type === 'wanted' ? 'secondary' : 'outline'}
-                className={listing.listing_type === 'wanted' ? 'text-blue-600' : ''}
-              >
-                {listing.listing_type === 'wanted' ? 'Looking For' : 'Offering'}
-              </Badge>
-            </TableCell>
-            <TableCell>${listing.price || 'N/A'}</TableCell>
-            <TableCell>
               <div>
                 <div className="font-medium">{listing.profiles?.profile_name}</div>
                 <div className="text-sm text-gray-500">{listing.profiles?.email}</div>
               </div>
             </TableCell>
+            <TableCell>{getCollegeName((listing as any).college_id)}</TableCell>
             <TableCell>
               <Badge 
                 variant={listing.status === 'active' ? 'default' : 'secondary'}
