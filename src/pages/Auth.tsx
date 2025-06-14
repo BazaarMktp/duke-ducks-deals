@@ -196,7 +196,7 @@ const Auth = () => {
             {isLogin ? "Sign In" : "Create Account"}
           </CardTitle>
           <p className="text-center text-sm text-muted-foreground">
-            {isLogin ? "Welcome back to Duke Marketplace" : "Join Duke Marketplace"}
+            {isLogin ? "Welcome back to The Bazaar" : "Join The Bazaar"}
           </p>
         </CardHeader>
         <CardContent>
