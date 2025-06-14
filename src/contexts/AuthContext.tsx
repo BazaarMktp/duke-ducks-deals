@@ -1,6 +1,8 @@
+
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
+import { cleanupAuthState } from '@/utils/authUtils';
 
 interface AuthContextType {
   user: User | null;
@@ -49,18 +51,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const signIn = async (email: string, password: string) => {
+    cleanupAuthState();
+    try {
+      await supabase.auth.signOut({ scope: 'global' });
+    } catch (err) {
+      // This is to ensure any lingering sessions are cleared.
+      // We can ignore errors here.
+    }
+    
     console.log('Attempting to sign in with:', email);
     
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
     
     console.log('Sign in result:', error ? error.message : 'Success');
+    if (data.user) {
+      window.location.href = '/';
+    }
     return { error };
   };
 
   const signUp = async (email: string, password: string, fullName: string, profileName: string) => {
+    cleanupAuthState();
+    try {
+      await supabase.auth.signOut({ scope: 'global' });
+    } catch (err) {
+      // This is to ensure any lingering sessions are cleared.
+      // We can ignore errors here.
+    }
+
     console.log('Attempting to sign up with:', email);
     
     // Validate college email or admin email
@@ -104,12 +125,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signOut = async () => {
     console.log('Signing out...');
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      console.error('Error signing out:', error);
+    cleanupAuthState();
+
+    try {
+      await supabase.auth.signOut({ scope: 'global' });
+    } catch (error) {
+      console.error('Global sign out failed, but proceeding with client-side cleanup:', error);
     }
-    // Force a reload to clear all state and redirect to home.
-    window.location.href = '/';
+    
+    // Force a reload to clear all state and redirect to auth page.
+    window.location.href = '/auth';
   };
 
   const value = {
