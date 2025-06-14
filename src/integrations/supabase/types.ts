@@ -356,6 +356,7 @@ export type Database = {
           id: string
           is_verified: boolean | null
           phone_number: string | null
+          points: number
           profile_name: string
           updated_at: string | null
         }
@@ -367,6 +368,7 @@ export type Database = {
           id: string
           is_verified?: boolean | null
           phone_number?: string | null
+          points?: number
           profile_name: string
           updated_at?: string | null
         }
@@ -378,6 +380,7 @@ export type Database = {
           id?: string
           is_verified?: boolean | null
           phone_number?: string | null
+          points?: number
           profile_name?: string
           updated_at?: string | null
         }
@@ -489,6 +492,35 @@ export type Database = {
         }
         Relationships: []
       }
+      user_badges: {
+        Row: {
+          badge_type: Database["public"]["Enums"]["badge_type"]
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          badge_type: Database["public"]["Enums"]["badge_type"]
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          badge_type?: Database["public"]["Enums"]["badge_type"]
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_badges_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           created_at: string | null
@@ -529,6 +561,12 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "user"
+      badge_type:
+        | "FIRST_POST"
+        | "TOP_TRADER"
+        | "COMMUNITY_HELPER"
+        | "ECO_WARRIOR"
+        | "VERIFIED_BLUE_DEVIL"
       housing_type: "sublease" | "for_rent" | "roommate_wanted"
       listing_category: "marketplace" | "housing" | "services"
       listing_status: "active" | "sold" | "inactive"
@@ -649,6 +687,13 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "user"],
+      badge_type: [
+        "FIRST_POST",
+        "TOP_TRADER",
+        "COMMUNITY_HELPER",
+        "ECO_WARRIOR",
+        "VERIFIED_BLUE_DEVIL",
+      ],
       housing_type: ["sublease", "for_rent", "roommate_wanted"],
       listing_category: ["marketplace", "housing", "services"],
       listing_status: ["active", "sold", "inactive"],

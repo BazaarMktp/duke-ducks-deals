@@ -9,6 +9,8 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import ProfilePictureUpload from "@/components/ProfilePictureUpload";
+import { Badge } from "./profile/types";
+import UserBadges from "@/components/profile/UserBadges";
 
 const Profile = () => {
   const { user } = useAuth();
@@ -19,11 +21,14 @@ const Profile = () => {
     email: "",
     phone_number: "",
     avatar_url: "",
+    points: 0,
   });
+  const [badges, setBadges] = useState<Badge[]>([]);
 
   useEffect(() => {
     if (user) {
       fetchProfile();
+      fetchBadges();
     }
   }, [user]);
 
@@ -46,6 +51,7 @@ const Profile = () => {
           email: data.email || user?.email || "",
           phone_number: data.phone_number || "",
           avatar_url: data.avatar_url || user?.user_metadata?.avatar_url || "",
+          points: data.points || 0,
         });
       }
     } catch (error) {
@@ -53,6 +59,23 @@ const Profile = () => {
       toast.error("Failed to load profile");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchBadges = async () => {
+    try {
+      if (!user) return;
+      const { data, error } = await supabase
+        .from("user_badges")
+        .select("badge_type, created_at")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+      setBadges(data || []);
+    } catch (error) {
+      console.error("Error fetching badges:", error);
+      toast.error("Failed to load badges");
     }
   };
 
@@ -112,15 +135,21 @@ const Profile = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <Card>
-        <CardHeader>
+        <CardHeader className="flex flex-row flex-wrap justify-between items-start">
           <CardTitle>Profile Settings</CardTitle>
+          <div className="text-right">
+            <p className="text-sm font-medium text-gray-500">Campus Cred</p>
+            <p className="text-2xl font-bold text-blue-600">{profile.points}</p>
+          </div>
         </CardHeader>
-        <CardContent className="space-y-6">
+        <CardContent className="space-y-8">
           <ProfilePictureUpload
             currentAvatarUrl={profile.avatar_url}
             profileName={profile.profile_name}
             onAvatarUpdate={handleAvatarUpdate}
           />
+
+          <UserBadges badges={badges} />
 
           <div className="space-y-4">
             <div className="space-y-2">
