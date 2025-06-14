@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -133,8 +132,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.error('Global sign out failed, but proceeding with client-side cleanup:', error);
     }
     
-    // Force a reload to clear all state and redirect to auth page.
-    window.location.href = '/auth';
+    // Force a reload to clear all state and redirect to the home page.
+    window.location.href = '/';
   };
 
   const value = {
