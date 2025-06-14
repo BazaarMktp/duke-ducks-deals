@@ -1,24 +1,9 @@
-
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Heart, MessageCircle, Search } from "lucide-react";
-
-interface ServiceListing {
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  location: string;
-  user_id: string;
-  listing_type: 'offer' | 'wanted';
-  featured?: boolean;
-  profiles: {
-    profile_name: string;
-    full_name?: string;
-  };
-}
+import { ServiceListing } from "./types";
 
 interface ServicesListProps {
   listings: ServiceListing[];
