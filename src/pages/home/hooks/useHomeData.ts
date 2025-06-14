@@ -1,3 +1,4 @@
+
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Listing, Profile, Stats } from "../types";
@@ -10,7 +11,8 @@ export const useHomeData = (user: any) => {
   const [stats, setStats] = useState<Stats>({
     activeListings: 0,
     totalUsers: 0,
-    totalDonations: 0
+    totalDonations: 0,
+    totalColleges: 0,
   });
 
   const fetchStats = useCallback(async () => {
@@ -28,10 +30,15 @@ export const useHomeData = (user: any) => {
         .from('donations')
         .select('*', { count: 'exact', head: true });
 
+      const { count: collegesCount } = await supabase
+        .from('colleges')
+        .select('*', { count: 'exact', head: true });
+
       setStats({
         activeListings: listingsCount || 0,
         totalUsers: usersCount || 0,
-        totalDonations: donationsCount || 0
+        totalDonations: donationsCount || 0,
+        totalColleges: collegesCount || 0,
       });
     } catch (error) {
       console.error('Error fetching stats:', error);
