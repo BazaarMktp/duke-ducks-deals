@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
-import { cleanupAuthState } from '@/utils/authUtils';
 
 interface AuthContextType {
   user: User | null;
@@ -50,7 +49,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    cleanupAuthState();
     try {
       await supabase.auth.signOut({ scope: 'global' });
     } catch (err) {
@@ -73,7 +71,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signUp = async (email: string, password: string, fullName: string, profileName: string) => {
-    cleanupAuthState();
     try {
       await supabase.auth.signOut({ scope: 'global' });
     } catch (err) {
@@ -124,8 +121,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signOut = async () => {
     console.log('Signing out...');
-    cleanupAuthState();
-
     try {
       await supabase.auth.signOut({ scope: 'global' });
     } catch (error) {
