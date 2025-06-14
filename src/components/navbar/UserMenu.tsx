@@ -45,10 +45,10 @@ const UserMenu = ({ user, onSignOut, unreadMessages }: UserMenuProps) => {
   if (!user) {
     return (
       <div className="hidden md:flex items-center space-x-2">
-        <Link to="/auth">
+        <Link to="/auth" state={{ from: 'login' }}>
           <Button variant="outline">Login</Button>
         </Link>
-        <Link to="/auth">
+        <Link to="/auth" state={{ from: 'signup' }}>
           <Button>Sign Up</Button>
         </Link>
       </div>

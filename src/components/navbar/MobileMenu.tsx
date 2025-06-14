@@ -129,10 +129,10 @@ const MobileMenu = ({ user, isOpen, onClose, onSignOut, unreadMessages }: Mobile
           </Button>
         ) : (
           <>
-            <Link to="/auth" onClick={onClose}>
+            <Link to="/auth" state={{ from: 'login' }} onClick={onClose}>
               <Button variant="outline" className="w-full">Login</Button>
             </Link>
-            <Link to="/auth" onClick={onClose}>
+            <Link to="/auth" state={{ from: 'signup' }} onClick={onClose}>
               <Button className="w-full">Sign Up</Button>
             </Link>
           </>

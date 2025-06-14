@@ -64,16 +64,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signUp = async (email: string, password: string, fullName: string, profileName: string) => {
     console.log('Attempting to sign up with:', email);
     
-    // Validate Duke email or admin email
-    const isDukeEmail = email.endsWith('@duke.edu');
+    // Validate college email or admin email
+    const emailDomain = email.substring(email.lastIndexOf('@') + 1);
     const isAdminEmail = email === 'info@thebazaarapp.com';
     
-    console.log('Email validation:', { isDukeEmail, isAdminEmail, email });
+    console.log('Email validation:', { emailDomain, isAdminEmail, email });
     
-    if (!isDukeEmail && !isAdminEmail) {
-      const errorMessage = 'Please use your Duke email address (@duke.edu) or the admin email (info@thebazaarapp.com)';
-      console.log('Email validation failed:', errorMessage);
-      return { error: { message: errorMessage } };
+    if (!isAdminEmail) {
+      const { data: college, error: collegeError } = await supabase
+        .from('colleges')
+        .select('id')
+        .eq('domain', emailDomain)
+        .single();
+      
+      if (collegeError || !college) {
+        const errorMessage = 'Please use an email address from a supported college/university.';
+        console.log('Email validation failed:', errorMessage, { emailDomain });
+        return { error: { message: errorMessage } };
+      }
     }
 
     const redirectUrl = `${window.location.origin}/`;

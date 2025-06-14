@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,7 +10,8 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
 const Auth = () => {
-  const [isLogin, setIsLogin] = useState(true);
+  const location = useLocation();
+  const [isLogin, setIsLogin] = useState(location.state?.from !== 'signup');
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -30,6 +31,15 @@ const Auth = () => {
       navigate("/");
     }
   }, [user, navigate]);
+  
+  // Set form mode based on navigation state
+  useEffect(() => {
+    if (location.state?.from === 'signup') {
+      setIsLogin(false);
+    } else if (location.state?.from === 'login') {
+      setIsLogin(true);
+    }
+  }, [location.state]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -142,14 +152,14 @@ const Auth = () => {
           <CardContent>
             <form onSubmit={handleForgotPassword} className="space-y-4">
               <div>
-                <Label htmlFor="reset-email">Duke Email</Label>
+                <Label htmlFor="reset-email">College/University Email</Label>
                 <Input
                   id="reset-email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  placeholder="your.name@duke.edu"
+                  placeholder="your.name@your-college.edu"
                 />
               </div>
               <Button type="submit" className="w-full" disabled={resetLoading}>
@@ -218,14 +228,14 @@ const Auth = () => {
               </>
             )}
             <div>
-              <Label htmlFor="email">Duke Email</Label>
+              <Label htmlFor="email">College/University Email</Label>
               <Input
                 id="email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                placeholder="your.name@duke.edu"
+                placeholder="your.name@your-college.edu"
               />
             </div>
             <div>
