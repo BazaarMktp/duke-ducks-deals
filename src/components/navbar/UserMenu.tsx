@@ -9,7 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { User, Settings, ListFilter, LogOut, Shield } from "lucide-react";
+import { User, Settings, ListFilter, LogOut, Shield, Heart, ShoppingCart } from "lucide-react";
 import { useAdmin } from "@/contexts/AdminContext";
 
 interface UserMenuProps {
@@ -79,6 +79,20 @@ const UserMenu = ({ user, onSignOut }: UserMenuProps) => {
               <span>My Listings</span>
             </Link>
           </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem asChild>
+            <Link to="/favorites" className="flex items-center space-x-2">
+              <Heart size={16} />
+              <span>Favorites</span>
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link to="/cart" className="flex items-center space-x-2">
+              <ShoppingCart size={16} />
+              <span>Cart</span>
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
             <Link to="/settings" className="flex items-center space-x-2">
               <Settings size={16} />

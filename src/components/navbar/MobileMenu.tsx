@@ -11,7 +11,8 @@ import {
   MessageCircle,
   LogOut,
   User,
-  ListFilter
+  ListFilter,
+  Heart
 } from "lucide-react";
 
 interface MobileMenuProps {
@@ -95,6 +96,22 @@ const MobileMenu = ({ user, isOpen, onClose, onSignOut }: MobileMenuProps) => {
           >
             <ListFilter size={16} />
             <span>My Listings</span>
+          </Link>
+          <Link
+            to="/favorites"
+            className="flex items-center space-x-2 py-2 text-gray-600 hover:text-blue-600 transition-colors"
+            onClick={onClose}
+          >
+            <Heart size={16} />
+            <span>Favorites</span>
+          </Link>
+          <Link
+            to="/cart"
+            className="flex items-center space-x-2 py-2 text-gray-600 hover:text-blue-600 transition-colors"
+            onClick={onClose}
+          >
+            <ShoppingCart size={16} />
+            <span>Cart</span>
           </Link>
         </>
       )}
