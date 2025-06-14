@@ -1,8 +1,7 @@
-
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { TrendingUp, Users, Gift } from "lucide-react";
+import { TrendingUp, Users, Gift, Gem, BadgeCheck, Award, HeartHandshake, Recycle } from "lucide-react";
 import { categories } from "../constants";
 import { Stats } from "../types";
 
@@ -129,6 +128,47 @@ export const MarketingPage = ({ stats }: MarketingPageProps) => {
               </div>
               <h3 className="text-xl font-bold mb-2">Give Back</h3>
               <p className="text-gray-600">Donate items to help fellow students in need</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Gamification Section */}
+      <section className="py-16">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 flex items-center justify-center gap-3">
+              <Gem className="text-yellow-400" size={36} />
+              Get Rewarded
+            </h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              Earn points and unlock cool badges for being an active part of the campus community.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+            <div className="flex flex-col items-center text-center p-4 rounded-lg hover:bg-gray-100 transition-colors">
+              <BadgeCheck className="h-12 w-12 text-green-500 mb-2" />
+              <h3 className="font-semibold text-gray-800">First Post</h3>
+              <p className="text-sm text-gray-500">Make your first listing.</p>
+            </div>
+            
+            <div className="flex flex-col items-center text-center p-4 rounded-lg hover:bg-gray-100 transition-colors">
+              <Award className="h-12 w-12 text-yellow-500 mb-2" />
+              <h3 className="font-semibold text-gray-800">Top Trader</h3>
+              <p className="text-sm text-gray-500">Complete 10 trades.</p>
+            </div>
+            
+            <div className="flex flex-col items-center text-center p-4 rounded-lg hover:bg-gray-100 transition-colors">
+              <HeartHandshake className="h-12 w-12 text-rose-500 mb-2" />
+              <h3 className="font-semibold text-gray-800">Community Helper</h3>
+              <p className="text-sm text-gray-500">Help a student in need.</p>
+            </div>
+            
+            <div className="flex flex-col items-center text-center p-4 rounded-lg hover:bg-gray-100 transition-colors">
+              <Recycle className="h-12 w-12 text-lime-500 mb-2" />
+              <h3 className="font-semibold text-gray-800">Eco Warrior</h3>
+              <p className="text-sm text-gray-500">Donate your used items.</p>
             </div>
           </div>
         </div>
