@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,7 +13,7 @@ import ListingTypeToggle from "@/components/services/ListingTypeToggle";
 
 const Marketplace = () => {
   const { user } = useAuth();
-  const [listings, setListings] = useState([]);
+  const [listings, setListings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("newest");
@@ -50,7 +49,9 @@ const Marketplace = () => {
       const ascending = sortBy === 'price_low' ? true : 
                        sortBy === 'price_high' ? false : false;
 
-      const { data, error } = await query.order(orderColumn, { ascending });
+      const { data, error } = await query
+        .order('featured', { ascending: false })
+        .order(orderColumn, { ascending });
 
       if (error) throw error;
       setListings(data || []);
@@ -198,7 +199,7 @@ const Marketplace = () => {
               key={listing.id} 
               className={`hover:shadow-lg transition-shadow ${
                 listing.listing_type === 'wanted' ? 'border-blue-200 bg-blue-50/50' : ''
-              }`}
+              } ${listing.featured ? 'border-yellow-400 border-2' : ''}`}
             >
               <div className="relative">
                 {listing.images && listing.images.length > 0 ? (
@@ -211,6 +212,9 @@ const Marketplace = () => {
                   <div className="w-full h-48 bg-gray-200 rounded-t-lg flex items-center justify-center">
                     <Package className="h-12 w-12 text-gray-400" />
                   </div>
+                )}
+                 {listing.featured && (
+                  <Badge className="absolute top-2 left-2 bg-yellow-400 text-yellow-900 font-bold">Featured</Badge>
                 )}
                 {user && (
                   <Button

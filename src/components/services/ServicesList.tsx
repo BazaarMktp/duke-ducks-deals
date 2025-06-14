@@ -13,6 +13,7 @@ interface ServiceListing {
   location: string;
   user_id: string;
   listing_type: 'offer' | 'wanted';
+  featured?: boolean;
   profiles: {
     profile_name: string;
     full_name?: string;
@@ -58,12 +59,15 @@ const ServicesList = ({
             key={listing.id} 
             className={`hover:shadow-lg transition-shadow ${
               listing.listing_type === 'wanted' ? 'border-blue-200 bg-blue-50/50' : ''
-            }`}
+            } ${listing.featured ? 'border-yellow-400 border-2' : ''}`}
           >
             <CardContent className="p-4">
               <div className="flex justify-between items-start mb-3">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
+                    {listing.featured && (
+                      <Badge className="bg-yellow-400 text-yellow-900 font-bold">Featured</Badge>
+                    )}
                     {listing.listing_type === 'wanted' && (
                       <Badge variant="outline" className="text-blue-600 border-blue-300">
                         <Search size={12} className="mr-1" />

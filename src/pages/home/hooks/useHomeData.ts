@@ -1,4 +1,3 @@
-
 import { useEffect, useState, useCallback, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Listing, Profile, Stats } from "../types";
@@ -47,7 +46,7 @@ export const useHomeData = (user: any) => {
         .select('*')
         .eq('status', 'active')
         .eq('listing_type', 'offer')
-        .eq('category', 'marketplace')
+        .eq('featured', true)
         .order('created_at', { ascending: false })
         .limit(4);
 
@@ -67,6 +66,7 @@ export const useHomeData = (user: any) => {
         .select('*')
         .eq('status', 'active')
         .eq('listing_type', 'wanted')
+        .eq('featured', true)
         .in('category', ['marketplace', 'housing', 'services'])
         .order('created_at', { ascending: false })
         .limit(4);

@@ -19,6 +19,7 @@ interface ServiceListing {
   location: string;
   user_id: string;
   listing_type: 'offer' | 'wanted';
+  featured?: boolean;
   profiles: {
     profile_name: string;
   };
@@ -55,6 +56,7 @@ const Services = () => {
         .eq('category', 'services')
         .eq('listing_type', activeListingType)
         .eq('status', 'active')
+        .order('featured', { ascending: false })
         .order('created_at', { ascending: false });
 
       if (error) throw error;
