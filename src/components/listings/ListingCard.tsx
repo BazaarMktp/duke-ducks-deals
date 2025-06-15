@@ -31,12 +31,28 @@ export const ListingCard = ({ listing, onDelete, onStatusToggle }: ListingCardPr
   const navigate = useNavigate();
   const isOldListing = differenceInDays(new Date(), parseISO(listing.created_at)) > 30;
 
-  const handleMarkAsSold = () => {
-    if (confirm('Mark this item as sold? This will deactivate the listing.')) {
-      // For now, we'll use the existing status toggle functionality
-      // In the future, this could set status to 'sold' specifically
+  const handleMarkAsCompleted = () => {
+    const actionText = listing.category === 'housing' ? 'no longer available' : 'completed';
+    if (confirm(`Mark this item as ${actionText}? This will deactivate the listing.`)) {
       onStatusToggle(listing.id, listing.status);
     }
+  };
+
+  // Get appropriate button text based on category
+  const getCompletedButtonText = () => {
+    switch (listing.category) {
+      case 'housing':
+        return 'No Longer Available';
+      case 'marketplace':
+        return 'Sold';
+      default:
+        return 'Completed';
+    }
+  };
+
+  const shouldShowCompletedButton = () => {
+    // Only show for housing and marketplace, not services
+    return listing.category !== 'services' && listing.status === 'active';
   };
 
   return (
@@ -75,7 +91,7 @@ export const ListingCard = ({ listing, onDelete, onStatusToggle }: ListingCardPr
             <AlertTriangle size={32} className="mr-3 flex-shrink-0" />
             <div>
               <p className="font-bold text-sm">Still available?</p>
-              <p className="text-xs">This listing is over a month old. Please update its status if it's sold.</p>
+              <p className="text-xs">This listing is over a month old. Please update its status if needed.</p>
             </div>
           </div>
         )}
@@ -96,15 +112,15 @@ export const ListingCard = ({ listing, onDelete, onStatusToggle }: ListingCardPr
             <Edit size={16} />
           </Button>
           
-          {listing.status === 'active' && (
+          {shouldShowCompletedButton() && (
             <Button
               variant="default"
               size="sm"
-              onClick={handleMarkAsSold}
+              onClick={handleMarkAsCompleted}
               className="bg-green-600 hover:bg-green-700 text-white"
             >
               <CheckCircle2 size={16} className="mr-1" />
-              Sold
+              {getCompletedButtonText()}
             </Button>
           )}
           
