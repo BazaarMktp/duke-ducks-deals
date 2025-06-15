@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TrendingUp, Users, Gift, Gem, BadgeCheck, Award, HeartHandshake, Recycle } from "lucide-react";
 import { categories } from "../constants";
 import { Stats } from "../types";
-import { CollegesSection } from "./CollegesSection";
 
 interface MarketingPageProps {
   stats: Stats;
@@ -68,9 +67,6 @@ export const MarketingPage = ({ stats }: MarketingPageProps) => {
           </div>
         </div>
       </section>
-
-      {/* Colleges Section */}
-      <CollegesSection />
 
       {/* Categories Section */}
       <section className="py-16">

@@ -28,9 +28,16 @@ const Auth = () => {
     handleForgotPassword,
   } = useAuthForm();
 
-  console.log('Auth component state:', { isLogin, showForgotPassword, loading });
+  console.log('Auth component rendering:', { 
+    isLogin, 
+    showForgotPassword, 
+    loading,
+    email: email?.substring(0, 3) + '***', // Partially mask email for privacy
+    hasFormData: !!(fullName || profileName)
+  });
 
   if (showForgotPassword) {
+    console.log('Rendering ForgotPasswordForm');
     return (
       <ForgotPasswordForm
         email={email}
@@ -45,6 +52,7 @@ const Auth = () => {
     );
   }
 
+  console.log('Rendering AuthFormContainer');
   return (
     <AuthFormContainer
       isLogin={isLogin}
