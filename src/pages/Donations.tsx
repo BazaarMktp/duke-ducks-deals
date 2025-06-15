@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -11,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 
 const Donations = () => {
   const [donationCount, setDonationCount] = useState(0);
+  const [collegeName, setCollegeName] = useState("College");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -26,7 +26,31 @@ const Donations = () => {
 
   useEffect(() => {
     fetchDonationCount();
-  }, []);
+    fetchUserCollege();
+  }, [user]);
+
+  const fetchUserCollege = async () => {
+    if (!user) return;
+    
+    try {
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select(`
+          college_id,
+          colleges!inner(name)
+        `)
+        .eq('id', user.id)
+        .single();
+
+      if (profileError) throw profileError;
+      
+      if (profile?.colleges?.name) {
+        setCollegeName(profile.colleges.name);
+      }
+    } catch (error) {
+      console.error('Error fetching user college:', error);
+    }
+  };
 
   const fetchDonationCount = async () => {
     try {
@@ -97,9 +121,9 @@ const Donations = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold mb-4">Duke Donations</h1>
+        <h1 className="text-4xl font-bold mb-4">{collegeName} Donations</h1>
         <p className="text-lg text-muted-foreground mb-6">
-          Help fellow Blue Devils by donating items you no longer need
+          Help fellow students by donating items you no longer need
         </p>
         
         {/* Donation Counter */}
@@ -138,7 +162,7 @@ const Donations = () => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="email">Duke Email</Label>
+                  <Label htmlFor="email">Email</Label>
                   <Input
                     id="email"
                     type="email"
