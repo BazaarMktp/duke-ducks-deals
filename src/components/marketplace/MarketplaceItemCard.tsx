@@ -1,10 +1,11 @@
-
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Heart, Search, Package } from "lucide-react";
 import { MarketplaceListing } from "./types";
+import VerifiedBadge from "@/components/common/VerifiedBadge";
+import { useUserVerification } from "@/hooks/useUserVerification";
 
 interface MarketplaceItemCardProps {
   listing: MarketplaceListing;
@@ -14,6 +15,8 @@ interface MarketplaceItemCardProps {
 }
 
 const MarketplaceItemCard = ({ listing, user, isFavorite, onToggleFavorite }: MarketplaceItemCardProps) => {
+  const { isVerified } = useUserVerification(listing.user_id);
+
   return (
     <Card 
       className={`hover:shadow-lg transition-shadow ${
@@ -63,7 +66,10 @@ const MarketplaceItemCard = ({ listing, user, isFavorite, onToggleFavorite }: Ma
             {listing.listing_type === 'wanted' ? `Looking for: ${listing.title}` : listing.title}
           </CardTitle>
         </Link>
-        <p className="text-sm text-gray-600 mb-2">by {listing.profiles?.profile_name || 'Unknown'}</p>
+        <div className="flex items-center gap-2 mb-2">
+          <p className="text-sm text-gray-600">by {listing.profiles?.profile_name || 'Unknown'}</p>
+          <VerifiedBadge isVerified={isVerified} />
+        </div>
         <p className="text-sm mb-3 line-clamp-2">{listing.description}</p>
         <div className="flex justify-between items-center">
           {listing.listing_type === 'offer' ? (

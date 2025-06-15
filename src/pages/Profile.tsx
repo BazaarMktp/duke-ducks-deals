@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -136,7 +135,10 @@ const Profile = () => {
     <div className="container mx-auto px-4 py-8">
       <Card>
         <CardHeader className="flex flex-row flex-wrap justify-between items-start">
-          <CardTitle>Profile Settings</CardTitle>
+          <div className="flex items-center gap-3">
+            <CardTitle>Profile Settings</CardTitle>
+            <UserBadges badges={badges} />
+          </div>
           <div className="text-right">
             <p className="text-sm font-medium text-gray-500">Campus Cred</p>
             <p className="text-2xl font-bold text-blue-600">{profile.points}</p>
@@ -148,8 +150,6 @@ const Profile = () => {
             profileName={profile.profile_name}
             onAvatarUpdate={handleAvatarUpdate}
           />
-
-          <UserBadges badges={badges} />
 
           <div className="space-y-4">
             <div className="space-y-2">

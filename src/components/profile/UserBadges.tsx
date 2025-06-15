@@ -35,9 +35,34 @@ const BADGE_INFO = {
 
 interface UserBadgesProps {
   badges: Badge[];
+  inline?: boolean;
 }
 
-const UserBadges = ({ badges }: UserBadgesProps) => {
+const UserBadges = ({ badges, inline = false }: UserBadgesProps) => {
+  const verifiedBadge = badges.find(badge => badge.badge_type === 'VERIFIED_BLUE_DEVIL');
+
+  if (inline && verifiedBadge) {
+    return (
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger>
+            <BadgeUI variant="secondary" className="bg-blue-100 text-blue-800 border-blue-300">
+              <Verified className="h-3 w-3 mr-1" />
+              Verified Blue Devil
+            </BadgeUI>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Awarded for completing your profile 100%</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    );
+  }
+
+  if (inline) {
+    return null;
+  }
+
   return (
     <Card>
       <CardHeader>

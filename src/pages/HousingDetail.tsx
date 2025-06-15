@@ -225,6 +225,7 @@ const HousingDetail = () => {
             avatarUrl={listing.profiles.avatar_url}
             fullName={listing.profiles.full_name}
             isAuthenticated={!!user}
+            userId={listing.user_id}
           />
 
           <HousingActions

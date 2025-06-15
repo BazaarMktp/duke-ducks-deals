@@ -218,6 +218,7 @@ const ServiceDetail = () => {
               avatarUrl={service.profiles.avatar_url}
               fullName={service.profiles.full_name}
               isAuthenticated={!!user}
+              userId={service.user_id}
             />
 
             <ServiceActions
