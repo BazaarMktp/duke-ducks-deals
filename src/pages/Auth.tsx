@@ -28,6 +28,8 @@ const Auth = () => {
     handleForgotPassword,
   } = useAuthForm();
 
+  console.log('Auth component state:', { isLogin, showForgotPassword, loading });
+
   if (showForgotPassword) {
     return (
       <ForgotPasswordForm
