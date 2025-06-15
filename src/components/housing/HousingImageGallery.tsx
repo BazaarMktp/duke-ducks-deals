@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Expand } from "lucide-react";
 
 interface HousingImageGalleryProps {
@@ -41,11 +42,29 @@ const HousingImageGallery = ({
             </DialogTrigger>
             <DialogContent className="max-w-4xl w-full">
               <div className="flex flex-col items-center">
-                <img
-                  src={images[expandedImageIndex]}
-                  alt={`${title} ${expandedImageIndex + 1}`}
-                  className="max-w-full max-h-[80vh] object-contain"
-                />
+                {images.length > 1 ? (
+                  <Carousel className="w-full max-w-3xl">
+                    <CarouselContent>
+                      {images.map((image, index) => (
+                        <CarouselItem key={index}>
+                          <img
+                            src={image}
+                            alt={`${title} ${index + 1}`}
+                            className="w-full max-h-[70vh] object-contain mx-auto"
+                          />
+                        </CarouselItem>
+                      ))}
+                    </CarouselContent>
+                    <CarouselPrevious className="left-2" />
+                    <CarouselNext className="right-2" />
+                  </Carousel>
+                ) : (
+                  <img
+                    src={images[0]}
+                    alt={`${title} 1`}
+                    className="max-w-full max-h-[80vh] object-contain"
+                  />
+                )}
                 {images.length > 1 && (
                   <div className="flex gap-2 mt-4">
                     {images.map((image, index) => (
