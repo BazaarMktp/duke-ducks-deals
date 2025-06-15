@@ -22,7 +22,7 @@ export const CollegeSelector = ({ selectedCollegeId, onCollegeChange, required =
         </SelectTrigger>
         <SelectContent>
           {loading ? (
-            <SelectItem value="" disabled>Loading colleges...</SelectItem>
+            <SelectItem value="loading" disabled>Loading colleges...</SelectItem>
           ) : (
             colleges.map((college) => (
               <SelectItem key={college.id} value={college.id}>
