@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Edit, Trash2, Play, Pause, MapPin, AlertTriangle } from "lucide-react";
+import { Edit, Trash2, Play, Pause, MapPin, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { DeleteListingDialog } from "./DeleteListingDialog";
 import { Listing } from "@/hooks/useMyListings";
 import { differenceInDays, parseISO } from "date-fns";
@@ -30,6 +30,14 @@ const getStatusColor = (status: string) => {
 export const ListingCard = ({ listing, onDelete, onStatusToggle }: ListingCardProps) => {
   const navigate = useNavigate();
   const isOldListing = differenceInDays(new Date(), parseISO(listing.created_at)) > 30;
+
+  const handleMarkAsSold = () => {
+    if (confirm('Mark this item as sold? This will deactivate the listing.')) {
+      // For now, we'll use the existing status toggle functionality
+      // In the future, this could set status to 'sold' specifically
+      onStatusToggle(listing.id, listing.status);
+    }
+  };
 
   return (
     <Card className="hover:shadow-lg transition-shadow">
@@ -87,6 +95,18 @@ export const ListingCard = ({ listing, onDelete, onStatusToggle }: ListingCardPr
           >
             <Edit size={16} />
           </Button>
+          
+          {listing.status === 'active' && (
+            <Button
+              variant="default"
+              size="sm"
+              onClick={handleMarkAsSold}
+              className="bg-green-600 hover:bg-green-700 text-white"
+            >
+              <CheckCircle2 size={16} className="mr-1" />
+              Sold
+            </Button>
+          )}
           
           <Button
             variant="outline"
