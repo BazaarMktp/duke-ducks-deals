@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { CollegeSelector } from "@/components/auth/CollegeSelector";
 
 const Auth = () => {
   const location = useLocation();
@@ -17,6 +18,7 @@ const Auth = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [profileName, setProfileName] = useState("");
+  const [selectedCollegeId, setSelectedCollegeId] = useState("");
   const [loading, setLoading] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [resetLoading, setResetLoading] = useState(false);
@@ -40,6 +42,30 @@ const Auth = () => {
       setIsLogin(true);
     }
   }, [location.state]);
+
+  // Auto-select college based on email domain
+  useEffect(() => {
+    if (!isLogin && email && email.includes('@')) {
+      const domain = email.substring(email.lastIndexOf('@') + 1);
+      fetchCollegeByDomain(domain);
+    }
+  }, [email, isLogin]);
+
+  const fetchCollegeByDomain = async (domain: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('colleges')
+        .select('id')
+        .eq('domain', domain)
+        .single();
+      
+      if (data) {
+        setSelectedCollegeId(data.id);
+      }
+    } catch (error) {
+      // College not found, user will need to select manually
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,6 +93,17 @@ const Auth = () => {
           toast({
             title: "Error",
             description: "Passwords do not match",
+            variant: "destructive",
+          });
+          setLoading(false);
+          return;
+        }
+
+        // Validate college selection
+        if (!selectedCollegeId) {
+          toast({
+            title: "Error",
+            description: "Please select your college/university",
             variant: "destructive",
           });
           setLoading(false);
@@ -225,6 +262,11 @@ const Auth = () => {
                     placeholder="Choose a profile name"
                   />
                 </div>
+                <CollegeSelector
+                  selectedCollegeId={selectedCollegeId}
+                  onCollegeChange={setSelectedCollegeId}
+                  required
+                />
               </>
             )}
             <div>

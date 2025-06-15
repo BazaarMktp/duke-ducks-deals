@@ -1,9 +1,11 @@
+
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TrendingUp, Users, Gift, Gem, BadgeCheck, Award, HeartHandshake, Recycle } from "lucide-react";
 import { categories } from "../constants";
 import { Stats } from "../types";
+import { CollegesSection } from "./CollegesSection";
 
 interface MarketingPageProps {
   stats: Stats;
@@ -52,7 +54,7 @@ export const MarketingPage = ({ stats }: MarketingPageProps) => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {statsDisplay.map((stat, index) => (
@@ -66,6 +68,9 @@ export const MarketingPage = ({ stats }: MarketingPageProps) => {
           </div>
         </div>
       </section>
+
+      {/* Colleges Section */}
+      <CollegesSection />
 
       {/* Categories Section */}
       <section className="py-16">
