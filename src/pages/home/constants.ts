@@ -1,4 +1,6 @@
 
+import { ShoppingBag, Home, Wrench, Heart } from "lucide-react";
+
 export const STATS = [
   { label: "Active Colleges", value: "1" },
   { label: "Happy Students", value: "500+" },
@@ -63,5 +65,36 @@ export const FAQ_ITEMS = [
   {
     question: "Are there any fees?",
     answer: "The Bazaar is completely free to use! No listing fees, no transaction fees, no hidden costs. We're here to help students save money, not spend more."
+  }
+];
+
+export const categories = [
+  {
+    title: "Marketplace",
+    description: "Buy and sell items with fellow students",
+    icon: ShoppingBag,
+    color: "bg-blue-500",
+    href: "/marketplace"
+  },
+  {
+    title: "Housing",
+    description: "Find roommates and housing options",
+    icon: Home,
+    color: "bg-green-500",
+    href: "/housing"
+  },
+  {
+    title: "Services",
+    description: "Offer or request services from peers",
+    icon: Wrench,
+    color: "bg-purple-500",
+    href: "/services"
+  },
+  {
+    title: "Donations",
+    description: "Give back to your campus community",
+    icon: Heart,
+    color: "bg-red-500",
+    href: "/donations"
   }
 ];
