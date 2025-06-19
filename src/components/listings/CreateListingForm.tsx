@@ -1,9 +1,11 @@
+
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 import ImageUpload from "@/components/ImageUpload";
 import type { ListingFormData } from '@/hooks/useCreateListing';
 import type { NavigateFunction } from 'react-router-dom';
@@ -11,7 +13,7 @@ import type { NavigateFunction } from 'react-router-dom';
 interface CreateListingFormProps {
   formData: ListingFormData;
   loading: boolean;
-  handleInputChange: (field: string, value: string) => void;
+  handleInputChange: (field: string, value: string | boolean) => void;
   handleImagesChange: (images: string[]) => void;
   handleSubmit: (e: React.FormEvent) => Promise<void>;
   navigate: NavigateFunction;
@@ -123,6 +125,38 @@ const CreateListingForm: React.FC<CreateListingFormProps> = ({
           />
         </div>
       </div>
+
+      {/* Transaction Methods */}
+      {formData.category === 'marketplace' && formData.listingType === 'offer' && (
+        <div className="space-y-3">
+          <Label className="text-base font-medium">Transaction Methods</Label>
+          <div className="space-y-2">
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="allowPickup"
+                checked={formData.allowPickup}
+                onCheckedChange={(checked) => handleInputChange("allowPickup", checked as boolean)}
+              />
+              <Label htmlFor="allowPickup" className="text-sm font-normal">
+                Allow pickup
+              </Label>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="allowMeetOnCampus"
+                checked={formData.allowMeetOnCampus}
+                onCheckedChange={(checked) => handleInputChange("allowMeetOnCampus", checked as boolean)}
+              />
+              <Label htmlFor="allowMeetOnCampus" className="text-sm font-normal">
+                Meet on campus
+              </Label>
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            Select at least one transaction method for your listing
+          </p>
+        </div>
+      )}
 
       {/* Temporarily disabled - can be re-enabled later */}
       {/* {formData.category === 'housing' && (

@@ -14,4 +14,6 @@ export interface MarketplaceListing {
   user_id: string;
   status: string;
   category: string;
+  allow_pickup?: boolean;
+  allow_meet_on_campus?: boolean;
 }

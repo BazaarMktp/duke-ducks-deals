@@ -14,6 +14,8 @@ export type ListingFormData = {
   listingType: 'offer' | 'wanted';
   housingType: string;
   images: string[];
+  allowPickup: boolean;
+  allowMeetOnCampus: boolean;
 };
 
 export const useCreateListing = () => {
@@ -26,12 +28,14 @@ export const useCreateListing = () => {
     listingType: "offer",
     housingType: "",
     images: [],
+    allowPickup: false,
+    allowMeetOnCampus: false,
   });
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  const handleInputChange = (field: string, value: string) => {
+  const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
@@ -42,6 +46,12 @@ export const useCreateListing = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
+
+    // Validation for marketplace items
+    if (formData.category === 'marketplace' && formData.listingType === 'offer' && !formData.allowPickup && !formData.allowMeetOnCampus) {
+      toast.error("Please select at least one transaction method (pickup or meet on campus).");
+      return;
+    }
 
     setLoading(true);
     try {
@@ -68,6 +78,12 @@ export const useCreateListing = () => {
         location: formData.location || null,
         images: formData.images.length > 0 ? formData.images : null,
       };
+
+      // Add transaction methods for marketplace items
+      if (formData.category === 'marketplace') {
+        insertData.allow_pickup = formData.allowPickup;
+        insertData.allow_meet_on_campus = formData.allowMeetOnCampus;
+      }
 
       if (formData.category === 'housing' && formData.housingType) {
         insertData.housing_type = formData.housingType;

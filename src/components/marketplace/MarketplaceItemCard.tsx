@@ -1,91 +1,147 @@
-import { Link } from "react-router-dom";
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Heart, Search, Package } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Heart, MessageCircle, MapPin, Package, Users } from "lucide-react";
+import { Link } from "react-router-dom";
 import { MarketplaceListing } from "./types";
-import VerifiedBadge from "@/components/common/VerifiedBadge";
-import { useUserVerification } from "@/hooks/useUserVerification";
 
 interface MarketplaceItemCardProps {
   listing: MarketplaceListing;
-  user: any;
-  isFavorite: boolean;
   onToggleFavorite: (listingId: string) => void;
+  onStartConversation: (listing: MarketplaceListing) => void;
+  isFavorite: boolean;
+  isAuthenticated: boolean;
 }
 
-const MarketplaceItemCard = ({ listing, user, isFavorite, onToggleFavorite }: MarketplaceItemCardProps) => {
-  const { isVerified } = useUserVerification(listing.user_id);
+const MarketplaceItemCard = ({
+  listing,
+  onToggleFavorite,
+  onStartConversation,
+  isFavorite,
+  isAuthenticated,
+}: MarketplaceItemCardProps) => {
+  // Determine display image
+  const displayImage = listing.images && listing.images.length > 0 
+    ? listing.images[0] 
+    : "/placeholder.svg";
+
+  // Extract first name from profile
+  const getDisplayName = () => {
+    if (listing.profiles?.profile_name) {
+      return listing.profiles.profile_name;
+    }
+    return 'Unknown';
+  };
+
+  const getTransactionMethods = () => {
+    const methods = [];
+    if (listing.allow_pickup) methods.push("Pickup");
+    if (listing.allow_meet_on_campus) methods.push("Meet on Campus");
+    return methods;
+  };
+
+  const transactionMethods = getTransactionMethods();
 
   return (
     <Card 
-      className={`hover:shadow-lg transition-shadow ${
-        listing.listing_type === 'wanted' ? 'border-blue-200 bg-blue-50/50' : ''
-      } ${listing.featured ? 'border-yellow-400 border-2' : ''}`}
+      key={listing.id} 
+      className={`group hover:shadow-lg transition-all duration-200 ${
+        listing.listing_type === 'wanted' ? 'border-blue-200 bg-blue-50/30' : ''
+      } ${listing.featured ? 'ring-2 ring-yellow-400' : ''}`}
     >
-      <div className="relative">
-        {listing.images && listing.images.length > 0 ? (
-          <img 
-            src={listing.images[0]} 
-            alt={listing.title}
-            className="w-full h-48 object-cover rounded-t-lg"
-          />
-        ) : (
-          <div className="w-full h-48 bg-gray-200 rounded-t-lg flex items-center justify-center">
-            <Package className="h-12 w-12 text-gray-400" />
-          </div>
-        )}
-         {listing.featured && (
-          <Badge className="absolute top-2 left-2 bg-yellow-400 text-yellow-900 font-bold">Featured</Badge>
-        )}
-        {user && (
-          <Button
-            variant="ghost"
-            size="sm"
-            className="absolute top-2 right-2 bg-white/80 hover:bg-white"
-            onClick={() => onToggleFavorite(listing.id)}
-          >
-            <Heart 
-              size={16} 
-              className={isFavorite ? "fill-red-500 text-red-500" : "text-gray-600"} 
-            />
-          </Button>
-        )}
-      </div>
-      <CardContent className="p-4">
-        <div className="flex items-center gap-2 mb-2">
-          {listing.listing_type === 'wanted' && (
-            <Badge variant="outline" className="text-blue-600 border-blue-300">
-              <Search size={12} className="mr-1" />
-              Looking For
-            </Badge>
-          )}
-        </div>
+      <CardContent className="p-0">
+        {/* Image Section */}
         <Link to={`/marketplace/${listing.id}`}>
-          <CardTitle className="text-lg hover:text-blue-600 transition-colors mb-2">
-            {listing.listing_type === 'wanted' ? `Looking for: ${listing.title}` : listing.title}
-          </CardTitle>
+          <div className="relative aspect-square overflow-hidden rounded-t-lg">
+            <img
+              src={displayImage}
+              alt={listing.title}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+            />
+            {listing.featured && (
+              <Badge className="absolute top-2 left-2 bg-yellow-400 text-yellow-900 font-semibold">
+                Featured
+              </Badge>
+            )}
+            {listing.listing_type === 'wanted' && (
+              <Badge variant="outline" className="absolute top-2 right-2 bg-blue-100 text-blue-700 border-blue-300">
+                Looking For
+              </Badge>
+            )}
+          </div>
         </Link>
-        <div className="flex items-center gap-2 mb-2">
-          <p className="text-sm text-gray-600">by {listing.profiles?.profile_name || 'Unknown'}</p>
-          <VerifiedBadge isVerified={isVerified} />
-        </div>
-        <p className="text-sm mb-3 line-clamp-2">{listing.description}</p>
-        <div className="flex justify-between items-center">
-          {listing.listing_type === 'offer' ? (
-            <p className="text-xl font-bold text-green-600">
-              {listing.price ? `$${listing.price}` : 'Contact for price'}
+
+        {/* Content Section */}
+        <div className="p-4 space-y-3">
+          <div>
+            <Link to={`/marketplace/${listing.id}`}>
+              <h3 className="font-semibold text-lg line-clamp-2 group-hover:text-blue-600 transition-colors">
+                {listing.title}
+              </h3>
+            </Link>
+            <p className="text-sm text-muted-foreground">by {getDisplayName()}</p>
+          </div>
+
+          {/* Price */}
+          <div className="flex items-center justify-between">
+            <p className={`text-xl font-bold ${
+              listing.listing_type === 'wanted' ? 'text-blue-600' : 'text-green-600'
+            }`}>
+              {listing.price ? `$${listing.price}` : 'Free'}
             </p>
-          ) : (
-            <p className="text-lg font-bold text-blue-600">
-              {listing.price ? `Budget: $${listing.price}` : 'Budget: Negotiable'}
-            </p>
+          </div>
+
+          {/* Transaction Methods */}
+          {listing.listing_type === 'offer' && transactionMethods.length > 0 && (
+            <div className="flex flex-wrap gap-1">
+              {transactionMethods.map((method) => (
+                <Badge key={method} variant="secondary" className="text-xs">
+                  {method === "Pickup" ? (
+                    <><Package size={12} className="mr-1" />{method}</>
+                  ) : (
+                    <><Users size={12} className="mr-1" />{method}</>
+                  )}
+                </Badge>
+              ))}
+            </div>
           )}
-          <Link to={`/marketplace/${listing.id}`}>
-            <Button size="sm">
-              {listing.listing_type === 'wanted' ? 'I Have This' : 'View Details'}
-            </Button>
-          </Link>
+
+          {/* Action Buttons */}
+          <div className="flex gap-2 pt-2">
+            {isAuthenticated && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={(e) => {
+                  e.preventDefault();
+                  onToggleFavorite(listing.id);
+                }}
+                className={isFavorite ? "text-red-500 border-red-200" : ""}
+              >
+                <Heart size={16} className={isFavorite ? "fill-current" : ""} />
+              </Button>
+            )}
+            
+            <Link to={`/marketplace/${listing.id}`} className="flex-1">
+              <Button size="sm" className="w-full">
+                {listing.listing_type === 'wanted' ? 'I Have This' : 'View Details'}
+              </Button>
+            </Link>
+            
+            {isAuthenticated && listing.user_id !== listing.user_id && (
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={(e) => {
+                  e.preventDefault();
+                  onStartConversation(listing);
+                }}
+              >
+                <MessageCircle size={16} />
+              </Button>
+            )}
+          </div>
         </div>
       </CardContent>
     </Card>

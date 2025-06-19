@@ -11,6 +11,8 @@ interface PostingFormData {
   location: string;
   housingType: string;
   images: string[];
+  allowPickup: boolean;
+  allowMeetOnCampus: boolean;
 }
 
 interface UsePostingFormProps {
@@ -27,13 +29,15 @@ export const usePostingForm = ({ category, listingType, onSuccess, onClose }: Us
     price: "",
     location: "",
     housingType: "",
-    images: []
+    images: [],
+    allowPickup: false,
+    allowMeetOnCampus: false
   });
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
   const { toast } = useToast();
 
-  const handleInputChange = (field: string, value: string) => {
+  const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
@@ -44,6 +48,16 @@ export const usePostingForm = ({ category, listingType, onSuccess, onClose }: Us
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
+
+    // Validation for marketplace items
+    if (category === 'marketplace' && listingType === 'offer' && !formData.allowPickup && !formData.allowMeetOnCampus) {
+      toast({
+        title: "Transaction Method Required",
+        description: "Please select at least one transaction method (pickup or meet on campus).",
+        variant: "destructive",
+      });
+      return;
+    }
 
     setLoading(true);
     try {
@@ -57,6 +71,12 @@ export const usePostingForm = ({ category, listingType, onSuccess, onClose }: Us
         images: formData.images.length > 0 ? formData.images : null,
         listing_type: listingType,
       };
+
+      // Add transaction methods for marketplace items
+      if (category === 'marketplace') {
+        insertData.allow_pickup = formData.allowPickup;
+        insertData.allow_meet_on_campus = formData.allowMeetOnCampus;
+      }
 
       if (category === 'housing' && formData.housingType) {
         insertData.housing_type = formData.housingType;
