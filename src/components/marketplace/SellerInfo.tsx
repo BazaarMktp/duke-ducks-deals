@@ -1,6 +1,7 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { VerifiedBadge } from "@/components/VerifiedBadge";
+import VerifiedBadge from "@/components/common/VerifiedBadge";
 import { Calendar, Clock, Phone } from "lucide-react";
 
 interface SellerInfoProps {
@@ -58,7 +59,7 @@ const SellerInfo = ({
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
               <h4 className="font-semibold text-gray-900">{displayName}</h4>
-              <VerifiedBadge userId={userId} />
+              <VerifiedBadge isVerified={true} />
             </div>
             {isAuthenticated && (
               <p className="text-sm text-gray-600 mb-2">{email}</p>

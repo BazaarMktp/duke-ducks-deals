@@ -16,6 +16,7 @@ interface Product {
   location?: string;
   allow_pickup?: boolean;
   allow_meet_on_campus?: boolean;
+  listing_type?: string;
   profiles: {
     profile_name: string;
     email: string;
