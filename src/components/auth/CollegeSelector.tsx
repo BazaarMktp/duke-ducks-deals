@@ -13,6 +13,11 @@ interface CollegeSelectorProps {
 export const CollegeSelector = ({ selectedCollegeId, onCollegeChange, required = false }: CollegeSelectorProps) => {
   const { colleges, loading } = useColleges();
 
+  // Hide the selector for now - will be auto-selected based on email domain
+  // TODO: Re-enable when we want to show multiple colleges
+  return null;
+
+  /* COMMENTED OUT - Keep for future use when we want to show multiple colleges
   return (
     <div>
       <Label htmlFor="college">College/University {required && '*'}</Label>
@@ -43,4 +48,5 @@ export const CollegeSelector = ({ selectedCollegeId, onCollegeChange, required =
       </Select>
     </div>
   );
+  */
 };
