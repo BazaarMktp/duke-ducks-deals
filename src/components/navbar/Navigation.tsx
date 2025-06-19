@@ -4,8 +4,6 @@ import {
   Home, 
   ShoppingCart, 
   MessageCircle,
-  MapPin,
-  Users,
   Gift
 } from "lucide-react";
 
@@ -13,8 +11,6 @@ const Navigation = () => {
   const navigation = [
     { name: "Home", href: "/", icon: Home },
     { name: "Marketplace", href: "/marketplace", icon: ShoppingCart },
-    { name: "Housing", href: "/housing", icon: MapPin },
-    { name: "Services", href: "/services", icon: Users },
     { name: "Donations", href: "/donations", icon: Gift },
     { name: "Messages", href: "/messages", icon: MessageCircle },
   ];

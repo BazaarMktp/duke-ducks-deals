@@ -11,8 +11,6 @@ import {
   Heart,
   Package,
   LogOut,
-  MapPin,
-  Users,
   Gift
 } from "lucide-react";
 
@@ -30,8 +28,6 @@ const MobileMenu = ({ user, isOpen, onClose, onSignOut, unreadMessages }: Mobile
   const navigation = [
     { name: "Home", href: "/", icon: Home },
     { name: "Marketplace", href: "/marketplace", icon: ShoppingCart },
-    { name: "Housing", href: "/housing", icon: MapPin },
-    { name: "Services", href: "/services", icon: Users },
     { name: "Donations", href: "/donations", icon: Gift },
   ];
 
