@@ -51,7 +51,7 @@ export const useMarketplaceItem = (id: string | undefined) => {
         .from('listings')
         .select(`
           *,
-          profiles!listings_user_id_fkey(profile_name, email, phone_number, avatar_url, full_name)
+          profiles!listings_user_id_fkey(profile_name, email, phone_number, avatar_url, full_name, created_at)
         `)
         .eq('id', id)
         .eq('category', 'marketplace')

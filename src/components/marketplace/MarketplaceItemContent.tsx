@@ -1,4 +1,3 @@
-
 import ProductImageGallery from "@/components/marketplace/ProductImageGallery";
 import ProductInfo from "@/components/marketplace/ProductInfo";
 import SellerInfo from "@/components/marketplace/SellerInfo";
@@ -70,11 +69,12 @@ const MarketplaceItemContent = ({
           profileName={product.profiles.profile_name}
           email={product.profiles.email}
           phoneNumber={product.profiles.phone_number}
-          createdAt={product.created_at}
+          createdAt={product.profiles.created_at}
           avatarUrl={product.profiles.avatar_url}
           fullName={product.profiles.full_name}
           isAuthenticated={!!user}
           userId={product.user_id}
+          listingCreatedAt={product.created_at}
         />
 
         <ProductActions

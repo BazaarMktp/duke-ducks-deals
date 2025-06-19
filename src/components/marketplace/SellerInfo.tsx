@@ -14,6 +14,7 @@ interface SellerInfoProps {
   fullName?: string;
   isAuthenticated: boolean;
   userId?: string;
+  listingCreatedAt?: string;
 }
 
 const SellerInfo = ({ 
@@ -24,7 +25,8 @@ const SellerInfo = ({
   avatarUrl, 
   fullName, 
   isAuthenticated,
-  userId 
+  userId,
+  listingCreatedAt
 }: SellerInfoProps) => {
   const { isVerified } = useUserVerification(userId);
 
@@ -58,9 +60,16 @@ const SellerInfo = ({
           </div>
         )}
         
-        <p className="text-xs text-gray-500 mt-4">
-          Member since {formatDistanceToNow(new Date(createdAt), { addSuffix: true })}
-        </p>
+        <div className="mt-4 space-y-1">
+          {listingCreatedAt && (
+            <p className="text-xs text-gray-500">
+              Posted {formatDistanceToNow(new Date(listingCreatedAt), { addSuffix: true })}
+            </p>
+          )}
+          <p className="text-xs text-gray-500">
+            Member since {formatDistanceToNow(new Date(createdAt), { addSuffix: true })}
+          </p>
+        </div>
       </CardContent>
     </Card>
   );
