@@ -1,3 +1,4 @@
+
 import ProductImageGallery from "@/components/marketplace/ProductImageGallery";
 import ProductInfo from "@/components/marketplace/ProductInfo";
 import SellerInfo from "@/components/marketplace/SellerInfo";
@@ -20,6 +21,7 @@ interface Product {
     phone_number?: string;
     avatar_url?: string;
     full_name?: string;
+    created_at: string;
   };
 }
 
