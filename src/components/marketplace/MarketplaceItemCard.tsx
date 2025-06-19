@@ -1,142 +1,116 @@
 
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Heart, MessageCircle, MapPin, Package, Users } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Heart, MessageCircle, Search } from "lucide-react";
 import { MarketplaceListing } from "./types";
 
 interface MarketplaceItemCardProps {
   listing: MarketplaceListing;
+  user: any;
+  favorites: string[];
   onToggleFavorite: (listingId: string) => void;
   onStartConversation: (listing: MarketplaceListing) => void;
-  isFavorite: boolean;
-  isAuthenticated: boolean;
 }
 
-const MarketplaceItemCard = ({
-  listing,
-  onToggleFavorite,
-  onStartConversation,
-  isFavorite,
-  isAuthenticated,
+const MarketplaceItemCard = ({ 
+  listing, 
+  user, 
+  favorites, 
+  onToggleFavorite, 
+  onStartConversation 
 }: MarketplaceItemCardProps) => {
-  // Determine display image
-  const displayImage = listing.images && listing.images.length > 0 
-    ? listing.images[0] 
-    : "/placeholder.svg";
-
-  // Extract first name from profile
+  // Extract first name from full_name or fallback to profile_name
   const getDisplayName = () => {
-    if (listing.profiles?.profile_name) {
-      return listing.profiles.profile_name;
+    if (listing.profiles?.full_name) {
+      return listing.profiles.full_name.split(' ')[0];
     }
-    return 'Unknown';
+    return listing.profiles?.profile_name || 'Unknown';
   };
-
-  const getTransactionMethods = () => {
-    const methods = [];
-    if (listing.allow_pickup) methods.push("Pickup");
-    if (listing.allow_meet_on_campus) methods.push("Meet on Campus");
-    return methods;
-  };
-
-  const transactionMethods = getTransactionMethods();
 
   return (
     <Card 
-      key={listing.id} 
-      className={`group hover:shadow-lg transition-all duration-200 ${
-        listing.listing_type === 'wanted' ? 'border-blue-200 bg-blue-50/30' : ''
-      } ${listing.featured ? 'ring-2 ring-yellow-400' : ''}`}
+      className={`hover:shadow-lg transition-shadow ${
+        listing.listing_type === 'wanted' ? 'border-blue-200 bg-blue-50/50' : ''
+      } ${listing.featured ? 'border-yellow-400 border-2' : ''}`}
     >
       <CardContent className="p-0">
-        {/* Image Section */}
-        <Link to={`/marketplace/${listing.id}`}>
-          <div className="relative aspect-square overflow-hidden rounded-t-lg">
+        {/* Only show image for offers, not for requests */}
+        {listing.listing_type === 'offer' && (
+          <div className="aspect-square overflow-hidden rounded-t-lg">
             <img
-              src={displayImage}
+              src={listing.images?.[0] || "/placeholder.svg"}
               alt={listing.title}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+              className="w-full h-full object-cover hover:scale-105 transition-transform"
             />
-            {listing.featured && (
-              <Badge className="absolute top-2 left-2 bg-yellow-400 text-yellow-900 font-semibold">
-                Featured
-              </Badge>
-            )}
-            {listing.listing_type === 'wanted' && (
-              <Badge variant="outline" className="absolute top-2 right-2 bg-blue-100 text-blue-700 border-blue-300">
-                Looking For
-              </Badge>
-            )}
           </div>
-        </Link>
-
-        {/* Content Section */}
-        <div className="p-4 space-y-3">
-          <div>
-            <Link to={`/marketplace/${listing.id}`}>
-              <h3 className="font-semibold text-lg line-clamp-2 group-hover:text-blue-600 transition-colors">
-                {listing.title}
-              </h3>
-            </Link>
-            <p className="text-sm text-muted-foreground">by {getDisplayName()}</p>
-          </div>
-
-          {/* Price */}
-          <div className="flex items-center justify-between">
-            <p className={`text-xl font-bold ${
-              listing.listing_type === 'wanted' ? 'text-blue-600' : 'text-green-600'
-            }`}>
-              {listing.price ? `$${listing.price}` : 'Free'}
-            </p>
-          </div>
-
-          {/* Transaction Methods */}
-          {listing.listing_type === 'offer' && transactionMethods.length > 0 && (
-            <div className="flex flex-wrap gap-1">
-              {transactionMethods.map((method) => (
-                <Badge key={method} variant="secondary" className="text-xs">
-                  {method === "Pickup" ? (
-                    <><Package size={12} className="mr-1" />{method}</>
-                  ) : (
-                    <><Users size={12} className="mr-1" />{method}</>
-                  )}
-                </Badge>
-              ))}
+        )}
+        
+        <div className={`p-4 ${listing.listing_type === 'wanted' ? 'pt-6' : ''}`}>
+          <div className="flex justify-between items-start mb-3">
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-1">
+                {listing.featured && (
+                  <Badge className="bg-yellow-400 text-yellow-900 font-bold">Featured</Badge>
+                )}
+                {listing.listing_type === 'wanted' && (
+                  <Badge variant="outline" className="text-blue-600 border-blue-300">
+                    <Search size={12} className="mr-1" />
+                    Looking For
+                  </Badge>
+                )}
+              </div>
+              <Link to={`/marketplace/${listing.id}`}>
+                <h3 className="font-semibold text-lg hover:text-blue-600 transition-colors mb-1">
+                  {listing.listing_type === 'wanted' ? `Looking for: ${listing.title}` : listing.title}
+                </h3>
+              </Link>
+              <p className="text-sm text-muted-foreground mb-2">by {getDisplayName()}</p>
             </div>
-          )}
-
-          {/* Action Buttons */}
-          <div className="flex gap-2 pt-2">
-            {isAuthenticated && (
+          </div>
+          
+          <p className="text-sm text-gray-600 mb-3 line-clamp-2">{listing.description}</p>
+          
+          <div className="flex justify-between items-center mb-3">
+            {listing.listing_type === 'offer' ? (
+              <>
+                <p className="text-xl font-bold text-green-600">
+                  {listing.price ? `$${listing.price}` : 'Free'}
+                </p>
+                <Badge variant="outline">Available</Badge>
+              </>
+            ) : (
+              <>
+                <p className="text-lg font-bold text-blue-600">
+                  {listing.price ? `Budget: $${listing.price}` : 'Budget: Negotiable'}
+                </p>
+                <Badge variant="outline" className="text-blue-600 border-blue-300">Wanted</Badge>
+              </>
+            )}
+          </div>
+          
+          <div className="flex gap-2">
+            {user && (
               <Button
                 variant="outline"
                 size="sm"
-                onClick={(e) => {
-                  e.preventDefault();
-                  onToggleFavorite(listing.id);
-                }}
-                className={isFavorite ? "text-red-500 border-red-200" : ""}
+                onClick={() => onToggleFavorite(listing.id)}
+                className={favorites.includes(listing.id) ? "text-red-500" : ""}
               >
-                <Heart size={16} className={isFavorite ? "fill-current" : ""} />
+                <Heart size={16} className={favorites.includes(listing.id) ? "fill-current" : ""} />
               </Button>
             )}
-            
             <Link to={`/marketplace/${listing.id}`} className="flex-1">
               <Button size="sm" className="w-full">
-                {listing.listing_type === 'wanted' ? 'I Have This' : 'View Details'}
+                {listing.listing_type === 'wanted' ? 'I Can Help' : 'View Details'}
               </Button>
             </Link>
-            
-            {isAuthenticated && listing.user_id !== listing.user_id && (
+            {user && listing.user_id !== user.id && (
               <Button 
                 variant="outline" 
                 size="sm"
-                onClick={(e) => {
-                  e.preventDefault();
-                  onStartConversation(listing);
-                }}
+                onClick={() => onStartConversation(listing)}
               >
                 <MessageCircle size={16} />
               </Button>

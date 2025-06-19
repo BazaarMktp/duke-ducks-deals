@@ -1,6 +1,6 @@
 
 import { Badge } from "@/components/ui/badge";
-import { Package, Users, MapPin } from "lucide-react";
+import { Package, Users, MapPin, Search } from "lucide-react";
 
 interface ProductInfoProps {
   title: string;
@@ -9,6 +9,7 @@ interface ProductInfoProps {
   allowPickup?: boolean;
   allowMeetOnCampus?: boolean;
   location?: string;
+  listingType?: string;
 }
 
 const ProductInfo = ({ 
@@ -17,7 +18,8 @@ const ProductInfo = ({
   description, 
   allowPickup, 
   allowMeetOnCampus,
-  location 
+  location,
+  listingType = 'offer'
 }: ProductInfoProps) => {
   const getTransactionMethods = () => {
     const methods = [];
@@ -31,9 +33,22 @@ const ProductInfo = ({
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">{title}</h1>
+        <div className="flex items-center gap-2 mb-3">
+          {listingType === 'wanted' && (
+            <Badge variant="outline" className="text-blue-600 border-blue-300">
+              <Search size={12} className="mr-1" />
+              Request
+            </Badge>
+          )}
+        </div>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          {listingType === 'wanted' ? `Looking for: ${title}` : title}
+        </h1>
         <p className="text-2xl font-bold text-green-600">
-          {price ? `$${price}` : 'Free'}
+          {listingType === 'wanted' 
+            ? (price ? `Budget: $${price}` : 'Budget: Negotiable')
+            : (price ? `$${price}` : 'Free')
+          }
         </p>
       </div>
 
@@ -41,11 +56,14 @@ const ProductInfo = ({
         {location && (
           <div className="flex items-center gap-2 text-gray-600">
             <MapPin size={16} />
-            <span className="text-sm">{location}</span>
+            <span className="text-sm">
+              {listingType === 'wanted' ? `Preferred location: ${location}` : location}
+            </span>
           </div>
         )}
 
-        {transactionMethods.length > 0 && (
+        {/* Only show transaction methods for offers */}
+        {listingType === 'offer' && transactionMethods.length > 0 && (
           <div>
             <h3 className="font-medium text-gray-900 mb-2">Available Transaction Methods:</h3>
             <div className="flex flex-wrap gap-2">
@@ -64,9 +82,22 @@ const ProductInfo = ({
       </div>
 
       <div className="pb-6 border-b border-gray-200">
-        <h3 className="font-medium text-gray-900 mb-3">Description</h3>
+        <h3 className="font-medium text-gray-900 mb-3">
+          {listingType === 'wanted' ? 'What I\'m looking for' : 'Description'}
+        </h3>
         <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{description}</p>
       </div>
+
+      {listingType === 'wanted' && (
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <h4 className="font-medium text-blue-900 mb-2">💡 Responding to this request:</h4>
+          <ul className="text-sm text-blue-800 space-y-1">
+            <li>• Contact the requester if you have what they're looking for</li>
+            <li>• Be clear about the condition and availability of your item</li>
+            <li>• Discuss pricing and meeting arrangements</li>
+          </ul>
+        </div>
+      )}
     </div>
   );
 };

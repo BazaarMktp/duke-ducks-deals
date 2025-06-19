@@ -175,12 +175,16 @@ export const useMarketplaceItem = (id: string | undefined) => {
         conversationId = newConv.id;
       }
 
+      const defaultMessage = product.listing_type === 'wanted' 
+        ? "Hi, I have what you're looking for and would like to help!"
+        : "Hi, I am interested in this item";
+
       await supabase
         .from('messages')
         .insert({
           conversation_id: conversationId,
           sender_id: user.id,
-          message: "Hi, I am interested in this item"
+          message: defaultMessage
         });
 
       toast({

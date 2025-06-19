@@ -15,6 +15,7 @@ interface Product {
   location?: string;
   allow_pickup?: boolean;
   allow_meet_on_campus?: boolean;
+  listing_type?: string;
   profiles: {
     profile_name: string;
     email: string;
@@ -48,6 +49,48 @@ const MarketplaceItemContent = ({
   onAddToCart,
   onStartConversation
 }: MarketplaceItemContentProps) => {
+  // For requests (wanted), we don't show images and use a single column layout
+  if (product.listing_type === 'wanted') {
+    return (
+      <div className="max-w-4xl mx-auto">
+        <ProductInfo
+          title={product.title}
+          price={product.price}
+          description={product.description}
+          location={product.location}
+          allowPickup={product.allow_pickup}
+          allowMeetOnCampus={product.allow_meet_on_campus}
+          listingType={product.listing_type}
+        />
+
+        <SellerInfo
+          profileName={product.profiles.profile_name}
+          email={product.profiles.email}
+          phoneNumber={product.profiles.phone_number}
+          createdAt={product.profiles.created_at}
+          avatarUrl={product.profiles.avatar_url}
+          fullName={product.profiles.full_name}
+          isAuthenticated={!!user}
+          userId={product.user_id}
+          listingCreatedAt={product.created_at}
+          listingType={product.listing_type}
+        />
+
+        <ProductActions
+          user={user}
+          isFavorite={isFavorite}
+          isInCart={isInCart}
+          isOwnProduct={product.user_id === user?.id}
+          onToggleFavorite={onToggleFavorite}
+          onAddToCart={onAddToCart}
+          onStartConversation={onStartConversation}
+          listingType={product.listing_type}
+        />
+      </div>
+    );
+  }
+
+  // For offers, use the two-column layout with images
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       <ProductImageGallery
@@ -65,6 +108,7 @@ const MarketplaceItemContent = ({
           location={product.location}
           allowPickup={product.allow_pickup}
           allowMeetOnCampus={product.allow_meet_on_campus}
+          listingType={product.listing_type}
         />
 
         <SellerInfo
@@ -77,6 +121,7 @@ const MarketplaceItemContent = ({
           isAuthenticated={!!user}
           userId={product.user_id}
           listingCreatedAt={product.created_at}
+          listingType={product.listing_type}
         />
 
         <ProductActions
@@ -87,6 +132,7 @@ const MarketplaceItemContent = ({
           onToggleFavorite={onToggleFavorite}
           onAddToCart={onAddToCart}
           onStartConversation={onStartConversation}
+          listingType={product.listing_type}
         />
       </div>
     </div>

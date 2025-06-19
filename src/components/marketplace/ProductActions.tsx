@@ -1,6 +1,7 @@
-
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Heart, ShoppingCart, MessageCircle } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Heart, ShoppingCart, MessageSquare } from "lucide-react";
 
 interface ProductActionsProps {
   user: any;
@@ -10,48 +11,94 @@ interface ProductActionsProps {
   onToggleFavorite: () => void;
   onAddToCart: () => void;
   onStartConversation: () => void;
+  listingType?: string;
 }
 
-const ProductActions = ({
-  user,
-  isFavorite,
-  isInCart,
-  isOwnProduct,
-  onToggleFavorite,
-  onAddToCart,
-  onStartConversation
+const ProductActions = ({ 
+  user, 
+  isFavorite, 
+  isInCart, 
+  isOwnProduct, 
+  onToggleFavorite, 
+  onAddToCart, 
+  onStartConversation,
+  listingType = 'offer'
 }: ProductActionsProps) => {
+  if (!user) {
+    return (
+      <Card>
+        <CardContent className="p-6 text-center">
+          <p className="text-gray-600 mb-4">
+            {listingType === 'wanted' ? 'Sign in to respond to this request' : 'Sign in to contact the seller'}
+          </p>
+          <Button asChild className="w-full">
+            <Link to="/auth">Sign In</Link>
+          </Button>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (isOwnProduct) {
+    return (
+      <Card>
+        <CardContent className="p-6 text-center">
+          <p className="text-gray-600 mb-4">
+            This is your {listingType === 'wanted' ? 'request' : 'listing'}
+          </p>
+          <Button variant="outline" asChild className="w-full">
+            <Link to="/my-listings">Manage {listingType === 'wanted' ? 'Requests' : 'Listings'}</Link>
+          </Button>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
-    <div className="flex gap-3">
-      {user && (
-        <Button
-          variant="outline"
-          onClick={onToggleFavorite}
-          className={isFavorite ? "text-red-500" : ""}
-        >
-          <Heart size={16} className={isFavorite ? "fill-current" : ""} />
-        </Button>
-      )}
-      {user && (
-        <Button 
-          onClick={onAddToCart}
-          disabled={isInCart}
-          className="flex-1"
-        >
-          <ShoppingCart size={16} className="mr-2" />
-          {isInCart ? "In Cart" : "Add to Cart"}
-        </Button>
-      )}
-      {user && !isOwnProduct && (
-        <Button 
-          onClick={onStartConversation}
-          variant="outline"
-        >
-          <MessageCircle size={16} className="mr-2" />
-          Contact Now
-        </Button>
-      )}
-    </div>
+    <Card>
+      <CardContent className="p-6">
+        <div className="space-y-3">
+          {listingType === 'offer' && (
+            <>
+              <Button
+                onClick={onToggleFavorite}
+                variant="outline"
+                className={`w-full ${isFavorite ? 'text-red-500' : ''}`}
+              >
+                <Heart size={16} className={`mr-2 ${isFavorite ? 'fill-current' : ''}`} />
+                {isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
+              </Button>
+              
+              <Button
+                onClick={onAddToCart}
+                disabled={isInCart}
+                variant="outline"
+                className="w-full"
+              >
+                <ShoppingCart size={16} className="mr-2" />
+                {isInCart ? 'Already in Cart' : 'Add to Cart'}
+              </Button>
+            </>
+          )}
+          
+          <Button onClick={onStartConversation} className="w-full">
+            <MessageSquare size={16} className="mr-2" />
+            {listingType === 'wanted' ? 'I Can Help!' : 'Message Seller'}
+          </Button>
+
+          {listingType === 'wanted' && (
+            <Button
+              onClick={onToggleFavorite}
+              variant="outline"
+              className={`w-full ${isFavorite ? 'text-red-500' : ''}`}
+            >
+              <Heart size={16} className={`mr-2 ${isFavorite ? 'fill-current' : ''}`} />
+              {isFavorite ? 'Remove from Saved' : 'Save Request'}
+            </Button>
+          )}
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 
