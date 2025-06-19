@@ -21,11 +21,8 @@ const MarketplaceItemCard = ({
   onToggleFavorite, 
   onStartConversation 
 }: MarketplaceItemCardProps) => {
-  // Extract first name from full_name or fallback to profile_name
+  // Extract first name from profile_name since full_name might not be available
   const getDisplayName = () => {
-    if (listing.profiles?.full_name) {
-      return listing.profiles.full_name.split(' ')[0];
-    }
     return listing.profiles?.profile_name || 'Unknown';
   };
 

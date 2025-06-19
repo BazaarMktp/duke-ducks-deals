@@ -27,6 +27,7 @@ interface HousingListing {
     phone_number?: string;
     avatar_url?: string;
     full_name?: string;
+    created_at: string;
   };
 }
 
@@ -55,7 +56,7 @@ const HousingDetail = () => {
         .from('listings')
         .select(`
           *,
-          profiles!listings_user_id_fkey(profile_name, email, phone_number, avatar_url, full_name)
+          profiles!listings_user_id_fkey(profile_name, email, phone_number, avatar_url, full_name, created_at)
         `)
         .eq('id', id)
         .eq('category', 'housing')
@@ -221,11 +222,12 @@ const HousingDetail = () => {
             profileName={listing.profiles.profile_name}
             email={listing.profiles.email}
             phoneNumber={listing.profiles.phone_number}
-            createdAt={listing.created_at}
+            createdAt={listing.profiles.created_at}
             avatarUrl={listing.profiles.avatar_url}
             fullName={listing.profiles.full_name}
             isAuthenticated={!!user}
             userId={listing.user_id}
+            listingCreatedAt={listing.created_at}
           />
 
           <HousingActions

@@ -44,10 +44,10 @@ const MarketplaceGrid = ({ listings, user, favorites, onToggleFavorite, loading,
         <MarketplaceItemCard 
           key={listing.id}
           listing={listing}
-          isFavorite={favorites.includes(listing.id)}
+          user={user}
+          favorites={favorites}
           onToggleFavorite={onToggleFavorite}
           onStartConversation={handleStartConversation}
-          isAuthenticated={!!user}
         />
       ))}
     </div>
