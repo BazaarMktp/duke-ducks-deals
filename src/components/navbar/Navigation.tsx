@@ -3,9 +3,6 @@ import { Link } from "react-router-dom";
 import { 
   Home, 
   ShoppingCart, 
-  MapPin, 
-  Users, 
-  Gift, 
   MessageCircle
 } from "lucide-react";
 
@@ -13,9 +10,10 @@ const Navigation = () => {
   const navigation = [
     { name: "Home", href: "/", icon: Home },
     { name: "Marketplace", href: "/marketplace", icon: ShoppingCart },
-    { name: "Housing", href: "/housing", icon: MapPin },
-    { name: "Services", href: "/services", icon: Users },
-    { name: "Donations", href: "/donations", icon: Gift },
+    // Temporarily disabled - can be re-enabled later
+    // { name: "Housing", href: "/housing", icon: MapPin },
+    // { name: "Services", href: "/services", icon: Users },
+    // { name: "Donations", href: "/donations", icon: Gift },
     { name: "Messages", href: "/messages", icon: MessageCircle },
   ];
 

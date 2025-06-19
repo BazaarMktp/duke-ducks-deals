@@ -1,18 +1,16 @@
 
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Separator } from "@/components/ui/separator";
 import { 
   Home, 
   ShoppingCart, 
-  MapPin, 
-  Users, 
-  Gift, 
-  MessageCircle,
-  LogOut,
-  User,
-  ListFilter,
-  Heart
+  MessageCircle, 
+  User, 
+  Settings,
+  Heart,
+  Package,
+  LogOut
 } from "lucide-react";
 
 interface MobileMenuProps {
@@ -24,129 +22,99 @@ interface MobileMenuProps {
 }
 
 const MobileMenu = ({ user, isOpen, onClose, onSignOut, unreadMessages }: MobileMenuProps) => {
+  if (!isOpen) return null;
+
   const navigation = [
     { name: "Home", href: "/", icon: Home },
     { name: "Marketplace", href: "/marketplace", icon: ShoppingCart },
-    { name: "Housing", href: "/housing", icon: MapPin },
-    { name: "Services", href: "/services", icon: Users },
-    { name: "Donations", href: "/donations", icon: Gift },
-    { name: "Messages", href: "/messages", icon: MessageCircle },
+    // Temporarily disabled - can be re-enabled later
+    // { name: "Housing", href: "/housing", icon: MapPin },
+    // { name: "Services", href: "/services", icon: Users },
+    // { name: "Donations", href: "/donations", icon: Gift },
   ];
 
-  // Get user's first name or fallback to profile name/email
-  const getUserDisplayName = () => {
-    // First try to get first name from full_name
-    if (user?.user_metadata?.full_name) {
-      return user.user_metadata.full_name.split(' ')[0];
-    }
-    // Fallback to profile_name
-    if (user?.user_metadata?.profile_name) {
-      return user.user_metadata.profile_name;
-    }
-    // Final fallback to email prefix
-    if (user?.email) {
-      return user.email.split('@')[0];
-    }
-    return 'User';
-  };
-
-  // Get user's initials for avatar fallback
-  const getUserInitials = () => {
-    const name = getUserDisplayName();
-    return name.slice(0, 2).toUpperCase();
-  };
-
-  const handleSignOut = () => {
-    console.log('Mobile sign out clicked');
-    onClose();
-    // Use a small delay to ensure menu closes before sign out
-    setTimeout(() => {
-      onSignOut();
-    }, 100);
-  };
-
-  if (!isOpen) return null;
-
   return (
-    <div className="md:hidden py-4 space-y-2">
-      {user && (
-        <div className="flex items-center space-x-2 py-2 border-b">
-          <Avatar className="h-8 w-8">
-            <AvatarImage src={user?.user_metadata?.avatar_url} />
-            <AvatarFallback>{getUserInitials()}</AvatarFallback>
-          </Avatar>
-          <span className="text-sm text-gray-700">Hi, {getUserDisplayName()}</span>
-        </div>
-      )}
-      {navigation.map((item) => (
-        <Link
-          key={item.name}
-          to={item.href}
-          className="flex items-center space-x-2 py-2 text-gray-600 hover:text-blue-600 transition-colors"
-          onClick={onClose}
-        >
-          <item.icon size={16} />
-          <span>{item.name}</span>
-          {item.name === "Messages" && unreadMessages > 0 && (
-            <span className="ml-auto bg-red-500 text-white text-xs font-semibold rounded-full h-5 w-5 flex items-center justify-center">
-              {unreadMessages}
-            </span>
-          )}
-        </Link>
-      ))}
-      {user && (
-        <>
+    <div className="md:hidden border-t bg-white">
+      <div className="px-4 py-4 space-y-3">
+        {navigation.map((item) => (
           <Link
-            to="/profile"
-            className="flex items-center space-x-2 py-2 text-gray-600 hover:text-blue-600 transition-colors"
+            key={item.name}
+            to={item.href}
+            className="flex items-center space-x-3 text-gray-600 hover:text-blue-600 py-2"
             onClick={onClose}
           >
-            <User size={16} />
-            <span>Profile</span>
+            <item.icon size={20} />
+            <span>{item.name}</span>
           </Link>
-          <Link
-            to="/my-listings"
-            className="flex items-center space-x-2 py-2 text-gray-600 hover:text-blue-600 transition-colors"
-            onClick={onClose}
-          >
-            <ListFilter size={16} />
-            <span>My Listings</span>
-          </Link>
-          <Link
-            to="/favorites"
-            className="flex items-center space-x-2 py-2 text-gray-600 hover:text-blue-600 transition-colors"
-            onClick={onClose}
-          >
-            <Heart size={16} />
-            <span>Favorites</span>
-          </Link>
-          <Link
-            to="/cart"
-            className="flex items-center space-x-2 py-2 text-gray-600 hover:text-blue-600 transition-colors"
-            onClick={onClose}
-          >
-            <ShoppingCart size={16} />
-            <span>Cart</span>
-          </Link>
-        </>
-      )}
-      <div className="pt-4 space-y-2">
-        {user ? (
-          <Button
-            variant="outline"
-            className="w-full"
-            onClick={handleSignOut}
-          >
-            <LogOut size={16} className="mr-2" />
-            Sign Out
-          </Button>
-        ) : (
+        ))}
+        
+        {user && (
           <>
-            <Link to="/auth" state={{ from: 'login' }} onClick={onClose}>
-              <Button variant="outline" className="w-full">Login</Button>
+            <Separator className="my-4" />
+            <Link
+              to="/messages"
+              className="flex items-center space-x-3 text-gray-600 hover:text-blue-600 py-2 relative"
+              onClick={onClose}
+            >
+              <MessageCircle size={20} />
+              <span>Messages</span>
+              {unreadMessages > 0 && (
+                <span className="bg-red-500 text-white text-xs rounded-full px-2 py-1 min-w-[1.25rem] h-5 flex items-center justify-center">
+                  {unreadMessages > 99 ? "99+" : unreadMessages}
+                </span>
+              )}
             </Link>
-            <Link to="/auth" state={{ from: 'signup' }} onClick={onClose}>
-              <Button className="w-full">Sign Up</Button>
+            <Link
+              to="/profile"
+              className="flex items-center space-x-3 text-gray-600 hover:text-blue-600 py-2"
+              onClick={onClose}
+            >
+              <User size={20} />
+              <span>Profile</span>
+            </Link>
+            <Link
+              to="/favorites"
+              className="flex items-center space-x-3 text-gray-600 hover:text-blue-600 py-2"
+              onClick={onClose}
+            >
+              <Heart size={20} />
+              <span>Favorites</span>
+            </Link>
+            <Link
+              to="/my-listings"
+              className="flex items-center space-x-3 text-gray-600 hover:text-blue-600 py-2"
+              onClick={onClose}
+            >
+              <Package size={20} />
+              <span>My Listings</span>
+            </Link>
+            <Link
+              to="/settings"
+              className="flex items-center space-x-3 text-gray-600 hover:text-blue-600 py-2"
+              onClick={onClose}
+            >
+              <Settings size={20} />
+              <span>Settings</span>
+            </Link>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                onSignOut();
+                onClose();
+              }}
+              className="w-full justify-start px-0 py-2 h-auto text-gray-600 hover:text-red-600"
+            >
+              <LogOut size={20} className="mr-3" />
+              Sign Out
+            </Button>
+          </>
+        )}
+        
+        {!user && (
+          <>
+            <Separator className="my-4" />
+            <Link to="/auth" onClick={onClose}>
+              <Button className="w-full">Sign In</Button>
             </Link>
           </>
         )}
