@@ -28,7 +28,7 @@ const CreateListingForm: React.FC<CreateListingFormProps> = ({
   navigate,
 }) => {
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <Label htmlFor="category">Category</Label>
@@ -60,7 +60,7 @@ const CreateListingForm: React.FC<CreateListingFormProps> = ({
       </div>
 
       <div>
-        <Label htmlFor="title">
+        <Label htmlFor="title" className="text-base font-medium">
           {formData.listingType === 'wanted' ? 'What are you looking for?' : 'Title'}
         </Label>
         <Input
@@ -73,35 +73,45 @@ const CreateListingForm: React.FC<CreateListingFormProps> = ({
               ? `What ${formData.category} are you looking for?`
               : `Enter ${formData.category} title...`
           }
+          className={formData.listingType === 'wanted' ? "text-lg py-3" : ""}
         />
       </div>
 
       <div>
-        <Label htmlFor="description">
-          {formData.listingType === 'wanted' ? 'Additional details' : 'Description'}
+        <Label htmlFor="description" className="text-base font-medium">
+          {formData.listingType === 'wanted' ? 'Detailed description of your needs' : 'Description'}
         </Label>
         <Textarea
           id="description"
           value={formData.description}
           onChange={(e) => handleInputChange("description", e.target.value)}
-          rows={4}
+          rows={formData.listingType === 'wanted' ? 6 : 4}
           placeholder={
             formData.listingType === 'wanted' 
-              ? "Provide more details about what you're looking for..."
+              ? "Please provide detailed information about what you're looking for, including specifications, preferred condition, timeline, and any other requirements..."
               : "Describe your listing..."
           }
+          className={formData.listingType === 'wanted' ? "text-base leading-relaxed" : ""}
         />
+        {formData.listingType === 'wanted' && (
+          <p className="text-sm text-muted-foreground mt-2">
+            💡 The more details you provide, the better responses you'll get from potential sellers!
+          </p>
+        )}
       </div>
 
-      <ImageUpload
-        images={formData.images}
-        onImagesChange={handleImagesChange}
-        maxImages={5}
-      />
+      {/* Only show images for offers, not for requests */}
+      {formData.listingType === 'offer' && (
+        <ImageUpload
+          images={formData.images}
+          onImagesChange={handleImagesChange}
+          maxImages={5}
+        />
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <Label htmlFor="price">
+          <Label htmlFor="price" className="text-base font-medium">
             {formData.listingType === 'wanted' ? 'Budget' : 'Price'} {formData.category === 'services' ? '(per hour)' : formData.category === 'housing' ? '(per month)' : ''}
             {formData.listingType === 'wanted' && ' (Optional)'}
           </Label>
@@ -112,16 +122,23 @@ const CreateListingForm: React.FC<CreateListingFormProps> = ({
             value={formData.price}
             onChange={(e) => handleInputChange("price", e.target.value)}
             placeholder="0.00"
+            className={formData.listingType === 'wanted' ? "text-lg" : ""}
           />
+          {formData.listingType === 'wanted' && (
+            <p className="text-sm text-muted-foreground mt-1">
+              Enter your budget or leave blank if negotiable
+            </p>
+          )}
         </div>
 
         <div>
-          <Label htmlFor="location">Location</Label>
+          <Label htmlFor="location" className="text-base font-medium">Location</Label>
           <Input
             id="location"
             value={formData.location}
             onChange={(e) => handleInputChange("location", e.target.value)}
-            placeholder="Enter location..."
+            placeholder={formData.listingType === 'wanted' ? "Where would you like to meet/pickup?" : "Enter location..."}
+            className={formData.listingType === 'wanted' ? "text-lg" : ""}
           />
         </div>
       </div>
@@ -155,6 +172,19 @@ const CreateListingForm: React.FC<CreateListingFormProps> = ({
           <p className="text-xs text-muted-foreground">
             Select at least one transaction method for your listing
           </p>
+        </div>
+      )}
+
+      {/* Additional help text for requests */}
+      {formData.listingType === 'wanted' && (
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <h4 className="font-medium text-blue-900 mb-2">Tips for better responses:</h4>
+          <ul className="text-sm text-blue-800 space-y-1">
+            <li>• Be specific about what you're looking for</li>
+            <li>• Include your preferred condition (new, used, etc.)</li>
+            <li>• Mention your timeline or urgency</li>
+            <li>• Add any size, color, or model preferences</li>
+          </ul>
         </div>
       )}
 
