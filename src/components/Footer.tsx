@@ -27,10 +27,7 @@ const Footer = () => {
             <h3 className="font-semibold mb-4">Platform</h3>
             <ul className="space-y-2 text-sm text-gray-400">
               <li><Link to="/marketplace" className="hover:text-white transition-colors">Marketplace</Link></li>
-              {/* Temporarily disabled - can be re-enabled later */}
-              {/* <li><Link to="/housing" className="hover:text-white transition-colors">Housing</Link></li>
-              <li><Link to="/services" className="hover:text-white transition-colors">Services</Link></li>
-              <li><Link to="/donations" className="hover:text-white transition-colors">Donations</Link></li> */}
+              <li><Link to="/donations" className="hover:text-white transition-colors">Donations</Link></li>
             </ul>
           </div>
 
