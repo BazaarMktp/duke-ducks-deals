@@ -55,11 +55,6 @@ const SellerInfo = ({
             <p className="text-sm">
               <span className="font-medium">Email:</span> {email}
             </p>
-            {phoneNumber && (
-              <p className="text-sm">
-                <span className="font-medium">Phone:</span> {phoneNumber}
-              </p>
-            )}
           </div>
         )}
         
