@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -183,7 +182,8 @@ const PostingForm: React.FC<PostingFormProps> = ({
               </div>
             </div>
 
-            {category === 'housing' && (
+            {/* Temporarily disabled - can be re-enabled later */}
+            {/* {category === 'housing' && (
               <div>
                 <Label htmlFor="housingType">Housing Type</Label>
                 <Select onValueChange={(value) => handleInputChange("housingType", value)}>
@@ -197,7 +197,7 @@ const PostingForm: React.FC<PostingFormProps> = ({
                   </SelectContent>
                 </Select>
               </div>
-            )}
+            )} */}
 
             <div className="flex gap-2 pt-4">
               <Button type="button" variant="outline" onClick={onClose} className="flex-1">

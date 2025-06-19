@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -37,8 +36,9 @@ const CreateListingForm: React.FC<CreateListingFormProps> = ({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="marketplace">Marketplace</SelectItem>
-              <SelectItem value="housing">Housing</SelectItem>
-              <SelectItem value="services">Services</SelectItem>
+              {/* Temporarily disabled - can be re-enabled later */}
+              {/* <SelectItem value="housing">Housing</SelectItem>
+              <SelectItem value="services">Services</SelectItem> */}
             </SelectContent>
           </Select>
         </div>
@@ -124,7 +124,8 @@ const CreateListingForm: React.FC<CreateListingFormProps> = ({
         </div>
       </div>
 
-      {formData.category === 'housing' && (
+      {/* Temporarily disabled - can be re-enabled later */}
+      {/* {formData.category === 'housing' && (
         <div>
           <Label htmlFor="housingType">Housing Type</Label>
           <Select onValueChange={(value) => handleInputChange("housingType", value)}>
@@ -138,7 +139,7 @@ const CreateListingForm: React.FC<CreateListingFormProps> = ({
             </SelectContent>
           </Select>
         </div>
-      )}
+      )} */}
 
       <div className="flex gap-2 pt-4">
         <Button 
