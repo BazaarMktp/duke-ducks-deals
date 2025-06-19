@@ -29,7 +29,7 @@ const ProductInfo = ({
   const transactionMethods = getTransactionMethods();
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold text-gray-900 mb-2">{title}</h1>
         <p className="text-2xl font-bold text-green-600">
@@ -37,7 +37,7 @@ const ProductInfo = ({
         </p>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-4">
         {location && (
           <div className="flex items-center gap-2 text-gray-600">
             <MapPin size={16} />
@@ -63,9 +63,9 @@ const ProductInfo = ({
         )}
       </div>
 
-      <div>
-        <h3 className="font-medium text-gray-900 mb-2">Description</h3>
-        <p className="text-gray-700 whitespace-pre-wrap">{description}</p>
+      <div className="pb-6 border-b border-gray-200">
+        <h3 className="font-medium text-gray-900 mb-3">Description</h3>
+        <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{description}</p>
       </div>
     </div>
   );
