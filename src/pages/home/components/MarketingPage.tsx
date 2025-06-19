@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,7 +12,6 @@ interface MarketingPageProps {
 export const MarketingPage = ({ stats }: MarketingPageProps) => {
   const statsDisplay = [
     { label: "Students", value: stats.totalUsers.toString() },
-    { label: "Colleges", value: stats.totalColleges.toString() },
     { label: "Active Listings", value: stats.activeListings.toString() },
     { label: "Donations", value: stats.totalDonations.toString() },
   ];
@@ -55,7 +53,7 @@ export const MarketingPage = ({ stats }: MarketingPageProps) => {
       {/* Stats Section */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-3 gap-8">
             {statsDisplay.map((stat, index) => (
               <div key={index} className="text-center">
                 <div className="text-3xl md:text-4xl font-bold text-blue-600 mb-2">

@@ -1,3 +1,4 @@
+
 import { ShoppingBag, Heart } from "lucide-react";
 
 export const STATS = [

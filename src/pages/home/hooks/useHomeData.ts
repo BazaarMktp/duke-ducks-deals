@@ -1,4 +1,3 @@
-
 import { useEffect, useMemo, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Listing, Profile, Stats } from "../types";
@@ -18,15 +17,11 @@ const fetchStats = async (): Promise<Stats> => {
       .from('donations')
       .select('*', { count: 'exact', head: true });
 
-    const { count: collegesCount } = await supabase
-      .from('colleges')
-      .select('*', { count: 'exact', head: true });
-
     return {
       activeListings: listingsCount || 0,
       totalUsers: usersCount || 0,
       totalDonations: donationsCount || 0,
-      totalColleges: collegesCount || 0,
+      totalColleges: 0,
     };
   } catch (error) {
     console.error('Error fetching stats:', error);
