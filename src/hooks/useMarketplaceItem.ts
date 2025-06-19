@@ -13,6 +13,9 @@ interface Product {
   images: string[];
   user_id: string;
   created_at: string;
+  location?: string;
+  allow_pickup?: boolean;
+  allow_meet_on_campus?: boolean;
   profiles: {
     profile_name: string;
     email: string;

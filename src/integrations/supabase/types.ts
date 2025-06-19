@@ -266,6 +266,8 @@ export type Database = {
       }
       listings: {
         Row: {
+          allow_meet_on_campus: boolean | null
+          allow_pickup: boolean | null
           category: Database["public"]["Enums"]["listing_category"]
           college_id: string
           created_at: string | null
@@ -286,6 +288,8 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          allow_meet_on_campus?: boolean | null
+          allow_pickup?: boolean | null
           category: Database["public"]["Enums"]["listing_category"]
           college_id: string
           created_at?: string | null
@@ -306,6 +310,8 @@ export type Database = {
           user_id: string
         }
         Update: {
+          allow_meet_on_campus?: boolean | null
+          allow_pickup?: boolean | null
           category?: Database["public"]["Enums"]["listing_category"]
           college_id?: string
           created_at?: string | null

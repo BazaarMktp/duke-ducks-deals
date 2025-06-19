@@ -12,6 +12,9 @@ interface Product {
   images: string[];
   user_id: string;
   created_at: string;
+  location?: string;
+  allow_pickup?: boolean;
+  allow_meet_on_campus?: boolean;
   profiles: {
     profile_name: string;
     email: string;
@@ -58,6 +61,9 @@ const MarketplaceItemContent = ({
           title={product.title}
           price={product.price}
           description={product.description}
+          location={product.location}
+          allowPickup={product.allow_pickup}
+          allowMeetOnCampus={product.allow_meet_on_campus}
         />
 
         <SellerInfo
