@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -10,6 +11,8 @@ import { Loader2 } from "lucide-react";
 import ProfilePictureUpload from "@/components/ProfilePictureUpload";
 import { Badge } from "./profile/types";
 import UserBadges from "@/components/profile/UserBadges";
+import VerificationProgress from "@/components/profile/VerificationProgress";
+import { useUserVerification } from "@/hooks/useUserVerification";
 
 const Profile = () => {
   const { user } = useAuth();
@@ -23,6 +26,7 @@ const Profile = () => {
     points: 0,
   });
   const [badges, setBadges] = useState<Badge[]>([]);
+  const { isVerified } = useUserVerification(user?.id);
 
   useEffect(() => {
     if (user) {
@@ -107,6 +111,8 @@ const Profile = () => {
       }
       
       toast.success("Profile updated successfully");
+      // Re-fetch badges in case verification was completed
+      fetchBadges();
     } catch (error) {
       console.error("Error updating profile:", error);
       toast.error("Failed to update profile");
@@ -133,11 +139,13 @@ const Profile = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <VerificationProgress profile={profile} isVerified={isVerified} />
+      
       <Card>
         <CardHeader className="flex flex-row flex-wrap justify-between items-start">
           <div className="flex items-center gap-3">
             <CardTitle>Profile Settings</CardTitle>
-            <UserBadges badges={badges} />
+            <UserBadges badges={badges} inline />
           </div>
           <div className="text-right">
             <p className="text-sm font-medium text-gray-500">Campus Cred</p>
@@ -196,6 +204,10 @@ const Profile = () => {
           </div>
         </CardContent>
       </Card>
+
+      <div className="mt-8">
+        <UserBadges badges={badges} />
+      </div>
     </div>
   );
 };
