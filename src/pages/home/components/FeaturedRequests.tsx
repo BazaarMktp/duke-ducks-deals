@@ -19,13 +19,12 @@ export const FeaturedRequests = ({ featuredRequests }: FeaturedRequestsProps) =>
             <Link to="/marketplace">
               <Button variant="outline" size="sm">Marketplace</Button>
             </Link>
-            {/* Temporarily disabled - can be re-enabled later */}
-            {/* <Link to="/housing">
+            <Link to="/housing">
               <Button variant="outline" size="sm">Housing</Button>
             </Link>
             <Link to="/services">
               <Button variant="outline" size="sm">Services</Button>
-            </Link> */}
+            </Link>
           </div>
         </div>
         
