@@ -42,57 +42,58 @@ const FAQ = () => {
         }
       ]
     },
-    {
-      category: "Housing",
-      questions: [
-        {
-          question: "How do I find a roommate?",
-          answer: "Browse the Housing section and filter by 'Roommate Wanted' listings. You can also post your own listing if you're looking for someone to share your space."
-        },
-        {
-          question: "Are housing listings verified?",
-          answer: "While we encourage users to provide accurate information, we recommend verifying all housing details in person before making any commitments."
-        },
-        {
-          question: "Can I post off-campus housing?",
-          answer: "Yes! You can post both on-campus and off-campus housing opportunities, including sublets, shared apartments, and room rentals."
-        }
-      ]
-    },
-    {
-      category: "Services",
-      questions: [
-        {
-          question: "What types of services can I offer?",
-          answer: "Popular services include tutoring, moving help, pet sitting, graphic design, and academic assistance. Services should be legal and appropriate for a campus environment."
-        },
-        {
-          question: "How do I set my service rates?",
-          answer: "You can set hourly rates or fixed prices for your services. Research similar offerings to ensure competitive pricing."
-        },
-        {
-          question: "Are service providers background checked?",
-          answer: "Service providers are verified students, but we don't conduct background checks. Use your best judgment and meet in public spaces when appropriate."
-        }
-      ]
-    },
-    {
-      category: "Donations",
-      questions: [
-        {
-          question: "How does the donation system work?",
-          answer: "Post items you'd like to donate for free. Interested recipients can contact you to arrange pickup. This is a great way to help fellow students in need."
-        },
-        {
-          question: "What items are suitable for donation?",
-          answer: "Gently used textbooks, clothing, electronics, furniture, and school supplies are all great donation items. Items should be clean and functional."
-        },
-        {
-          question: "Do you organize donation pickups?",
-          answer: "Currently, donors and recipients arrange pickups directly. We're working on organizing campus-wide donation events in the future."
-        }
-      ]
-    },
+    // Temporarily disabled - can be re-enabled later
+    // {
+    //   category: "Housing",
+    //   questions: [
+    //     {
+    //       question: "How do I find a roommate?",
+    //       answer: "Browse the Housing section and filter by 'Roommate Wanted' listings. You can also post your own listing if you're looking for someone to share your space."
+    //     },
+    //     {
+    //       question: "Are housing listings verified?",
+    //       answer: "While we encourage users to provide accurate information, we recommend verifying all housing details in person before making any commitments."
+    //     },
+    //     {
+    //       question: "Can I post off-campus housing?",
+    //       answer: "Yes! You can post both on-campus and off-campus housing opportunities, including sublets, shared apartments, and room rentals."
+    //     }
+    //   ]
+    // },
+    // {
+    //   category: "Services",
+    //   questions: [
+    //     {
+    //       question: "What types of services can I offer?",
+    //       answer: "Popular services include tutoring, moving help, pet sitting, graphic design, and academic assistance. Services should be legal and appropriate for a campus environment."
+    //     },
+    //     {
+    //       question: "How do I set my service rates?",
+    //       answer: "You can set hourly rates or fixed prices for your services. Research similar offerings to ensure competitive pricing."
+    //     },
+    //     {
+    //       question: "Are service providers background checked?",
+    //       answer: "Service providers are verified students, but we don't conduct background checks. Use your best judgment and meet in public spaces when appropriate."
+    //     }
+    //   ]
+    // },
+    // {
+    //   category: "Donations",
+    //   questions: [
+    //     {
+    //       question: "How does the donation system work?",
+    //       answer: "Post items you'd like to donate for free. Interested recipients can contact you to arrange pickup. This is a great way to help fellow students in need."
+    //     },
+    //     {
+    //       question: "What items are suitable for donation?",
+    //       answer: "Gently used textbooks, clothing, electronics, furniture, and school supplies are all great donation items. Items should be clean and functional."
+    //     },
+    //     {
+    //       question: "Do you organize donation pickups?",
+    //       answer: "Currently, donors and recipients arrange pickups directly. We're working on organizing campus-wide donation events in the future."
+    //     }
+    //   ]
+    // },
     {
       category: "Safety & Trust",
       questions: [
