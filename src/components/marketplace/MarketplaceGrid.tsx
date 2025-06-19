@@ -12,6 +12,11 @@ interface MarketplaceGridProps {
 }
 
 const MarketplaceGrid = ({ listings, user, favorites, onToggleFavorite, loading, activeListingType }: MarketplaceGridProps) => {
+  const handleStartConversation = (listing: MarketplaceListing) => {
+    // This function will be implemented when needed
+    console.log('Starting conversation for listing:', listing.id);
+  };
+
   if (loading) {
     return (
       <div className="text-center py-12">
@@ -39,9 +44,10 @@ const MarketplaceGrid = ({ listings, user, favorites, onToggleFavorite, loading,
         <MarketplaceItemCard 
           key={listing.id}
           listing={listing}
-          user={user}
           isFavorite={favorites.includes(listing.id)}
           onToggleFavorite={onToggleFavorite}
+          onStartConversation={handleStartConversation}
+          isAuthenticated={!!user}
         />
       ))}
     </div>
