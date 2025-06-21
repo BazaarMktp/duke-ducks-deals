@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -11,6 +10,7 @@ export const useChat = () => {
     const [messages, setMessages] = useState<Message[]>([]);
     const [loading, setLoading] = useState(true);
     const [showArchived, setShowArchived] = useState(false);
+    const [sendingMessage, setSendingMessage] = useState(false);
     const { user } = useAuth();
     const { toast } = useToast();
 
@@ -121,8 +121,9 @@ export const useChat = () => {
     }, [selectedConversation, fetchMessages, markMessagesAsRead]);
 
     const sendMessage = async (newMessage: string) => {
-        if (!newMessage.trim() || !selectedConversation || !user) return;
+        if (!newMessage.trim() || !selectedConversation || !user || sendingMessage) return;
 
+        setSendingMessage(true);
         try {
             const { error } = await supabase
                 .from('messages')
@@ -136,6 +137,8 @@ export const useChat = () => {
         } catch (error) {
             console.error('Error sending message:', error);
             toast({ title: "Error", description: "Failed to send message.", variant: "destructive" });
+        } finally {
+            setSendingMessage(false);
         }
     };
 
@@ -201,6 +204,7 @@ export const useChat = () => {
         selectedConversation,
         messages,
         showArchived,
+        sendingMessage,
         handleSelectConversation,
         sendMessage,
         archiveConversation,

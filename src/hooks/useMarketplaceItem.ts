@@ -151,6 +151,7 @@ export const useMarketplaceItem = (id: string | undefined) => {
     if (!user || !product) return;
 
     try {
+      // Check if conversation already exists
       const { data: existingConv } = await supabase
         .from('conversations')
         .select('id')
@@ -161,6 +162,7 @@ export const useMarketplaceItem = (id: string | undefined) => {
 
       let conversationId = existingConv?.id;
 
+      // Only create conversation if it doesn't exist
       if (!conversationId) {
         const { data: newConv, error: convError } = await supabase
           .from('conversations')
@@ -174,32 +176,40 @@ export const useMarketplaceItem = (id: string | undefined) => {
 
         if (convError) throw convError;
         conversationId = newConv.id;
+
+        // Only send initial message when creating NEW conversation
+        const defaultMessage = product.listing_type === 'wanted' 
+          ? "Hi, I have what you're looking for and would like to help!"
+          : "Hi, I am interested in this item";
+
+        await supabase
+          .from('messages')
+          .insert({
+            conversation_id: conversationId,
+            sender_id: user.id,
+            message: defaultMessage
+          });
+
+        toast({
+          title: "Message sent!",
+          description: "Redirecting to chat...",
+        });
+      } else {
+        // Conversation exists, just redirect without sending message
+        toast({
+          title: "Opening conversation",
+          description: "Redirecting to chat...",
+        });
       }
 
-      const defaultMessage = product.listing_type === 'wanted' 
-        ? "Hi, I have what you're looking for and would like to help!"
-        : "Hi, I am interested in this item";
-
-      await supabase
-        .from('messages')
-        .insert({
-          conversation_id: conversationId,
-          sender_id: user.id,
-          message: defaultMessage
-        });
-
-      toast({
-        title: "Message sent!",
-        description: "Redirecting to chat...",
-      });
-
+      // Navigate to messages with the specific conversation
       navigate('/messages');
 
     } catch (error) {
       console.error('Error starting conversation:', error);
       toast({
         title: "Error",
-        description: "Failed to send message.",
+        description: "Failed to start conversation.",
         variant: "destructive",
       });
     }
