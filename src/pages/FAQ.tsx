@@ -43,23 +43,6 @@ const FAQ = () => {
       ]
     },
     {
-      category: "Donations",
-      questions: [
-        {
-          question: "How does the donation system work?",
-          answer: "Post items you'd like to donate for free. Interested recipients can contact you to arrange pickup. This is a great way to help fellow students in need."
-        },
-        {
-          question: "What items are suitable for donation?",
-          answer: "Gently used textbooks, clothing, electronics, furniture, and school supplies are all great donation items. Items should be clean and functional."
-        },
-        {
-          question: "Do you organize donation pickups?",
-          answer: "Currently, donors and recipients arrange pickups directly. We're working on organizing campus-wide donation events in the future."
-        }
-      ]
-    },
-    {
       category: "Safety & Trust",
       questions: [
         {

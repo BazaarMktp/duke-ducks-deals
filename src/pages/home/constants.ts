@@ -1,5 +1,5 @@
 
-import { ShoppingBag, Heart } from "lucide-react";
+import { ShoppingBag } from "lucide-react";
 
 export const STATS = [
   { label: "Active Colleges", value: "1" },
@@ -75,12 +75,5 @@ export const categories = [
     icon: ShoppingBag,
     color: "bg-blue-500",
     href: "/marketplace"
-  },
-  {
-    title: "Donations",
-    description: "Give back to your campus community",
-    icon: Heart,
-    color: "bg-red-500",
-    href: "/donations"
   }
 ];

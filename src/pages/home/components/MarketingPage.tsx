@@ -1,7 +1,8 @@
+
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { TrendingUp, Users, Gift, Gem, BadgeCheck, Award, HeartHandshake, Recycle } from "lucide-react";
+import { TrendingUp, Users, Gem, BadgeCheck, Award, HeartHandshake, Recycle } from "lucide-react";
 import { categories } from "../constants";
 import { Stats } from "../types";
 
@@ -13,7 +14,6 @@ export const MarketingPage = ({ stats }: MarketingPageProps) => {
   const statsDisplay = [
     { label: "Students", value: stats.totalUsers.toString() },
     { label: "Active Listings", value: stats.activeListings.toString() },
-    { label: "Donations", value: stats.totalDonations.toString() },
   ];
 
   return (
@@ -32,7 +32,7 @@ export const MarketingPage = ({ stats }: MarketingPageProps) => {
             Welcome to <span className="text-yellow-300">Bazaar</span>
           </h1>
           <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
-            Your campus marketplace for buying, selling, housing, services, and donations. 
+            Your campus marketplace for buying and selling. 
             Connect with fellow students and make campus life easier.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -53,7 +53,7 @@ export const MarketingPage = ({ stats }: MarketingPageProps) => {
       {/* Stats Section */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-3 gap-8">
+          <div className="grid grid-cols-2 gap-8 max-w-2xl mx-auto">
             {statsDisplay.map((stat, index) => (
               <div key={index} className="text-center">
                 <div className="text-3xl md:text-4xl font-bold text-blue-600 mb-2">
@@ -76,7 +76,7 @@ export const MarketingPage = ({ stats }: MarketingPageProps) => {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
             {categories.map((category, index) => (
               <Link key={index} to={category.href}>
                 <Card className="hover:shadow-lg transition-shadow cursor-pointer group">
@@ -124,10 +124,10 @@ export const MarketingPage = ({ stats }: MarketingPageProps) => {
             
             <div className="text-center">
               <div className="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Gift className="text-purple-600" size={32} />
+                <HeartHandshake className="text-purple-600" size={32} />
               </div>
-              <h3 className="text-xl font-bold mb-2">Give Back</h3>
-              <p className="text-gray-600">Donate items to help fellow students in need</p>
+              <h3 className="text-xl font-bold mb-2">Safe Trading</h3>
+              <p className="text-gray-600">Secure transactions within your trusted campus network</p>
             </div>
           </div>
         </div>
@@ -168,7 +168,7 @@ export const MarketingPage = ({ stats }: MarketingPageProps) => {
             <div className="flex flex-col items-center text-center p-4 rounded-lg hover:bg-gray-100 transition-colors">
               <Recycle className="h-12 w-12 text-lime-500 mb-2" />
               <h3 className="font-semibold text-gray-800">Eco Warrior</h3>
-              <p className="text-sm text-gray-500">Donate your used items.</p>
+              <p className="text-sm text-gray-500">Recycle and reuse items.</p>
             </div>
           </div>
         </div>

@@ -7,7 +7,7 @@ export const QuickActions = () => {
   return (
     <section className="py-8">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
           {categories.map((category, index) => (
             <Link key={index} to={category.href}>
               <Card className="hover:shadow-md transition-shadow cursor-pointer">

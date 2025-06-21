@@ -27,7 +27,6 @@ const Footer = () => {
             <h3 className="font-semibold mb-4">Platform</h3>
             <ul className="space-y-2 text-sm text-gray-400">
               <li><Link to="/marketplace" className="hover:text-white transition-colors">Marketplace</Link></li>
-              <li><Link to="/donations" className="hover:text-white transition-colors">Donations</Link></li>
             </ul>
           </div>
 
