@@ -1,41 +1,23 @@
 
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-
-interface Product {
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  images: string[];
-  user_id: string;
-  created_at: string;
-  location?: string;
-  allow_pickup?: boolean;
-  allow_meet_on_campus?: boolean;
-  listing_type?: string;
-  profiles: {
-    profile_name: string;
-    email: string;
-    phone_number?: string;
-    avatar_url?: string;
-    full_name?: string;
-    created_at: string;
-  };
-}
+import { useFavorites } from "@/hooks/useFavorites";
+import { useCartItem } from "@/hooks/useCartItem";
+import { useConversation } from "@/hooks/useConversation";
+import { Product } from "@/types/marketplace";
 
 export const useMarketplaceItem = (id: string | undefined) => {
-  const navigate = useNavigate();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isFavorite, setIsFavorite] = useState(false);
-  const [isInCart, setIsInCart] = useState(false);
   const { user } = useAuth();
   const { toast } = useToast();
+
+  const { isFavorite, checkFavoriteStatus, toggleFavorite } = useFavorites(id);
+  const { isInCart, checkCartStatus, addToCart } = useCartItem(id);
+  const { startConversation: startConv } = useConversation();
 
   useEffect(() => {
     if (id) {
@@ -45,7 +27,7 @@ export const useMarketplaceItem = (id: string | undefined) => {
         checkCartStatus();
       }
     }
-  }, [id, user]);
+  }, [id, user, checkFavoriteStatus, checkCartStatus]);
 
   const fetchProduct = async () => {
     try {
@@ -74,144 +56,9 @@ export const useMarketplaceItem = (id: string | undefined) => {
     }
   };
 
-  const checkFavoriteStatus = async () => {
-    if (!user || !id) return;
-    
-    try {
-      const { data } = await supabase
-        .from('favorites')
-        .select('id')
-        .eq('user_id', user.id)
-        .eq('listing_id', id)
-        .single();
-      
-      setIsFavorite(!!data);
-    } catch (error) {
-      // Not a favorite
-    }
-  };
-
-  const checkCartStatus = async () => {
-    if (!user || !id) return;
-    
-    try {
-      const { data } = await supabase
-        .from('cart_items')
-        .select('id')
-        .eq('user_id', user.id)
-        .eq('listing_id', id)
-        .single();
-      
-      setIsInCart(!!data);
-    } catch (error) {
-      // Not in cart
-    }
-  };
-
-  const toggleFavorite = async () => {
-    if (!user || !id) return;
-
-    try {
-      if (isFavorite) {
-        await supabase
-          .from('favorites')
-          .delete()
-          .eq('user_id', user.id)
-          .eq('listing_id', id);
-        setIsFavorite(false);
-      } else {
-        await supabase
-          .from('favorites')
-          .insert({ user_id: user.id, listing_id: id });
-        setIsFavorite(true);
-      }
-    } catch (error) {
-      console.error('Error toggling favorite:', error);
-    }
-  };
-
-  const addToCart = async () => {
-    if (!user || !id) return;
-
-    try {
-      await supabase
-        .from('cart_items')
-        .insert({ user_id: user.id, listing_id: id });
-      setIsInCart(true);
-      toast({
-        title: "Added to cart",
-        description: "Item added to your cart successfully.",
-      });
-    } catch (error) {
-      console.error('Error adding to cart:', error);
-    }
-  };
-
-  const startConversation = async () => {
-    if (!user || !product) return;
-
-    try {
-      // Check if conversation already exists
-      const { data: existingConv } = await supabase
-        .from('conversations')
-        .select('id')
-        .eq('buyer_id', user.id)
-        .eq('seller_id', product.user_id)
-        .eq('listing_id', product.id)
-        .single();
-
-      let conversationId = existingConv?.id;
-
-      // Only create conversation if it doesn't exist
-      if (!conversationId) {
-        const { data: newConv, error: convError } = await supabase
-          .from('conversations')
-          .insert({
-            buyer_id: user.id,
-            seller_id: product.user_id,
-            listing_id: product.id
-          })
-          .select('id')
-          .single();
-
-        if (convError) throw convError;
-        conversationId = newConv.id;
-
-        // Only send initial message when creating NEW conversation
-        const defaultMessage = product.listing_type === 'wanted' 
-          ? "Hi, I have what you're looking for and would like to help!"
-          : "Hi, I am interested in this item";
-
-        await supabase
-          .from('messages')
-          .insert({
-            conversation_id: conversationId,
-            sender_id: user.id,
-            message: defaultMessage
-          });
-
-        toast({
-          title: "Message sent!",
-          description: "Redirecting to chat...",
-        });
-      } else {
-        // Conversation exists, just redirect without sending message
-        toast({
-          title: "Opening conversation",
-          description: "Redirecting to chat...",
-        });
-      }
-
-      // Navigate to messages with the specific conversation
-      navigate('/messages');
-
-    } catch (error) {
-      console.error('Error starting conversation:', error);
-      toast({
-        title: "Error",
-        description: "Failed to start conversation.",
-        variant: "destructive",
-      });
+  const startConversation = () => {
+    if (product) {
+      startConv(product);
     }
   };
 
