@@ -112,10 +112,8 @@ export const useAuthForm = () => {
             variant: "destructive",
           });
         } else {
-          toast({
-            title: "Success",
-            description: "Account created! Please check your email to verify your account.",
-          });
+          // Redirect to email validation page with email
+          navigate("/email-validation", { state: { email } });
         }
       }
     } catch (error) {

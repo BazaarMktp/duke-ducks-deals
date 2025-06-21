@@ -10,6 +10,7 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signUp: (email: string, password: string, fullName: string, profileName: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
+  resendConfirmation: (email: string) => Promise<{ error: any }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -101,7 +102,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     }
 
-    const redirectUrl = `${window.location.origin}/`;
+    const redirectUrl = `${window.location.origin}/#/`;
     console.log('Using redirect URL:', redirectUrl);
     
     const { error } = await supabase.auth.signUp({
@@ -117,6 +118,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
     
     console.log('Sign up result:', error ? error.message : 'Success');
+    return { error };
+  };
+
+  const resendConfirmation = async (email: string) => {
+    console.log('Resending confirmation email to:', email);
+    
+    const { error } = await supabase.auth.resend({
+      type: 'signup',
+      email: email,
+      options: {
+        emailRedirectTo: `${window.location.origin}/#/`,
+      }
+    });
+    
+    console.log('Resend confirmation result:', error ? error.message : 'Success');
     return { error };
   };
 
@@ -156,6 +172,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     signIn,
     signUp,
     signOut,
+    resendConfirmation,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
