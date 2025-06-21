@@ -24,8 +24,10 @@ export const Dashboard = ({
   return (
     <div className="min-h-screen bg-gray-50">
       <WelcomeSection user={user} />
-      <FeaturedItems featuredListings={featuredListings} isLoading={isLoading} />
       <QuickActions />
+      <div className="text-left">
+        <FeaturedItems featuredListings={featuredListings} isLoading={isLoading} />
+      </div>
       <FeaturedRequests featuredRequests={featuredRequests} />
       <StatsSection stats={stats} />
     </div>
