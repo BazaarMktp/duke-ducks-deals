@@ -5,12 +5,49 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ShoppingCart, Users, TrendingUp } from "lucide-react";
 import { Stats } from "../types";
 import FeedbackButton from "@/components/feedback/FeedbackButton";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface SimpleMarketingPageProps {
   stats: Stats;
 }
 
+interface FeaturedProduct {
+  id: string;
+  title: string;
+  price: number;
+  images: string[];
+  profiles: {
+    profile_name: string;
+  } | null;
+}
+
 export const SimpleMarketingPage = ({ stats }: SimpleMarketingPageProps) => {
+  const [featuredProducts, setFeaturedProducts] = useState<FeaturedProduct[]>([]);
+
+  useEffect(() => {
+    const fetchFeaturedProducts = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('listings')
+          .select('id, title, price, images, profiles(profile_name)')
+          .eq('status', 'active')
+          .eq('category', 'marketplace')
+          .eq('listing_type', 'offer')
+          .order('featured', { ascending: false })
+          .order('created_at', { ascending: false })
+          .limit(6);
+
+        if (error) throw error;
+        setFeaturedProducts(data || []);
+      } catch (error) {
+        console.error('Error fetching featured products:', error);
+      }
+    };
+
+    fetchFeaturedProducts();
+  }, []);
+
   const statsDisplay = [
     { label: "Students", value: stats.totalUsers.toString(), icon: Users },
     { label: "Active Listings", value: stats.activeListings.toString(), icon: ShoppingCart },
@@ -51,8 +88,57 @@ export const SimpleMarketingPage = ({ stats }: SimpleMarketingPageProps) => {
         </div>
       </section>
 
+      {/* Featured Products Section */}
+      {featuredProducts.length > 0 && (
+        <section className="py-16 bg-white">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">What's Available Now</h2>
+              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                Check out some of the great items your fellow students are selling
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto mb-8">
+              {featuredProducts.map((product) => (
+                <Card key={product.id} className="hover:shadow-lg transition-shadow">
+                  <div className="h-48 bg-gray-100">
+                    {product.images && product.images.length > 0 ? (
+                      <img 
+                        src={product.images[0]} 
+                        alt={product.title}
+                        className="w-full h-full object-cover rounded-t-lg"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-gray-200 rounded-t-lg">
+                        <span className="text-gray-400">No image</span>
+                      </div>
+                    )}
+                  </div>
+                  <CardContent className="p-4">
+                    <h3 className="font-semibold mb-2 line-clamp-1">{product.title}</h3>
+                    <p className="text-blue-600 font-bold mb-1">
+                      {product.price ? `$${product.price.toFixed(2)}` : 'Free'}
+                    </p>
+                    <p className="text-sm text-gray-500">by {product.profiles?.profile_name || 'Unknown'}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            <div className="text-center">
+              <Link to="/marketplace">
+                <Button size="lg" className="bg-blue-600 text-white hover:bg-blue-700">
+                  View All Items
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Stats Section */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-gray-100">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 gap-8 max-w-2xl mx-auto">
             {statsDisplay.map((stat, index) => (
@@ -73,7 +159,7 @@ export const SimpleMarketingPage = ({ stats }: SimpleMarketingPageProps) => {
       </section>
 
       {/* Features Section */}
-      <section className="py-16">
+      <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Choose Bazaar?</h2>
