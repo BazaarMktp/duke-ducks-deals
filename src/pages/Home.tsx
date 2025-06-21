@@ -1,7 +1,7 @@
 
 import { useAuth } from "@/contexts/AuthContext";
 import { Dashboard } from "./home/components/Dashboard";
-import { MarketingPage } from "./home/components/MarketingPage";
+import { SimpleMarketingPage } from "./home/components/SimpleMarketingPage";
 import { useHomeData } from "./home/hooks/useHomeData";
 
 const Home = () => {
@@ -20,7 +20,7 @@ const Home = () => {
     );
   }
 
-  return <MarketingPage stats={stats} />;
+  return <SimpleMarketingPage stats={stats} />;
 };
 
 export default Home;
