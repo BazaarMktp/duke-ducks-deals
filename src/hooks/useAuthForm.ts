@@ -24,7 +24,7 @@ export const useAuthForm = () => {
   // Redirect if user is already authenticated
   useEffect(() => {
     if (user) {
-      navigate("/");
+      navigate("/", { replace: true });
     }
   }, [user, navigate]);
   
@@ -79,7 +79,8 @@ export const useAuthForm = () => {
             title: "Success",
             description: "Logged in successfully!",
           });
-          navigate("/");
+          // Let React Router handle navigation smoothly
+          navigate("/", { replace: true });
         }
       } else {
         // Validate password confirmation
@@ -113,7 +114,7 @@ export const useAuthForm = () => {
           });
         } else {
           // Redirect to email validation page with email
-          navigate("/email-validation", { state: { email } });
+          navigate("/email-validation", { state: { email }, replace: true });
         }
       }
     } catch (error) {
@@ -141,7 +142,7 @@ export const useAuthForm = () => {
     setResetLoading(true);
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/auth?mode=reset`,
+        redirectTo: `${window.location.origin}/#/auth?mode=reset`,
       });
 
       if (error) {

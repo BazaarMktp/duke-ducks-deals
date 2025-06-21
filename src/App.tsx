@@ -33,29 +33,27 @@ import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Footer from "@/components/Footer";
-import { supabase } from "@/integrations/supabase/client";
 
 const queryClient = new QueryClient();
 
-// Component to handle auth redirects
+// Component to handle auth redirects more smoothly
 const AuthRedirectHandler = () => {
   useEffect(() => {
-    // Check if this is an auth callback with error
     const hash = window.location.hash;
     const searchParams = new URLSearchParams(hash.replace('#', ''));
     
     if (searchParams.get('error')) {
       console.log('Auth error detected:', searchParams.get('error_description'));
-      // Redirect to auth page with error message
-      window.location.href = '/#/auth';
+      // Clear the error from URL without reloading
+      window.history.replaceState({}, document.title, '/#/auth');
       return;
     }
 
     // Handle successful email confirmation
     if (searchParams.get('access_token') || searchParams.get('type') === 'recovery') {
       console.log('Auth success detected, handling session');
-      // Let Supabase handle the session automatically
-      // The AuthContext will handle the redirect
+      // Clear auth parameters from URL without reloading
+      window.history.replaceState({}, document.title, '/#/');
     }
   }, []);
 

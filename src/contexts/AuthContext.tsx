@@ -37,13 +37,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(session?.user ?? null);
         setLoading(false);
 
-        // Handle successful email confirmation
+        // Handle successful email confirmation without forcing reload
         if (event === 'SIGNED_IN' && session?.user?.email_confirmed_at) {
-          console.log('Email confirmed, redirecting to home');
-          // Small delay to ensure state is updated
-          setTimeout(() => {
-            window.location.href = '/';
-          }, 100);
+          console.log('Email confirmed successfully');
+          // Let React Router handle navigation naturally
         }
       }
     );
@@ -60,13 +57,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    try {
-      await supabase.auth.signOut({ scope: 'global' });
-    } catch (err) {
-      // This is to ensure any lingering sessions are cleared.
-      // We can ignore errors here.
-    }
-    
     console.log('Attempting to sign in with:', email);
     
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -75,20 +65,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
     
     console.log('Sign in result:', error ? error.message : 'Success');
-    if (data.user) {
-      window.location.href = '/';
-    }
+    // Remove the forced redirect - let React handle state updates naturally
     return { error };
   };
 
   const signUp = async (email: string, password: string, fullName: string, profileName: string) => {
-    try {
-      await supabase.auth.signOut({ scope: 'global' });
-    } catch (err) {
-      // This is to ensure any lingering sessions are cleared.
-      // We can ignore errors here.
-    }
-
     console.log('Attempting to sign up with:', email);
     
     // Validate college email or admin email
@@ -111,8 +92,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     }
 
-    // Use a simpler redirect URL that points directly to the home page
-    const redirectUrl = `${window.location.origin}/`;
+    // Use the current origin for redirect
+    const redirectUrl = `${window.location.origin}/#/`;
     console.log('Using redirect URL:', redirectUrl);
     
     const { error } = await supabase.auth.signUp({
@@ -138,7 +119,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       type: 'signup',
       email: email,
       options: {
-        emailRedirectTo: `${window.location.origin}/`,
+        emailRedirectTo: `${window.location.origin}/#/`,
       }
     });
     
@@ -149,30 +130,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signOut = async () => {
     console.log('Signing out...');
     
-    // Clear local state immediately
-    setUser(null);
-    setSession(null);
-    
     try {
-      // Attempt to sign out from Supabase
+      // Sign out from Supabase
       await supabase.auth.signOut({ scope: 'global' });
-    } catch (error) {
-      console.error('Sign out error (continuing anyway):', error);
-    }
-    
-    // Clear any remaining auth data from storage
-    try {
+      
+      // Clear local state
+      setUser(null);
+      setSession(null);
+      
+      // Clear any remaining auth data from storage
       Object.keys(localStorage).forEach(key => {
         if (key.startsWith('supabase.auth.') || key.includes('sb-')) {
           localStorage.removeItem(key);
         }
       });
     } catch (error) {
-      console.error('Storage cleanup error:', error);
+      console.error('Sign out error:', error);
+      // Clear state anyway
+      setUser(null);
+      setSession(null);
     }
-    
-    // Force reload to ensure clean state
-    window.location.href = '/';
   };
 
   const value = {
