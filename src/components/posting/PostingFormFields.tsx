@@ -36,7 +36,7 @@ const PostingFormFields: React.FC<PostingFormFieldsProps> = ({
     <>
       <div>
         <Label htmlFor="title" className="text-base font-medium">
-          {listingType === 'wanted' ? 'What are you looking for?' : 'Title'}
+          {listingType === 'wanted' ? 'What are you looking for?' : 'Title'} *
         </Label>
         <Input
           id="title"
@@ -54,12 +54,13 @@ const PostingFormFields: React.FC<PostingFormFieldsProps> = ({
 
       <div>
         <Label htmlFor="description" className="text-base font-medium">
-          {listingType === 'wanted' ? 'Detailed description of your needs' : 'Description'}
+          {listingType === 'wanted' ? 'Detailed description of your needs' : 'Description'} *
         </Label>
         <Textarea
           id="description"
           value={formData.description}
           onChange={(e) => onInputChange("description", e.target.value)}
+          required
           rows={listingType === 'wanted' ? 6 : 4}
           placeholder={
             listingType === 'wanted' 
@@ -75,19 +76,20 @@ const PostingFormFields: React.FC<PostingFormFieldsProps> = ({
         )}
       </div>
 
-      {/* Only show images for offers, not for requests */}
-      {listingType === 'offer' && (
+      {/* Images are required for both offers and requests now */}
+      <div>
+        <Label className="text-base font-medium">Images *</Label>
         <ImageUpload
           images={formData.images}
           onImagesChange={onImagesChange}
           maxImages={5}
         />
-      )}
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <Label htmlFor="price" className="text-base font-medium">
-            {getPricePlaceholder()} {listingType === 'wanted' && '(Optional)'}
+            {getPricePlaceholder()} *
           </Label>
           <Input
             id="price"
@@ -95,18 +97,14 @@ const PostingFormFields: React.FC<PostingFormFieldsProps> = ({
             step="0.01"
             value={formData.price}
             onChange={(e) => onInputChange("price", e.target.value)}
+            required
             placeholder="0.00"
             className={listingType === 'wanted' ? "text-lg" : ""}
           />
-          {listingType === 'wanted' && (
-            <p className="text-sm text-muted-foreground mt-1">
-              Enter your budget or leave blank if negotiable
-            </p>
-          )}
         </div>
 
         <div>
-          <Label htmlFor="location" className="text-base font-medium">Location</Label>
+          <Label htmlFor="location" className="text-base font-medium">My Location</Label>
           <Input
             id="location"
             value={formData.location}

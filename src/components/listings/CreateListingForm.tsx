@@ -46,7 +46,7 @@ const CreateListingForm: React.FC<CreateListingFormProps> = ({
         </div>
 
         <div>
-          <Label htmlFor="listingType">Type</Label>
+          <Label htmlFor="listingType">Type of Listing</Label>
           <Select value={formData.listingType} onValueChange={(value) => handleInputChange("listingType", value)}>
             <SelectTrigger>
               <SelectValue placeholder="Select type" />
@@ -61,7 +61,7 @@ const CreateListingForm: React.FC<CreateListingFormProps> = ({
 
       <div>
         <Label htmlFor="title" className="text-base font-medium">
-          {formData.listingType === 'wanted' ? 'What are you looking for?' : 'Title'}
+          {formData.listingType === 'wanted' ? 'What are you looking for?' : 'Title'} *
         </Label>
         <Input
           id="title"
@@ -79,12 +79,13 @@ const CreateListingForm: React.FC<CreateListingFormProps> = ({
 
       <div>
         <Label htmlFor="description" className="text-base font-medium">
-          {formData.listingType === 'wanted' ? 'Detailed description of your needs' : 'Description'}
+          {formData.listingType === 'wanted' ? 'Detailed description of your needs' : 'Description'} *
         </Label>
         <Textarea
           id="description"
           value={formData.description}
           onChange={(e) => handleInputChange("description", e.target.value)}
+          required
           rows={formData.listingType === 'wanted' ? 6 : 4}
           placeholder={
             formData.listingType === 'wanted' 
@@ -100,20 +101,20 @@ const CreateListingForm: React.FC<CreateListingFormProps> = ({
         )}
       </div>
 
-      {/* Only show images for offers, not for requests */}
-      {formData.listingType === 'offer' && (
+      {/* Images are required for both offers and requests now */}
+      <div>
+        <Label className="text-base font-medium">Images *</Label>
         <ImageUpload
           images={formData.images}
           onImagesChange={handleImagesChange}
           maxImages={5}
         />
-      )}
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <Label htmlFor="price" className="text-base font-medium">
-            {formData.listingType === 'wanted' ? 'Budget' : 'Price'} {formData.category === 'services' ? '(per hour)' : formData.category === 'housing' ? '(per month)' : ''}
-            {formData.listingType === 'wanted' && ' (Optional)'}
+            {formData.listingType === 'wanted' ? 'Budget' : 'Price'} {formData.category === 'services' ? '(per hour)' : formData.category === 'housing' ? '(per month)' : ''} *
           </Label>
           <Input
             id="price"
@@ -121,18 +122,14 @@ const CreateListingForm: React.FC<CreateListingFormProps> = ({
             step="0.01"
             value={formData.price}
             onChange={(e) => handleInputChange("price", e.target.value)}
+            required
             placeholder="0.00"
             className={formData.listingType === 'wanted' ? "text-lg" : ""}
           />
-          {formData.listingType === 'wanted' && (
-            <p className="text-sm text-muted-foreground mt-1">
-              Enter your budget or leave blank if negotiable
-            </p>
-          )}
         </div>
 
         <div>
-          <Label htmlFor="location" className="text-base font-medium">Location</Label>
+          <Label htmlFor="location" className="text-base font-medium">My Location</Label>
           <Input
             id="location"
             value={formData.location}

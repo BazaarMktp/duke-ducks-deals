@@ -49,6 +49,43 @@ export const usePostingForm = ({ category, listingType, onSuccess, onClose }: Us
     e.preventDefault();
     if (!user) return;
 
+    // Validation for required fields
+    if (!formData.title.trim()) {
+      toast({
+        title: "Error",
+        description: "Title is required.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!formData.description.trim()) {
+      toast({
+        title: "Error",
+        description: "Description is required.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (formData.images.length === 0) {
+      toast({
+        title: "Error",
+        description: "At least one image is required.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!formData.price) {
+      toast({
+        title: "Error",
+        description: "Price is required.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     // Validation for marketplace items
     if (category === 'marketplace' && listingType === 'offer' && !formData.allowPickup && !formData.allowMeetOnCampus) {
       toast({
@@ -117,9 +154,9 @@ export const usePostingForm = ({ category, listingType, onSuccess, onClose }: Us
 
   const getPricePlaceholder = () => {
     if (listingType === 'wanted') {
-      return category === 'services' ? 'Budget per hour' : category === 'housing' ? 'Budget per month' : 'Budget';
+      return category === 'services' ? 'Budget per hour *' : category === 'housing' ? 'Budget per month *' : 'Budget *';
     }
-    return category === 'services' ? 'Price per hour' : category === 'housing' ? 'Price per month' : 'Price';
+    return category === 'services' ? 'Price per hour *' : category === 'housing' ? 'Price per month *' : 'Price *';
   };
 
   return {

@@ -47,6 +47,27 @@ export const useCreateListing = () => {
     e.preventDefault();
     if (!user) return;
 
+    // Validation for required fields
+    if (!formData.title.trim()) {
+      toast.error("Title is required.");
+      return;
+    }
+
+    if (!formData.description.trim()) {
+      toast.error("Description is required.");
+      return;
+    }
+
+    if (formData.images.length === 0) {
+      toast.error("At least one image is required.");
+      return;
+    }
+
+    if (!formData.price) {
+      toast.error("Price is required.");
+      return;
+    }
+
     // Validation for marketplace items
     if (formData.category === 'marketplace' && formData.listingType === 'offer' && !formData.allowPickup && !formData.allowMeetOnCampus) {
       toast.error("Please select at least one transaction method (pickup or meet on campus).");
