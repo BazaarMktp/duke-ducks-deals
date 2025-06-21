@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { HashRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route, useEffect } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { AdminProvider } from "@/contexts/AdminContext";
 import Navbar from "@/components/Navbar";
@@ -20,7 +20,6 @@ import Housing from "./pages/Housing";
 import HousingDetail from "./pages/HousingDetail";
 import Services from "./pages/Services";
 import ServiceDetail from "./pages/ServiceDetail";
-import Donations from "./pages/Donations";
 import Messages from "./pages/Messages";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
@@ -33,8 +32,34 @@ import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Footer from "@/components/Footer";
+import { supabase } from "@/integrations/supabase/client";
 
 const queryClient = new QueryClient();
+
+// Component to handle auth redirects
+const AuthRedirectHandler = () => {
+  useEffect(() => {
+    // Check if this is an auth callback with error
+    const hash = window.location.hash;
+    const searchParams = new URLSearchParams(hash.replace('#', ''));
+    
+    if (searchParams.get('error')) {
+      console.log('Auth error detected:', searchParams.get('error_description'));
+      // Redirect to auth page with error message
+      window.location.href = '/#/auth';
+      return;
+    }
+
+    // Handle successful email confirmation
+    if (searchParams.get('access_token') || searchParams.get('type') === 'recovery') {
+      console.log('Auth success detected, handling session');
+      // Let Supabase handle the session automatically
+      // The AuthContext will handle the redirect
+    }
+  }, []);
+
+  return null;
+};
 
 function App() {
   return (
@@ -45,6 +70,7 @@ function App() {
             <Toaster />
             <Sonner />
             <HashRouter>
+              <AuthRedirectHandler />
               <div className="min-h-screen bg-gray-50 flex flex-col">
                 <Navbar />
                 <main className="flex-1">
@@ -62,7 +88,6 @@ function App() {
                     <Route path="/housing/:id" element={<HousingDetail />} />
                     <Route path="/services" element={<Services />} />
                     <Route path="/services/:id" element={<ServiceDetail />} />
-                    <Route path="/donations" element={<Donations />} />
                     <Route
                       path="/messages"
                       element={

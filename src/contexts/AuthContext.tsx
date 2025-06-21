@@ -36,6 +36,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
+
+        // Handle successful email confirmation
+        if (event === 'SIGNED_IN' && session?.user?.email_confirmed_at) {
+          console.log('Email confirmed, redirecting to home');
+          // Small delay to ensure state is updated
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 100);
+        }
       }
     );
 
@@ -102,7 +111,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     }
 
-    const redirectUrl = `${window.location.origin}/#/`;
+    // Use a simpler redirect URL that points directly to the home page
+    const redirectUrl = `${window.location.origin}/`;
     console.log('Using redirect URL:', redirectUrl);
     
     const { error } = await supabase.auth.signUp({
@@ -128,7 +138,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       type: 'signup',
       email: email,
       options: {
-        emailRedirectTo: `${window.location.origin}/#/`,
+        emailRedirectTo: `${window.location.origin}/`,
       }
     });
     
