@@ -1,6 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Heart, MessageCircle, Calendar } from "lucide-react";
+import FeedbackButton from "@/components/feedback/FeedbackButton";
 
 interface ServiceActionsProps {
   user: any;
@@ -43,6 +44,8 @@ const ServiceActions = ({
             {isFavorite ? "Remove from Favorites" : "Add to Favorites"}
           </Button>
         )}
+
+        <FeedbackButton variant="ghost" className="w-full" />
       </div>
 
       <div className="mt-6 p-4 bg-gray-50 rounded-lg">

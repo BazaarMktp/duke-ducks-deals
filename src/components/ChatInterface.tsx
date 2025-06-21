@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { HeadphonesIcon } from "lucide-react";
 import ConversationList from "./chat/ConversationList";
 import MessagePanel from "./chat/MessagePanel";
+import FeedbackButton from "./feedback/FeedbackButton";
 
 const ChatInterface = () => {
   const {
@@ -44,6 +45,7 @@ const ChatInterface = () => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Messages</h1>
         <div className="flex gap-2">
+          <FeedbackButton />
           <Button
             variant="outline"
             onClick={contactSupport}
