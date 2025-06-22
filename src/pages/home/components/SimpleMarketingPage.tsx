@@ -56,7 +56,7 @@ export const SimpleMarketingPage = ({ stats }: SimpleMarketingPageProps) => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="relative bg-blue-600 text-white py-20">
+      <section className="relative bg-purple-600 text-white py-20">
         <div 
           className="absolute inset-0 bg-cover bg-center opacity-20"
           style={{
@@ -74,13 +74,13 @@ export const SimpleMarketingPage = ({ stats }: SimpleMarketingPageProps) => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/marketplace">
-              <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100">
+              <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100">
                 <ShoppingCart size={20} className="mr-2" />
                 Browse Marketplace
               </Button>
             </Link>
             <Link to="/auth">
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-700 bg-transparent">
+              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-purple-700 bg-transparent">
                 Join Bazaar
               </Button>
             </Link>
@@ -117,7 +117,7 @@ export const SimpleMarketingPage = ({ stats }: SimpleMarketingPageProps) => {
                   </div>
                   <CardContent className="p-4">
                     <h3 className="font-semibold mb-2 line-clamp-1">{product.title}</h3>
-                    <p className="text-blue-600 font-bold mb-1">
+                    <p className="text-purple-600 font-bold mb-1">
                       {product.price ? `$${product.price.toFixed(2)}` : 'Free'}
                     </p>
                     <p className="text-sm text-gray-500">by {product.profiles?.profile_name || 'Unknown'}</p>
@@ -128,7 +128,7 @@ export const SimpleMarketingPage = ({ stats }: SimpleMarketingPageProps) => {
 
             <div className="text-center">
               <Link to="/marketplace">
-                <Button size="lg" className="bg-blue-600 text-white hover:bg-blue-700">
+                <Button size="lg" className="bg-purple-600 text-white hover:bg-purple-700">
                   View All Items
                 </Button>
               </Link>
@@ -144,11 +144,11 @@ export const SimpleMarketingPage = ({ stats }: SimpleMarketingPageProps) => {
             {statsDisplay.map((stat, index) => (
               <div key={index} className="text-center">
                 <div className="flex justify-center mb-4">
-                  <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center">
-                    <stat.icon className="text-blue-600" size={32} />
+                  <div className="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center">
+                    <stat.icon className="text-purple-600" size={32} />
                   </div>
                 </div>
-                <div className="text-3xl md:text-4xl font-bold text-blue-600 mb-2">
+                <div className="text-3xl md:text-4xl font-bold text-purple-600 mb-2">
                   {stat.value}
                 </div>
                 <div className="text-gray-600">{stat.label}</div>
@@ -171,8 +171,8 @@ export const SimpleMarketingPage = ({ stats }: SimpleMarketingPageProps) => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             <Card className="text-center hover:shadow-lg transition-shadow">
               <CardHeader>
-                <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <TrendingUp className="text-blue-600" size={32} />
+                <div className="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <TrendingUp className="text-purple-600" size={32} />
                 </div>
                 <CardTitle>Easy to Use</CardTitle>
               </CardHeader>
@@ -209,7 +209,7 @@ export const SimpleMarketingPage = ({ stats }: SimpleMarketingPageProps) => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-blue-600 text-white">
+      <section className="py-16 bg-purple-600 text-white">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             Ready to Get Started?
@@ -219,11 +219,11 @@ export const SimpleMarketingPage = ({ stats }: SimpleMarketingPageProps) => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
             <Link to="/auth">
-              <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100">
+              <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100">
                 Sign Up Today
               </Button>
             </Link>
-            <FeedbackButton variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600" />
+            <FeedbackButton variant="outline" className="border-white text-white hover:bg-white hover:text-purple-600" />
           </div>
         </div>
       </section>
