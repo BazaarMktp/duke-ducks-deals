@@ -140,38 +140,48 @@ export const useUserManagement = () => {
 
   const handleDeleteUser = async (userId: string) => {
     try {
-      // Instead of hard deletion, we'll deactivate the user
-      // by updating their profile and banning them permanently
-      const { data: currentUser } = await supabase.auth.getUser();
-      if (!currentUser.user) throw new Error('Not authenticated');
-
-      // Mark user as deleted by updating their profile
+      // First delete the user's profile record
       const { error: profileError } = await supabase
         .from('profiles')
-        .update({ 
-          email: `deleted_${userId}@deleted.local`,
-          profile_name: 'Deleted User',
-          full_name: 'Deleted User'
-        })
+        .delete()
         .eq('id', userId);
 
-      if (profileError) throw profileError;
+      if (profileError) {
+        console.error('Error deleting profile:', profileError);
+        throw profileError;
+      }
 
-      // Add a permanent ban record
-      await supabase
+      // Delete from user_roles table
+      const { error: rolesError } = await supabase
+        .from('user_roles')
+        .delete()
+        .eq('user_id', userId);
+
+      if (rolesError) {
+        console.error('Error deleting user roles:', rolesError);
+        // Don't throw here as this is not critical
+      }
+
+      // Delete any banned_users records
+      const { error: bannedError } = await supabase
         .from('banned_users')
-        .upsert({
-          user_id: userId,
-          banned_by: currentUser.user.id,
-          reason: 'Account deleted by admin',
-          is_active: true
-        });
+        .delete()
+        .eq('user_id', userId);
 
-      toast.success('User account deactivated successfully');
+      if (bannedError) {
+        console.error('Error deleting banned user record:', bannedError);
+        // Don't throw here as this is not critical
+      }
+
+      // Note: We cannot delete from auth.users table directly via the client
+      // The profile deletion will cascade and remove the association
+      // The auth user will remain but without a profile, effectively making it inactive
+
+      toast.success('User deleted successfully');
       await fetchUsers(); // Refresh the list
     } catch (error) {
       console.error('Error deleting user:', error);
-      toast.error('Failed to delete user account');
+      toast.error('Failed to delete user');
     }
   };
 

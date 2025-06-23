@@ -3,6 +3,17 @@ import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { User } from "./types";
 import BanUserDialog from "./BanUserDialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface UserActionsProps {
   user: User;
@@ -13,9 +24,7 @@ interface UserActionsProps {
 
 const UserActions = ({ user, onBanUser, onUnbanUser, onDeleteUser }: UserActionsProps) => {
   const handleDelete = () => {
-    if (confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
-      onDeleteUser(user.id);
-    }
+    onDeleteUser(user.id);
   };
 
   return (
@@ -31,13 +40,31 @@ const UserActions = ({ user, onBanUser, onUnbanUser, onDeleteUser }: UserActions
       ) : (
         <BanUserDialog user={user} onBanUser={onBanUser} />
       )}
-      <Button
-        size="sm"
-        variant="destructive"
-        onClick={handleDelete}
-      >
-        <Trash2 className="h-4 w-4" />
-      </Button>
+      
+      <AlertDialog>
+        <AlertDialogTrigger asChild>
+          <Button
+            size="sm"
+            variant="destructive"
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete User</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete user "{user.email}"? This will permanently remove their profile and all associated data. This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
+              Delete User
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
