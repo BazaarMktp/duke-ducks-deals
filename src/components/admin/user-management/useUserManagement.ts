@@ -47,7 +47,7 @@ export const useUserManagement = () => {
 
       console.log('Banned users fetched:', bannedUsers?.length);
 
-      // Combine the data
+      // Combine the data - only include users with valid profiles
       const usersWithBanStatus = profiles?.map(profile => {
         const banInfo = bannedUsers?.find(ban => ban.user_id === profile.id);
         return {
@@ -140,17 +140,10 @@ export const useUserManagement = () => {
 
   const handleDeleteUser = async (userId: string) => {
     try {
-      // First delete the user's profile record
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .delete()
-        .eq('id', userId);
-
-      if (profileError) {
-        console.error('Error deleting profile:', profileError);
-        throw profileError;
-      }
-
+      console.log('Starting user deletion for ID:', userId);
+      
+      // Delete all related data first, then the profile
+      
       // Delete from user_roles table
       const { error: rolesError } = await supabase
         .from('user_roles')
@@ -159,7 +152,6 @@ export const useUserManagement = () => {
 
       if (rolesError) {
         console.error('Error deleting user roles:', rolesError);
-        // Don't throw here as this is not critical
       }
 
       // Delete any banned_users records
@@ -170,13 +162,60 @@ export const useUserManagement = () => {
 
       if (bannedError) {
         console.error('Error deleting banned user record:', bannedError);
-        // Don't throw here as this is not critical
       }
 
-      // Note: We cannot delete from auth.users table directly via the client
-      // The profile deletion will cascade and remove the association
-      // The auth user will remain but without a profile, effectively making it inactive
+      // Delete any conversations where user is buyer or seller
+      const { error: conversationsError } = await supabase
+        .from('conversations')
+        .delete()
+        .or(`buyer_id.eq.${userId},seller_id.eq.${userId}`);
 
+      if (conversationsError) {
+        console.error('Error deleting conversations:', conversationsError);
+      }
+
+      // Delete any favorites
+      const { error: favoritesError } = await supabase
+        .from('favorites')
+        .delete()
+        .eq('user_id', userId);
+
+      if (favoritesError) {
+        console.error('Error deleting favorites:', favoritesError);
+      }
+
+      // Delete any cart items
+      const { error: cartError } = await supabase
+        .from('cart_items')
+        .delete()
+        .eq('user_id', userId);
+
+      if (cartError) {
+        console.error('Error deleting cart items:', cartError);
+      }
+
+      // Update listings to remove user association (set status to deleted)
+      const { error: listingsError } = await supabase
+        .from('listings')
+        .update({ status: 'deleted' })
+        .eq('user_id', userId);
+
+      if (listingsError) {
+        console.error('Error updating listings:', listingsError);
+      }
+
+      // Finally, delete the user's profile record
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .delete()
+        .eq('id', userId);
+
+      if (profileError) {
+        console.error('Error deleting profile:', profileError);
+        throw profileError;
+      }
+
+      console.log('User deletion completed successfully');
       toast.success('User deleted successfully');
       await fetchUsers(); // Refresh the list
     } catch (error) {
