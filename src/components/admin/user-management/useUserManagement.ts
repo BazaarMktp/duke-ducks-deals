@@ -21,7 +21,7 @@ export const useUserManagement = () => {
       console.log('Fetching users...');
       setLoading(true);
       
-      // First fetch all profiles
+      // First fetch all profiles that still exist
       const { data: profiles, error: profilesError } = await supabase
         .from('profiles')
         .select('*, college_id')
@@ -34,15 +34,23 @@ export const useUserManagement = () => {
 
       console.log('Profiles fetched:', profiles?.length);
 
-      // Then fetch banned users separately
-      const { data: bannedUsers, error: bannedError } = await supabase
-        .from('banned_users')
-        .select('user_id, is_active, reason, banned_at')
-        .eq('is_active', true);
+      // Then fetch banned users separately - only for existing profiles
+      const profileIds = profiles?.map(p => p.id) || [];
+      let bannedUsers: any[] = [];
+      
+      if (profileIds.length > 0) {
+        const { data: bannedData, error: bannedError } = await supabase
+          .from('banned_users')
+          .select('user_id, is_active, reason, banned_at')
+          .eq('is_active', true)
+          .in('user_id', profileIds);
 
-      if (bannedError) {
-        console.error('Error fetching banned users:', bannedError);
-        // Don't throw here, just log the error and continue without banned data
+        if (bannedError) {
+          console.error('Error fetching banned users:', bannedError);
+          // Don't throw here, just log the error and continue without banned data
+        } else {
+          bannedUsers = bannedData || [];
+        }
       }
 
       console.log('Banned users fetched:', bannedUsers?.length);
@@ -217,7 +225,12 @@ export const useUserManagement = () => {
 
       console.log('User deletion completed successfully');
       toast.success('User deleted successfully');
-      await fetchUsers(); // Refresh the list
+      
+      // Immediately remove the user from the local state to update UI instantly
+      setUsers(prevUsers => prevUsers.filter(user => user.id !== userId));
+      
+      // Also refresh from server to ensure consistency
+      await fetchUsers();
     } catch (error) {
       console.error('Error deleting user:', error);
       toast.error('Failed to delete user');
