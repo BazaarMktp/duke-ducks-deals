@@ -194,10 +194,10 @@ export const useUserManagement = () => {
         console.error('Error deleting cart items:', cartError);
       }
 
-      // Update listings to remove user association (set status to deleted)
+      // Update listings to remove user association (set status to inactive)
       const { error: listingsError } = await supabase
         .from('listings')
-        .update({ status: 'deleted' })
+        .update({ status: 'inactive' })
         .eq('user_id', userId);
 
       if (listingsError) {
