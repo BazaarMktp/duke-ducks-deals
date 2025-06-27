@@ -62,6 +62,7 @@ function App() {
                 <main className="flex-1">
                   <Routes>
                     <Route path="/" element={<Index />} />
+                    <Route path="/verify" element={<Index />} />
                     <Route path="/auth" element={<Auth />} />
                     <Route path="/email-validation" element={<EmailValidation />} />
                     <Route path="/about" element={<About />} />
