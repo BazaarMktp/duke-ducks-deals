@@ -4,9 +4,10 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HashRouter, Routes, Route } from "react-router-dom";
-import { useEffect } from "react";
+import { useState } from "react";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { AdminProvider } from "@/contexts/AdminContext";
+import { AuthRedirectHandler } from "@/components/auth/AuthRedirectHandler";
 import Navbar from "@/components/Navbar";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
@@ -36,31 +37,9 @@ import Footer from "@/components/Footer";
 
 const queryClient = new QueryClient();
 
-// Component to handle auth redirects more smoothly
-const AuthRedirectHandler = () => {
-  useEffect(() => {
-    const hash = window.location.hash;
-    const searchParams = new URLSearchParams(hash.replace('#', ''));
-    
-    if (searchParams.get('error')) {
-      console.log('Auth error detected:', searchParams.get('error_description'));
-      // Clear the error from URL without reloading
-      window.history.replaceState({}, document.title, '/#/auth');
-      return;
-    }
-
-    // Handle successful email confirmation
-    if (searchParams.get('access_token') || searchParams.get('type') === 'recovery') {
-      console.log('Auth success detected, handling session');
-      // Clear auth parameters from URL without reloading
-      window.history.replaceState({}, document.title, '/#/');
-    }
-  }, []);
-
-  return null;
-};
-
 function App() {
+  const [isAuthProcessing, setIsAuthProcessing] = useState(false);
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
@@ -69,8 +48,16 @@ function App() {
             <Toaster />
             <Sonner />
             <HashRouter>
-              <AuthRedirectHandler />
+              <AuthRedirectHandler onAuthProcessing={setIsAuthProcessing} />
               <div className="min-h-screen bg-gray-50 flex flex-col">
+                {isAuthProcessing && (
+                  <div className="fixed inset-0 bg-white bg-opacity-90 flex items-center justify-center z-50">
+                    <div className="text-center">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                      <p className="text-gray-600">Confirming your email...</p>
+                    </div>
+                  </div>
+                )}
                 <Navbar />
                 <main className="flex-1">
                   <Routes>

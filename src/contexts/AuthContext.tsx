@@ -37,10 +37,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(session?.user ?? null);
         setLoading(false);
 
-        // Handle successful email confirmation without forcing reload
+        // Handle email confirmation success
         if (event === 'SIGNED_IN' && session?.user?.email_confirmed_at) {
-          console.log('Email confirmed successfully');
-          // Let React Router handle navigation naturally
+          console.log('Email confirmed successfully for user:', session.user.email);
+          // The redirect will be handled by AuthRedirectHandler
+        }
+
+        // Handle token refresh
+        if (event === 'TOKEN_REFRESHED') {
+          console.log('Token refreshed successfully');
         }
       }
     );
@@ -65,7 +70,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
     
     console.log('Sign in result:', error ? error.message : 'Success');
-    // Remove the forced redirect - let React handle state updates naturally
     return { error };
   };
 
@@ -92,7 +96,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     }
 
-    // Use the current origin for redirect
+    // Use the current origin for redirect - this ensures proper redirect after email confirmation
     const redirectUrl = `${window.location.origin}/#/`;
     console.log('Using redirect URL:', redirectUrl);
     
