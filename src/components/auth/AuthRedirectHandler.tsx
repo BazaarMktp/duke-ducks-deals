@@ -21,7 +21,7 @@ export const AuthRedirectHandler = ({ onAuthProcessing }: AuthRedirectHandlerPro
 
       if (!hasAuthParams) return;
 
-      console.log('Auth redirect detected, processing...');
+      console.log('Auth redirect detected, processing...', { hash });
       setIsProcessing(true);
       onAuthProcessing(true);
 
@@ -38,27 +38,30 @@ export const AuthRedirectHandler = ({ onAuthProcessing }: AuthRedirectHandlerPro
 
       // Handle successful email confirmation or recovery
       if (searchParams.get('access_token') || searchParams.get('type') === 'recovery') {
-        console.log('Auth success detected, waiting for session update...');
+        console.log('Auth success detected, processing session...');
         
-        // Wait for Supabase to process the session
         try {
-          await supabase.auth.getSession();
+          // Get the current session to trigger auth state update
+          const { data: { session }, error } = await supabase.auth.getSession();
+          console.log('Session retrieved:', { session: !!session, error });
           
-          // Wait a bit longer to ensure auth state is updated
-          setTimeout(() => {
-            console.log('Session processed, redirecting to dashboard...');
-            window.history.replaceState({}, document.title, '/#/');
-            setIsProcessing(false);
-            onAuthProcessing(false);
-          }, 1000);
+          if (session) {
+            console.log('User authenticated successfully, redirecting to home...');
+            // Clear the URL parameters and redirect to home
+            window.history.replaceState({}, document.title, '/');
+            // Force a page reload to ensure clean state
+            window.location.reload();
+          } else {
+            console.log('No session found, redirecting to auth...');
+            window.history.replaceState({}, document.title, '/#/auth');
+          }
         } catch (error) {
           console.error('Error processing auth session:', error);
-          setTimeout(() => {
-            window.history.replaceState({}, document.title, '/#/');
-            setIsProcessing(false);
-            onAuthProcessing(false);
-          }, 100);
+          window.history.replaceState({}, document.title, '/#/auth');
         }
+        
+        setIsProcessing(false);
+        onAuthProcessing(false);
       }
     };
 

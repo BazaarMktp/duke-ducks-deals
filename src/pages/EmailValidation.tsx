@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Mail, ArrowLeft, RefreshCw } from "lucide-react";
+import { Mail, ArrowLeft, RefreshCw, AlertTriangle } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
@@ -37,7 +37,7 @@ const EmailValidation = () => {
       } else {
         toast({
           title: "Success",
-          description: "Confirmation email resent! Please check your inbox.",
+          description: "Confirmation email resent! Please check your inbox and spam folder.",
         });
       }
     } catch (error) {
@@ -66,8 +66,17 @@ const EmailValidation = () => {
             {email && <span className="font-medium">{email}</span>}. 
             Please check your email and click the link to verify your account.
           </p>
+          
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 flex items-start space-x-2">
+            <AlertTriangle className="w-5 h-5 text-yellow-600 mt-0.5 flex-shrink-0" />
+            <div className="text-sm text-yellow-800">
+              <p className="font-medium">Don't see the email?</p>
+              <p>Check your <strong>spam/junk folder</strong> - verification emails sometimes end up there.</p>
+            </div>
+          </div>
+          
           <p className="text-sm text-gray-500">
-            Don't see the email? Check your spam folder or click the button below to resend.
+            If you still can't find it, click the button below to resend the confirmation email.
           </p>
           
           <div className="space-y-3 pt-4">
