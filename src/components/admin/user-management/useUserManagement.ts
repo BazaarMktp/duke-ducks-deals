@@ -150,59 +150,47 @@ export const useUserManagement = () => {
     try {
       console.log('Starting user deletion for ID:', userId);
       
-      // Use RPC call for complete user deletion to ensure all related data is removed
-      const { error } = await supabase.rpc('delete_user_completely', { 
-        user_id: userId 
+      // Delete related data in proper order to avoid foreign key constraints
+      const deletionTasks = [
+        // Delete from user_roles table
+        supabase.from('user_roles').delete().eq('user_id', userId),
+        // Delete any banned_users records
+        supabase.from('banned_users').delete().eq('user_id', userId),
+        // Delete any conversations where user is buyer or seller
+        supabase.from('conversations').delete().or(`buyer_id.eq.${userId},seller_id.eq.${userId}`),
+        // Delete any favorites
+        supabase.from('favorites').delete().eq('user_id', userId),
+        // Delete any cart items
+        supabase.from('cart_items').delete().eq('user_id', userId),
+        // Update listings to remove user association (set status to inactive)
+        supabase.from('listings').update({ status: 'inactive' }).eq('user_id', userId),
+        // Delete any messages sent by the user
+        supabase.from('messages').delete().eq('sender_id', userId),
+        // Delete any reports made by the user
+        supabase.from('reports').delete().eq('reporter_id', userId),
+        // Delete any support tickets by the user
+        supabase.from('support_tickets').delete().eq('user_id', userId),
+      ];
+
+      // Execute all deletion tasks
+      const results = await Promise.allSettled(deletionTasks);
+      
+      // Log any errors but don't stop the process
+      results.forEach((result, index) => {
+        if (result.status === 'rejected') {
+          console.error(`Deletion task ${index} failed:`, result.reason);
+        }
       });
 
-      if (error) {
-        console.error('Error calling delete_user_completely RPC:', error);
-        
-        // Fallback to manual deletion if RPC doesn't exist
-        console.log('Attempting manual deletion...');
-        
-        // Delete related data in proper order to avoid foreign key constraints
-        const deletionTasks = [
-          // Delete from user_roles table
-          supabase.from('user_roles').delete().eq('user_id', userId),
-          // Delete any banned_users records
-          supabase.from('banned_users').delete().eq('user_id', userId),
-          // Delete any conversations where user is buyer or seller
-          supabase.from('conversations').delete().or(`buyer_id.eq.${userId},seller_id.eq.${userId}`),
-          // Delete any favorites
-          supabase.from('favorites').delete().eq('user_id', userId),
-          // Delete any cart items
-          supabase.from('cart_items').delete().eq('user_id', userId),
-          // Update listings to remove user association (set status to inactive)
-          supabase.from('listings').update({ status: 'inactive' }).eq('user_id', userId),
-          // Delete any messages sent by the user
-          supabase.from('messages').delete().eq('sender_id', userId),
-          // Delete any reports made by the user
-          supabase.from('reports').delete().eq('reporter_id', userId),
-          // Delete any support tickets by the user
-          supabase.from('support_tickets').delete().eq('user_id', userId),
-        ];
+      // Finally, delete the user's profile record
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .delete()
+        .eq('id', userId);
 
-        // Execute all deletion tasks
-        const results = await Promise.allSettled(deletionTasks);
-        
-        // Log any errors but don't stop the process
-        results.forEach((result, index) => {
-          if (result.status === 'rejected') {
-            console.error(`Deletion task ${index} failed:`, result.reason);
-          }
-        });
-
-        // Finally, delete the user's profile record
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .delete()
-          .eq('id', userId);
-
-        if (profileError) {
-          console.error('Error deleting profile:', profileError);
-          throw profileError;
-        }
+      if (profileError) {
+        console.error('Error deleting profile:', profileError);
+        throw profileError;
       }
 
       console.log('User deletion completed successfully');
