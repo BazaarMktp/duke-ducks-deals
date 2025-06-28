@@ -36,9 +36,9 @@ export const AuthRedirectHandler = ({ onAuthProcessing }: AuthRedirectHandlerPro
 
       if (error) {
         console.log('Auth error detected:', errorDescription);
-        // Clear the error from URL after a short delay
+        // Clear the error from URL and redirect to auth page
         setTimeout(() => {
-          window.history.replaceState({}, document.title, '/');
+          window.history.replaceState({}, document.title, '/auth');
           setIsProcessing(false);
           onAuthProcessing(false);
         }, 100);
@@ -54,7 +54,7 @@ export const AuthRedirectHandler = ({ onAuthProcessing }: AuthRedirectHandlerPro
         
         try {
           // Give Supabase time to process the tokens
-          await new Promise(resolve => setTimeout(resolve, 1000));
+          await new Promise(resolve => setTimeout(resolve, 1500));
           
           // Get the current session to trigger auth state update
           const { data: { session }, error: sessionError } = await supabase.auth.getSession();
@@ -67,12 +67,15 @@ export const AuthRedirectHandler = ({ onAuthProcessing }: AuthRedirectHandlerPro
             // Force a page reload to ensure clean state
             window.location.reload();
           } else {
-            console.log('No session found, redirecting to auth...');
-            window.history.replaceState({}, document.title, '/auth');
+            console.log('No session found after confirmation, redirecting to auth...');
+            // For email confirmation, redirect to auth page with success message
+            window.history.replaceState({}, document.title, '/auth?confirmed=true');
+            window.location.reload();
           }
         } catch (error) {
           console.error('Error processing auth session:', error);
           window.history.replaceState({}, document.title, '/auth');
+          window.location.reload();
         }
         
         setIsProcessing(false);

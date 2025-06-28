@@ -6,6 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,12 +22,48 @@ import {
 
 const Settings = () => {
   const { user, signOut } = useAuth();
+  const navigate = useNavigate();
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [pushNotifications, setPushNotifications] = useState(true);
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
 
   const handleSaveNotifications = () => {
     // This would typically save to a user preferences table in the database
     toast.success("Notification preferences saved");
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!user) return;
+    
+    setIsDeletingAccount(true);
+    try {
+      console.log('Starting account deletion for user:', user.id);
+      
+      // Delete user's profile and related data
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .delete()
+        .eq('id', user.id);
+
+      if (profileError) {
+        console.error('Error deleting profile:', profileError);
+        throw profileError;
+      }
+
+      // Sign out the user
+      await signOut();
+      
+      console.log('Account deletion completed successfully');
+      
+      // Redirect to feedback page
+      navigate('/account-deleted');
+      
+    } catch (error) {
+      console.error('Error deleting account:', error);
+      toast.error('Failed to delete account. Please try again.');
+    } finally {
+      setIsDeletingAccount(false);
+    }
   };
 
   return (
@@ -85,18 +123,27 @@ const Settings = () => {
               
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <Button variant="destructive">Delete Account</Button>
+                  <Button variant="destructive" disabled={isDeletingAccount}>
+                    {isDeletingAccount ? "Deleting..." : "Delete Account"}
+                  </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
                     <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                     <AlertDialogDescription>
-                      This action cannot be undone. This will permanently delete your account and remove your data from our servers.
+                      This action cannot be undone. This will permanently delete your account, 
+                      remove your profile, listings, messages, and all associated data from our servers.
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction>Delete Account</AlertDialogAction>
+                    <AlertDialogAction 
+                      onClick={handleDeleteAccount}
+                      className="bg-red-600 hover:bg-red-700"
+                      disabled={isDeletingAccount}
+                    >
+                      {isDeletingAccount ? "Deleting..." : "Delete Account"}
+                    </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>

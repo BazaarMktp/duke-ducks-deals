@@ -12,6 +12,7 @@ import Navbar from "@/components/Navbar";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import EmailValidation from "./pages/EmailValidation";
+import AccountDeleted from "./pages/AccountDeleted";
 import About from "./pages/About";
 import FAQ from "./pages/FAQ";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -65,6 +66,7 @@ function App() {
                     <Route path="/verify" element={<Index />} />
                     <Route path="/auth" element={<Auth />} />
                     <Route path="/email-validation" element={<EmailValidation />} />
+                    <Route path="/account-deleted" element={<AccountDeleted />} />
                     <Route path="/about" element={<About />} />
                     <Route path="/faq" element={<FAQ />} />
                     <Route path="/privacy" element={<PrivacyPolicy />} />
