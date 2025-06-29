@@ -24,10 +24,8 @@ const Auth = () => {
     setSelectedCollegeId,
     loading,
     resetLoading,
-    magicLinkLoading,
     handleSubmit,
     handleForgotPassword,
-    handleMagicLink,
   } = useAuthForm();
 
   console.log('Auth component rendering:', { 
@@ -72,10 +70,8 @@ const Auth = () => {
       selectedCollegeId={selectedCollegeId}
       setSelectedCollegeId={setSelectedCollegeId}
       loading={loading}
-      magicLinkLoading={magicLinkLoading}
       onSubmit={handleSubmit}
       onForgotPassword={() => setShowForgotPassword(true)}
-      onMagicLink={handleMagicLink}
     />
   );
 };
