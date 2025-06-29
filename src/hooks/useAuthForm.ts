@@ -80,7 +80,6 @@ export const useAuthForm = () => {
             title: "Success",
             description: "Logged in successfully!",
           });
-          // Let React Router handle navigation smoothly
           navigate("/", { replace: true });
         }
       } else {
@@ -114,7 +113,6 @@ export const useAuthForm = () => {
             variant: "destructive",
           });
         } else {
-          // Redirect to email validation page with email
           navigate("/email-validation", { state: { email }, replace: true });
         }
       }
@@ -171,10 +169,22 @@ export const useAuthForm = () => {
 
   const handleMagicLink = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) {
+    
+    // Validate required fields for signup
+    if (!fullName || !profileName || !email) {
       toast({
         title: "Error",
-        description: "Please enter your email address",
+        description: "Please fill in all required fields",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate college selection
+    if (!selectedCollegeId) {
+      toast({
+        title: "Error",
+        description: "Please select your college/university",
         variant: "destructive",
       });
       return;
@@ -186,6 +196,10 @@ export const useAuthForm = () => {
         email,
         options: {
           emailRedirectTo: `${window.location.origin}/#/`,
+          data: {
+            full_name: fullName,
+            profile_name: profileName,
+          },
         },
       });
 
@@ -198,7 +212,7 @@ export const useAuthForm = () => {
       } else {
         toast({
           title: "Magic Link Sent!",
-          description: "Check your email for a sign-in link. It should arrive within a few seconds.",
+          description: "Check your email for a sign-up link. It should arrive within a few seconds.",
         });
       }
     } catch (error) {

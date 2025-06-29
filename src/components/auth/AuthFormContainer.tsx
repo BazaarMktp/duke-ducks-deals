@@ -68,10 +68,8 @@ export const AuthFormContainer = ({
               password={password}
               setPassword={setPassword}
               loading={loading}
-              magicLinkLoading={magicLinkLoading}
               onSubmit={onSubmit}
               onForgotPassword={onForgotPassword}
-              onMagicLink={onMagicLink}
             />
           ) : (
             <SignupForm
@@ -88,7 +86,9 @@ export const AuthFormContainer = ({
               confirmPassword={confirmPassword}
               setConfirmPassword={setConfirmPassword}
               loading={loading}
+              magicLinkLoading={magicLinkLoading}
               onSubmit={onSubmit}
+              onMagicLink={onMagicLink}
             />
           )}
           
