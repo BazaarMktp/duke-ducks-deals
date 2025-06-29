@@ -20,8 +20,10 @@ interface AuthFormContainerProps {
   selectedCollegeId: string;
   setSelectedCollegeId: (id: string) => void;
   loading: boolean;
+  magicLinkLoading: boolean;
   onSubmit: (e: React.FormEvent) => void;
   onForgotPassword: () => void;
+  onMagicLink: (e: React.FormEvent) => void;
 }
 
 export const AuthFormContainer = ({
@@ -40,8 +42,10 @@ export const AuthFormContainer = ({
   selectedCollegeId,
   setSelectedCollegeId,
   loading,
+  magicLinkLoading,
   onSubmit,
   onForgotPassword,
+  onMagicLink,
 }: AuthFormContainerProps) => {
   console.log('AuthFormContainer rendering:', { isLogin, loading });
 
@@ -64,8 +68,10 @@ export const AuthFormContainer = ({
               password={password}
               setPassword={setPassword}
               loading={loading}
+              magicLinkLoading={magicLinkLoading}
               onSubmit={onSubmit}
               onForgotPassword={onForgotPassword}
+              onMagicLink={onMagicLink}
             />
           ) : (
             <SignupForm
