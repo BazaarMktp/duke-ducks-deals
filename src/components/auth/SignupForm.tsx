@@ -61,15 +61,6 @@ export const SignupForm = ({
           placeholder="Choose a profile name"
         />
       </div>
-      {/* College selector is hidden - auto-selected based on email domain */}
-      {/* TODO: Re-enable when we want to show college selection */}
-      {/*
-      <CollegeSelector
-        selectedCollegeId={selectedCollegeId}
-        onCollegeChange={setSelectedCollegeId}
-        required
-      />
-      */}
       <div>
         <Label htmlFor="email">College/University Email</Label>
         <Input
