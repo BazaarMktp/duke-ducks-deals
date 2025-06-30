@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,7 +30,7 @@ const CreateListingForm: React.FC<CreateListingFormProps> = ({
     if (formData.listingType === 'wanted') {
       switch (formData.category) {
         case 'marketplace':
-          return 'Looking for iPhone 13 Pro Max in good condition';
+          return 'Looking for desk lamp with adjustable brightness';
         case 'housing':
           return 'Looking for 2-bedroom apartment near campus';
         case 'services':
@@ -42,7 +41,7 @@ const CreateListingForm: React.FC<CreateListingFormProps> = ({
     } else {
       switch (formData.category) {
         case 'marketplace':
-          return 'iPhone 13 Pro Max - Excellent Condition';
+          return 'Desk Lamp - LED with Adjustable Brightness';
         case 'housing':
           return '2-Bedroom Apartment Available for Spring Semester';
         case 'services':
@@ -57,7 +56,7 @@ const CreateListingForm: React.FC<CreateListingFormProps> = ({
     if (formData.listingType === 'wanted') {
       switch (formData.category) {
         case 'marketplace':
-          return 'I\'m looking for an iPhone 13 Pro Max in good working condition. Preferably unlocked, with minimal scratches. Battery health should be above 85%. Willing to meet on campus or arrange pickup. Please include photos and details about the condition.';
+          return 'I\'m looking for a desk lamp with adjustable brightness for studying. Preferably LED with different color temperatures (warm/cool white). Should be sturdy and not too bulky for my dorm desk. Willing to meet on campus or arrange pickup.';
         case 'housing':
           return 'Looking for a 2-bedroom apartment or house within walking distance of campus. Need it for the spring semester (January-May). Prefer furnished or partially furnished. Must allow pets (small dog). Budget is flexible for the right place.';
         case 'services':
@@ -68,7 +67,7 @@ const CreateListingForm: React.FC<CreateListingFormProps> = ({
     } else {
       switch (formData.category) {
         case 'marketplace':
-          return 'iPhone 13 Pro Max in excellent condition. Used for 1 year, always kept in a case with screen protector. Battery health at 92%. Unlocked and works with all carriers. Includes original box, charger, and protective case. No cracks or major scratches.';
+          return 'LED desk lamp with adjustable brightness and color temperature. Perfect for studying with 3 brightness levels and warm/cool white options. Sturdy metal base with flexible arm. Used for 1 semester, excellent condition. Great for dorm or study spaces.';
         case 'housing':
           return 'Beautiful 2-bedroom apartment available for spring semester sublease. Fully furnished with modern appliances. 10-minute walk to campus. Includes utilities (water, electricity, internet). Pet-friendly building with laundry facilities. Available January 1st.';
         case 'services':

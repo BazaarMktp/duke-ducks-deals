@@ -1,4 +1,3 @@
-
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -36,7 +35,7 @@ const PostingFormFields: React.FC<PostingFormFieldsProps> = ({
     if (listingType === 'wanted') {
       switch (category) {
         case 'marketplace':
-          return 'Looking for iPhone 13 Pro Max in good condition';
+          return 'Looking for twin mattress in good condition';
         case 'housing':
           return 'Looking for 2-bedroom apartment near campus';
         case 'services':
@@ -47,7 +46,7 @@ const PostingFormFields: React.FC<PostingFormFieldsProps> = ({
     } else {
       switch (category) {
         case 'marketplace':
-          return 'iPhone 13 Pro Max - Excellent Condition';
+          return 'Twin Mattress - Like New Condition';
         case 'housing':
           return '2-Bedroom Apartment Available for Spring Semester';
         case 'services':
@@ -62,7 +61,7 @@ const PostingFormFields: React.FC<PostingFormFieldsProps> = ({
     if (listingType === 'wanted') {
       switch (category) {
         case 'marketplace':
-          return 'I\'m looking for an iPhone 13 Pro Max in good working condition. Preferably unlocked, with minimal scratches. Battery health should be above 85%. Willing to meet on campus or arrange pickup. Please include photos and details about the condition.';
+          return 'I\'m looking for a twin mattress in good condition for my dorm room. Preferably memory foam or hybrid, no stains or odors. Must be clean and comfortable. Willing to meet on campus or arrange pickup. Budget is flexible for the right mattress.';
         case 'housing':
           return 'Looking for a 2-bedroom apartment or house within walking distance of campus. Need it for the spring semester (January-May). Prefer furnished or partially furnished. Must allow pets (small dog). Budget is flexible for the right place.';
         case 'services':
@@ -73,7 +72,7 @@ const PostingFormFields: React.FC<PostingFormFieldsProps> = ({
     } else {
       switch (category) {
         case 'marketplace':
-          return 'iPhone 13 Pro Max in excellent condition. Used for 1 year, always kept in a case with screen protector. Battery health at 92%. Unlocked and works with all carriers. Includes original box, charger, and protective case. No cracks or major scratches.';
+          return 'Twin mattress in excellent condition, used for only 6 months. Memory foam with cooling gel layer. No stains, odors, or damage. Always used with mattress protector. Great for dorm rooms or small spaces. Includes mattress protector.';
         case 'housing':
           return 'Beautiful 2-bedroom apartment available for spring semester sublease. Fully furnished with modern appliances. 10-minute walk to campus. Includes utilities (water, electricity, internet). Pet-friendly building with laundry facilities. Available January 1st.';
         case 'services':
