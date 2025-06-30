@@ -7,7 +7,7 @@ const Logo = () => {
       <img 
         src="/lovable-uploads/ab5a5857-7332-4da1-b76a-f8de90b92080.png" 
         alt="Bazaar Logo" 
-        className="h-32 w-auto"
+        className="h-12 w-auto"
       />
     </Link>
   );
