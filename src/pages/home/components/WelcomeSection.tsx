@@ -17,19 +17,11 @@ export const WelcomeSection = ({ user }: WelcomeSectionProps) => {
         }}
       />
       <div className="container relative mx-auto px-4">
-        <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold text-white">
-              Welcome back, {user.user_metadata?.profile_name || user.email?.split('@')[0]}!
-            </h1>
-            <p className="text-blue-100 mt-2">What would you like to do today?</p>
-          </div>
-          <Link to="/create-listing">
-            <Button className="flex items-center space-x-2 bg-white text-blue-600 hover:bg-blue-50">
-              <Plus size={16} />
-              <span>Create Listing</span>
-            </Button>
-          </Link>
+        <div>
+          <h1 className="text-3xl font-bold text-white">
+            Welcome back, {user.user_metadata?.profile_name || user.email?.split('@')[0]}!
+          </h1>
+          <p className="text-blue-100 mt-2">What would you like to do today?</p>
         </div>
       </div>
     </section>
