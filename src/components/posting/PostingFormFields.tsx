@@ -32,6 +32,65 @@ const PostingFormFields: React.FC<PostingFormFieldsProps> = ({
   onImagesChange,
   getPricePlaceholder
 }) => {
+  const getTitlePlaceholder = () => {
+    if (listingType === 'wanted') {
+      switch (category) {
+        case 'marketplace':
+          return 'Looking for iPhone 13 Pro Max in good condition';
+        case 'housing':
+          return 'Looking for 2-bedroom apartment near campus';
+        case 'services':
+          return 'Need math tutoring for calculus';
+        default:
+          return 'What are you looking for?';
+      }
+    } else {
+      switch (category) {
+        case 'marketplace':
+          return 'iPhone 13 Pro Max - Excellent Condition';
+        case 'housing':
+          return '2-Bedroom Apartment Available for Spring Semester';
+        case 'services':
+          return 'Math Tutoring - Calculus & Statistics';
+        default:
+          return 'Enter title here...';
+      }
+    }
+  };
+
+  const getDescriptionPlaceholder = () => {
+    if (listingType === 'wanted') {
+      switch (category) {
+        case 'marketplace':
+          return 'I\'m looking for an iPhone 13 Pro Max in good working condition. Preferably unlocked, with minimal scratches. Battery health should be above 85%. Willing to meet on campus or arrange pickup. Please include photos and details about the condition.';
+        case 'housing':
+          return 'Looking for a 2-bedroom apartment or house within walking distance of campus. Need it for the spring semester (January-May). Prefer furnished or partially furnished. Must allow pets (small dog). Budget is flexible for the right place.';
+        case 'services':
+          return 'I need help with Calculus I - specifically with derivatives and integration. Looking for someone who can meet twice a week, preferably in the evenings. Can meet at the library or virtually. Please mention your experience and availability.';
+        default:
+          return 'Please provide detailed information about what you\'re looking for, including specifications, preferred condition, timeline, and any other requirements...';
+      }
+    } else {
+      switch (category) {
+        case 'marketplace':
+          return 'iPhone 13 Pro Max in excellent condition. Used for 1 year, always kept in a case with screen protector. Battery health at 92%. Unlocked and works with all carriers. Includes original box, charger, and protective case. No cracks or major scratches.';
+        case 'housing':
+          return 'Beautiful 2-bedroom apartment available for spring semester sublease. Fully furnished with modern appliances. 10-minute walk to campus. Includes utilities (water, electricity, internet). Pet-friendly building with laundry facilities. Available January 1st.';
+        case 'services':
+          return 'Experienced math tutor offering help with Calculus, Statistics, and Algebra. I\'m a senior math major with 3+ years of tutoring experience. Available weekday evenings and weekends. Can meet at the library, your place, or conduct sessions online.';
+        default:
+          return 'Describe your listing in detail. Include condition, features, availability, and any important information buyers should know...';
+      }
+    }
+  };
+
+  const getLocationPlaceholder = () => {
+    if (listingType === 'wanted') {
+      return 'Campus library, dorms, or anywhere on campus';
+    }
+    return 'North Campus, Student Union, Main Library area';
+  };
+
   return (
     <>
       <div>
@@ -43,11 +102,7 @@ const PostingFormFields: React.FC<PostingFormFieldsProps> = ({
           value={formData.title}
           onChange={(e) => onInputChange("title", e.target.value)}
           required
-          placeholder={
-            listingType === 'wanted' 
-              ? `What ${category} are you looking for?`
-              : `Enter ${category} title...`
-          }
+          placeholder={getTitlePlaceholder()}
           className={listingType === 'wanted' ? "text-lg py-3" : ""}
         />
       </div>
@@ -62,11 +117,7 @@ const PostingFormFields: React.FC<PostingFormFieldsProps> = ({
           onChange={(e) => onInputChange("description", e.target.value)}
           required
           rows={listingType === 'wanted' ? 6 : 4}
-          placeholder={
-            listingType === 'wanted' 
-              ? "Please provide detailed information about what you're looking for, including specifications, preferred condition, timeline, and any other requirements..."
-              : "Describe your listing..."
-          }
+          placeholder={getDescriptionPlaceholder()}
           className={listingType === 'wanted' ? "text-base leading-relaxed" : ""}
         />
         {listingType === 'wanted' && (
@@ -98,7 +149,7 @@ const PostingFormFields: React.FC<PostingFormFieldsProps> = ({
             value={formData.price}
             onChange={(e) => onInputChange("price", e.target.value)}
             required
-            placeholder="0.00"
+            placeholder={category === 'services' ? '25.00' : category === 'housing' ? '800.00' : '299.99'}
             className={listingType === 'wanted' ? "text-lg" : ""}
           />
         </div>
@@ -109,7 +160,7 @@ const PostingFormFields: React.FC<PostingFormFieldsProps> = ({
             id="location"
             value={formData.location}
             onChange={(e) => onInputChange("location", e.target.value)}
-            placeholder={listingType === 'wanted' ? "Where would you like to meet/pickup?" : "Enter location..."}
+            placeholder={getLocationPlaceholder()}
             className={listingType === 'wanted' ? "text-lg" : ""}
           />
         </div>

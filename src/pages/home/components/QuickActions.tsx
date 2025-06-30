@@ -1,25 +1,62 @@
 
 import { Link } from "react-router-dom";
-import { Card, CardContent } from "@/components/ui/card";
-import { categories } from "../constants";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Plus, MessageSquare, Heart } from "lucide-react";
 
 export const QuickActions = () => {
   return (
-    <section className="py-8">
+    <section className="py-8 bg-white">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
-          {categories.map((category, index) => (
-            <Link key={index} to={category.href}>
-              <Card className="hover:shadow-md transition-shadow cursor-pointer">
-                <CardContent className="p-4 text-center">
-                  <div className={`${category.color} w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3`}>
-                    <category.icon className="text-white" size={24} />
-                  </div>
-                  <h3 className="font-semibold text-sm">{category.title}</h3>
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
+        <h2 className="text-2xl font-bold mb-6 text-center">Quick Actions</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+          <Link to="/create-listing">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer group">
+              <CardHeader className="text-center">
+                <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                  <Plus className="text-blue-600" size={32} />
+                </div>
+                <CardTitle className="group-hover:text-blue-600 transition-colors">
+                  Create Listing
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 text-center">Post items, housing, or services</p>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link to="/messages">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer group">
+              <CardHeader className="text-center">
+                <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                  <MessageSquare className="text-green-600" size={32} />
+                </div>
+                <CardTitle className="group-hover:text-green-600 transition-colors">
+                  Messages
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 text-center">Chat with buyers and sellers</p>
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link to="/favorites">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer group">
+              <CardHeader className="text-center">
+                <div className="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                  <Heart className="text-purple-600" size={32} />
+                </div>
+                <CardTitle className="group-hover:text-purple-600 transition-colors">
+                  Favorites
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 text-center">View your saved items</p>
+              </CardContent>
+            </Card>
+          </Link>
         </div>
       </div>
     </section>
