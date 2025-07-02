@@ -8,6 +8,7 @@ import { useState } from "react";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { AdminProvider } from "@/contexts/AdminContext";
 import { AuthRedirectHandler } from "@/components/auth/AuthRedirectHandler";
+import { SharedLinkWrapper } from "@/components/shared/SharedLinkWrapper";
 import Navbar from "@/components/Navbar";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
@@ -32,6 +33,7 @@ import EditListing from "./pages/EditListing";
 import Favorites from "./pages/Favorites";
 import Cart from "./pages/Cart";
 import AdminDashboard from "./pages/AdminDashboard";
+import SharedLinks from "./pages/SharedLinks";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Footer from "@/components/Footer";
@@ -50,110 +52,120 @@ function App() {
             <Sonner />
             <HashRouter>
               <AuthRedirectHandler onAuthProcessing={setIsAuthProcessing} />
-              <div className="min-h-screen bg-gray-50 flex flex-col">
-                {isAuthProcessing && (
-                  <div className="fixed inset-0 bg-white bg-opacity-90 flex items-center justify-center z-50">
-                    <div className="text-center">
-                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                      <p className="text-gray-600">Confirming your email...</p>
+              <SharedLinkWrapper>
+                <div className="min-h-screen bg-gray-50 flex flex-col">
+                  {isAuthProcessing && (
+                    <div className="fixed inset-0 bg-white bg-opacity-90 flex items-center justify-center z-50">
+                      <div className="text-center">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                        <p className="text-gray-600">Confirming your email...</p>
+                      </div>
                     </div>
-                  </div>
-                )}
-                <Navbar />
-                <main className="flex-1">
-                  <Routes>
-                    <Route path="/" element={<Index />} />
-                    <Route path="/verify" element={<Index />} />
-                    <Route path="/auth" element={<Auth />} />
-                    <Route path="/email-validation" element={<EmailValidation />} />
-                    <Route path="/account-deleted" element={<AccountDeleted />} />
-                    <Route path="/about" element={<About />} />
-                    <Route path="/faq" element={<FAQ />} />
-                    <Route path="/privacy" element={<PrivacyPolicy />} />
-                    <Route path="/terms" element={<TermsAndConditions />} />
-                    <Route path="/marketplace" element={<Marketplace />} />
-                    <Route path="/marketplace/:id" element={<MarketplaceItemDetail />} />
-                    <Route path="/housing" element={<Housing />} />
-                    <Route path="/housing/:id" element={<HousingDetail />} />
-                    <Route path="/services" element={<Services />} />
-                    <Route path="/services/:id" element={<ServiceDetail />} />
-                    <Route
-                      path="/messages"
-                      element={
-                        <ProtectedRoute>
-                          <Messages />
-                        </ProtectedRoute>
-                      }
-                    />
-                    <Route
-                      path="/profile"
-                      element={
-                        <ProtectedRoute>
-                          <Profile />
-                        </ProtectedRoute>
-                      }
-                    />
-                    <Route
-                      path="/settings"
-                      element={
-                        <ProtectedRoute>
-                          <Settings />
-                        </ProtectedRoute>
-                      }
-                    />
-                    <Route
-                      path="/my-listings"
-                      element={
-                        <ProtectedRoute>
-                          <MyListings />
-                        </ProtectedRoute>
-                      }
-                    />
-                    <Route
-                      path="/create-listing"
-                      element={
-                        <ProtectedRoute>
-                          <CreateListing />
-                        </ProtectedRoute>
-                      }
-                    />
-                    <Route
-                      path="/edit-listing/:id"
-                      element={
-                        <ProtectedRoute>
-                          <EditListing />
-                        </ProtectedRoute>
-                      }
-                    />
-                    <Route
-                      path="/favorites"
-                      element={
-                        <ProtectedRoute>
-                          <Favorites />
-                        </ProtectedRoute>
-                      }
-                    />
-                    <Route
-                      path="/cart"
-                      element={
-                        <ProtectedRoute>
-                          <Cart />
-                        </ProtectedRoute>
-                      }
-                    />
-                    <Route
-                      path="/admin"
-                      element={
-                        <ProtectedRoute>
-                          <AdminDashboard />
-                        </ProtectedRoute>
-                      }
-                    />
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </main>
-                <Footer />
-              </div>
+                  )}
+                  <Navbar />
+                  <main className="flex-1">
+                    <Routes>
+                      <Route path="/" element={<Index />} />
+                      <Route path="/verify" element={<Index />} />
+                      <Route path="/auth" element={<Auth />} />
+                      <Route path="/email-validation" element={<EmailValidation />} />
+                      <Route path="/account-deleted" element={<AccountDeleted />} />
+                      <Route path="/about" element={<About />} />
+                      <Route path="/faq" element={<FAQ />} />
+                      <Route path="/privacy" element={<PrivacyPolicy />} />
+                      <Route path="/terms" element={<TermsAndConditions />} />
+                      <Route path="/marketplace" element={<Marketplace />} />
+                      <Route path="/marketplace/:id" element={<MarketplaceItemDetail />} />
+                      <Route path="/housing" element={<Housing />} />
+                      <Route path="/housing/:id" element={<HousingDetail />} />
+                      <Route path="/services" element={<Services />} />
+                      <Route path="/services/:id" element={<ServiceDetail />} />
+                      <Route
+                        path="/messages"
+                        element={
+                          <ProtectedRoute>
+                            <Messages />
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="/profile"
+                        element={
+                          <ProtectedRoute>
+                            <Profile />
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="/settings"
+                        element={
+                          <ProtectedRoute>
+                            <Settings />
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="/my-listings"
+                        element={
+                          <ProtectedRoute>
+                            <MyListings />
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="/create-listing"
+                        element={
+                          <ProtectedRoute>
+                            <CreateListing />
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="/edit-listing/:id"
+                        element={
+                          <ProtectedRoute>
+                            <EditListing />
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="/favorites"
+                        element={
+                          <ProtectedRoute>
+                            <Favorites />
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="/cart"
+                        element={
+                          <ProtectedRoute>
+                            <Cart />
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="/admin"
+                        element={
+                          <ProtectedRoute>
+                            <AdminDashboard />
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="/shared-links"
+                        element={
+                          <ProtectedRoute>
+                            <SharedLinks />
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                  </main>
+                  <Footer />
+                </div>
+              </SharedLinkWrapper>
             </HashRouter>
           </AdminProvider>
         </AuthProvider>
