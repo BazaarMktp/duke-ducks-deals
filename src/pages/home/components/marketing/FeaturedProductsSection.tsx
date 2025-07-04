@@ -33,12 +33,12 @@ export const FeaturedProductsSection = ({ featuredProducts }: FeaturedProductsSe
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto mb-8">
           {featuredProducts.map((product) => (
             <Card key={product.id} className="hover:shadow-lg transition-shadow">
-              <div className="h-48 bg-gray-100">
+              <div className="h-48 bg-gray-100 overflow-hidden rounded-t-lg relative">
                 {product.images && product.images.length > 0 ? (
                   <img 
                     src={product.images[0]} 
                     alt={product.title}
-                    className="w-full h-full object-cover rounded-t-lg"
+                    className="w-full h-full object-cover"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-gray-200 rounded-t-lg">

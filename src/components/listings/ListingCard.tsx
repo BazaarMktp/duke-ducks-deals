@@ -58,11 +58,11 @@ export const ListingCard = ({ listing, onDelete, onStatusToggle }: ListingCardPr
   return (
     <Card className="hover:shadow-lg transition-shadow">
       <CardHeader className="p-0">
-        <div className="h-48 bg-gray-50 rounded-t-lg flex items-center justify-center overflow-hidden">
+        <div className="h-48 bg-gray-50 rounded-t-lg overflow-hidden relative">
           <img 
             src={listing.images?.[0] || "/placeholder.svg"} 
             alt={listing.title}
-            className="max-w-full max-h-full object-contain"
+            className="w-full h-full object-cover"
           />
         </div>
       </CardHeader>

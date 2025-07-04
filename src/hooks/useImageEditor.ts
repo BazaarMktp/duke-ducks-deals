@@ -12,6 +12,7 @@ export const useImageEditor = ({ imageUrl, isOpen }: UseImageEditorProps) => {
   const [fabricCanvas, setFabricCanvas] = useState<FabricCanvas | null>(null);
   const [zoom, setZoom] = useState([100]);
   const [isCropMode, setIsCropMode] = useState(false);
+  const [originalImage, setOriginalImage] = useState<FabricImage | null>(null);
 
   useEffect(() => {
     if (!canvasRef.current || !isOpen) return;
@@ -23,12 +24,14 @@ export const useImageEditor = ({ imageUrl, isOpen }: UseImageEditorProps) => {
     });
 
     // Load the image
-    FabricImage.fromURL(imageUrl).then((img) => {
+    FabricImage.fromURL(imageUrl, {
+      crossOrigin: 'anonymous'
+    }).then((img) => {
       // Scale image to fit canvas while maintaining aspect ratio
       const canvasWidth = canvas.getWidth();
       const canvasHeight = canvas.getHeight();
-      const imgWidth = img.width!;
-      const imgHeight = img.height!;
+      const imgWidth = img.width || 1;
+      const imgHeight = img.height || 1;
       
       const scale = Math.min(canvasWidth / imgWidth, canvasHeight / imgHeight);
       img.scale(scale);
@@ -41,6 +44,9 @@ export const useImageEditor = ({ imageUrl, isOpen }: UseImageEditorProps) => {
       
       canvas.add(img);
       canvas.renderAll();
+      setOriginalImage(img);
+    }).catch((error) => {
+      console.error('Error loading image:', error);
     });
 
     setFabricCanvas(canvas);
@@ -78,6 +84,7 @@ export const useImageEditor = ({ imageUrl, isOpen }: UseImageEditorProps) => {
         quality: 0.9,
         multiplier: 1,
       });
+      setIsCropMode(false);
       return dataURL;
     } else {
       setIsCropMode(true);
@@ -91,13 +98,16 @@ export const useImageEditor = ({ imageUrl, isOpen }: UseImageEditorProps) => {
     fabricCanvas.clear();
     setZoom([100]);
     setIsCropMode(false);
+    fabricCanvas.setZoom(1);
     
     // Reload the original image
-    FabricImage.fromURL(imageUrl).then((img) => {
+    FabricImage.fromURL(imageUrl, {
+      crossOrigin: 'anonymous'
+    }).then((img) => {
       const canvasWidth = fabricCanvas.getWidth();
       const canvasHeight = fabricCanvas.getHeight();
-      const imgWidth = img.width!;
-      const imgHeight = img.height!;
+      const imgWidth = img.width || 1;
+      const imgHeight = img.height || 1;
       
       const scale = Math.min(canvasWidth / imgWidth, canvasHeight / imgHeight);
       img.scale(scale);
@@ -109,6 +119,9 @@ export const useImageEditor = ({ imageUrl, isOpen }: UseImageEditorProps) => {
       
       fabricCanvas.add(img);
       fabricCanvas.renderAll();
+      setOriginalImage(img);
+    }).catch((error) => {
+      console.error('Error reloading image:', error);
     });
   };
 
