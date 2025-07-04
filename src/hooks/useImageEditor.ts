@@ -15,7 +15,9 @@ export const useImageEditor = ({ imageUrl, isOpen }: UseImageEditorProps) => {
   const [originalImage, setOriginalImage] = useState<FabricImage | null>(null);
 
   useEffect(() => {
-    if (!canvasRef.current || !isOpen) return;
+    if (!canvasRef.current || !isOpen || !imageUrl) return;
+
+    console.log('Initializing canvas with image:', imageUrl);
 
     const canvas = new FabricCanvas(canvasRef.current, {
       width: 600,
@@ -27,11 +29,16 @@ export const useImageEditor = ({ imageUrl, isOpen }: UseImageEditorProps) => {
     FabricImage.fromURL(imageUrl, {
       crossOrigin: 'anonymous'
     }).then((img) => {
+      console.log('Image loaded successfully:', img);
+      
       // Scale image to fit canvas while maintaining aspect ratio
       const canvasWidth = canvas.getWidth();
       const canvasHeight = canvas.getHeight();
       const imgWidth = img.width || 1;
       const imgHeight = img.height || 1;
+      
+      console.log('Canvas dimensions:', canvasWidth, canvasHeight);
+      console.log('Image dimensions:', imgWidth, imgHeight);
       
       const scale = Math.min(canvasWidth / imgWidth, canvasHeight / imgHeight);
       img.scale(scale);
@@ -40,11 +47,13 @@ export const useImageEditor = ({ imageUrl, isOpen }: UseImageEditorProps) => {
       img.set({
         left: (canvasWidth - img.getScaledWidth()) / 2,
         top: (canvasHeight - img.getScaledHeight()) / 2,
+        selectable: !isCropMode,
       });
       
       canvas.add(img);
       canvas.renderAll();
       setOriginalImage(img);
+      console.log('Image added to canvas');
     }).catch((error) => {
       console.error('Error loading image:', error);
     });
@@ -52,30 +61,39 @@ export const useImageEditor = ({ imageUrl, isOpen }: UseImageEditorProps) => {
     setFabricCanvas(canvas);
 
     return () => {
+      console.log('Disposing canvas');
       canvas.dispose();
     };
   }, [imageUrl, isOpen]);
 
   const handleZoom = (value: number[]) => {
-    if (!fabricCanvas) return;
+    if (!fabricCanvas || !originalImage) return;
+    
+    console.log('Applying zoom:', value[0]);
     const zoomValue = value[0] / 100;
     setZoom(value);
+    
+    // Apply zoom to the canvas
     fabricCanvas.setZoom(zoomValue);
     fabricCanvas.renderAll();
   };
 
   const handleZoomIn = () => {
     const newZoom = Math.min(zoom[0] + 25, 200);
+    console.log('Zoom in to:', newZoom);
     handleZoom([newZoom]);
   };
 
   const handleZoomOut = () => {
     const newZoom = Math.max(zoom[0] - 25, 25);
+    console.log('Zoom out to:', newZoom);
     handleZoom([newZoom]);
   };
 
   const handleCrop = () => {
-    if (!fabricCanvas) return;
+    if (!fabricCanvas || !originalImage) return;
+    
+    console.log('Crop mode:', isCropMode);
     
     if (isCropMode) {
       // Apply crop - export the visible area
@@ -85,16 +103,25 @@ export const useImageEditor = ({ imageUrl, isOpen }: UseImageEditorProps) => {
         multiplier: 1,
       });
       setIsCropMode(false);
+      // Make image selectable again
+      originalImage.set({ selectable: true });
+      fabricCanvas.renderAll();
+      console.log('Crop applied, returning dataURL');
       return dataURL;
     } else {
       setIsCropMode(true);
+      // Make image non-selectable in crop mode
+      originalImage.set({ selectable: false });
       fabricCanvas.renderAll();
+      console.log('Entering crop mode');
       return null;
     }
   };
 
   const handleReset = () => {
-    if (!fabricCanvas) return;
+    if (!fabricCanvas || !imageUrl) return;
+    
+    console.log('Resetting canvas');
     fabricCanvas.clear();
     setZoom([100]);
     setIsCropMode(false);
@@ -115,11 +142,13 @@ export const useImageEditor = ({ imageUrl, isOpen }: UseImageEditorProps) => {
       img.set({
         left: (canvasWidth - img.getScaledWidth()) / 2,
         top: (canvasHeight - img.getScaledHeight()) / 2,
+        selectable: true,
       });
       
       fabricCanvas.add(img);
       fabricCanvas.renderAll();
       setOriginalImage(img);
+      console.log('Canvas reset complete');
     }).catch((error) => {
       console.error('Error reloading image:', error);
     });
@@ -128,6 +157,7 @@ export const useImageEditor = ({ imageUrl, isOpen }: UseImageEditorProps) => {
   const handleSave = () => {
     if (!fabricCanvas) return;
     
+    console.log('Saving canvas');
     const dataURL = fabricCanvas.toDataURL({
       format: 'jpeg',
       quality: 0.9,
