@@ -36,12 +36,12 @@ export const FeaturedItems = ({ featuredListings, isLoading }: FeaturedItemsProp
             {featuredListings.map((item) => (
               <Link key={item.id} to={`/marketplace/${item.id}`}>
                 <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-                  <div className="h-48 bg-gray-100">
+                  <div className="h-48 bg-gray-100 flex items-center justify-center overflow-hidden">
                     {item.images && item.images.length > 0 ? (
                       <img 
                         src={item.images[0]} 
                         alt={item.title}
-                        className="w-full h-full object-cover rounded-t-lg"
+                        className="max-w-full max-h-full object-contain rounded-t-lg"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center bg-gray-200">

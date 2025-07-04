@@ -35,11 +35,11 @@ const MarketplaceItemCard = ({
       <CardContent className="p-0">
         {/* Only show image for offers, not for requests */}
         {listing.listing_type === 'offer' && (
-          <div className="aspect-square overflow-hidden rounded-t-lg">
+          <div className="aspect-square overflow-hidden rounded-t-lg bg-gray-50 flex items-center justify-center">
             <img
               src={listing.images?.[0] || "/placeholder.svg"}
               alt={listing.title}
-              className="w-full h-full object-cover hover:scale-105 transition-transform"
+              className="max-w-full max-h-full object-contain hover:scale-105 transition-transform"
             />
           </div>
         )}
