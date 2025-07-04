@@ -82,6 +82,7 @@ const ImageEditor: React.FC<ImageEditorProps> = ({ imageUrl, isOpen, onClose, on
       const dataURL = fabricCanvas.toDataURL({
         format: 'jpeg',
         quality: 0.9,
+        multiplier: 1,
       });
       onSave(dataURL);
       onClose();
@@ -124,6 +125,7 @@ const ImageEditor: React.FC<ImageEditorProps> = ({ imageUrl, isOpen, onClose, on
     const dataURL = fabricCanvas.toDataURL({
       format: 'jpeg',
       quality: 0.9,
+      multiplier: 1,
     });
     onSave(dataURL);
     onClose();
