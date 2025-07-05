@@ -19,6 +19,11 @@ export const useImageEditor = ({ imageUrl, isOpen }: UseImageEditorProps) => {
 
     console.log('Initializing canvas with image:', imageUrl);
 
+    // Dispose of existing canvas if any
+    if (fabricCanvas) {
+      fabricCanvas.dispose();
+    }
+
     const canvas = new FabricCanvas(canvasRef.current, {
       width: 600,
       height: 400,
@@ -47,7 +52,7 @@ export const useImageEditor = ({ imageUrl, isOpen }: UseImageEditorProps) => {
       img.set({
         left: (canvasWidth - img.getScaledWidth()) / 2,
         top: (canvasHeight - img.getScaledHeight()) / 2,
-        selectable: !isCropMode,
+        selectable: true,
       });
       
       canvas.add(img);
@@ -64,7 +69,7 @@ export const useImageEditor = ({ imageUrl, isOpen }: UseImageEditorProps) => {
       console.log('Disposing canvas');
       canvas.dispose();
     };
-  }, [imageUrl, isOpen]);
+  }, [imageUrl, isOpen]); // Removed isCropMode from dependencies
 
   const handleZoom = (value: number[]) => {
     if (!fabricCanvas || !originalImage) return;
@@ -73,8 +78,11 @@ export const useImageEditor = ({ imageUrl, isOpen }: UseImageEditorProps) => {
     const zoomValue = value[0] / 100;
     setZoom(value);
     
-    // Apply zoom to the canvas
-    fabricCanvas.setZoom(zoomValue);
+    // Get the canvas center
+    const center = fabricCanvas.getCenter();
+    
+    // Apply zoom from center
+    fabricCanvas.zoomToPoint({ x: center.left, y: center.top }, zoomValue);
     fabricCanvas.renderAll();
   };
 
@@ -125,7 +133,10 @@ export const useImageEditor = ({ imageUrl, isOpen }: UseImageEditorProps) => {
     fabricCanvas.clear();
     setZoom([100]);
     setIsCropMode(false);
-    fabricCanvas.setZoom(1);
+    
+    // Reset zoom to 1
+    const center = fabricCanvas.getCenter();
+    fabricCanvas.zoomToPoint({ x: center.left, y: center.top }, 1);
     
     // Reload the original image
     FabricImage.fromURL(imageUrl, {
