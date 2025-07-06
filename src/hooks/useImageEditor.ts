@@ -1,6 +1,6 @@
 
 import { useEffect, useRef, useState } from 'react';
-import { Canvas as FabricCanvas, FabricImage } from 'fabric';
+import { Canvas as FabricCanvas, FabricImage, Point } from 'fabric';
 
 interface UseImageEditorProps {
   imageUrl: string;
@@ -81,8 +81,8 @@ export const useImageEditor = ({ imageUrl, isOpen }: UseImageEditorProps) => {
     // Get the canvas center
     const center = fabricCanvas.getCenter();
     
-    // Apply zoom from center
-    fabricCanvas.zoomToPoint({ x: center.left, y: center.top }, zoomValue);
+    // Apply zoom from center using Point constructor
+    fabricCanvas.zoomToPoint(new Point(center.left, center.top), zoomValue);
     fabricCanvas.renderAll();
   };
 
@@ -134,9 +134,9 @@ export const useImageEditor = ({ imageUrl, isOpen }: UseImageEditorProps) => {
     setZoom([100]);
     setIsCropMode(false);
     
-    // Reset zoom to 1
+    // Reset zoom to 1 using Point constructor
     const center = fabricCanvas.getCenter();
-    fabricCanvas.zoomToPoint({ x: center.left, y: center.top }, 1);
+    fabricCanvas.zoomToPoint(new Point(center.left, center.top), 1);
     
     // Reload the original image
     FabricImage.fromURL(imageUrl, {
