@@ -171,6 +171,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ images, onImagesChange, maxIm
               />
               <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
                 <Button
+                  type="button"
                   variant="outline"
                   size="sm"
                   className="bg-white/90"
@@ -179,6 +180,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ images, onImagesChange, maxIm
                   <Edit size={12} />
                 </Button>
                 <Button
+                  type="button"
                   variant="destructive"
                   size="sm"
                   onClick={() => removeImage(index)}
