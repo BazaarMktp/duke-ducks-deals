@@ -30,35 +30,46 @@ export const useImageEditor = ({ imageUrl, isOpen }: UseImageEditorProps) => {
       backgroundColor: '#ffffff',
     });
 
-    // Load the image
+    // Load the image with proper error handling
     FabricImage.fromURL(imageUrl, {
       crossOrigin: 'anonymous'
     }).then((img) => {
-      console.log('Image loaded successfully:', img);
+      console.log('Image loaded successfully');
       
+      if (!img.width || !img.height) {
+        console.error('Image dimensions are invalid');
+        return;
+      }
+
       // Scale image to fit canvas while maintaining aspect ratio
       const canvasWidth = canvas.getWidth();
       const canvasHeight = canvas.getHeight();
-      const imgWidth = img.width || 1;
-      const imgHeight = img.height || 1;
+      const imgWidth = img.width;
+      const imgHeight = img.height;
       
       console.log('Canvas dimensions:', canvasWidth, canvasHeight);
       console.log('Image dimensions:', imgWidth, imgHeight);
       
-      const scale = Math.min(canvasWidth / imgWidth, canvasHeight / imgHeight);
+      const scale = Math.min(canvasWidth / imgWidth, canvasHeight / imgHeight) * 0.8; // 80% of canvas
       img.scale(scale);
       
       // Center the image
+      const scaledWidth = imgWidth * scale;
+      const scaledHeight = imgHeight * scale;
+      
       img.set({
-        left: (canvasWidth - img.getScaledWidth()) / 2,
-        top: (canvasHeight - img.getScaledHeight()) / 2,
+        left: (canvasWidth - scaledWidth) / 2,
+        top: (canvasHeight - scaledHeight) / 2,
         selectable: true,
+        hasControls: true,
+        hasBorders: true,
       });
       
       canvas.add(img);
+      canvas.setActiveObject(img);
       canvas.renderAll();
       setOriginalImage(img);
-      console.log('Image added to canvas');
+      console.log('Image added to canvas and centered');
     }).catch((error) => {
       console.error('Error loading image:', error);
     });
@@ -67,12 +78,14 @@ export const useImageEditor = ({ imageUrl, isOpen }: UseImageEditorProps) => {
 
     return () => {
       console.log('Disposing canvas');
-      canvas.dispose();
+      if (canvas) {
+        canvas.dispose();
+      }
     };
-  }, [imageUrl, isOpen]); // Removed isCropMode from dependencies
+  }, [imageUrl, isOpen]);
 
   const handleZoom = (value: number[]) => {
-    if (!fabricCanvas || !originalImage) return;
+    if (!fabricCanvas) return;
     
     console.log('Applying zoom:', value[0]);
     const zoomValue = value[0] / 100;
@@ -142,21 +155,29 @@ export const useImageEditor = ({ imageUrl, isOpen }: UseImageEditorProps) => {
     FabricImage.fromURL(imageUrl, {
       crossOrigin: 'anonymous'
     }).then((img) => {
+      if (!img.width || !img.height) return;
+
       const canvasWidth = fabricCanvas.getWidth();
       const canvasHeight = fabricCanvas.getHeight();
-      const imgWidth = img.width || 1;
-      const imgHeight = img.height || 1;
+      const imgWidth = img.width;
+      const imgHeight = img.height;
       
-      const scale = Math.min(canvasWidth / imgWidth, canvasHeight / imgHeight);
+      const scale = Math.min(canvasWidth / imgWidth, canvasHeight / imgHeight) * 0.8;
       img.scale(scale);
       
+      const scaledWidth = imgWidth * scale;
+      const scaledHeight = imgHeight * scale;
+      
       img.set({
-        left: (canvasWidth - img.getScaledWidth()) / 2,
-        top: (canvasHeight - img.getScaledHeight()) / 2,
+        left: (canvasWidth - scaledWidth) / 2,
+        top: (canvasHeight - scaledHeight) / 2,
         selectable: true,
+        hasControls: true,
+        hasBorders: true,
       });
       
       fabricCanvas.add(img);
+      fabricCanvas.setActiveObject(img);
       fabricCanvas.renderAll();
       setOriginalImage(img);
       console.log('Canvas reset complete');
