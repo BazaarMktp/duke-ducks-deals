@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from './use-toast';
@@ -9,9 +9,10 @@ export const useUnreadMessages = () => {
   const { user } = useAuth();
   const [unreadCount, setUnreadCount] = useState(0);
   const { toast } = useToast();
+  const channelRef = useRef<RealtimeChannel | null>(null);
 
   const fetchUnreadCount = useCallback(async () => {
-    if (!user) return;
+    if (!user?.id) return;
     try {
       const { data, error } = await supabase.rpc('get_unread_message_count', {
         _user_id: user.id,
@@ -20,7 +21,7 @@ export const useUnreadMessages = () => {
       if (error) {
         throw error;
       }
-      setUnreadCount(data);
+      setUnreadCount(data || 0);
     } catch (error) {
       console.error('Error fetching unread message count:', error);
       toast({
@@ -29,16 +30,24 @@ export const useUnreadMessages = () => {
         variant: "destructive",
       });
     }
-  }, [user, toast]);
+  }, [user?.id, toast]);
 
   useEffect(() => {
-    if (user) {
+    if (user?.id) {
       fetchUnreadCount();
+    } else {
+      setUnreadCount(0);
     }
-  }, [user, fetchUnreadCount]);
+  }, [user?.id, fetchUnreadCount]);
 
   useEffect(() => {
-    if (!user) return;
+    // Clean up existing channel first
+    if (channelRef.current) {
+      supabase.removeChannel(channelRef.current);
+      channelRef.current = null;
+    }
+
+    if (!user?.id) return;
 
     const channel: RealtimeChannel = supabase
       .channel(`unread-messages-count-${user.id}`)
@@ -55,10 +64,15 @@ export const useUnreadMessages = () => {
       )
       .subscribe();
 
+    channelRef.current = channel;
+
     return () => {
-      supabase.removeChannel(channel);
+      if (channelRef.current) {
+        supabase.removeChannel(channelRef.current);
+        channelRef.current = null;
+      }
     };
-  }, [user, fetchUnreadCount]);
+  }, [user?.id, fetchUnreadCount]);
 
   return { unreadCount, fetchUnreadCount };
 };
