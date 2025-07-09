@@ -83,7 +83,10 @@ export const useMessages = (selectedConversation: string | null) => {
           { event: 'INSERT', schema: 'public', table: 'messages', filter: `conversation_id=eq.${selectedConversation}` },
           (payload) => {
             fetchMessages(selectedConversation);
-            markMessagesAsRead(selectedConversation);
+            // Only mark as read if the message is not from the current user
+            if (payload.new && payload.new.sender_id !== user?.id) {
+              markMessagesAsRead(selectedConversation);
+            }
           }
         )
         .subscribe();
@@ -92,7 +95,7 @@ export const useMessages = (selectedConversation: string | null) => {
         supabase.removeChannel(subscription);
       };
     }
-  }, [selectedConversation, fetchMessages, markMessagesAsRead]);
+  }, [selectedConversation, fetchMessages, markMessagesAsRead, user?.id]);
 
   return {
     messages,

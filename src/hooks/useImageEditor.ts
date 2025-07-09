@@ -19,7 +19,7 @@ export const useImageEditor = ({ imageUrl, isOpen }: UseImageEditorProps) => {
 
     console.log('Initializing canvas with image:', imageUrl);
 
-    // Dispose of existing canvas if any
+    // Clean up existing canvas
     if (fabricCanvas) {
       fabricCanvas.dispose();
     }
@@ -30,11 +30,16 @@ export const useImageEditor = ({ imageUrl, isOpen }: UseImageEditorProps) => {
       backgroundColor: '#ffffff',
     });
 
+    setFabricCanvas(canvas);
+    setOriginalImage(null);
+    setZoom([100]);
+    setIsCropMode(false);
+
     // Load the image with proper error handling
     FabricImage.fromURL(imageUrl, {
       crossOrigin: 'anonymous'
     }).then((img) => {
-      console.log('Image loaded successfully');
+      console.log('Image loaded successfully', img);
       
       if (!img.width || !img.height) {
         console.error('Image dimensions are invalid');
@@ -73,8 +78,6 @@ export const useImageEditor = ({ imageUrl, isOpen }: UseImageEditorProps) => {
     }).catch((error) => {
       console.error('Error loading image:', error);
     });
-
-    setFabricCanvas(canvas);
 
     return () => {
       console.log('Disposing canvas');

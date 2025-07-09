@@ -55,9 +55,7 @@ const MobileMenu = ({ user, isOpen, onClose, onSignOut, unreadMessages }: Mobile
               <MessageCircle size={20} />
               <span>Messages</span>
               {unreadMessages > 0 && (
-                <span className="bg-red-500 text-white text-xs rounded-full px-2 py-1 min-w-[1.25rem] h-5 flex items-center justify-center">
-                  {unreadMessages > 99 ? "99+" : unreadMessages}
-                </span>
+                <span className="absolute top-1 left-3 bg-red-500 text-white text-xs rounded-full w-2 h-2"></span>
               )}
             </Link>
             <Link
