@@ -2,7 +2,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plus, MessageSquare, Heart } from "lucide-react";
+import { Plus, Search, Heart } from "lucide-react";
 
 export const QuickActions = () => {
   return (
@@ -21,23 +21,23 @@ export const QuickActions = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 text-center">Post items, housing, or services</p>
+                <p className="text-gray-600 text-center">Post items or services you're offering</p>
               </CardContent>
             </Card>
           </Link>
 
-          <Link to="/messages">
+          <Link to="/create-listing" state={{ listingType: 'wanted' }}>
             <Card className="hover:shadow-lg transition-shadow cursor-pointer group">
               <CardHeader className="text-center">
                 <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
-                  <MessageSquare className="text-green-600" size={32} />
+                  <Search className="text-green-600" size={32} />
                 </div>
                 <CardTitle className="group-hover:text-green-600 transition-colors">
-                  Messages
+                  Create Request
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 text-center">Chat with buyers and sellers</p>
+                <p className="text-gray-600 text-center">Post what you're looking for</p>
               </CardContent>
             </Card>
           </Link>
