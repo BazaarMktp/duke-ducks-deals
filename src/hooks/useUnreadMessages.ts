@@ -41,34 +41,46 @@ export const useUnreadMessages = () => {
   }, [user?.id, fetchUnreadCount]);
 
   useEffect(() => {
-    // Clean up existing channel first
+    // Always clean up existing channel first
     if (channelRef.current) {
-      supabase.removeChannel(channelRef.current);
+      try {
+        supabase.removeChannel(channelRef.current);
+      } catch (error) {
+        console.error('Error removing channel:', error);
+      }
       channelRef.current = null;
     }
 
     if (!user?.id) return;
 
-    const channel: RealtimeChannel = supabase
-      .channel(`unread-messages-count-${user.id}`)
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'messages',
-        },
-        () => {
-          fetchUnreadCount();
-        }
-      )
-      .subscribe();
+    try {
+      const channel = supabase
+        .channel(`unread-messages-count-${user.id}`)
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'messages',
+          },
+          () => {
+            fetchUnreadCount();
+          }
+        )
+        .subscribe();
 
-    channelRef.current = channel;
+      channelRef.current = channel;
+    } catch (error) {
+      console.error('Error setting up realtime channel:', error);
+    }
 
     return () => {
       if (channelRef.current) {
-        supabase.removeChannel(channelRef.current);
+        try {
+          supabase.removeChannel(channelRef.current);
+        } catch (error) {
+          console.error('Error removing channel on cleanup:', error);
+        }
         channelRef.current = null;
       }
     };
