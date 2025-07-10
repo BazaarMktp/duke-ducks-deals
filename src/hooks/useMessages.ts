@@ -14,11 +14,16 @@ export const useMessages = (selectedConversation: string | null) => {
   const markMessagesAsRead = useCallback(async (conversationId: string) => {
     if (!user) return;
     try {
-      await supabase
+      const { error } = await supabase
         .from('messages')
         .update({ is_read: true })
         .eq('conversation_id', conversationId)
         .neq('sender_id', user.id);
+      
+      if (error) throw error;
+      
+      // Trigger a manual refresh of unread count by dispatching a custom event
+      window.dispatchEvent(new CustomEvent('unread-messages-updated'));
     } catch (error) {
       console.error('Error marking messages as read:', error);
       toast({

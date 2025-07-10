@@ -28,6 +28,18 @@ const ServiceProvider = ({
 }: ServiceProviderProps) => {
   const { isVerified } = useUserVerification(userId);
 
+  const getDisplayName = () => {
+    if (isAuthenticated) {
+      return fullName || profileName;
+    } else {
+      // For non-authenticated users, show only first name
+      if (fullName) {
+        return fullName.split(' ')[0];
+      }
+      return profileName.split(' ')[0] || profileName;
+    }
+  };
+
   return (
     <Card className="mb-6">
       <CardHeader>
@@ -43,7 +55,7 @@ const ServiceProvider = ({
           </Avatar>
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <p className="font-semibold">{fullName || profileName}</p>
+              <p className="font-semibold">{getDisplayName()}</p>
               <VerifiedBadge isVerified={isVerified} showText />
             </div>
             <p className="text-sm text-gray-600">@{profileName}</p>

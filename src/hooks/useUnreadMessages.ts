@@ -40,6 +40,19 @@ export const useUnreadMessages = () => {
     }
   }, [user?.id, fetchUnreadCount]);
 
+  // Listen for custom event to refresh unread count
+  useEffect(() => {
+    const handleUnreadUpdate = () => {
+      fetchUnreadCount();
+    };
+
+    window.addEventListener('unread-messages-updated', handleUnreadUpdate);
+    
+    return () => {
+      window.removeEventListener('unread-messages-updated', handleUnreadUpdate);
+    };
+  }, [fetchUnreadCount]);
+
   useEffect(() => {
     // Always clean up existing channel first
     if (channelRef.current) {
