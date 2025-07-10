@@ -21,6 +21,7 @@ export const useUnreadMessages = () => {
       if (error) {
         throw error;
       }
+      console.log('Fetched unread count:', data);
       setUnreadCount(data || 0);
     } catch (error) {
       console.error('Error fetching unread message count:', error);
@@ -43,6 +44,7 @@ export const useUnreadMessages = () => {
   // Listen for custom event to refresh unread count
   useEffect(() => {
     const handleUnreadUpdate = () => {
+      console.log('Unread messages update event received');
       fetchUnreadCount();
     };
 
@@ -76,8 +78,12 @@ export const useUnreadMessages = () => {
             schema: 'public',
             table: 'messages',
           },
-          () => {
-            fetchUnreadCount();
+          (payload) => {
+            console.log('Message change detected:', payload.eventType);
+            // Add a small delay to ensure the database has been updated
+            setTimeout(() => {
+              fetchUnreadCount();
+            }, 200);
           }
         )
         .subscribe();

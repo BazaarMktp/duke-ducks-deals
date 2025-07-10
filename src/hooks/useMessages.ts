@@ -22,8 +22,11 @@ export const useMessages = (selectedConversation: string | null) => {
       
       if (error) throw error;
       
-      // Trigger a manual refresh of unread count by dispatching a custom event
-      window.dispatchEvent(new CustomEvent('unread-messages-updated'));
+      // Trigger immediate refresh of unread count
+      setTimeout(() => {
+        window.dispatchEvent(new CustomEvent('unread-messages-updated'));
+      }, 100);
+      
     } catch (error) {
       console.error('Error marking messages as read:', error);
       toast({
@@ -82,6 +85,7 @@ export const useMessages = (selectedConversation: string | null) => {
     if (selectedConversation) {
       fetchMessages(selectedConversation);
       markMessagesAsRead(selectedConversation);
+      
       const subscription = supabase
         .channel(`messages:conversation_id=eq.${selectedConversation}`)
         .on('postgres_changes',
@@ -92,6 +96,13 @@ export const useMessages = (selectedConversation: string | null) => {
             if (payload.new && payload.new.sender_id !== user?.id) {
               markMessagesAsRead(selectedConversation);
             }
+          }
+        )
+        .on('postgres_changes',
+          { event: 'UPDATE', schema: 'public', table: 'messages', filter: `conversation_id=eq.${selectedConversation}` },
+          () => {
+            // Trigger unread count refresh when messages are updated (marked as read)
+            window.dispatchEvent(new CustomEvent('unread-messages-updated'));
           }
         )
         .subscribe();
