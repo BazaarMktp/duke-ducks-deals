@@ -21,7 +21,7 @@ export const QuickActions = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 text-center">Post items or services you're offering</p>
+                <p className="text-gray-600 text-center">Post items you're offering</p>
               </CardContent>
             </Card>
           </Link>
