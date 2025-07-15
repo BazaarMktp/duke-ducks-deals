@@ -29,7 +29,19 @@ const SellerInfo = ({
   listingCreatedAt,
   listingType = 'offer'
 }: SellerInfoProps) => {
-  const displayName = fullName || profileName;
+  const getDisplayName = () => {
+    if (isAuthenticated) {
+      return fullName || profileName;
+    } else {
+      // For non-authenticated users, show only first name
+      if (fullName) {
+        return fullName.split(' ')[0];
+      }
+      return profileName.split(' ')[0] || profileName;
+    }
+  };
+
+  const displayName = getDisplayName();
   const memberSince = new Date(createdAt).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long'
