@@ -63,6 +63,17 @@ const MarketplaceItemContent = ({
           listingType={product.listing_type}
         />
 
+        <ProductActions
+          user={user}
+          isFavorite={isFavorite}
+          isInCart={isInCart}
+          isOwnProduct={product.user_id === user?.id}
+          onToggleFavorite={onToggleFavorite}
+          onAddToCart={onAddToCart}
+          onStartConversation={onStartConversation}
+          listingType={product.listing_type}
+        />
+
         <SellerInfo
           profileName={product.profiles.profile_name}
           email={product.profiles.email}
@@ -73,17 +84,6 @@ const MarketplaceItemContent = ({
           isAuthenticated={!!user}
           userId={product.user_id}
           listingCreatedAt={product.created_at}
-          listingType={product.listing_type}
-        />
-
-        <ProductActions
-          user={user}
-          isFavorite={isFavorite}
-          isInCart={isInCart}
-          isOwnProduct={product.user_id === user?.id}
-          onToggleFavorite={onToggleFavorite}
-          onAddToCart={onAddToCart}
-          onStartConversation={onStartConversation}
           listingType={product.listing_type}
         />
       </div>
@@ -111,6 +111,17 @@ const MarketplaceItemContent = ({
           listingType={product.listing_type}
         />
 
+        <ProductActions
+          user={user}
+          isFavorite={isFavorite}
+          isInCart={isInCart}
+          isOwnProduct={product.user_id === user?.id}
+          onToggleFavorite={onToggleFavorite}
+          onAddToCart={onAddToCart}
+          onStartConversation={onStartConversation}
+          listingType={product.listing_type}
+        />
+
         <SellerInfo
           profileName={product.profiles.profile_name}
           email={product.profiles.email}
@@ -121,17 +132,6 @@ const MarketplaceItemContent = ({
           isAuthenticated={!!user}
           userId={product.user_id}
           listingCreatedAt={product.created_at}
-          listingType={product.listing_type}
-        />
-
-        <ProductActions
-          user={user}
-          isFavorite={isFavorite}
-          isInCart={isInCart}
-          isOwnProduct={product.user_id === user?.id}
-          onToggleFavorite={onToggleFavorite}
-          onAddToCart={onAddToCart}
-          onStartConversation={onStartConversation}
           listingType={product.listing_type}
         />
       </div>
