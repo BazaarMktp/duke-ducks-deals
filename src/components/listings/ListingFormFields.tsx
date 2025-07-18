@@ -3,8 +3,11 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { Sparkles, Loader2 } from "lucide-react";
 import ImageUpload from "@/components/ImageUpload";
 import { getTitlePlaceholder, getDescriptionPlaceholder, getLocationPlaceholder } from "../posting/utils/placeholderText";
+import { useAIAnalysis } from "@/hooks/useAIAnalysis";
 import type { ListingFormData } from '@/hooks/useCreateListing';
 
 interface ListingFormFieldsProps {
@@ -18,6 +21,18 @@ const ListingFormFields: React.FC<ListingFormFieldsProps> = ({
   handleInputChange,
   handleImagesChange
 }) => {
+  const { generateDescription, loading } = useAIAnalysis();
+
+  const handleGenerateDescription = async () => {
+    if (!formData.title || !formData.category) {
+      return;
+    }
+
+    const result = await generateDescription(formData.title, formData.category, formData.images);
+    if (result?.description) {
+      handleInputChange('description', result.description);
+    }
+  };
   return (
     <>
       <div>
@@ -35,9 +50,26 @@ const ListingFormFields: React.FC<ListingFormFieldsProps> = ({
       </div>
 
       <div>
-        <Label htmlFor="description" className="text-base font-medium">
-          {formData.listingType === 'wanted' ? 'Detailed description of your needs' : 'Description'} *
-        </Label>
+        <div className="flex items-center justify-between mb-2">
+          <Label htmlFor="description" className="text-base font-medium">
+            {formData.listingType === 'wanted' ? 'Detailed description of your needs' : 'Description'} *
+          </Label>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={handleGenerateDescription}
+            disabled={loading || !formData.title || !formData.category}
+            className="text-xs"
+          >
+            {loading ? (
+              <Loader2 className="w-3 h-3 mr-1 animate-spin" />
+            ) : (
+              <Sparkles className="w-3 h-3 mr-1" />
+            )}
+            AI Generate
+          </Button>
+        </div>
         <Textarea
           id="description"
           value={formData.description}

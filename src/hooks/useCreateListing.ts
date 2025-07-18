@@ -6,6 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { useAIAnalysis } from "./useAIAnalysis";
 
+
 export type ListingFormData = {
   title: string;
   description: string;
@@ -37,7 +38,7 @@ export const useCreateListing = () => {
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { analyzeListingContent } = useAIAnalysis();
+  const { moderateContent, trackAIInteraction } = useAIAnalysis();
 
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -92,6 +93,10 @@ export const useCreateListing = () => {
         return;
       }
 
+      // Moderate content with AI
+      const moderationResult = await moderateContent(formData.title, formData.description);
+      const moderationStatus = moderationResult.flagged ? 'flagged' : 'approved';
+
       const insertData: any = {
         user_id: user.id,
         college_id: profile.college_id,
@@ -102,6 +107,8 @@ export const useCreateListing = () => {
         listing_type: formData.listingType,
         location: formData.location || null,
         images: formData.images.length > 0 ? formData.images : null,
+        moderation_status: moderationStatus,
+        moderation_flags: moderationResult.flags || [],
       };
 
       // Add transaction methods for marketplace items
@@ -123,21 +130,15 @@ export const useCreateListing = () => {
 
       if (error) throw error;
 
-      // Trigger AI analysis for marketplace listings
-      if (formData.category === 'marketplace' && newListing) {
-        try {
-          await analyzeListingContent(
-            newListing.id,
-            formData.title,
-            formData.description,
-            formData.images,
-            formData.category,
-            parseFloat(formData.price) || 0
-          );
-        } catch (aiError) {
-          console.warn('AI analysis failed but listing was created:', aiError);
-        }
-      }
+      // Track content moderation interaction
+      await trackAIInteraction(
+        newListing.id,
+        'content_moderated',
+        moderationResult,
+        moderationStatus === 'approved' ? 'auto_approved' : 'flagged_for_review'
+      );
+
+      // AI analysis will be triggered automatically by the database after listing creation
 
       const actionText = formData.listingType === 'wanted' ? 'request' : 'listing';
       toast.success(`Your ${formData.category} ${actionText} has been posted successfully.`);

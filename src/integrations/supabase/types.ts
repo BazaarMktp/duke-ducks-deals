@@ -14,6 +14,44 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_interactions: {
+        Row: {
+          ai_suggestion: Json | null
+          created_at: string
+          id: string
+          interaction_type: string
+          listing_id: string | null
+          user_action: string | null
+          user_id: string
+        }
+        Insert: {
+          ai_suggestion?: Json | null
+          created_at?: string
+          id?: string
+          interaction_type: string
+          listing_id?: string | null
+          user_action?: string | null
+          user_id: string
+        }
+        Update: {
+          ai_suggestion?: Json | null
+          created_at?: string
+          id?: string
+          interaction_type?: string
+          listing_id?: string | null
+          user_action?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_interactions_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       app_stats: {
         Row: {
           id: string
@@ -382,7 +420,10 @@ export type Database = {
       }
       listings: {
         Row: {
+          ai_confidence_score: number | null
           ai_features: Json | null
+          ai_generated_description: string | null
+          ai_suggested_category: string | null
           allow_drop_off: boolean | null
           allow_meet_on_campus: boolean | null
           allow_pickup: boolean | null
@@ -400,6 +441,8 @@ export type Database = {
           listing_type: Database["public"]["Enums"]["listing_type"]
           location: string | null
           longitude: number | null
+          moderation_flags: Json | null
+          moderation_status: string | null
           price: number | null
           similarity_score: number | null
           status: Database["public"]["Enums"]["listing_status"] | null
@@ -408,7 +451,10 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          ai_confidence_score?: number | null
           ai_features?: Json | null
+          ai_generated_description?: string | null
+          ai_suggested_category?: string | null
           allow_drop_off?: boolean | null
           allow_meet_on_campus?: boolean | null
           allow_pickup?: boolean | null
@@ -426,6 +472,8 @@ export type Database = {
           listing_type?: Database["public"]["Enums"]["listing_type"]
           location?: string | null
           longitude?: number | null
+          moderation_flags?: Json | null
+          moderation_status?: string | null
           price?: number | null
           similarity_score?: number | null
           status?: Database["public"]["Enums"]["listing_status"] | null
@@ -434,7 +482,10 @@ export type Database = {
           user_id: string
         }
         Update: {
+          ai_confidence_score?: number | null
           ai_features?: Json | null
+          ai_generated_description?: string | null
+          ai_suggested_category?: string | null
           allow_drop_off?: boolean | null
           allow_meet_on_campus?: boolean | null
           allow_pickup?: boolean | null
@@ -452,6 +503,8 @@ export type Database = {
           listing_type?: Database["public"]["Enums"]["listing_type"]
           location?: string | null
           longitude?: number | null
+          moderation_flags?: Json | null
+          moderation_status?: string | null
           price?: number | null
           similarity_score?: number | null
           status?: Database["public"]["Enums"]["listing_status"] | null
@@ -670,6 +723,39 @@ export type Database = {
           status?: string | null
           subject?: string
           updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_ai_preferences: {
+        Row: {
+          auto_categorize: boolean | null
+          auto_generate_descriptions: boolean | null
+          auto_moderate: boolean | null
+          created_at: string
+          enhanced_search: boolean | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          auto_categorize?: boolean | null
+          auto_generate_descriptions?: boolean | null
+          auto_moderate?: boolean | null
+          created_at?: string
+          enhanced_search?: boolean | null
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          auto_categorize?: boolean | null
+          auto_generate_descriptions?: boolean | null
+          auto_moderate?: boolean | null
+          created_at?: string
+          enhanced_search?: boolean | null
+          id?: string
+          updated_at?: string
           user_id?: string
         }
         Relationships: []

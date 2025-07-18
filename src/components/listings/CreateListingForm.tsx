@@ -30,6 +30,9 @@ const CreateListingForm: React.FC<CreateListingFormProps> = ({
         listingType={formData.listingType}
         onCategoryChange={(value) => handleInputChange("category", value)}
         onListingTypeChange={(value) => handleInputChange("listingType", value)}
+        title={formData.title}
+        description={formData.description}
+        images={formData.images}
       />
 
       <ListingFormFields
