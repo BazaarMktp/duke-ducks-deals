@@ -17,6 +17,7 @@ interface PostingFormFieldsProps {
     images: string[];
     allowPickup: boolean;
     allowMeetOnCampus: boolean;
+    allowDropOff: boolean;
   };
   category: 'marketplace' | 'housing' | 'services';
   listingType: 'offer' | 'wanted';
@@ -111,6 +112,7 @@ const PostingFormFields: React.FC<PostingFormFieldsProps> = ({
         <TransactionMethods
           allowPickup={formData.allowPickup}
           allowMeetOnCampus={formData.allowMeetOnCampus}
+          allowDropOff={formData.allowDropOff}
           onInputChange={onInputChange}
         />
       )}

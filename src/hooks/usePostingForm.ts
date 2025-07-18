@@ -13,6 +13,7 @@ interface PostingFormData {
   images: string[];
   allowPickup: boolean;
   allowMeetOnCampus: boolean;
+  allowDropOff: boolean;
 }
 
 interface UsePostingFormProps {
@@ -31,7 +32,8 @@ export const usePostingForm = ({ category, listingType, onSuccess, onClose }: Us
     housingType: "",
     images: [],
     allowPickup: false,
-    allowMeetOnCampus: false
+    allowMeetOnCampus: false,
+    allowDropOff: false,
   });
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
@@ -87,10 +89,10 @@ export const usePostingForm = ({ category, listingType, onSuccess, onClose }: Us
     }
 
     // Validation for marketplace items
-    if (category === 'marketplace' && listingType === 'offer' && !formData.allowPickup && !formData.allowMeetOnCampus) {
+    if (category === 'marketplace' && listingType === 'offer' && !formData.allowPickup && !formData.allowMeetOnCampus && !formData.allowDropOff) {
       toast({
         title: "Transaction Method Required",
-        description: "Please select at least one transaction method (pickup or meet on campus).",
+        description: "Please select at least one transaction method.",
         variant: "destructive",
       });
       return;
@@ -113,6 +115,7 @@ export const usePostingForm = ({ category, listingType, onSuccess, onClose }: Us
       if (category === 'marketplace') {
         insertData.allow_pickup = formData.allowPickup;
         insertData.allow_meet_on_campus = formData.allowMeetOnCampus;
+        insertData.allow_drop_off = formData.allowDropOff;
       }
 
       if (category === 'housing' && formData.housingType) {

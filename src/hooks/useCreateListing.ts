@@ -16,6 +16,7 @@ export type ListingFormData = {
   images: string[];
   allowPickup: boolean;
   allowMeetOnCampus: boolean;
+  allowDropOff: boolean;
 };
 
 export const useCreateListing = () => {
@@ -30,6 +31,7 @@ export const useCreateListing = () => {
     images: [],
     allowPickup: false,
     allowMeetOnCampus: false,
+    allowDropOff: false,
   });
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
@@ -69,8 +71,8 @@ export const useCreateListing = () => {
     }
 
     // Validation for marketplace items
-    if (formData.category === 'marketplace' && formData.listingType === 'offer' && !formData.allowPickup && !formData.allowMeetOnCampus) {
-      toast.error("Please select at least one transaction method (pickup or meet on campus).");
+    if (formData.category === 'marketplace' && formData.listingType === 'offer' && !formData.allowPickup && !formData.allowMeetOnCampus && !formData.allowDropOff) {
+      toast.error("Please select at least one transaction method.");
       return;
     }
 
@@ -104,6 +106,7 @@ export const useCreateListing = () => {
       if (formData.category === 'marketplace') {
         insertData.allow_pickup = formData.allowPickup;
         insertData.allow_meet_on_campus = formData.allowMeetOnCampus;
+        insertData.allow_drop_off = formData.allowDropOff;
       }
 
       if (formData.category === 'housing' && formData.housingType) {

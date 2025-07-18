@@ -5,12 +5,14 @@ import { Checkbox } from "@/components/ui/checkbox";
 interface TransactionMethodsProps {
   allowPickup: boolean;
   allowMeetOnCampus: boolean;
+  allowDropOff: boolean;
   onInputChange: (field: string, value: boolean) => void;
 }
 
 const TransactionMethods: React.FC<TransactionMethodsProps> = ({
   allowPickup,
   allowMeetOnCampus,
+  allowDropOff,
   onInputChange
 }) => {
   return (
@@ -35,6 +37,16 @@ const TransactionMethods: React.FC<TransactionMethodsProps> = ({
           />
           <Label htmlFor="allowMeetOnCampus" className="text-sm font-normal">
             Meet on campus
+          </Label>
+        </div>
+        <div className="flex items-center space-x-2">
+          <Checkbox
+            id="allowDropOff"
+            checked={allowDropOff}
+            onCheckedChange={(checked) => onInputChange("allowDropOff", checked as boolean)}
+          />
+          <Label htmlFor="allowDropOff" className="text-sm font-normal">
+            Drop off
           </Label>
         </div>
       </div>
