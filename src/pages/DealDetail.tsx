@@ -28,13 +28,7 @@ export default function DealDetail() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('deals')
-        .select(`
-          *,
-          profiles:created_by (
-            full_name,
-            profile_name
-          )
-        `)
+        .select('*')
         .eq('id', id)
         .eq('is_active', true)
         .single();

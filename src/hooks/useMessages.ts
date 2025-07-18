@@ -14,18 +14,35 @@ export const useMessages = (selectedConversation: string | null) => {
   const markMessagesAsRead = useCallback(async (conversationId: string) => {
     if (!user) return;
     try {
-      const { error } = await supabase
+      console.log('Marking messages as read for conversation:', conversationId, 'user:', user.id);
+      
+      // First check if there are any unread messages from others
+      const { data: unreadMessages, error: checkError } = await supabase
         .from('messages')
-        .update({ is_read: true })
+        .select('id, sender_id, is_read')
         .eq('conversation_id', conversationId)
-        .neq('sender_id', user.id);
+        .neq('sender_id', user.id)
+        .eq('is_read', false);
       
-      if (error) throw error;
+      if (checkError) throw checkError;
+      console.log('Unread messages found:', unreadMessages?.length || 0);
       
-      // Trigger immediate refresh of unread count
-      setTimeout(() => {
-        window.dispatchEvent(new CustomEvent('unread-messages-updated'));
-      }, 100);
+      if (unreadMessages && unreadMessages.length > 0) {
+        const { error } = await supabase
+          .from('messages')
+          .update({ is_read: true })
+          .eq('conversation_id', conversationId)
+          .neq('sender_id', user.id)
+          .eq('is_read', false);
+        
+        if (error) throw error;
+        console.log('Successfully marked messages as read');
+        
+        // Trigger immediate refresh of unread count
+        setTimeout(() => {
+          window.dispatchEvent(new CustomEvent('unread-messages-updated'));
+        }, 100);
+      }
       
     } catch (error) {
       console.error('Error marking messages as read:', error);
