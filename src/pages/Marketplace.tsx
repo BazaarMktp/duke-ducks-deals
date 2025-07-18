@@ -27,6 +27,7 @@ const Marketplace = () => {
       <ListingTypeToggle 
         activeType={activeListingType}
         onTypeChange={setActiveListingType}
+        category="marketplace"
       />
 
       <MarketplaceFilters
