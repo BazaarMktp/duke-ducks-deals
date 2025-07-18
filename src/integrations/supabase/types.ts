@@ -186,6 +186,69 @@ export type Database = {
           },
         ]
       }
+      deals: {
+        Row: {
+          business_email: string | null
+          business_name: string
+          business_phone: string | null
+          business_website: string | null
+          created_at: string
+          created_by: string
+          description: string
+          discount_percentage: number | null
+          discounted_price: number | null
+          id: string
+          image_url: string | null
+          is_active: boolean
+          original_price: number | null
+          terms_and_conditions: string | null
+          title: string
+          updated_at: string
+          valid_from: string
+          valid_until: string | null
+        }
+        Insert: {
+          business_email?: string | null
+          business_name: string
+          business_phone?: string | null
+          business_website?: string | null
+          created_at?: string
+          created_by: string
+          description: string
+          discount_percentage?: number | null
+          discounted_price?: number | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          original_price?: number | null
+          terms_and_conditions?: string | null
+          title: string
+          updated_at?: string
+          valid_from?: string
+          valid_until?: string | null
+        }
+        Update: {
+          business_email?: string | null
+          business_name?: string
+          business_phone?: string | null
+          business_website?: string | null
+          created_at?: string
+          created_by?: string
+          description?: string
+          discount_percentage?: number | null
+          discounted_price?: number | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          original_price?: number | null
+          terms_and_conditions?: string | null
+          title?: string
+          updated_at?: string
+          valid_from?: string
+          valid_until?: string | null
+        }
+        Relationships: []
+      }
       donations: {
         Row: {
           address: string

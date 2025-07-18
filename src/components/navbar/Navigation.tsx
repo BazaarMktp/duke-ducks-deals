@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import { 
   Home, 
   ShoppingCart, 
-  MessageCircle
+  MessageCircle,
+  Percent
 } from "lucide-react";
 import { useUnreadMessages } from "@/hooks/useUnreadMessages";
 
@@ -12,6 +13,7 @@ const Navigation = () => {
   const navigation = [
     { name: "Home", href: "/", icon: Home },
     { name: "Marketplace", href: "/marketplace", icon: ShoppingCart },
+    { name: "Devil's Deals", href: "/devils-deals", icon: Percent },
     { name: "Messages", href: "/messages", icon: MessageCircle },
   ];
 

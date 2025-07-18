@@ -34,6 +34,8 @@ import Favorites from "./pages/Favorites";
 import Cart from "./pages/Cart";
 import AdminDashboard from "./pages/AdminDashboard";
 import SharedLinks from "./pages/SharedLinks";
+import DevilsDeals from "./pages/DevilsDeals";
+import DealDetail from "./pages/DealDetail";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Footer from "@/components/Footer";
@@ -80,6 +82,8 @@ function App() {
                       <Route path="/housing/:id" element={<HousingDetail />} />
                       <Route path="/services" element={<Services />} />
                       <Route path="/services/:id" element={<ServiceDetail />} />
+                      <Route path="/devils-deals" element={<DevilsDeals />} />
+                      <Route path="/devils-deals/:id" element={<DealDetail />} />
                       <Route
                         path="/messages"
                         element={
