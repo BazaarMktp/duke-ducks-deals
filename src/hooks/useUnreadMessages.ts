@@ -78,12 +78,17 @@ export const useUnreadMessages = () => {
             schema: 'public',
             table: 'messages',
           },
-          (payload) => {
-            console.log('Message change detected:', payload.eventType);
-            // Add a small delay to ensure the database has been updated
-            setTimeout(() => {
-              fetchUnreadCount();
-            }, 200);
+          (payload: any) => {
+            console.log('Message change detected:', payload.eventType, 'payload:', payload);
+            // Only refresh count if the message is not from the current user
+            // Handle both INSERT and UPDATE events properly
+            const senderId = payload.new?.sender_id || payload.old?.sender_id;
+            if (payload.eventType === 'UPDATE' || (payload.eventType === 'INSERT' && senderId !== user.id)) {
+              // Add a small delay to ensure the database has been updated
+              setTimeout(() => {
+                fetchUnreadCount();
+              }, 200);
+            }
           }
         )
         .subscribe();

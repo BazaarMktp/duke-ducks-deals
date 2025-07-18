@@ -90,21 +90,26 @@ export const useMessages = (selectedConversation: string | null) => {
         .channel(`messages:conversation_id=eq.${selectedConversation}`)
         .on('postgres_changes',
           { event: 'INSERT', schema: 'public', table: 'messages', filter: `conversation_id=eq.${selectedConversation}` },
-          (payload) => {
-            fetchMessages(selectedConversation);
-            // Only mark as read if the message is not from the current user
-            if (payload.new && payload.new.sender_id !== user?.id) {
-              markMessagesAsRead(selectedConversation);
-            }
-          }
-        )
-        .on('postgres_changes',
-          { event: 'UPDATE', schema: 'public', table: 'messages', filter: `conversation_id=eq.${selectedConversation}` },
-          () => {
-            // Trigger unread count refresh when messages are updated (marked as read)
-            window.dispatchEvent(new CustomEvent('unread-messages-updated'));
-          }
-        )
+           (payload) => {
+             console.log('New message received from:', payload.new?.sender_id, 'current user:', user?.id);
+             fetchMessages(selectedConversation);
+             // Only mark as read if the message is not from the current user
+             if (payload.new && payload.new.sender_id !== user?.id) {
+               setTimeout(() => markMessagesAsRead(selectedConversation), 100);
+             }
+           }
+         )
+         .on('postgres_changes',
+           { event: 'UPDATE', schema: 'public', table: 'messages', filter: `conversation_id=eq.${selectedConversation}` },
+           (payload) => {
+             console.log('Message updated:', payload);
+             // Refresh messages and trigger unread count refresh when messages are updated (marked as read)
+             fetchMessages(selectedConversation);
+             setTimeout(() => {
+               window.dispatchEvent(new CustomEvent('unread-messages-updated'));
+             }, 100);
+           }
+         )
         .subscribe();
 
       return () => {
