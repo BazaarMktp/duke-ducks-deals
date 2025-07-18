@@ -334,6 +334,7 @@ export type Database = {
       }
       listings: {
         Row: {
+          allow_drop_off: boolean | null
           allow_meet_on_campus: boolean | null
           allow_pickup: boolean | null
           category: Database["public"]["Enums"]["listing_category"]
@@ -356,6 +357,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          allow_drop_off?: boolean | null
           allow_meet_on_campus?: boolean | null
           allow_pickup?: boolean | null
           category: Database["public"]["Enums"]["listing_category"]
@@ -378,6 +380,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          allow_drop_off?: boolean | null
           allow_meet_on_campus?: boolean | null
           allow_pickup?: boolean | null
           category?: Database["public"]["Enums"]["listing_category"]
