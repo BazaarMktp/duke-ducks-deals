@@ -733,6 +733,26 @@ export type Database = {
         Args: { "": string } | { "": unknown }
         Returns: unknown
       }
+      find_similar_listings_by_embedding: {
+        Args: {
+          query_embedding: string
+          listing_id_to_exclude: string
+          similarity_threshold?: number
+          match_count?: number
+        }
+        Returns: {
+          id: string
+          title: string
+          description: string
+          price: number
+          category: Database["public"]["Enums"]["listing_category"]
+          images: string[]
+          user_id: string
+          created_at: string
+          ai_features: Json
+          similarity: number
+        }[]
+      }
       get_current_user_college_id: {
         Args: Record<PropertyKey, never>
         Returns: string
