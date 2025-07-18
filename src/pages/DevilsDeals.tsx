@@ -19,13 +19,7 @@ export default function DevilsDeals() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('deals')
-        .select(`
-          *,
-          profiles:created_by (
-            full_name,
-            profile_name
-          )
-        `)
+        .select('*')
         .eq('is_active', true)
         .order('created_at', { ascending: false });
 

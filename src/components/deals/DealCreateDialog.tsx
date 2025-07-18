@@ -75,6 +75,9 @@ export const DealCreateDialog: React.FC<DealCreateDialogProps> = ({
 
   const createDealMutation = useMutation({
     mutationFn: async (data: DealFormData) => {
+      console.log('Creating deal with data:', data);
+      console.log('User ID:', user?.id);
+      
       const dealData: any = {
         title: data.title,
         description: data.description,
@@ -91,8 +94,15 @@ export const DealCreateDialog: React.FC<DealCreateDialogProps> = ({
         valid_until: data.valid_until ? new Date(data.valid_until).toISOString() : null,
       };
 
-      const { error } = await supabase.from('deals').insert([dealData]);
-      if (error) throw error;
+      console.log('Prepared deal data:', dealData);
+
+      const { data: result, error } = await supabase.from('deals').insert([dealData]).select();
+      if (error) {
+        console.error('Deal creation error:', error);
+        throw error;
+      }
+      console.log('Deal created successfully:', result);
+      return result;
     },
     onSuccess: () => {
       toast({
@@ -103,6 +113,7 @@ export const DealCreateDialog: React.FC<DealCreateDialogProps> = ({
       onSuccess();
     },
     onError: (error: any) => {
+      console.error('Deal creation mutation error:', error);
       toast({
         title: 'Error',
         description: error.message || 'Failed to create deal',
