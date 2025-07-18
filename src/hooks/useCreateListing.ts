@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { useAIAnalysis } from "./useAIAnalysis";
 
 export type ListingFormData = {
   title: string;
@@ -36,6 +37,7 @@ export const useCreateListing = () => {
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { analyzeListingContent } = useAIAnalysis();
 
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -113,11 +115,29 @@ export const useCreateListing = () => {
         insertData.housing_type = formData.housingType;
       }
 
-      const { error } = await supabase
+      const { data: newListing, error } = await supabase
         .from('listings')
-        .insert(insertData);
+        .insert(insertData)
+        .select()
+        .single();
 
       if (error) throw error;
+
+      // Trigger AI analysis for marketplace listings
+      if (formData.category === 'marketplace' && newListing) {
+        try {
+          await analyzeListingContent(
+            newListing.id,
+            formData.title,
+            formData.description,
+            formData.images,
+            formData.category,
+            parseFloat(formData.price) || 0
+          );
+        } catch (aiError) {
+          console.warn('AI analysis failed but listing was created:', aiError);
+        }
+      }
 
       const actionText = formData.listingType === 'wanted' ? 'request' : 'listing';
       toast.success(`Your ${formData.category} ${actionText} has been posted successfully.`);
