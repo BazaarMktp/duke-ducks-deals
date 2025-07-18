@@ -29,7 +29,7 @@ const MarketplaceHeader = ({ user, activeListingType }: MarketplaceHeaderProps) 
             {activeListingType === 'offer' ? (
               <>
                 <Plus size={16} />
-                Sell Item
+                Create Listing
               </>
             ) : (
               <>
