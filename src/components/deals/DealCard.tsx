@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Calendar, Eye, ExternalLink } from 'lucide-react';
+import { Calendar, Eye, Edit, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 interface Deal {
@@ -16,14 +16,24 @@ interface Deal {
   image_url?: string;
   valid_until?: string;
   created_at: string;
+  is_active: boolean;
 }
 
 interface DealCardProps {
   deal: Deal;
   isAuthenticated: boolean;
+  isAdmin?: boolean;
+  onEdit?: (deal: Deal) => void;
+  onDelete?: (dealId: string) => void;
 }
 
-export const DealCard: React.FC<DealCardProps> = ({ deal, isAuthenticated }) => {
+export const DealCard: React.FC<DealCardProps> = ({ 
+  deal, 
+  isAuthenticated, 
+  isAdmin = false,
+  onEdit,
+  onDelete 
+}) => {
   const navigate = useNavigate();
 
   const formatPrice = (price: number) => {
@@ -119,14 +129,44 @@ export const DealCard: React.FC<DealCardProps> = ({ deal, isAuthenticated }) => 
       </CardContent>
 
       <CardFooter className="pt-0">
-        <Button
-          onClick={() => navigate(`/devils-deals/${deal.id}`)}
-          className="w-full"
-          variant={isAuthenticated ? "default" : "outline"}
-        >
-          <Eye className="w-4 h-4 mr-2" />
-          {isAuthenticated ? "View Details" : "Login to View Details"}
-        </Button>
+        <div className="flex gap-2 w-full">
+          <Button
+            onClick={() => navigate(`/devils-deals/${deal.id}`)}
+            className="flex-1"
+            variant={isAuthenticated ? "default" : "outline"}
+          >
+            <Eye className="w-4 h-4 mr-2" />
+            {isAuthenticated ? "View Details" : "Login to View Details"}
+          </Button>
+          
+          {isAdmin && onEdit && (
+            <Button
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit(deal);
+              }}
+              variant="outline"
+              size="icon"
+              className="shrink-0"
+            >
+              <Edit className="w-4 h-4" />
+            </Button>
+          )}
+          
+          {isAdmin && onDelete && (
+            <Button
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(deal.id);
+              }}
+              variant="outline"
+              size="icon"
+              className="shrink-0 text-destructive hover:text-destructive"
+            >
+              <Trash2 className="w-4 h-4" />
+            </Button>
+          )}
+        </div>
       </CardFooter>
     </Card>
   );
