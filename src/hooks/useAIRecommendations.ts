@@ -32,6 +32,38 @@ export const useAIRecommendations = (listingId: string | undefined) => {
     
     setLoading(true);
     try {
+      // First, check if the listing has embeddings
+      const { data: sourceListingData, error: sourceError } = await supabase
+        .from('listings')
+        .select('embedding, title, description, images, category, price')
+        .eq('id', listingId)
+        .single();
+
+      if (sourceError) throw sourceError;
+
+      // If no embedding, trigger analysis first
+      if (!sourceListingData.embedding) {
+        console.log('No embedding found, triggering AI analysis...');
+        try {
+          await supabase.functions.invoke('analyze-listing-content', {
+            body: {
+              listingId,
+              title: sourceListingData.title,
+              description: sourceListingData.description,
+              images: sourceListingData.images || [],
+              category: sourceListingData.category,
+              price: sourceListingData.price || 0
+            }
+          });
+          
+          // Wait a moment for the analysis to complete
+          await new Promise(resolve => setTimeout(resolve, 2000));
+        } catch (analysisError) {
+          console.error('Failed to analyze listing:', analysisError);
+          // Continue anyway - try to find recommendations based on other criteria
+        }
+      }
+
       const { data, error } = await supabase.functions.invoke('find-similar-listings', {
         body: { listingId, limit: 5 }
       });
