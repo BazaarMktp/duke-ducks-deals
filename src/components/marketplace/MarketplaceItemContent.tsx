@@ -63,16 +63,18 @@ const MarketplaceItemContent = ({
           listingType={product.listing_type}
         />
 
-        <ProductActions
-          user={user}
-          isFavorite={isFavorite}
-          isInCart={isInCart}
-          isOwnProduct={product.user_id === user?.id}
-          onToggleFavorite={onToggleFavorite}
-          onAddToCart={onAddToCart}
-          onStartConversation={onStartConversation}
-          listingType={product.listing_type}
-        />
+        <div className="mb-6">
+          <ProductActions
+            user={user}
+            isFavorite={isFavorite}
+            isInCart={isInCart}
+            isOwnProduct={product.user_id === user?.id}
+            onToggleFavorite={onToggleFavorite}
+            onAddToCart={onAddToCart}
+            onStartConversation={onStartConversation}
+            listingType={product.listing_type}
+          />
+        </div>
 
         <SellerInfo
           profileName={product.profiles.profile_name}
@@ -111,16 +113,18 @@ const MarketplaceItemContent = ({
           listingType={product.listing_type}
         />
 
-        <ProductActions
-          user={user}
-          isFavorite={isFavorite}
-          isInCart={isInCart}
-          isOwnProduct={product.user_id === user?.id}
-          onToggleFavorite={onToggleFavorite}
-          onAddToCart={onAddToCart}
-          onStartConversation={onStartConversation}
-          listingType={product.listing_type}
-        />
+        <div className="mb-6">
+          <ProductActions
+            user={user}
+            isFavorite={isFavorite}
+            isInCart={isInCart}
+            isOwnProduct={product.user_id === user?.id}
+            onToggleFavorite={onToggleFavorite}
+            onAddToCart={onAddToCart}
+            onStartConversation={onStartConversation}
+            listingType={product.listing_type}
+          />
+        </div>
 
         <SellerInfo
           profileName={product.profiles.profile_name}
