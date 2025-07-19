@@ -38,10 +38,13 @@ export const useMessages = (selectedConversation: string | null) => {
         if (error) throw error;
         console.log('Successfully marked messages as read');
         
+        // Update the local messages state to reflect read status
+        setMessages(prev => prev.map(msg => 
+          msg.sender_id !== user.id ? { ...msg, is_read: true } : msg
+        ));
+        
         // Trigger immediate refresh of unread count
-        setTimeout(() => {
-          window.dispatchEvent(new CustomEvent('unread-messages-updated'));
-        }, 100);
+        window.dispatchEvent(new CustomEvent('unread-messages-updated'));
       }
       
     } catch (error) {

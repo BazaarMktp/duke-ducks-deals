@@ -80,11 +80,47 @@ export const useUnreadMessages = () => {
           },
           (payload: any) => {
             console.log('Message change detected:', payload.eventType, 'payload:', payload);
-            // Only refresh count if the message is not from the current user
-            // Handle both INSERT and UPDATE events properly
-            const senderId = payload.new?.sender_id || payload.old?.sender_id;
-            if (payload.eventType === 'UPDATE' || (payload.eventType === 'INSERT' && senderId !== user.id)) {
-              // Add a small delay to ensure the database has been updated
+            
+            // Handle different event types
+            if (payload.eventType === 'INSERT') {
+              // New message - refresh if it's not from the current user
+              const senderId = payload.new?.sender_id;
+              if (senderId !== user.id) {
+                setTimeout(() => {
+                  fetchUnreadCount();
+                }, 200);
+              }
+            } else if (payload.eventType === 'UPDATE') {
+              // Message update (likely read status change) - always refresh
+              // This handles cases where messages are marked as read
+              const oldIsRead = payload.old?.is_read;
+              const newIsRead = payload.new?.is_read;
+              const receiverId = payload.new?.conversation_id;
+              
+              // If a message was marked as read, refresh count
+              if (oldIsRead === false && newIsRead === true) {
+                setTimeout(() => {
+                  fetchUnreadCount();
+                }, 100);
+              }
+            }
+          }
+        )
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'conversations',
+          },
+          (payload: any) => {
+            // Also listen to conversation changes that might affect message counts
+            console.log('Conversation change detected:', payload.eventType);
+            const buyerId = payload.new?.buyer_id || payload.old?.buyer_id;
+            const sellerId = payload.new?.seller_id || payload.old?.seller_id;
+            
+            // If this user is part of the conversation, refresh count
+            if (buyerId === user.id || sellerId === user.id) {
               setTimeout(() => {
                 fetchUnreadCount();
               }, 200);
