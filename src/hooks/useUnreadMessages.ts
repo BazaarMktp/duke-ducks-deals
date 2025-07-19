@@ -12,7 +12,10 @@ export const useUnreadMessages = () => {
   const channelRef = useRef<RealtimeChannel | null>(null);
 
   const fetchUnreadCount = useCallback(async () => {
-    if (!user?.id) return;
+    if (!user?.id) {
+      setUnreadCount(0);
+      return;
+    }
     try {
       const { data, error } = await supabase.rpc('get_unread_message_count', {
         _user_id: user.id,
@@ -22,9 +25,11 @@ export const useUnreadMessages = () => {
         throw error;
       }
       console.log('Fetched unread count:', data);
-      setUnreadCount(data || 0);
+      const count = data || 0;
+      setUnreadCount(count);
     } catch (error) {
       console.error('Error fetching unread message count:', error);
+      setUnreadCount(0); // Reset to 0 on error
       toast({
         title: "Error",
         description: "Could not fetch unread message count.",
@@ -39,13 +44,31 @@ export const useUnreadMessages = () => {
     } else {
       setUnreadCount(0);
     }
-  }, [user?.id, fetchUnreadCount]);
+  }, [user?.id, fetchUnreadCount]); // Need fetchUnreadCount for proper dependency
 
   // Listen for custom event to refresh unread count
   useEffect(() => {
-    const handleUnreadUpdate = () => {
+    const handleUnreadUpdate = async () => {
       console.log('Unread messages update event received');
-      fetchUnreadCount();
+      if (!user?.id) {
+        setUnreadCount(0);
+        return;
+      }
+      try {
+        const { data, error } = await supabase.rpc('get_unread_message_count', {
+          _user_id: user.id,
+        });
+
+        if (error) {
+          throw error;
+        }
+        console.log('Fetched unread count via custom event:', data);
+        const count = data || 0;
+        setUnreadCount(count);
+      } catch (error) {
+        console.error('Error fetching unread message count via custom event:', error);
+        setUnreadCount(0);
+      }
     };
 
     window.addEventListener('unread-messages-updated', handleUnreadUpdate);
@@ -53,7 +76,7 @@ export const useUnreadMessages = () => {
     return () => {
       window.removeEventListener('unread-messages-updated', handleUnreadUpdate);
     };
-  }, [fetchUnreadCount]);
+  }, [user?.id]); // Simplified dependency
 
   useEffect(() => {
     // Always clean up existing channel first
@@ -67,6 +90,24 @@ export const useUnreadMessages = () => {
     }
 
     if (!user?.id) return;
+
+    const fetchCount = async () => {
+      try {
+        const { data, error } = await supabase.rpc('get_unread_message_count', {
+          _user_id: user.id,
+        });
+
+        if (error) {
+          throw error;
+        }
+        console.log('Fetched unread count via realtime:', data);
+        const count = data || 0;
+        setUnreadCount(count);
+      } catch (error) {
+        console.error('Error fetching unread message count via realtime:', error);
+        setUnreadCount(0);
+      }
+    };
 
     try {
       const channel = supabase
@@ -87,7 +128,7 @@ export const useUnreadMessages = () => {
               const senderId = payload.new?.sender_id;
               if (senderId !== user.id) {
                 setTimeout(() => {
-                  fetchUnreadCount();
+                  fetchCount();
                 }, 200);
               }
             } else if (payload.eventType === 'UPDATE') {
@@ -95,12 +136,11 @@ export const useUnreadMessages = () => {
               // This handles cases where messages are marked as read
               const oldIsRead = payload.old?.is_read;
               const newIsRead = payload.new?.is_read;
-              const receiverId = payload.new?.conversation_id;
               
               // If a message was marked as read, refresh count
               if (oldIsRead === false && newIsRead === true) {
                 setTimeout(() => {
-                  fetchUnreadCount();
+                  fetchCount();
                 }, 100);
               }
             }
@@ -122,7 +162,7 @@ export const useUnreadMessages = () => {
             // If this user is part of the conversation, refresh count
             if (buyerId === user.id || sellerId === user.id) {
               setTimeout(() => {
-                fetchUnreadCount();
+                fetchCount();
               }, 200);
             }
           }
@@ -144,7 +184,7 @@ export const useUnreadMessages = () => {
         channelRef.current = null;
       }
     };
-  }, [user?.id, fetchUnreadCount]);
+  }, [user?.id]); // Only depend on user.id
 
   return { unreadCount, fetchUnreadCount };
 };
