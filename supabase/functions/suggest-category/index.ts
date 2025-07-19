@@ -25,9 +25,13 @@ serve(async (req) => {
 
   try {
     const { title, description, images } = await req.json();
+    console.log('Request data:', { title, description, images: images?.length });
+    
     const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
+    console.log('OpenAI API Key available:', !!openAIApiKey);
 
     if (!openAIApiKey) {
+      console.error('OpenAI API key not configured');
       throw new Error('OpenAI API key not configured');
     }
 
@@ -71,7 +75,17 @@ Respond with just the category name from the list above.`;
       }),
     });
 
+    console.log('OpenAI response status:', response.status);
+    
+    if (!response.ok) {
+      const errorData = await response.text();
+      console.error('OpenAI API error:', errorData);
+      throw new Error(`OpenAI API error: ${response.status} - ${errorData}`);
+    }
+
     const data = await response.json();
+    console.log('OpenAI response:', data);
+    
     const suggestedCategory = data.choices[0].message.content.trim().toLowerCase();
 
     // Validate the suggested category

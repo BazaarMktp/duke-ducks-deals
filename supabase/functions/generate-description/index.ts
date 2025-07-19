@@ -13,9 +13,13 @@ serve(async (req) => {
 
   try {
     const { title, category, images } = await req.json();
+    console.log('Request data:', { title, category, images: images?.length });
+    
     const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
+    console.log('OpenAI API Key available:', !!openAIApiKey);
 
     if (!openAIApiKey) {
+      console.error('OpenAI API key not configured');
       throw new Error('OpenAI API key not configured');
     }
 
@@ -54,7 +58,17 @@ serve(async (req) => {
       }),
     });
 
+    console.log('OpenAI response status:', response.status);
+    
+    if (!response.ok) {
+      const errorData = await response.text();
+      console.error('OpenAI API error:', errorData);
+      throw new Error(`OpenAI API error: ${response.status} - ${errorData}`);
+    }
+
     const data = await response.json();
+    console.log('OpenAI response:', data);
+    
     const generatedDescription = data.choices[0].message.content.trim();
 
     return new Response(JSON.stringify({ 
