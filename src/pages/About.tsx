@@ -6,26 +6,32 @@ const About = () => {
   const teamMembers = [
     {
       name: "William Peña",
-      role: "Founder & CEO",
+      role: "Head of Technology",
       bio: "Industrial Engineer with UX/UI design and backend development experience, passionate about creating seamless student experiences.",
       image: "/placeholder.svg"
     },
     {
       name: "Ann Marie",
-      role: "Co-Founder & Strategic Lead", 
+      role: "Head of Outreach and Co-strategy", 
       bio: "Strategic visionary focused on building sustainable growth and fostering campus community connections.",
       image: "/placeholder.svg"
     },
     {
       name: "Sumeet Batra",
-      role: "Product Manager",
+      role: "Head of Product and Project",
       bio: "Product strategist dedicated to understanding student needs and delivering innovative platform solutions.",
       image: "/placeholder.svg"
     },
     {
       name: "Sathvika Gandavarapu",
-      role: "Marketing Lead",
+      role: "Head of Marketing and Co-strategy",
       bio: "Marketing specialist building brand awareness and connecting with student communities across campuses.",
+      image: "/placeholder.svg"
+    },
+    {
+      name: "Namisha Metha",
+      role: "Head of Product Design UX/UI",
+      bio: "Design expert focused on creating intuitive and beautiful user experiences that enhance student engagement and platform usability.",
       image: "/placeholder.svg"
     }
   ];
