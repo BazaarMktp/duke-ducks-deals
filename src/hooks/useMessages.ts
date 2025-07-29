@@ -16,35 +16,29 @@ export const useMessages = (selectedConversation: string | null) => {
     try {
       console.log('Marking messages as read for conversation:', conversationId, 'user:', user.id);
       
-      // First check if there are any unread messages from others
-      const { data: unreadMessages, error: checkError } = await supabase
+      // Update all unread messages from others in this conversation
+      const { data: updatedMessages, error } = await supabase
         .from('messages')
-        .select('id, sender_id, is_read')
+        .update({ is_read: true })
         .eq('conversation_id', conversationId)
         .neq('sender_id', user.id)
-        .eq('is_read', false);
+        .eq('is_read', false)
+        .select('id');
       
-      if (checkError) throw checkError;
-      console.log('Unread messages found:', unreadMessages?.length || 0);
+      if (error) throw error;
       
-      if (unreadMessages && unreadMessages.length > 0) {
-        const { error } = await supabase
-          .from('messages')
-          .update({ is_read: true })
-          .eq('conversation_id', conversationId)
-          .neq('sender_id', user.id)
-          .eq('is_read', false);
-        
-        if (error) throw error;
-        console.log('Successfully marked messages as read');
+      if (updatedMessages && updatedMessages.length > 0) {
+        console.log('Successfully marked', updatedMessages.length, 'messages as read');
         
         // Update the local messages state to reflect read status
         setMessages(prev => prev.map(msg => 
           msg.sender_id !== user.id ? { ...msg, is_read: true } : msg
         ));
         
-        // Trigger immediate refresh of unread count
-        window.dispatchEvent(new CustomEvent('unread-messages-updated'));
+        // Trigger immediate refresh of unread count with a small delay to ensure DB consistency
+        setTimeout(() => {
+          window.dispatchEvent(new CustomEvent('unread-messages-updated'));
+        }, 100);
       }
       
     } catch (error) {
