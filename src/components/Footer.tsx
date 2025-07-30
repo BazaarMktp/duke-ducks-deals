@@ -3,7 +3,7 @@ import { Input } from "./ui/input";
 
 export default function Footer() {
   return (
-    <section className="py-20 bg-gradient-to-r from-primary to-brand-blue">
+    <section className="py-20 bg-gradient-to-r from-brand-orange to-primary">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h2 className="text-4xl font-bold text-white mb-4">
           Your campus marketplace<br />awaits
@@ -20,7 +20,7 @@ export default function Footer() {
               placeholder="Your school email"
               className="bg-white border-0 h-12 flex-1"
             />
-            <Button className="bg-white text-primary hover:bg-gray-100 h-12 px-8 font-semibold whitespace-nowrap shadow-lg">
+            <Button className="bg-white text-brand-orange hover:bg-gray-100 h-12 px-8 font-semibold whitespace-nowrap shadow-lg">
               Get started →
             </Button>
           </div>

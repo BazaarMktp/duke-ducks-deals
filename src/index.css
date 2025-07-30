@@ -15,8 +15,8 @@
     --popover: 0 0% 100%;
     --popover-foreground: 210 11% 15%;
 
-    /* Bazaar brand colors - Blue theme */
-    --primary: 217 91% 60%; /* Blue primary color */
+    /* Bazaar brand colors from Figma */
+    --primary: 18 87% 62%; /* Orange-red from buttons */
     --primary-foreground: 0 0% 100%;
 
     --secondary: 220 13% 91%;
@@ -33,11 +33,11 @@
 
     --border: 220 13% 91%;
     --input: 220 13% 91%;
-    --ring: 217 91% 60%;
+    --ring: 18 87% 62%;
 
     /* Brand specific colors */
     --brand-orange: 18 87% 62%;
-    --brand-blue: 217 91% 60%; /* Main brand blue */
+    --brand-blue: 217 33% 17%;
     --hot-deal: 11 100% 50%; /* For hot deal badges */
     --success: 142 76% 36%;
     --warning: 38 92% 50%;

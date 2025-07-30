@@ -25,7 +25,7 @@ export const TestimonialsSection = () => {
             "This is a game changer"
           </p>
           <cite className="text-sm text-muted-foreground">
-            — Jessica K., Stanford University
+            — Jessica K., Duke University
           </cite>
         </div>
       </div>
