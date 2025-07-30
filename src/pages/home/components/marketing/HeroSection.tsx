@@ -10,61 +10,172 @@ export const HeroSection = () => {
       {/* Background elements */}
       <div className="absolute inset-0 bg-gradient-to-br from-accent via-background to-muted" />
       
-      {/* Left side testimonial - exact position from screenshot */}
-      <div className="hidden lg:block absolute top-48 left-8 z-10">
-        <div className="bg-card rounded-lg p-4 max-w-xs shadow-lg border border-border">
-          <blockquote className="text-sm text-foreground italic mb-2">
-            "Saved $500 on textbooks this semester!"
-          </blockquote>
-          <cite className="text-xs text-muted-foreground">— Sarah M.</cite>
+      {/* Background mock listings - behind text */}
+      <div className="hidden lg:block absolute inset-0 z-0 pointer-events-none">
+        {/* Top left listing */}
+        <div className="absolute top-20 left-16 animate-pulse opacity-70">
+          <div className="bg-card rounded-xl shadow-lg p-4 w-48 border border-border">
+            <img 
+              src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=200&h=120&fit=crop&crop=center" 
+              alt="MacBook Pro" 
+              className="w-full h-28 object-cover rounded-lg mb-3"
+            />
+            <Badge className="bg-hot-deal text-white text-xs mb-2 rounded-full px-2 py-1">Hot deal</Badge>
+            <h3 className="font-semibold text-sm text-foreground mb-1">MacBook Pro</h3>
+            <p className="text-lg font-bold text-foreground">$899</p>
+          </div>
         </div>
-      </div>
 
-      {/* JBL Speaker card - left side, below testimonial */}
-      <div className="hidden lg:block absolute top-80 left-8 animate-pulse z-10">
-        <div className="bg-card rounded-xl shadow-lg p-4 w-52 border border-border">
-          <img 
-            src="https://images.unsplash.com/photo-1587037805535-5604dc617685?w=200&h=120&fit=crop&crop=center" 
-            alt="JBL Speaker" 
-            className="w-full h-32 object-cover rounded-lg mb-3"
-          />
-          <Badge className="bg-hot-deal text-white text-xs mb-2 rounded-full px-2 py-1">Hot deal</Badge>
-          <h3 className="font-semibold text-sm text-foreground mb-1">JBL Speaker</h3>
-          <p className="text-lg font-bold text-foreground">$65</p>
+        {/* Top right listing */}
+        <div className="absolute top-32 right-20 animate-pulse delay-500 opacity-70">
+          <div className="bg-card rounded-xl shadow-lg p-4 w-48 border border-border">
+            <img 
+              src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=200&h=120&fit=crop&crop=center" 
+              alt="Textbooks" 
+              className="w-full h-28 object-cover rounded-lg mb-3"
+            />
+            <h3 className="font-semibold text-sm text-foreground mb-1">Biology Textbook</h3>
+            <p className="text-lg font-bold text-foreground">$45</p>
+          </div>
         </div>
-      </div>
-      
-      {/* Coffee Machine card - right side, top */}
-      <div className="hidden lg:block absolute top-40 right-8 animate-pulse delay-1000 z-10">
-        <div className="bg-card rounded-xl shadow-lg p-4 w-52 border border-border">
-          <img 
-            src="https://images.unsplash.com/photo-1576175219775-c39bWxqyV10?w=200&h=120&fit=crop&crop=center" 
-            alt="Coffee Machine" 
-            className="w-full h-32 object-cover rounded-lg mb-3"
-          />
-          <Badge className="bg-hot-deal text-white text-xs mb-2 rounded-full px-2 py-1">Hot deal</Badge>
-          <h3 className="font-semibold text-sm text-foreground mb-1">Coffee Machine</h3>
-          <p className="text-lg font-bold text-foreground">$45</p>
-        </div>
-      </div>
 
-      {/* Bottom left stats card */}
-      <div className="hidden lg:block absolute bottom-32 left-8 z-10">
-        <div className="bg-card rounded-lg p-4 shadow-lg border border-border">
-          <div className="text-center">
-            <div className="text-2xl font-bold text-foreground">150+</div>
-            <div className="text-sm text-muted-foreground">Happy Students</div>
+        {/* Center left listing */}
+        <div className="absolute top-64 left-8 animate-pulse delay-1000 opacity-60">
+          <div className="bg-card rounded-xl shadow-lg p-4 w-48 border border-border">
+            <img 
+              src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=200&h=120&fit=crop&crop=center" 
+              alt="Coffee Mug" 
+              className="w-full h-28 object-cover rounded-lg mb-3"
+            />
+            <h3 className="font-semibold text-sm text-foreground mb-1">Coffee Mug Set</h3>
+            <p className="text-lg font-bold text-foreground">$15</p>
+          </div>
+        </div>
+
+        {/* Center right listing */}
+        <div className="absolute top-56 right-12 animate-pulse delay-700 opacity-60">
+          <div className="bg-card rounded-xl shadow-lg p-4 w-48 border border-border">
+            <img 
+              src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=200&h=120&fit=crop&crop=center" 
+              alt="Desk Lamp" 
+              className="w-full h-28 object-cover rounded-lg mb-3"
+            />
+            <h3 className="font-semibold text-sm text-foreground mb-1">Desk Lamp</h3>
+            <p className="text-lg font-bold text-foreground">$25</p>
+          </div>
+        </div>
+
+        {/* Bottom left listing */}
+        <div className="absolute bottom-40 left-20 animate-pulse delay-300 opacity-70">
+          <div className="bg-card rounded-xl shadow-lg p-4 w-48 border border-border">
+            <img 
+              src="https://images.unsplash.com/photo-1583394838336-acd977736f90?w=200&h=120&fit=crop&crop=center" 
+              alt="Sneakers" 
+              className="w-full h-28 object-cover rounded-lg mb-3"
+            />
+            <Badge className="bg-success text-white text-xs mb-2 rounded-full px-2 py-1">Great deal</Badge>
+            <h3 className="font-semibold text-sm text-foreground mb-1">Nike Sneakers</h3>
+            <p className="text-lg font-bold text-foreground">$75</p>
+          </div>
+        </div>
+
+        {/* Bottom right listing */}
+        <div className="absolute bottom-52 right-16 animate-pulse delay-800 opacity-60">
+          <div className="bg-card rounded-xl shadow-lg p-4 w-48 border border-border">
+            <img 
+              src="https://images.unsplash.com/photo-1721322800607-80022131f5a1?w=200&h=120&fit=crop&crop=center" 
+              alt="Mini Fridge" 
+              className="w-full h-28 object-cover rounded-lg mb-3"
+            />
+            <h3 className="font-semibold text-sm text-foreground mb-1">Mini Fridge</h3>
+            <p className="text-lg font-bold text-foreground">$120</p>
+          </div>
+        </div>
+
+        {/* Additional scattered listings */}
+        <div className="absolute top-80 left-60 animate-pulse delay-1200 opacity-50">
+          <div className="bg-card rounded-xl shadow-lg p-4 w-44 border border-border">
+            <img 
+              src="https://images.unsplash.com/photo-1588200908342-23b585c03e26?w=200&h=120&fit=crop&crop=center" 
+              alt="Plant" 
+              className="w-full h-24 object-cover rounded-lg mb-2"
+            />
+            <h3 className="font-semibold text-xs text-foreground mb-1">Dorm Plant</h3>
+            <p className="text-sm font-bold text-foreground">$8</p>
+          </div>
+        </div>
+
+        <div className="absolute top-96 right-40 animate-pulse delay-1500 opacity-50">
+          <div className="bg-card rounded-xl shadow-lg p-4 w-44 border border-border">
+            <img 
+              src="https://images.unsplash.com/photo-1587037805535-5604dc617685?w=200&h=120&fit=crop&crop=center" 
+              alt="Bluetooth Speaker" 
+              className="w-full h-24 object-cover rounded-lg mb-2"
+            />
+            <h3 className="font-semibold text-xs text-foreground mb-1">JBL Speaker</h3>
+            <p className="text-sm font-bold text-foreground">$65</p>
           </div>
         </div>
       </div>
 
-      {/* Right side testimonial - bottom */}
-      <div className="hidden lg:block absolute bottom-32 right-8 z-10">
-        <div className="bg-card rounded-lg p-4 max-w-xs shadow-lg border border-border">
-          <blockquote className="text-sm text-foreground italic mb-2">
-            "Everything I need for campus life in one place"
-          </blockquote>
-          <cite className="text-xs text-muted-foreground">— Alex K.</cite>
+      {/* Foreground featured items - more prominent */}
+      <div className="hidden lg:block absolute inset-0 z-5">
+        {/* Left side testimonial */}
+        <div className="absolute top-48 left-8">
+          <div className="bg-card/95 backdrop-blur-sm rounded-lg p-4 max-w-xs shadow-xl border border-border">
+            <blockquote className="text-sm text-foreground italic mb-2">
+              "Saved $500 on textbooks this semester!"
+            </blockquote>
+            <cite className="text-xs text-muted-foreground">— Sarah M.</cite>
+          </div>
+        </div>
+
+        {/* Featured JBL Speaker card */}
+        <div className="absolute top-80 left-8 animate-pulse">
+          <div className="bg-card rounded-xl shadow-xl p-4 w-52 border border-border ring-2 ring-primary/20">
+            <img 
+              src="https://images.unsplash.com/photo-1587037805535-5604dc617685?w=200&h=120&fit=crop&crop=center" 
+              alt="JBL Speaker" 
+              className="w-full h-32 object-cover rounded-lg mb-3"
+            />
+            <Badge className="bg-hot-deal text-white text-xs mb-2 rounded-full px-2 py-1">Hot deal</Badge>
+            <h3 className="font-semibold text-sm text-foreground mb-1">JBL Speaker</h3>
+            <p className="text-lg font-bold text-foreground">$65</p>
+          </div>
+        </div>
+        
+        {/* Featured Coffee Machine card */}
+        <div className="absolute top-40 right-8 animate-pulse delay-1000">
+          <div className="bg-card rounded-xl shadow-xl p-4 w-52 border border-border ring-2 ring-primary/20">
+            <img 
+              src="https://images.unsplash.com/photo-1576175219775-c39bWxqyV10?w=200&h=120&fit=crop&crop=center" 
+              alt="Coffee Machine" 
+              className="w-full h-32 object-cover rounded-lg mb-3"
+            />
+            <Badge className="bg-hot-deal text-white text-xs mb-2 rounded-full px-2 py-1">Hot deal</Badge>
+            <h3 className="font-semibold text-sm text-foreground mb-1">Coffee Machine</h3>
+            <p className="text-lg font-bold text-foreground">$45</p>
+          </div>
+        </div>
+
+        {/* Bottom stats card */}
+        <div className="absolute bottom-32 left-8">
+          <div className="bg-card/95 backdrop-blur-sm rounded-lg p-4 shadow-xl border border-border">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-foreground">150+</div>
+              <div className="text-sm text-muted-foreground">Happy Students</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Right side testimonial */}
+        <div className="absolute bottom-32 right-8">
+          <div className="bg-card/95 backdrop-blur-sm rounded-lg p-4 max-w-xs shadow-xl border border-border">
+            <blockquote className="text-sm text-foreground italic mb-2">
+              "Everything I need for campus life in one place"
+            </blockquote>
+            <cite className="text-xs text-muted-foreground">— Alex K.</cite>
+          </div>
         </div>
       </div>
 
