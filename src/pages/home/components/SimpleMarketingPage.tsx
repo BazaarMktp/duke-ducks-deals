@@ -9,7 +9,7 @@ import { FeaturesSection } from "./marketing/FeaturesSection";
 import { TestimonialsSection } from "./marketing/TestimonialsSection";
 import { CTASection } from "./marketing/CTASection";
 import { AnimatedSection } from "@/components/AnimatedSection";
-import Footer from "@/components/Footer";
+
 
 interface SimpleMarketingPageProps {
   stats: Stats;
@@ -69,7 +69,6 @@ export const SimpleMarketingPage = ({ stats }: SimpleMarketingPageProps) => {
       <AnimatedSection direction="up" delay={0.1}>
         <CTASection />
       </AnimatedSection>
-      <Footer />
     </div>
   );
 };
