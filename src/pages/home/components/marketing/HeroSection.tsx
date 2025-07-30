@@ -11,7 +11,7 @@ export const HeroSection = () => {
       <div className="absolute inset-0 bg-gradient-to-br from-accent via-background to-muted" />
       
       {/* Left side testimonial - exact position from screenshot */}
-      <div className="hidden xl:block absolute top-48 left-8">
+      <div className="hidden lg:block absolute top-48 left-8 z-10">
         <div className="bg-card rounded-lg p-4 max-w-xs shadow-lg border border-border">
           <blockquote className="text-sm text-foreground italic mb-2">
             "Saved $500 on textbooks this semester!"
@@ -21,7 +21,7 @@ export const HeroSection = () => {
       </div>
 
       {/* JBL Speaker card - left side, below testimonial */}
-      <div className="hidden xl:block absolute top-80 left-8 animate-pulse">
+      <div className="hidden lg:block absolute top-80 left-8 animate-pulse z-10">
         <div className="bg-card rounded-xl shadow-lg p-4 w-52 border border-border">
           <img 
             src="https://images.unsplash.com/photo-1587037805535-5604dc617685?w=200&h=120&fit=crop&crop=center" 
@@ -35,7 +35,7 @@ export const HeroSection = () => {
       </div>
       
       {/* Coffee Machine card - right side, top */}
-      <div className="hidden xl:block absolute top-40 right-8 animate-pulse delay-1000">
+      <div className="hidden lg:block absolute top-40 right-8 animate-pulse delay-1000 z-10">
         <div className="bg-card rounded-xl shadow-lg p-4 w-52 border border-border">
           <img 
             src="https://images.unsplash.com/photo-1576175219775-c39bWxqyV10?w=200&h=120&fit=crop&crop=center" 
@@ -49,7 +49,7 @@ export const HeroSection = () => {
       </div>
 
       {/* Bottom left stats card */}
-      <div className="hidden xl:block absolute bottom-32 left-8">
+      <div className="hidden lg:block absolute bottom-32 left-8 z-10">
         <div className="bg-card rounded-lg p-4 shadow-lg border border-border">
           <div className="text-center">
             <div className="text-2xl font-bold text-foreground">150+</div>
@@ -59,7 +59,7 @@ export const HeroSection = () => {
       </div>
 
       {/* Right side testimonial - bottom */}
-      <div className="hidden xl:block absolute bottom-32 right-8">
+      <div className="hidden lg:block absolute bottom-32 right-8 z-10">
         <div className="bg-card rounded-lg p-4 max-w-xs shadow-lg border border-border">
           <blockquote className="text-sm text-foreground italic mb-2">
             "Everything I need for campus life in one place"
@@ -80,7 +80,7 @@ export const HeroSection = () => {
 
         {/* Logo */}
         <div className="mb-8">
-          <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold text-brand-blue mb-4 leading-tight">
+          <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold text-foreground mb-4 leading-tight">
             Buy and Sell <br />
             <span className="text-primary">Anything</span> <br />
             on Campus
