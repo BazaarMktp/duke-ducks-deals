@@ -52,6 +52,14 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				// Bazaar brand colors
+				brand: {
+					orange: 'hsl(var(--brand-orange))',
+					blue: 'hsl(var(--brand-blue))',
+				},
+				'hot-deal': 'hsl(var(--hot-deal))',
+				success: 'hsl(var(--success))',
+				warning: 'hsl(var(--warning))',
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',

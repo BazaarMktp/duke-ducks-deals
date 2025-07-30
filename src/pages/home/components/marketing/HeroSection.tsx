@@ -1,38 +1,84 @@
 
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 
 export const HeroSection = () => {
   return (
-    <section className="relative bg-blue-600 text-white py-20">
-      <div 
-        className="absolute inset-0 bg-cover bg-center opacity-20"
-        style={{
-          backgroundImage: `url('/lovable-uploads/b78b0861-a175-4fd0-835e-08d13103ea11.png')`
-        }}
-      />
+    <section className="min-h-screen bg-background relative overflow-hidden">
+      {/* Background elements */}
+      <div className="absolute inset-0 bg-gradient-to-br from-accent via-background to-muted" />
       
-      <div className="relative container mx-auto px-4 text-center">
-        <h1 className="text-4xl md:text-6xl font-bold mb-6">
-          Welcome to <span className="text-yellow-300">Bazaar</span>
-        </h1>
-        <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
-          Your campus marketplace for buying and selling. 
-          Connect with fellow students and make campus life easier.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link to="/marketplace">
-            <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100">
-              <ShoppingCart size={20} className="mr-2" />
-              Browse Marketplace
+      {/* Product cards floating around */}
+      <div className="absolute top-20 left-10 animate-pulse">
+        <div className="bg-card rounded-lg shadow-lg p-4 w-48">
+          <div className="bg-muted rounded-md h-32 mb-3" />
+          <Badge className="bg-hot-deal text-white text-xs mb-2">Hot deal</Badge>
+          <h3 className="font-semibold text-sm">JBL Speaker</h3>
+          <p className="text-lg font-bold">$65</p>
+        </div>
+      </div>
+      
+      <div className="absolute top-32 right-16 animate-pulse delay-1000">
+        <div className="bg-card rounded-lg shadow-lg p-4 w-48">
+          <div className="bg-muted rounded-md h-32 mb-3" />
+          <Badge className="bg-hot-deal text-white text-xs mb-2">Hot deal</Badge>
+          <h3 className="font-semibold text-sm">Coffee Machine</h3>
+          <p className="text-lg font-bold">$45</p>
+        </div>
+      </div>
+
+      {/* Main content */}
+      <div className="relative container mx-auto px-4 pt-20 pb-16 text-center">
+        {/* Testimonial */}
+        <div className="mb-12">
+          <blockquote className="text-muted-foreground italic mb-2">
+            "Saved $500 on textbooks this semester!"
+          </blockquote>
+          <cite className="text-sm text-muted-foreground">— Sarah M.</cite>
+        </div>
+
+        {/* Logo */}
+        <div className="mb-8">
+          <h1 className="text-5xl md:text-7xl font-bold text-brand-blue mb-4">
+            Buy and Sell <br />
+            <span className="text-primary">Anything</span> <br />
+            on Campus
+          </h1>
+        </div>
+
+        {/* Email signup */}
+        <div className="max-w-md mx-auto mb-8">
+          <div className="flex gap-2">
+            <Input 
+              type="email" 
+              placeholder="Email address *" 
+              className="flex-1"
+            />
+            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground px-8">
+              Get started
             </Button>
-          </Link>
-          <Link to="/auth">
-            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-700 bg-transparent">
-              Join Bazaar
-            </Button>
-          </Link>
+          </div>
+          <p className="text-xs text-muted-foreground mt-3 leading-relaxed">
+            By entering my email and clicking "get started", I agree to receive updates from Bazaar about student deals, new products, and campus delivery. Message frequency varies. Reply STOP to unsubscribe. Terms and privacy policy.
+          </p>
+        </div>
+
+        {/* Stats */}
+        <div className="flex flex-wrap justify-center gap-8 text-sm">
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">⭐</span>
+            <span>4.9/5 Student Rating</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">👥</span>
+            <span>150+ Students</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">🚚</span>
+            <span>Same day delivery and pick up</span>
+          </div>
         </div>
       </div>
     </section>
