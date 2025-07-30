@@ -11,7 +11,7 @@ const floatingCards = [
   {
     text: "Coffee Machine",
     price: "$45",
-    image: "https://images.unsplash.com/photo-1576175219775-c39bWxqyV10?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixlib=rb-4.1.0&q=80&w=1080",
+    image: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixlib=rb-4.1.0&q=80&w=300",
     position: "top-32 right-16",
     rotation: "rotate-2"
   },

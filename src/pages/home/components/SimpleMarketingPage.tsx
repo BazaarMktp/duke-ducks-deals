@@ -8,6 +8,8 @@ import { CategoriesSection } from "./marketing/CategoriesSection";
 import { FeaturesSection } from "./marketing/FeaturesSection";
 import { TestimonialsSection } from "./marketing/TestimonialsSection";
 import { CTASection } from "./marketing/CTASection";
+import { AnimatedSection } from "@/components/AnimatedSection";
+import Footer from "@/components/Footer";
 
 interface SimpleMarketingPageProps {
   stats: Stats;
@@ -52,11 +54,22 @@ export const SimpleMarketingPage = ({ stats }: SimpleMarketingPageProps) => {
   return (
     <div className="min-h-screen bg-background">
       <HeroSection />
-      <HowItWorksSection />
-      <CategoriesSection />
-      <FeaturesSection />
-      <TestimonialsSection />
-      <CTASection />
+      <AnimatedSection direction="up" delay={0.1}>
+        <HowItWorksSection />
+      </AnimatedSection>
+      <AnimatedSection direction="up" delay={0.2}>
+        <CategoriesSection />
+      </AnimatedSection>
+      <AnimatedSection direction="left" delay={0.1}>
+        <FeaturesSection />
+      </AnimatedSection>
+      <AnimatedSection direction="right" delay={0.2}>
+        <TestimonialsSection />
+      </AnimatedSection>
+      <AnimatedSection direction="up" delay={0.1}>
+        <CTASection />
+      </AnimatedSection>
+      <Footer />
     </div>
   );
 };
