@@ -10,8 +10,18 @@ export const HeroSection = () => {
       {/* Background elements */}
       <div className="absolute inset-0 bg-gradient-to-br from-accent via-background to-muted" />
       
-      {/* Product cards floating around - hidden on mobile */}
-      <div className="hidden lg:block absolute top-20 left-10 animate-pulse">
+      {/* Left side testimonial - exact position from screenshot */}
+      <div className="hidden xl:block absolute top-48 left-8">
+        <div className="bg-card rounded-lg p-4 max-w-xs shadow-lg border border-border">
+          <blockquote className="text-sm text-foreground italic mb-2">
+            "Saved $500 on textbooks this semester!"
+          </blockquote>
+          <cite className="text-xs text-muted-foreground">— Sarah M.</cite>
+        </div>
+      </div>
+
+      {/* JBL Speaker card - left side, below testimonial */}
+      <div className="hidden xl:block absolute top-80 left-8 animate-pulse">
         <div className="bg-card rounded-xl shadow-lg p-4 w-52 border border-border">
           <img 
             src="https://images.unsplash.com/photo-1587037805535-5604dc617685?w=200&h=120&fit=crop&crop=center" 
@@ -24,10 +34,11 @@ export const HeroSection = () => {
         </div>
       </div>
       
-      <div className="hidden lg:block absolute top-32 right-16 animate-pulse delay-1000">
+      {/* Coffee Machine card - right side, top */}
+      <div className="hidden xl:block absolute top-40 right-8 animate-pulse delay-1000">
         <div className="bg-card rounded-xl shadow-lg p-4 w-52 border border-border">
           <img 
-            src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=200&h=120&fit=crop&crop=center" 
+            src="https://images.unsplash.com/photo-1576175219775-c39bWxqyV10?w=200&h=120&fit=crop&crop=center" 
             alt="Coffee Machine" 
             className="w-full h-32 object-cover rounded-lg mb-3"
           />
@@ -37,19 +48,9 @@ export const HeroSection = () => {
         </div>
       </div>
 
-      {/* Testimonial on left side - hidden on mobile */}
-      <div className="hidden lg:block absolute top-48 left-16">
-        <div className="bg-card/90 backdrop-blur-sm rounded-lg p-4 max-w-xs shadow-lg border border-border">
-          <blockquote className="text-sm text-foreground italic mb-2">
-            "Saved $500 on textbooks this semester!"
-          </blockquote>
-          <cite className="text-xs text-muted-foreground">— Sarah M.</cite>
-        </div>
-      </div>
-
-      {/* Stats floating card - hidden on mobile */}
-      <div className="hidden lg:block absolute bottom-32 left-12">
-        <div className="bg-card/90 backdrop-blur-sm rounded-lg p-4 shadow-lg border border-border">
+      {/* Bottom left stats card */}
+      <div className="hidden xl:block absolute bottom-32 left-8">
+        <div className="bg-card rounded-lg p-4 shadow-lg border border-border">
           <div className="text-center">
             <div className="text-2xl font-bold text-foreground">150+</div>
             <div className="text-sm text-muted-foreground">Happy Students</div>
@@ -57,9 +58,9 @@ export const HeroSection = () => {
         </div>
       </div>
 
-      {/* Another testimonial on right side - hidden on mobile */}
-      <div className="hidden lg:block absolute bottom-48 right-12">
-        <div className="bg-card/90 backdrop-blur-sm rounded-lg p-4 max-w-xs shadow-lg border border-border">
+      {/* Right side testimonial - bottom */}
+      <div className="hidden xl:block absolute bottom-32 right-8">
+        <div className="bg-card rounded-lg p-4 max-w-xs shadow-lg border border-border">
           <blockquote className="text-sm text-foreground italic mb-2">
             "Everything I need for campus life in one place"
           </blockquote>
