@@ -1,4 +1,4 @@
-import { BookOpen, Laptop, Home, Coffee } from "lucide-react";
+import { BookOpen, Laptop, Home, Tag } from "lucide-react";
 
 export const CategoriesSection = () => {
   const categories = [
@@ -21,10 +21,10 @@ export const CategoriesSection = () => {
       image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=300&h=200&fit=crop"
     },
     {
-      icon: Coffee,
-      title: "Food & Snacks",
-      description: "Grab snacks, meal prep, and campus dining deals",
-      image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=300&h=200&fit=crop"
+      icon: Tag,
+      title: "Devils Deals",
+      description: "Exclusive student discounts and coupons from local businesses",
+      image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=300&h=200&fit=crop"
     }
   ];
 
