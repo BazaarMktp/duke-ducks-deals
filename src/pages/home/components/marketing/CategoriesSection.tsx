@@ -18,7 +18,7 @@ export const CategoriesSection = () => {
       icon: Home,
       title: "Dorm Essentials",
       description: "Furniture, decor, and everything you need for your room",
-      image: "https://images.unsplash.com/photo-1721322800607-80022131f5a1?w=300&h=200&fit=crop"
+      image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=300&h=200&fit=crop"
     },
     {
       icon: Coffee,
