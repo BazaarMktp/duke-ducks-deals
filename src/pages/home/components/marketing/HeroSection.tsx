@@ -16,9 +16,9 @@ const floatingCards = [
     rotation: "rotate-2"
   },
   {
-    text: "JBL Speaker",
-    price: "$65",
-    image: "https://images.unsplash.com/photo-1587037805535-5604dc617685?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxKQkwlMjBibHVldG9vdGglMjBzcGVha2VyJTIwc3R1ZGVudCUyMGRvcm18ZW58MXx8fHwxNzUzODk5MjcyfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+    text: "Dorm Essentials",
+    price: "$25",
+    image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixlib=rb-4.1.0&q=80&w=300",
     position: "top-40 left-32",
     rotation: "rotate-1"
   },
