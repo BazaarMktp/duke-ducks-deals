@@ -3,9 +3,10 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Stats } from "../types";
 import { HeroSection } from "./marketing/HeroSection";
-import { FeaturedProductsSection } from "./marketing/FeaturedProductsSection";
-import { StatsSection } from "./marketing/StatsSection";
+import { HowItWorksSection } from "./marketing/HowItWorksSection";
+import { CategoriesSection } from "./marketing/CategoriesSection";
 import { FeaturesSection } from "./marketing/FeaturesSection";
+import { TestimonialsSection } from "./marketing/TestimonialsSection";
 import { CTASection } from "./marketing/CTASection";
 
 interface SimpleMarketingPageProps {
@@ -49,11 +50,12 @@ export const SimpleMarketingPage = ({ stats }: SimpleMarketingPageProps) => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       <HeroSection />
-      <FeaturedProductsSection featuredProducts={featuredProducts} />
-      <StatsSection stats={stats} />
+      <HowItWorksSection />
+      <CategoriesSection />
       <FeaturesSection />
+      <TestimonialsSection />
       <CTASection />
     </div>
   );
