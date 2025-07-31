@@ -93,19 +93,21 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
         </Select>
       </div>
 
-      <div>
+      <div className="flex flex-col">
         <div className="mb-2">
           <Label htmlFor="listingType">Type of Listing</Label>
         </div>
-        <Select value={listingType} onValueChange={onListingTypeChange}>
-          <SelectTrigger>
-            <SelectValue placeholder="Select type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="offer">Offering</SelectItem>
-            <SelectItem value="wanted">Looking For</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="flex-1 flex flex-col justify-end">
+          <Select value={listingType} onValueChange={onListingTypeChange}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="offer">Offering</SelectItem>
+              <SelectItem value="wanted">Looking For</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
     </div>
   );
