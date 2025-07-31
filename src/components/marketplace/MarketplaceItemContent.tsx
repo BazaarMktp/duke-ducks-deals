@@ -16,6 +16,7 @@ interface Product {
   allow_pickup?: boolean;
   allow_meet_on_campus?: boolean;
   listing_type?: string;
+  open_to_negotiation?: boolean;
   profiles: {
     profile_name: string;
     email: string;
@@ -61,6 +62,7 @@ const MarketplaceItemContent = ({
           allowPickup={product.allow_pickup}
           allowMeetOnCampus={product.allow_meet_on_campus}
           listingType={product.listing_type}
+          openToNegotiation={product.open_to_negotiation}
         />
 
         <div className="mb-6">
@@ -111,6 +113,7 @@ const MarketplaceItemContent = ({
           allowPickup={product.allow_pickup}
           allowMeetOnCampus={product.allow_meet_on_campus}
           listingType={product.listing_type}
+          openToNegotiation={product.open_to_negotiation}
         />
 
         <div className="mb-6">

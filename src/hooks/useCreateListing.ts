@@ -19,6 +19,7 @@ export type ListingFormData = {
   allowPickup: boolean;
   allowMeetOnCampus: boolean;
   allowDropOff: boolean;
+  openToNegotiation: boolean;
 };
 
 export const useCreateListing = () => {
@@ -34,6 +35,7 @@ export const useCreateListing = () => {
     allowPickup: false,
     allowMeetOnCampus: false,
     allowDropOff: false,
+    openToNegotiation: false,
   });
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
@@ -109,6 +111,7 @@ export const useCreateListing = () => {
         images: formData.images.length > 0 ? formData.images : null,
         moderation_status: moderationStatus,
         moderation_flags: moderationResult.flags || [],
+        open_to_negotiation: formData.openToNegotiation,
       };
 
       // Add transaction methods for marketplace items

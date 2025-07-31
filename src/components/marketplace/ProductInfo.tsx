@@ -1,6 +1,6 @@
 
 import { Badge } from "@/components/ui/badge";
-import { Package, Users, MapPin, Search } from "lucide-react";
+import { Package, Users, MapPin, Search, HandCoins } from "lucide-react";
 
 interface ProductInfoProps {
   title: string;
@@ -10,6 +10,7 @@ interface ProductInfoProps {
   allowMeetOnCampus?: boolean;
   location?: string;
   listingType?: string;
+  openToNegotiation?: boolean;
 }
 
 const ProductInfo = ({ 
@@ -19,7 +20,8 @@ const ProductInfo = ({
   allowPickup, 
   allowMeetOnCampus,
   location,
-  listingType = 'offer'
+  listingType = 'offer',
+  openToNegotiation = false
 }: ProductInfoProps) => {
   const getTransactionMethods = () => {
     const methods = [];
@@ -44,12 +46,20 @@ const ProductInfo = ({
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
           {listingType === 'wanted' ? `Looking for: ${title}` : title}
         </h1>
-        <p className="text-2xl font-bold text-green-600">
-          {listingType === 'wanted' 
-            ? (price ? `Budget: $${price}` : 'Budget: Negotiable')
-            : (price ? `$${price}` : 'Free')
-          }
-        </p>
+        <div className="flex items-center gap-3">
+          <p className="text-2xl font-bold text-green-600">
+            {listingType === 'wanted' 
+              ? (price ? `Budget: $${price}` : 'Budget: Negotiable')
+              : (price ? `$${price}` : 'Free')
+            }
+          </p>
+          {listingType === 'offer' && openToNegotiation && (
+            <Badge variant="outline" className="text-orange-600 border-orange-300">
+              <HandCoins size={12} className="mr-1" />
+              Open to negotiation
+            </Badge>
+          )}
+        </div>
       </div>
 
       <div className="space-y-4">

@@ -124,6 +124,17 @@ const ListingFormFields: React.FC<ListingFormFieldsProps> = ({
         </div>
       </div>
 
+      <div className="flex items-center space-x-2">
+        <Checkbox
+          id="openToNegotiation"
+          checked={formData.openToNegotiation}
+          onCheckedChange={(checked) => handleInputChange("openToNegotiation", checked as boolean)}
+        />
+        <Label htmlFor="openToNegotiation" className="text-sm font-normal">
+          Open to price negotiation
+        </Label>
+      </div>
+
       {formData.category === 'marketplace' && formData.listingType === 'offer' && (
         <div className="space-y-3">
           <Label className="text-base font-medium">Transaction Methods</Label>

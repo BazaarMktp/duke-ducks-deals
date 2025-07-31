@@ -442,6 +442,7 @@ export type Database = {
           longitude: number | null
           moderation_flags: Json | null
           moderation_status: string | null
+          open_to_negotiation: boolean | null
           price: number | null
           similarity_score: number | null
           status: Database["public"]["Enums"]["listing_status"] | null
@@ -472,6 +473,7 @@ export type Database = {
           longitude?: number | null
           moderation_flags?: Json | null
           moderation_status?: string | null
+          open_to_negotiation?: boolean | null
           price?: number | null
           similarity_score?: number | null
           status?: Database["public"]["Enums"]["listing_status"] | null
@@ -502,6 +504,7 @@ export type Database = {
           longitude?: number | null
           moderation_flags?: Json | null
           moderation_status?: string | null
+          open_to_negotiation?: boolean | null
           price?: number | null
           similarity_score?: number | null
           status?: Database["public"]["Enums"]["listing_status"] | null
