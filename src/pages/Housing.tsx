@@ -142,7 +142,7 @@ const Housing = () => {
               ) : (
                 <>
                   <Search size={16} />
-                  Post Request
+                  Create Request
                 </>
               )}
             </Button>

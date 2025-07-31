@@ -65,8 +65,8 @@ export const useCreateListing = () => {
       return;
     }
 
-    if (formData.images.length === 0) {
-      toast.error("At least one image is required.");
+    if (formData.listingType === 'offer' && formData.images.length === 0) {
+      toast.error("At least one image is required for listings.");
       return;
     }
 

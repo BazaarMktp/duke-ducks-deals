@@ -34,7 +34,7 @@ const MarketplaceHeader = ({ user, activeListingType }: MarketplaceHeaderProps) 
             ) : (
               <>
                 <Search size={16} />
-                Post Request
+                Create Request
               </>
             )}
           </Button>

@@ -86,14 +86,16 @@ const ListingFormFields: React.FC<ListingFormFieldsProps> = ({
         )}
       </div>
 
-      <div>
-        <Label className="text-base font-medium">Images *</Label>
-        <ImageUpload
-          images={formData.images}
-          onImagesChange={handleImagesChange}
-          maxImages={5}
-        />
-      </div>
+      {formData.listingType === 'offer' && (
+        <div>
+          <Label className="text-base font-medium">Images *</Label>
+          <ImageUpload
+            images={formData.images}
+            onImagesChange={handleImagesChange}
+            maxImages={5}
+          />
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>

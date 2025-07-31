@@ -33,7 +33,7 @@ const ServicesHeader = ({ user, onPostService, activeListingType = 'offer' }: Se
           ) : (
             <>
               <Search size={16} />
-              Post Request
+              Create Request
             </>
           )}
         </Button>
