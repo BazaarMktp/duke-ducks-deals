@@ -15,7 +15,7 @@ interface ConversationItemProps {
   currentUserId: string;
   isSelected: boolean;
   showArchived: boolean;
-  onSelect: (id: string) => void;
+  onSelect: (id: string | null) => void;
   onArchive: (id: string) => void;
   onDelete: (id: string) => void;
 }

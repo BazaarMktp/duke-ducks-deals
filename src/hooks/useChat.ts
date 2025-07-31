@@ -34,7 +34,7 @@ export const useChat = () => {
     }
   }, [user, showArchived, fetchConversations]);
 
-  const handleSelectConversation = (convId: string) => {
+  const handleSelectConversation = (convId: string | null) => {
     setSelectedConversation(convId);
   };
 

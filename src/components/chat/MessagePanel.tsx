@@ -10,6 +10,7 @@ interface MessagePanelProps {
   messages: Message[];
   currentUserId: string;
   onSendMessage: (message: string) => void;
+  onBack?: () => void;
 }
 
 const MessagePanel: React.FC<MessagePanelProps> = ({
@@ -17,6 +18,7 @@ const MessagePanel: React.FC<MessagePanelProps> = ({
   messages,
   currentUserId,
   onSendMessage,
+  onBack,
 }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -31,11 +33,19 @@ const MessagePanel: React.FC<MessagePanelProps> = ({
   return (
     <Card className="md:col-span-2">
       <CardHeader>
-        <CardTitle>
+        <CardTitle className="flex items-center gap-2">
+          {onBack && (
+            <button 
+              onClick={onBack}
+              className="md:hidden p-1 hover:bg-gray-100 rounded"
+            >
+              ←
+            </button>
+          )}
           {selectedConversation ? 'Chat' : 'Select a conversation'}
         </CardTitle>
       </CardHeader>
-      <CardContent className="flex flex-col h-[calc(600px-70px)]">
+      <CardContent className="flex flex-col h-[calc(100vh-200px)] md:h-[calc(600px-70px)]">
         {selectedConversation ? (
           <>
             <div className="flex-1 overflow-y-auto space-y-4 mb-4 p-4">

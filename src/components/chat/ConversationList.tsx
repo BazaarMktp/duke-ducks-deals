@@ -9,7 +9,7 @@ interface ConversationListProps {
   selectedConversation: string | null;
   currentUserId: string;
   showArchived: boolean;
-  onSelectConversation: (id: string) => void;
+  onSelectConversation: (id: string | null) => void;
   onArchiveConversation: (id: string) => void;
   onDeleteConversation: (id: string) => void;
 }
@@ -28,7 +28,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
       <CardHeader>
         <CardTitle>{showArchived ? "Archived Conversations" : "Active Conversations"}</CardTitle>
       </CardHeader>
-      <CardContent className="p-0 overflow-y-auto h-[calc(600px-70px)]">
+      <CardContent className="p-0 overflow-y-auto h-[calc(100vh-200px)] md:h-[calc(600px-70px)]">
         {conversations.length === 0 ? (
           <p className="p-4 text-gray-500 text-center">
             {showArchived ? "No archived conversations" : "No conversations yet"}
