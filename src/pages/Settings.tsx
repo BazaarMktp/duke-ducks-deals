@@ -7,7 +7,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -118,7 +118,7 @@ const Settings = () => {
             
             <div className="pt-2 space-y-4">
               <Button variant="outline" asChild>
-                <a href="/profile">Edit Profile</a>
+                <Link to="/profile">Edit Profile</Link>
               </Button>
               
               <AlertDialog>
