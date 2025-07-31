@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useMarketplaceItem } from "@/hooks/useMarketplaceItem";
 import MarketplaceItemHeader from "@/components/marketplace/MarketplaceItemHeader";
 import MarketplaceItemContent from "@/components/marketplace/MarketplaceItemContent";
-import { AIRecommendations } from "@/components/marketplace/AIRecommendations";
+
 
 const MarketplaceItemDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -56,9 +56,6 @@ const MarketplaceItemDetail = () => {
         onAddToCart={addToCart}
         onStartConversation={startConversation}
       />
-      <div className="mt-8">
-        <AIRecommendations listingId={product.id} />
-      </div>
     </div>
   );
 };
