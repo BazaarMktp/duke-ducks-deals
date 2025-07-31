@@ -42,6 +42,16 @@ export const useAuthActions = () => {
   ) => {
     console.log('Attempting signup with email:', email);
     
+    // Validate email domain (only duke.edu allowed)
+    if (!email.endsWith('@duke.edu')) {
+      toast({
+        title: "Error",
+        description: "Only Duke University students can sign up. Please use your duke.edu email address.",
+        variant: "destructive",
+      });
+      return false;
+    }
+    
     // Validate password confirmation
     if (password !== confirmPassword) {
       toast({
