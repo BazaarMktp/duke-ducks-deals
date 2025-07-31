@@ -1,10 +1,12 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useAuthForm } from "@/hooks/useAuthForm";
 import { AuthFormContainer } from "@/components/auth/AuthFormContainer";
 import { ForgotPasswordForm } from "@/components/auth/ForgotPasswordForm";
 
 const Auth = () => {
+  const [searchParams] = useSearchParams();
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   
   const {
@@ -27,6 +29,14 @@ const Auth = () => {
     handleSubmit,
     handleForgotPassword,
   } = useAuthForm();
+
+  // Set signup mode based on URL parameter
+  useEffect(() => {
+    const mode = searchParams.get('mode');
+    if (mode === 'signup') {
+      setIsLogin(false);
+    }
+  }, [searchParams, setIsLogin]);
 
   console.log('Auth component rendering:', { 
     isLogin, 

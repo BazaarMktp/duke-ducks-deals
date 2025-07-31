@@ -14,7 +14,7 @@ export const CTASection = () => {
           Join students already using Bazaar to buy and sell on campus
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
-          <Link to="/auth">
+          <Link to="/auth?mode=signup">
             <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100">
               Sign Up Today
             </Button>

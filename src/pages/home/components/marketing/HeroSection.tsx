@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Link } from "react-router-dom";
 
 const floatingCards = [
   {
@@ -95,27 +96,21 @@ export const HeroSection = () => {
           on Campus
         </h1>
 
-        {/* Email Signup */}
+        {/* Get Started Flow */}
         <div className="max-w-md mx-auto">
-          <Input
-            type="email"
-            placeholder="Email address *"
-            className="mb-4 h-12 text-center border-gray-200 focus:border-primary focus:ring-primary"
-          />
-          <Button 
-            size="lg" 
-            className="w-full h-12 bg-primary hover:bg-primary/90 text-white font-medium"
-          >
-            Get started
-          </Button>
+          <Link to="/auth?mode=signup">
+            <Button 
+              size="lg" 
+              className="w-full h-12 bg-primary hover:bg-primary/90 text-white font-medium"
+            >
+              Get started
+            </Button>
+          </Link>
+          <p className="text-sm text-gray-600 mt-3">
+            Join your campus marketplace in seconds
+          </p>
         </div>
 
-        {/* Disclaimer Text */}
-        <p className="text-xs text-gray-500 mt-4 max-w-sm mx-auto leading-relaxed">
-          By entering my email and clicking "get started", I agree to receive updates from 
-          Bazaar about student deals, new products, and campus delivery. Message 
-          frequency varies. Reply STOP to unsubscribe. Terms and privacy policy.
-        </p>
 
         {/* Stats */}
         <div className="flex items-center justify-center space-x-8 mt-12 text-sm text-gray-600">
