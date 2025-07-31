@@ -51,23 +51,8 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div>
-        <div className="flex items-center justify-between mb-2">
+        <div className="mb-2">
           <Label htmlFor="category">Category</Label>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={handleSuggestCategory}
-            disabled={loading || !title}
-            className="text-xs"
-          >
-            {loading ? (
-              <Loader2 className="w-3 h-3 mr-1 animate-spin" />
-            ) : (
-              <Sparkles className="w-3 h-3 mr-1" />
-            )}
-            AI Suggest
-          </Button>
         </div>
         
         {suggestion && suggestion.category !== category && (
