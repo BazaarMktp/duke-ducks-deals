@@ -94,7 +94,9 @@ const CategorySelector: React.FC<CategorySelectorProps> = ({
       </div>
 
       <div>
-        <Label htmlFor="listingType">Type of Listing</Label>
+        <div className="mb-2">
+          <Label htmlFor="listingType">Type of Listing</Label>
+        </div>
         <Select value={listingType} onValueChange={onListingTypeChange}>
           <SelectTrigger>
             <SelectValue placeholder="Select type" />
