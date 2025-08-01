@@ -33,10 +33,10 @@ export const CategoriesSection = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            What students are buying
+            Popular Categories at Duke University
           </h2>
           <p className="text-muted-foreground text-lg">
-            Popular items across all campus categories
+            Browse the most in-demand items Duke students are buying and selling on campus
           </p>
         </div>
 

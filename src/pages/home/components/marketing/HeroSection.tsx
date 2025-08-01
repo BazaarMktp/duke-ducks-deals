@@ -89,11 +89,11 @@ export const HeroSection = () => {
           </span>
         </div>
 
-        {/* Main Heading */}
+        {/* Main Heading - SEO optimized */}
         <h1 className="text-5xl lg:text-7xl font-bold text-gray-900 mb-8 leading-tight">
-          Buy and Sell<br />
-          Anything<br />
-          on Campus
+          Duke University<br />
+          Student Marketplace<br />
+          for Blue Devils
         </h1>
 
         {/* Get Started Flow */}
