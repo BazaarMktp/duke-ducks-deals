@@ -3,9 +3,10 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Users, FileText, MessageSquare, Ban, AlertTriangle, Activity, BarChart } from "lucide-react";
+import { Users, FileText, MessageSquare, Ban, AlertTriangle, Activity, BarChart, ShoppingCart } from "lucide-react";
 import UserAnalytics from "./analytics/UserAnalytics";
 import ListingAnalytics from "./analytics/ListingAnalytics";
+import SalesAnalytics from "./analytics/SalesAnalytics";
 
 interface PlatformStats {
   total_users: number;
@@ -109,7 +110,7 @@ const AdminStats = () => {
 
       {/* Detailed Analytics */}
       <Tabs defaultValue="users" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="users" className="flex items-center gap-2">
             <Activity className="h-4 w-4" />
             User Analytics
@@ -117,6 +118,10 @@ const AdminStats = () => {
           <TabsTrigger value="listings" className="flex items-center gap-2">
             <BarChart className="h-4 w-4" />
             Listing Analytics
+          </TabsTrigger>
+          <TabsTrigger value="sales" className="flex items-center gap-2">
+            <ShoppingCart className="h-4 w-4" />
+            Sales Analytics
           </TabsTrigger>
         </TabsList>
 
@@ -126,6 +131,10 @@ const AdminStats = () => {
 
         <TabsContent value="listings">
           <ListingAnalytics />
+        </TabsContent>
+
+        <TabsContent value="sales">
+          <SalesAnalytics />
         </TabsContent>
       </Tabs>
     </div>
