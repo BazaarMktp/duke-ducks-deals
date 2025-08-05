@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Edit, Trash2, Play, Pause, MapPin, AlertTriangle, CheckCircle2 } from "lucide-react";
 import { DeleteListingDialog } from "./DeleteListingDialog";
+import { SoldConfirmationDialog } from "./SoldConfirmationDialog";
 import { Listing } from "@/hooks/useMyListings";
 import { differenceInDays, parseISO } from "date-fns";
 
@@ -12,6 +13,7 @@ interface ListingCardProps {
   listing: Listing;
   onDelete: (listingId: string) => void;
   onStatusToggle: (listingId: string, currentStatus: string) => void;
+  onMarkAsSold?: (listingId: string, soldOnBazaar: boolean, soldElsewhereLocation?: string) => void;
 }
 
 const getStatusColor = (status: string) => {
@@ -27,7 +29,7 @@ const getStatusColor = (status: string) => {
   }
 };
 
-export const ListingCard = ({ listing, onDelete, onStatusToggle }: ListingCardProps) => {
+export const ListingCard = ({ listing, onDelete, onStatusToggle, onMarkAsSold }: ListingCardProps) => {
   const navigate = useNavigate();
   const isOldListing = differenceInDays(new Date(), parseISO(listing.created_at)) > 30;
 
@@ -115,15 +117,35 @@ export const ListingCard = ({ listing, onDelete, onStatusToggle }: ListingCardPr
           </Button>
           
           {shouldShowCompletedButton() && (
-            <Button
-              variant="default"
-              size="sm"
-              onClick={handleMarkAsCompleted}
-              className="bg-green-600 hover:bg-green-700 text-white"
-            >
-              <CheckCircle2 size={16} className="mr-1" />
-              {getCompletedButtonText()}
-            </Button>
+            <>
+              {listing.category === 'marketplace' && onMarkAsSold ? (
+                <SoldConfirmationDialog
+                  listingTitle={listing.title}
+                  onConfirm={(soldOnBazaar, soldElsewhereLocation) => 
+                    onMarkAsSold(listing.id, soldOnBazaar, soldElsewhereLocation)
+                  }
+                >
+                  <Button
+                    variant="default"
+                    size="sm"
+                    className="bg-green-600 hover:bg-green-700 text-white"
+                  >
+                    <CheckCircle2 size={16} className="mr-1" />
+                    Sold
+                  </Button>
+                </SoldConfirmationDialog>
+              ) : (
+                <Button
+                  variant="default"
+                  size="sm"
+                  onClick={handleMarkAsCompleted}
+                  className="bg-green-600 hover:bg-green-700 text-white"
+                >
+                  <CheckCircle2 size={16} className="mr-1" />
+                  {getCompletedButtonText()}
+                </Button>
+              )}
+            </>
           )}
           
           <Button

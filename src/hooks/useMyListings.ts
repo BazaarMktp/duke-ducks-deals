@@ -96,12 +96,47 @@ export const useMyListings = () => {
     }
   };
 
+  const handleMarkAsSold = async (listingId: string, soldOnBazaar: boolean, soldElsewhereLocation?: string) => {
+    try {
+      const updateData = {
+        status: 'sold' as const,
+        sold_on_bazaar: soldOnBazaar,
+        sold_elsewhere_location: soldElsewhereLocation || null,
+        sold_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+
+      const { error } = await supabase
+        .from('listings')
+        .update(updateData)
+        .eq('id', listingId)
+        .eq('user_id', user?.id);
+
+      if (error) throw error;
+
+      setListings(prev => 
+        prev.map(listing => 
+          listing.id === listingId 
+            ? { ...listing, status: 'sold' as "active" | "sold" | "inactive" }
+            : listing
+        )
+      );
+
+      const location = soldOnBazaar ? 'Bazaar' : soldElsewhereLocation;
+      toast.success(`Listing marked as sold on ${location}!`);
+    } catch (error) {
+      console.error('Error marking listing as sold:', error);
+      toast.error("Failed to mark listing as sold.");
+    }
+  };
+
   return {
     listings,
     loading,
     user,
     handleDelete,
-    handleStatusToggle
+    handleStatusToggle,
+    handleMarkAsSold
   };
 };
 

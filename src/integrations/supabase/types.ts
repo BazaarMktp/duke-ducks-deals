@@ -445,6 +445,9 @@ export type Database = {
           open_to_negotiation: boolean | null
           price: number | null
           similarity_score: number | null
+          sold_at: string | null
+          sold_elsewhere_location: string | null
+          sold_on_bazaar: boolean | null
           status: Database["public"]["Enums"]["listing_status"] | null
           title: string
           updated_at: string | null
@@ -476,6 +479,9 @@ export type Database = {
           open_to_negotiation?: boolean | null
           price?: number | null
           similarity_score?: number | null
+          sold_at?: string | null
+          sold_elsewhere_location?: string | null
+          sold_on_bazaar?: boolean | null
           status?: Database["public"]["Enums"]["listing_status"] | null
           title: string
           updated_at?: string | null
@@ -507,6 +513,9 @@ export type Database = {
           open_to_negotiation?: boolean | null
           price?: number | null
           similarity_score?: number | null
+          sold_at?: string | null
+          sold_elsewhere_location?: string | null
+          sold_on_bazaar?: boolean | null
           status?: Database["public"]["Enums"]["listing_status"] | null
           title?: string
           updated_at?: string | null

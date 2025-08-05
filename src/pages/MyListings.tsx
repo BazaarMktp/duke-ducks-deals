@@ -5,7 +5,7 @@ import { MyListingsHeader } from "@/components/listings/MyListingsHeader";
 import { EmptyListingsState } from "@/components/listings/EmptyListingsState";
 
 const MyListings = () => {
-  const { listings, loading, user, handleDelete, handleStatusToggle } = useMyListings();
+  const { listings, loading, user, handleDelete, handleStatusToggle, handleMarkAsSold } = useMyListings();
 
   if (!user) {
     return (
@@ -39,6 +39,7 @@ const MyListings = () => {
               listing={listing}
               onDelete={handleDelete}
               onStatusToggle={handleStatusToggle}
+              onMarkAsSold={handleMarkAsSold}
             />
           ))}
         </div>
