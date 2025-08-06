@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { User } from "./types";
 import BanUserDialog from "./BanUserDialog";
+import AdminMessageDialog from "./AdminMessageDialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -29,6 +30,8 @@ const UserActions = ({ user, onBanUser, onUnbanUser, onDeleteUser }: UserActions
 
   return (
     <div className="flex space-x-2">
+      <AdminMessageDialog user={user} />
+      
       {user.is_banned ? (
         <Button
           size="sm"
