@@ -56,7 +56,9 @@ export default function DevilsDeals() {
       
       // Admins see all deals, regular users see only active and non-expired deals
       if (!isAdmin) {
-        query.eq('is_active', true);
+        query
+          .eq('is_active', true)
+          .or('valid_until.is.null,valid_until.gt.' + new Date().toISOString());
       }
       
       const { data, error } = await query.order('created_at', { ascending: false });
