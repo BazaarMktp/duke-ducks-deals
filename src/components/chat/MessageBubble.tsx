@@ -1,5 +1,6 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 import { Message } from './types';
 
 interface MessageBubbleProps {
@@ -8,8 +9,26 @@ interface MessageBubbleProps {
 }
 
 const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isCurrentUser }) => {
-  // Check if the sender is an admin
-  const isAdminSender = message.profiles?.user_roles?.some(role => role.role === 'admin');
+  const [isAdminSender, setIsAdminSender] = useState(false);
+
+  useEffect(() => {
+    const checkIfAdmin = async () => {
+      try {
+        const { data } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', message.sender_id)
+          .eq('role', 'admin');
+        
+        setIsAdminSender(data && data.length > 0);
+      } catch (error) {
+        console.error('Error checking admin status:', error);
+      }
+    };
+
+    checkIfAdmin();
+  }, [message.sender_id]);
+
   const senderName = isAdminSender ? 'Admin' : message.profiles?.profile_name;
 
   return (
