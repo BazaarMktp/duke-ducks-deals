@@ -7,6 +7,9 @@ export interface Message {
   is_read: boolean;
   profiles: {
     profile_name: string;
+    user_roles: Array<{
+      role: string;
+    }>;
   };
 }
 

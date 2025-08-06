@@ -61,13 +61,35 @@ export const useMessages = (selectedConversation: string | null) => {
           sender_id,
           created_at,
           is_read,
-          profiles!messages_sender_id_fkey(profile_name)
+          profiles!messages_sender_id_fkey(
+            profile_name,
+            id
+          )
         `)
         .eq('conversation_id', conversationId)
         .order('created_at', { ascending: true });
 
       if (error) throw error;
-      setMessages(data || []);
+
+      // Fetch user roles for each profile
+      const messagesWithRoles = await Promise.all(
+        (data || []).map(async (message) => {
+          const { data: roleData } = await supabase
+            .from('user_roles')
+            .select('role')
+            .eq('user_id', message.profiles.id);
+          
+          return {
+            ...message,
+            profiles: {
+              ...message.profiles,
+              user_roles: roleData || []
+            }
+          };
+        })
+      );
+
+      setMessages(messagesWithRoles);
     } catch (error) {
       console.error('Error fetching messages:', error);
     }

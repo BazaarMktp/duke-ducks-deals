@@ -29,9 +29,11 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
   onArchive,
   onDelete,
 }) => {
-  const partnerName = conversation.buyer_id === currentUserId
-    ? conversation.seller_profile.profile_name
-    : conversation.buyer_profile.profile_name;
+  const partnerProfile = conversation.buyer_id === currentUserId
+    ? conversation.seller_profile
+    : conversation.buyer_profile;
+  
+  const partnerName = partnerProfile.profile_name === 'Admin' ? 'Admin' : partnerProfile.profile_name;
 
   return (
     <div

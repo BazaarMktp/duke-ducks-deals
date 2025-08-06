@@ -8,6 +8,10 @@ interface MessageBubbleProps {
 }
 
 const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isCurrentUser }) => {
+  // Check if the sender is an admin
+  const isAdminSender = message.profiles?.user_roles?.some(role => role.role === 'admin');
+  const senderName = isAdminSender ? 'Admin' : message.profiles?.profile_name;
+
   return (
     <div className={`flex ${isCurrentUser ? 'justify-end' : 'justify-start'}`}>
       <div
@@ -17,6 +21,11 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isCurrentUser })
             : 'bg-gray-200 text-gray-800'
         }`}
       >
+        {!isCurrentUser && (
+          <p className={`text-xs font-semibold mb-1 ${isAdminSender ? 'text-red-600' : 'text-gray-600'}`}>
+            {senderName}
+          </p>
+        )}
         <p className="text-sm">{message.message}</p>
         <p className={`text-xs mt-1 ${isCurrentUser ? 'text-blue-100' : 'text-gray-500'}`}>
           {new Date(message.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
