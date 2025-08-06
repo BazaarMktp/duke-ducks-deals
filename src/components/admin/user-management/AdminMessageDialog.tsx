@@ -32,19 +32,30 @@ const AdminMessageDialog = ({ user }: AdminMessageDialogProps) => {
 
     setSending(true);
     try {
-      // Create a support ticket as a way to send a message to the user
-      // This leverages the existing support ticket system for admin-to-user communication
-      const { error } = await supabase
-        .from('support_tickets')
+      // Create a conversation between admin and user
+      const { data: conversation, error: convError } = await supabase
+        .from('conversations')
         .insert({
-          user_id: user.id,
-          subject: `Admin Message: ${subject}`,
-          message: `Message from Admin:\n\n${message}`,
-          status: 'closed', // Mark as closed since this is an admin message, not a request for support
-          priority: 'medium'
+          buyer_id: user.id,
+          seller_id: adminUser.id,
+          listing_id: null, // Admin messages don't relate to specific listings
+        })
+        .select()
+        .single();
+
+      if (convError) throw convError;
+
+      // Send the actual message in the conversation
+      const { error: messageError } = await supabase
+        .from('messages')
+        .insert({
+          conversation_id: conversation.id,
+          sender_id: adminUser.id,
+          message: `**${subject}**\n\n${message}`,
+          is_read: false
         });
 
-      if (error) throw error;
+      if (messageError) throw messageError;
 
       toast({
         title: "Message sent",
