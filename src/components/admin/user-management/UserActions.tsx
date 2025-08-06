@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
+import { Trash2, MessageSquare } from "lucide-react";
 import { User } from "./types";
 import BanUserDialog from "./BanUserDialog";
 import AdminMessageDialog from "./AdminMessageDialog";
