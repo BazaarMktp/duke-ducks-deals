@@ -27,7 +27,7 @@ export const useConversations = () => {
           archived_by_seller,
           deleted_by_buyer,
           deleted_by_seller,
-          listings(title),
+          listings!left(title),
           buyer_profile:profiles!conversations_buyer_id_fkey(profile_name),
           seller_profile:profiles!conversations_seller_id_fkey(profile_name)
         `)

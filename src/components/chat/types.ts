@@ -21,7 +21,7 @@ export interface Conversation {
   deleted_by_seller: boolean;
   listings: {
     title: string;
-  };
+  } | null;
   buyer_profile: {
     profile_name: string;
   };

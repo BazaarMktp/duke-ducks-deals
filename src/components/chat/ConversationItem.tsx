@@ -42,7 +42,9 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
       }`}
     >
       <div className="flex-1" onClick={() => onSelect(conversation.id)}>
-        <h4 className="font-semibold">{conversation.listings.title}</h4>
+        <h4 className="font-semibold">
+          {conversation.listings?.title || "Admin Message"}
+        </h4>
         <p className="text-sm text-gray-600">with {partnerName}</p>
       </div>
       <DropdownMenu>
