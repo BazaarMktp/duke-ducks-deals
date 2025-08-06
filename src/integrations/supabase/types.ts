@@ -172,7 +172,7 @@ export type Database = {
           deleted_by_buyer: boolean | null
           deleted_by_seller: boolean | null
           id: string
-          listing_id: string
+          listing_id: string | null
           seller_id: string
           updated_at: string | null
         }
@@ -184,7 +184,7 @@ export type Database = {
           deleted_by_buyer?: boolean | null
           deleted_by_seller?: boolean | null
           id?: string
-          listing_id: string
+          listing_id?: string | null
           seller_id: string
           updated_at?: string | null
         }
@@ -196,7 +196,7 @@ export type Database = {
           deleted_by_buyer?: boolean | null
           deleted_by_seller?: boolean | null
           id?: string
-          listing_id?: string
+          listing_id?: string | null
           seller_id?: string
           updated_at?: string | null
         }
