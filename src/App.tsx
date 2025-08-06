@@ -14,6 +14,7 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import EmailValidation from "./pages/EmailValidation";
 import AccountDeleted from "./pages/AccountDeleted";
+import PasswordReset from "./pages/PasswordReset";
 import About from "./pages/About";
 import FAQ from "./pages/FAQ";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -70,6 +71,7 @@ function App() {
                       <Route path="/" element={<Index />} />
                       <Route path="/verify" element={<Index />} />
                       <Route path="/auth" element={<Auth />} />
+                      <Route path="/reset-password" element={<PasswordReset />} />
                       <Route path="/email-validation" element={<EmailValidation />} />
                       <Route path="/account-deleted" element={<AccountDeleted />} />
                       <Route path="/about" element={<About />} />
