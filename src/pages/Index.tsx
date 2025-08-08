@@ -1,8 +1,8 @@
 
-import Home from './Home';
+import Marketplace from './Marketplace';
 
 const Index = () => {
-  return <Home />;
+  return <Marketplace />;
 };
 
 export default Index;
