@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HashRouter, Routes, Route } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
 import { useState } from "react";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { AdminProvider } from "@/contexts/AdminContext";
@@ -11,6 +12,7 @@ import { AuthRedirectHandler } from "@/components/auth/AuthRedirectHandler";
 import { SharedLinkWrapper } from "@/components/shared/SharedLinkWrapper";
 import Navbar from "@/components/Navbar";
 import Index from "./pages/Index";
+import Home from "./pages/Home";
 import Auth from "./pages/Auth";
 import EmailValidation from "./pages/EmailValidation";
 import AccountDeleted from "./pages/AccountDeleted";
@@ -48,8 +50,9 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <AuthProvider>
+      <HelmetProvider>
+        <TooltipProvider>
+          <AuthProvider>
           <AdminProvider>
             <Toaster />
             <Sonner />
@@ -70,6 +73,7 @@ function App() {
                     <Routes>
                       <Route path="/" element={<Index />} />
                       <Route path="/verify" element={<Index />} />
+                      <Route path="/home" element={<Home />} />
                       <Route path="/auth" element={<Auth />} />
                       <Route path="/reset-password" element={<PasswordReset />} />
                       <Route path="/email-validation" element={<EmailValidation />} />
@@ -176,6 +180,7 @@ function App() {
           </AdminProvider>
         </AuthProvider>
       </TooltipProvider>
+      </HelmetProvider>
     </QueryClientProvider>
   );
 }

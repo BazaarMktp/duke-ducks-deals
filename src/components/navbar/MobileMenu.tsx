@@ -25,7 +25,7 @@ const MobileMenu = ({ user, isOpen, onClose, onSignOut, unreadMessages }: Mobile
   if (!isOpen) return null;
 
   const navigation = [
-    { name: "Home", href: "/", icon: Home },
+    { name: "Home", href: "/home", icon: Home },
     { name: "Marketplace", href: "/marketplace", icon: ShoppingCart },
   ];
 

@@ -14,7 +14,7 @@ const Navigation = () => {
   const { unreadCount } = useUnreadMessages();
   
   const navigation = [
-    { name: "Home", href: "/", icon: Home, showWhenLoggedOut: true },
+    { name: "Home", href: "/home", icon: Home, showWhenLoggedOut: true },
     { name: "Marketplace", href: "/marketplace", icon: ShoppingCart, showWhenLoggedOut: true },
     { name: "Devil's Deals", href: "/devils-deals", icon: Percent, showWhenLoggedOut: true },
     { name: "Messages", href: "/messages", icon: MessageCircle, showWhenLoggedOut: false },
