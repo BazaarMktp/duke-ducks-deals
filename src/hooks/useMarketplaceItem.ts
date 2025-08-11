@@ -47,19 +47,29 @@ export const useMarketplaceItem = (id: string | undefined) => {
         .maybeSingle();
 
       if (error) throw error;
-      const normalized = data && (data as any).profiles
+      const d = data as any;
+      const normalized = d
         ? {
-            ...(data as any),
-            profiles: {
-              profile_name: (data as any).profiles.profile_name,
-              email: (data as any).profiles.email ?? '',
-              phone_number: (data as any).profiles.phone_number,
-              avatar_url: (data as any).profiles.avatar_url,
-              full_name: (data as any).profiles.full_name,
-              created_at: (data as any).profiles.created_at,
-            },
+            ...d,
+            profiles: d.profiles
+              ? {
+                  profile_name: d.profiles.profile_name,
+                  email: d.profiles.email ?? '',
+                  phone_number: d.profiles.phone_number,
+                  avatar_url: d.profiles.avatar_url,
+                  full_name: d.profiles.full_name,
+                  created_at: d.profiles.created_at,
+                }
+              : {
+                  profile_name: 'Bazaar Member',
+                  email: '',
+                  phone_number: undefined,
+                  avatar_url: undefined,
+                  full_name: undefined,
+                  created_at: d?.created_at,
+                },
           }
-        : (data as any);
+        : null;
       setProduct(normalized as Product | null);
     } catch (error) {
       console.error('Error fetching product:', error);

@@ -28,7 +28,7 @@ interface HousingListing {
     avatar_url?: string;
     full_name?: string;
     created_at: string;
-  };
+  } | null;
 }
 
 const HousingDetail = () => {
@@ -236,12 +236,12 @@ const HousingDetail = () => {
           />
 
           <SellerInfo
-            profileName={listing.profiles.profile_name}
-            email={listing.profiles.email}
-            phoneNumber={listing.profiles.phone_number}
-            createdAt={listing.profiles.created_at}
-            avatarUrl={listing.profiles.avatar_url}
-            fullName={listing.profiles.full_name}
+            profileName={listing.profiles?.profile_name || 'Bazaar Member'}
+            email={listing.profiles?.email || ''}
+            phoneNumber={listing.profiles?.phone_number}
+            createdAt={listing.profiles?.created_at || listing.created_at}
+            avatarUrl={listing.profiles?.avatar_url}
+            fullName={listing.profiles?.full_name}
             isAuthenticated={!!user}
             userId={listing.user_id}
             listingCreatedAt={listing.created_at}

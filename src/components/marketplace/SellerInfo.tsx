@@ -42,16 +42,20 @@ const SellerInfo = ({
   };
 
   const displayName = getDisplayName();
-  const memberSince = new Date(createdAt).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long'
-  });
+  const memberSince = createdAt
+    ? new Date(createdAt).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long'
+      })
+    : '—';
   
-  const listingDate = new Date(listingCreatedAt).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
+  const listingDate = listingCreatedAt
+    ? new Date(listingCreatedAt).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      })
+    : '—';
 
   return (
     <Card className="mb-6">
@@ -65,7 +69,7 @@ const SellerInfo = ({
           <Avatar className="h-12 w-12">
             <AvatarImage src={avatarUrl} />
             <AvatarFallback>
-              {displayName.charAt(0).toUpperCase()}
+              {displayName?.charAt(0)?.toUpperCase() || 'U'}
             </AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">

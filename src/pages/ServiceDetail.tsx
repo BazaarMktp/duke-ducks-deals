@@ -24,7 +24,7 @@ interface ServiceListing {
     phone_number?: string;
     avatar_url?: string;
     full_name?: string;
-  };
+  } | null;
 }
 
 const ServiceDetail = () => {
@@ -227,12 +227,12 @@ const ServiceDetail = () => {
 
           <div>
             <ServiceProvider
-              profileName={service.profiles.profile_name}
-              email={service.profiles.email}
-              phoneNumber={service.profiles.phone_number}
+              profileName={service.profiles?.profile_name || 'Bazaar Member'}
+              email={service.profiles?.email || ''}
+              phoneNumber={service.profiles?.phone_number}
               createdAt={service.created_at}
-              avatarUrl={service.profiles.avatar_url}
-              fullName={service.profiles.full_name}
+              avatarUrl={service.profiles?.avatar_url}
+              fullName={service.profiles?.full_name}
               isAuthenticated={!!user}
               userId={service.user_id}
             />
