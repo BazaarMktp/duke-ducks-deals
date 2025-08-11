@@ -47,19 +47,35 @@ const ServiceDetail = () => {
 
   const fetchService = async () => {
     try {
+      const profileFields = user
+        ? 'profile_name, email, phone_number, avatar_url, full_name'
+        : 'profile_name, avatar_url';
+
       const { data, error } = await supabase
         .from('listings')
         .select(`
           *,
-          profiles!listings_user_id_fkey(profile_name, email, phone_number, avatar_url, full_name)
+          profiles!listings_user_id_fkey(${profileFields})
         `)
         .eq('id', id)
         .eq('category', 'services')
         .eq('status', 'active')
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
-      setService(data);
+      const normalized = data && (data as any).profiles
+        ? {
+            ...(data as any),
+            profiles: {
+              profile_name: (data as any).profiles.profile_name,
+              email: (data as any).profiles.email ?? '',
+              phone_number: (data as any).profiles.phone_number,
+              avatar_url: (data as any).profiles.avatar_url,
+              full_name: (data as any).profiles.full_name,
+            },
+          }
+        : (data as any);
+      setService(normalized as ServiceListing | null);
     } catch (error) {
       // Secure error handling - don't expose sensitive details
       toast({

@@ -17,11 +17,12 @@ export const useServices = (user: any) => {
   const fetchServiceListings = async () => {
     setLoading(true);
     try {
+      const profileFields = user ? 'profile_name, full_name' : 'profile_name';
       const { data, error } = await supabase
         .from('listings')
         .select(`
           *,
-          profiles!listings_user_id_fkey(profile_name, full_name)
+          profiles!listings_user_id_fkey(${profileFields})
         `)
         .eq('category', 'services')
         .eq('listing_type', activeListingType)

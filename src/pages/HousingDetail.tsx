@@ -52,19 +52,36 @@ const HousingDetail = () => {
 
   const fetchListing = async () => {
     try {
+      const profileFields = user
+        ? 'profile_name, email, phone_number, avatar_url, full_name, created_at'
+        : 'profile_name, avatar_url, created_at';
+
       const { data, error } = await supabase
         .from('listings')
         .select(`
           *,
-          profiles!listings_user_id_fkey(profile_name, email, phone_number, avatar_url, full_name, created_at)
+          profiles!listings_user_id_fkey(${profileFields})
         `)
         .eq('id', id)
         .eq('category', 'housing')
         .eq('status', 'active')
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
-      setListing(data);
+      const normalized = data && (data as any).profiles
+        ? {
+            ...(data as any),
+            profiles: {
+              profile_name: (data as any).profiles.profile_name,
+              email: (data as any).profiles.email ?? '',
+              phone_number: (data as any).profiles.phone_number,
+              avatar_url: (data as any).profiles.avatar_url,
+              full_name: (data as any).profiles.full_name,
+              created_at: (data as any).profiles.created_at,
+            },
+          }
+        : (data as any);
+      setListing(normalized as HousingListing | null);
     } catch (error) {
       console.error('Error fetching listing:', error);
       toast({
