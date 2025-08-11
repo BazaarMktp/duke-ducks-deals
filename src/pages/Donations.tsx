@@ -54,12 +54,9 @@ const Donations = () => {
 
   const fetchDonationCount = async () => {
     try {
-      const { count, error } = await supabase
-        .from('donations')
-        .select('*', { count: 'exact', head: true });
-
+      const { data, error } = await supabase.rpc('get_donations_count');
       if (error) throw error;
-      setDonationCount(count || 0);
+      setDonationCount(data || 0);
     } catch (error) {
       console.error('Error fetching donation count:', error);
       setDonationCount(2456); // Fallback number
