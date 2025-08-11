@@ -828,6 +828,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: string
       }
+      get_donations_count: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
       get_platform_stats: {
         Args: Record<PropertyKey, never>
         Returns: Json
