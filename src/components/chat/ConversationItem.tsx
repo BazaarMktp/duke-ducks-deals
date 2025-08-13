@@ -33,7 +33,7 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
     ? conversation.seller_profile
     : conversation.buyer_profile;
   
-  const partnerName = partnerProfile.profile_name === 'Admin' ? 'Admin' : partnerProfile.profile_name;
+  const partnerName = partnerProfile?.profile_name === 'Admin' ? 'Admin' : (partnerProfile?.profile_name || 'Unknown User');
 
   return (
     <div
