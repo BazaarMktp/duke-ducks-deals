@@ -13,9 +13,8 @@ const fetchStats = async (): Promise<Stats> => {
       .from('profiles')
       .select('*', { count: 'exact', head: true });
 
-    const { count: donationsCount } = await supabase
-      .from('donations')
-      .select('*', { count: 'exact', head: true });
+    const { data: donationsCount } = await supabase
+      .rpc('get_donations_count');
 
     return {
       activeListings: listingsCount || 0,
