@@ -172,8 +172,7 @@ const PrivacyPolicy = () => {
                   If you have questions about this Privacy Policy or our data practices, please contact us:
                 </p>
                 <div className="text-gray-600">
-                  <p>Email: privacy@bazaar.edu</p>
-                  <p>Address: [Your Institution Address]</p>
+                  <p>Email: info@thebazaarapp.com</p>
                 </div>
               </CardContent>
             </Card>

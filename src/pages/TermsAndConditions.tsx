@@ -190,8 +190,7 @@ const TermsAndConditions = () => {
                   For questions about these Terms and Conditions, please contact us:
                 </p>
                 <div className="text-gray-600">
-                  <p>Email: legal@bazaar.edu</p>
-                  <p>Address: [Your Institution Address]</p>
+                  <p>Email: info@thebazaarapp.com</p>
                 </div>
               </CardContent>
             </Card>
