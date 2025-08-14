@@ -65,13 +65,24 @@ const Donations = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Ensure user is authenticated before creating donations
+    if (!user?.id) {
+      toast({
+        title: "Authentication Required",
+        description: "Please sign in to submit a donation request.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
       const { error } = await supabase
         .from('donations')
         .insert({
-          user_id: user?.id || null,
+          user_id: user.id, // Now guaranteed to exist due to check above
           full_name: formData.name,
           email: formData.email,
           phone_number: formData.phone,
