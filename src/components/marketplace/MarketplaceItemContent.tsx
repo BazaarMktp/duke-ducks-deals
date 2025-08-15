@@ -63,6 +63,10 @@ const MarketplaceItemContent = ({
           allowMeetOnCampus={product.allow_meet_on_campus}
           listingType={product.listing_type}
           openToNegotiation={product.open_to_negotiation}
+          userId={user?.id}
+          listingOwnerId={product.user_id}
+          isInConversation={false} // TODO: Add conversation detection
+          isAdmin={false} // TODO: Add admin detection
         />
 
         <div className="mb-6">
@@ -114,6 +118,10 @@ const MarketplaceItemContent = ({
           allowMeetOnCampus={product.allow_meet_on_campus}
           listingType={product.listing_type}
           openToNegotiation={product.open_to_negotiation}
+          userId={user?.id}
+          listingOwnerId={product.user_id}
+          isInConversation={false} // TODO: Add conversation detection
+          isAdmin={false} // TODO: Add admin detection
         />
 
         <div className="mb-6">

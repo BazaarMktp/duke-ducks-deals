@@ -15,6 +15,7 @@ interface Listing {
   images: string[];
   status: "active" | "sold" | "inactive";
   created_at: string;
+  user_id: string;
 }
 
 export const useMyListings = () => {

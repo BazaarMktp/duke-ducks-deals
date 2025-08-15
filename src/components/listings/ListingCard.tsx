@@ -3,17 +3,20 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Edit, Trash2, Play, Pause, MapPin, AlertTriangle, CheckCircle2 } from "lucide-react";
+import { Edit, Trash2, Play, Pause, MapPin, AlertTriangle, CheckCircle2, Lock } from "lucide-react";
 import { DeleteListingDialog } from "./DeleteListingDialog";
 import { SoldConfirmationDialog } from "./SoldConfirmationDialog";
 import { Listing } from "@/hooks/useMyListings";
 import { differenceInDays, parseISO } from "date-fns";
+import { getPrivacyAwareLocation } from "@/utils/locationPrivacy";
 
 interface ListingCardProps {
   listing: Listing;
   onDelete: (listingId: string) => void;
   onStatusToggle: (listingId: string, currentStatus: string) => void;
   onMarkAsSold?: (listingId: string, soldOnBazaar: boolean, soldElsewhereLocation?: string) => void;
+  userId?: string;
+  isAdmin?: boolean;
 }
 
 const getStatusColor = (status: string) => {
@@ -29,9 +32,27 @@ const getStatusColor = (status: string) => {
   }
 };
 
-export const ListingCard = ({ listing, onDelete, onStatusToggle, onMarkAsSold }: ListingCardProps) => {
+export const ListingCard = ({ 
+  listing, 
+  onDelete, 
+  onStatusToggle, 
+  onMarkAsSold, 
+  userId, 
+  isAdmin = false 
+}: ListingCardProps) => {
   const navigate = useNavigate();
   const isOldListing = differenceInDays(new Date(), parseISO(listing.created_at)) > 30;
+  
+  // For user's own listings, show full address. For others, mask it.
+  const displayLocation = getPrivacyAwareLocation(
+    listing.location,
+    userId,
+    listing.user_id,
+    false, // Not in conversation context in listing cards
+    isAdmin
+  );
+  
+  const isLocationMasked = listing.location && displayLocation !== listing.location;
 
   const handleMarkAsCompleted = () => {
     const actionText = listing.category === 'housing' ? 'no longer available' : 'completed';
@@ -81,11 +102,17 @@ export const ListingCard = ({ listing, onDelete, onStatusToggle, onMarkAsSold }:
           </div>
         </div>
         
-        {listing.location && (
-          <p className="text-sm text-muted-foreground mb-2 flex items-center">
+        {displayLocation && (
+          <div className="text-sm text-muted-foreground mb-2 flex items-center">
             <MapPin size={14} className="mr-1" />
-            {listing.location}
-          </p>
+            {displayLocation}
+            {isLocationMasked && (
+              <div className="flex items-center gap-1 ml-2 text-xs">
+                <Lock size={10} />
+                <span>Protected</span>
+              </div>
+            )}
+          </div>
         )}
         
         <p className="text-sm mb-3 line-clamp-2">{listing.description}</p>

@@ -40,6 +40,8 @@ const MyListings = () => {
               onDelete={handleDelete}
               onStatusToggle={handleStatusToggle}
               onMarkAsSold={handleMarkAsSold}
+              userId={user?.id}
+              isAdmin={false} // TODO: Add admin detection if needed
             />
           ))}
         </div>

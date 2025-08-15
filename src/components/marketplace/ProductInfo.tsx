@@ -1,6 +1,7 @@
 
 import { Badge } from "@/components/ui/badge";
-import { Package, Users, MapPin, Search, HandCoins } from "lucide-react";
+import { Package, Users, MapPin, Search, HandCoins, Lock } from "lucide-react";
+import { getPrivacyAwareLocation } from "@/utils/locationPrivacy";
 
 interface ProductInfoProps {
   title: string;
@@ -11,6 +12,10 @@ interface ProductInfoProps {
   location?: string;
   listingType?: string;
   openToNegotiation?: boolean;
+  userId?: string;
+  listingOwnerId?: string;
+  isInConversation?: boolean;
+  isAdmin?: boolean;
 }
 
 const ProductInfo = ({ 
@@ -21,7 +26,11 @@ const ProductInfo = ({
   allowMeetOnCampus,
   location,
   listingType = 'offer',
-  openToNegotiation = false
+  openToNegotiation = false,
+  userId,
+  listingOwnerId,
+  isInConversation = false,
+  isAdmin = false
 }: ProductInfoProps) => {
   const getTransactionMethods = () => {
     const methods = [];
@@ -31,6 +40,16 @@ const ProductInfo = ({
   };
 
   const transactionMethods = getTransactionMethods();
+  
+  const displayLocation = getPrivacyAwareLocation(
+    location,
+    userId,
+    listingOwnerId || '',
+    isInConversation,
+    isAdmin
+  );
+  
+  const isLocationMasked = location && displayLocation !== location;
 
   return (
     <div className="space-y-6">
@@ -63,12 +82,18 @@ const ProductInfo = ({
       </div>
 
       <div className="space-y-4">
-        {location && (
+        {displayLocation && (
           <div className="flex items-center gap-2 text-gray-600">
             <MapPin size={16} />
             <span className="text-sm">
-              {listingType === 'wanted' ? `Preferred location: ${location}` : location}
+              {listingType === 'wanted' ? `Preferred location: ${displayLocation}` : displayLocation}
             </span>
+            {isLocationMasked && (
+              <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                <Lock size={12} />
+                <span>Start a conversation to see full address</span>
+              </div>
+            )}
           </div>
         )}
 
