@@ -47,6 +47,19 @@ export const usePostingForm = ({ category, listingType, onSuccess, onClose }: Us
     setFormData(prev => ({ ...prev, images }));
   };
 
+  const validatePhoneNumber = (text: string): boolean => {
+    // Common phone number patterns
+    const phonePatterns = [
+      /\b\d{3}[-.\s]?\d{3}[-.\s]?\d{4}\b/, // 123-456-7890, 123.456.7890, 123 456 7890
+      /\b\(\d{3}\)\s?\d{3}[-.\s]?\d{4}\b/, // (123) 456-7890
+      /\b\d{10}\b/, // 1234567890
+      /\b\+?1?[-.\s]?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}\b/, // +1 123 456 7890
+      /\b\d{3}[-.\s]?\d{4}\b/, // 123-4567 (7 digits)
+    ];
+    
+    return phonePatterns.some(pattern => pattern.test(text));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
@@ -65,6 +78,16 @@ export const usePostingForm = ({ category, listingType, onSuccess, onClose }: Us
       toast({
         title: "Error",
         description: "Description is required.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Check for phone numbers in description
+    if (validatePhoneNumber(formData.description)) {
+      toast({
+        title: "Phone Numbers Not Allowed",
+        description: "Please remove phone numbers from the description. Use the messaging system to share contact details.",
         variant: "destructive",
       });
       return;

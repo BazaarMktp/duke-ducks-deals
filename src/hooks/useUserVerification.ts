@@ -15,18 +15,33 @@ export const useUserVerification = (userId: string | undefined) => {
       }
 
       try {
-        const { data, error } = await supabase
-          .from('user_badges')
-          .select('badge_type')
-          .eq('user_id', userId)
-          .eq('badge_type', 'VERIFIED_BLUE_DEVIL')
-          .single();
+        // Check for verified badge AND profile picture
+        const [badgeResult, profileResult] = await Promise.all([
+          supabase
+            .from('user_badges')
+            .select('badge_type')
+            .eq('user_id', userId)
+            .eq('badge_type', 'VERIFIED_BLUE_DEVIL')
+            .single(),
+          supabase
+            .from('profiles')
+            .select('avatar_url')
+            .eq('id', userId)
+            .single()
+        ]);
 
-        if (error && error.code !== 'PGRST116') {
-          console.error('Error checking verification:', error);
+        const hasBadge = !!badgeResult.data;
+        const hasProfilePicture = !!(profileResult.data?.avatar_url);
+
+        // User is verified only if they have both the badge AND a profile picture
+        setIsVerified(hasBadge && hasProfilePicture);
+
+        if (badgeResult.error && badgeResult.error.code !== 'PGRST116') {
+          console.error('Error checking verification badge:', badgeResult.error);
         }
-
-        setIsVerified(!!data);
+        if (profileResult.error) {
+          console.error('Error checking profile picture:', profileResult.error);
+        }
       } catch (error) {
         console.error('Error checking verification:', error);
         setIsVerified(false);
