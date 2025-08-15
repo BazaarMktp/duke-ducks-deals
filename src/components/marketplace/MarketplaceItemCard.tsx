@@ -23,7 +23,8 @@ const MarketplaceItemCard = ({
 }: MarketplaceItemCardProps) => {
   // Extract first name from profile_name since full_name might not be available
   const getDisplayName = () => {
-    return listing.profiles?.profile_name || 'Unknown';
+    if (!user || !listing.profiles?.profile_name) return null;
+    return listing.profiles.profile_name;
   };
 
   return (
@@ -63,7 +64,9 @@ const MarketplaceItemCard = ({
                   {listing.listing_type === 'wanted' ? `Looking for: ${listing.title}` : listing.title}
                 </h3>
               </Link>
-              <p className="text-xs sm:text-sm text-muted-foreground mb-1 sm:mb-2 truncate">by {getDisplayName()}</p>
+              {getDisplayName() && (
+                <p className="text-xs sm:text-sm text-muted-foreground mb-1 sm:mb-2 truncate">by {getDisplayName()}</p>
+              )}
             </div>
           </div>
           
