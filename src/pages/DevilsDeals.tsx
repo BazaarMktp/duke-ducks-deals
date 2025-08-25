@@ -21,7 +21,6 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Helmet } from 'react-helmet-async';
-import comingSoonImage from '@/assets/devils-deals-coming-soon.png';
 
 interface Deal {
   id: string;
@@ -116,24 +115,86 @@ export default function DevilsDeals() {
   return (
     <>
       <Helmet>
-        <title>Devil's Deals – College Discounts Coming Soon | Bazaar Duke</title>
-        <meta name="description" content="Exclusive student discounts and local deals coming soon to Bazaar Duke. Get notified when Devil's Deals launches." />
+        <title>Devil's Deals – Exclusive Student Discounts | Bazaar Duke</title>
+        <meta name="description" content="Discover exclusive student discounts and local deals from businesses around Duke University. Save money on food, services, and more." />
         <link rel="canonical" href={`${window.location.origin}/devils-deals`} />
       </Helmet>
-      <main className="container mx-auto px-4 py-16">
-        <section className="flex flex-col items-center text-center">
-          <h1 className="sr-only">Devil's Deals – Coming Soon</h1>
-          <img
-            src={comingSoonImage}
-            alt="Devil's Deals coming soon graphic for Bazaar Duke"
-            loading="lazy"
-            className="w-full max-w-4xl rounded-xl shadow"
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Devil's Deals</h1>
+            <p className="text-gray-600 mt-2">
+              Exclusive discounts and deals for Duke students
+            </p>
+          </div>
+          
+          {isAdmin && (
+            <Button onClick={() => setIsCreateDialogOpen(true)} className="flex items-center gap-2">
+              <Plus size={16} />
+              Create Deal
+            </Button>
+          )}
+        </div>
+
+        {isLoading ? (
+          <div className="text-center py-12">
+            <p className="text-gray-500">Loading deals...</p>
+          </div>
+        ) : deals && deals.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {deals.map((deal) => (
+              <DealCard
+                key={deal.id}
+                deal={deal}
+                isAuthenticated={!!user}
+                isAdmin={isAdmin}
+                onEdit={isAdmin ? handleEditDeal : undefined}
+                onDelete={isAdmin ? handleDeleteDeal : undefined}
+              />
+            ))}
+          </div>
+        ) : (
+          <EmptyDealsState
+            isAdmin={isAdmin}
+            onCreateDeal={() => setIsCreateDialogOpen(true)}
           />
-          <p className="mt-8 text-lg text-muted-foreground max-w-2xl">
-            We're crafting exclusive student discounts and partnerships with local businesses. Check back soon for incredible savings.
-          </p>
-        </section>
-      </main>
+        )}
+
+        <DealCreateDialog
+          open={isCreateDialogOpen}
+          onOpenChange={setIsCreateDialogOpen}
+          onSuccess={() => {
+            refetch();
+            setIsCreateDialogOpen(false);
+          }}
+        />
+
+        <DealEditDialog
+          open={isEditDialogOpen}
+          onOpenChange={setIsEditDialogOpen}
+          deal={editingDeal}
+          onSuccess={() => {
+            refetch();
+            setIsEditDialogOpen(false);
+            setEditingDeal(null);
+          }}
+        />
+
+        <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete Deal</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to delete this deal? This action cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={confirmDelete}>Delete</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </div>
     </>
   );
 }
