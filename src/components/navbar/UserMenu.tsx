@@ -57,6 +57,18 @@ const UserMenu = ({ user, onSignOut, unreadMessages }: UserMenuProps) => {
 
   return (
     <div className="hidden md:flex items-center space-x-4">
+      {user && (
+        <Link to="/messages" className="relative">
+          <Button variant="ghost" size="sm" className="p-2">
+            <MessageCircle size={20} />
+            {unreadMessages > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                {unreadMessages}
+              </span>
+            )}
+          </Button>
+        </Link>
+      )}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="flex items-center space-x-2">
