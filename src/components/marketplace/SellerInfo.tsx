@@ -6,7 +6,7 @@ import { Calendar, Clock, Phone } from "lucide-react";
 
 interface SellerInfoProps {
   profileName: string;
-  email: string;
+  email?: string; // Optional - only available for own listings or admin
   phoneNumber?: string;
   createdAt: string;
   avatarUrl?: string;
@@ -15,6 +15,7 @@ interface SellerInfoProps {
   userId: string;
   listingCreatedAt: string;
   listingType?: string;
+  isOwnListing?: boolean; // New prop to determine if this is user's own listing
 }
 
 const SellerInfo = ({ 
@@ -27,17 +28,16 @@ const SellerInfo = ({
   isAuthenticated, 
   userId, 
   listingCreatedAt,
-  listingType = 'offer'
+  listingType = 'offer',
+  isOwnListing = false
 }: SellerInfoProps) => {
   const getDisplayName = () => {
-    if (isAuthenticated) {
+    // Show full name only for own listings or if user is authenticated and has access to sensitive data
+    if (isAuthenticated && (isOwnListing || email)) {
       return fullName || profileName;
     } else {
-      // For non-authenticated users, show only first name
-      if (fullName) {
-        return fullName.split(' ')[0];
-      }
-      return profileName.split(' ')[0] || profileName;
+      // For other users, show only profile name (which is safe to share)
+      return profileName;
     }
   };
 
@@ -77,7 +77,7 @@ const SellerInfo = ({
               <h4 className="font-semibold text-gray-900">{displayName}</h4>
               <VerifiedBadge isVerified={true} />
             </div>
-            {isAuthenticated && (
+            {isAuthenticated && email && (
               <p className="text-sm text-gray-600 mb-2">{email}</p>
             )}
             <div className="space-y-1">

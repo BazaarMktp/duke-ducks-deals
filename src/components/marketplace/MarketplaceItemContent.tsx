@@ -3,29 +3,7 @@ import ProductImageGallery from "@/components/marketplace/ProductImageGallery";
 import ProductInfo from "@/components/marketplace/ProductInfo";
 import SellerInfo from "@/components/marketplace/SellerInfo";
 import ProductActions from "@/components/marketplace/ProductActions";
-
-interface Product {
-  id: string;
-  title: string;
-  description: string;
-  price: number;
-  images: string[];
-  user_id: string;
-  created_at: string;
-  location?: string;
-  allow_pickup?: boolean;
-  allow_meet_on_campus?: boolean;
-  listing_type?: string;
-  open_to_negotiation?: boolean;
-  profiles: {
-    profile_name: string;
-    email: string;
-    phone_number?: string;
-    avatar_url?: string;
-    full_name?: string;
-    created_at: string;
-  };
-}
+import { Product } from "@/types/marketplace";
 
 interface MarketplaceItemContentProps {
   product: Product;
@@ -93,6 +71,7 @@ const MarketplaceItemContent = ({
           userId={product.user_id}
           listingCreatedAt={product.created_at}
           listingType={product.listing_type}
+          isOwnListing={product.user_id === user?.id}
         />
       </div>
     );
@@ -148,6 +127,7 @@ const MarketplaceItemContent = ({
           userId={product.user_id}
           listingCreatedAt={product.created_at}
           listingType={product.listing_type}
+          isOwnListing={product.user_id === user?.id}
         />
       </div>
     </div>
