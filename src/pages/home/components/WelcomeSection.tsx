@@ -11,7 +11,7 @@ export const WelcomeSection = ({ user }: WelcomeSectionProps) => {
   return (
     <section className="relative bg-blue-600 py-8 border-b">
       <div 
-        className="absolute inset-0 bg-cover bg-center opacity-20"
+        className="absolute inset-0 bg-cover bg-center"
         style={{
           backgroundImage: `url('/lovable-uploads/b78b0861-a175-4fd0-835e-08d13103ea11.png')`
         }}

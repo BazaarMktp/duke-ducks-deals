@@ -87,6 +87,20 @@ export const useMessages = (selectedConversation: string | null) => {
         });
 
       if (error) throw error;
+
+      // Send email notification
+      try {
+        await supabase.functions.invoke('send-message-notification', {
+          body: {
+            conversationId: selectedConversation,
+            senderId: user.id,
+            message: newMessage.trim()
+          }
+        });
+      } catch (emailError) {
+        console.error('Email notification failed (non-critical):', emailError);
+        // Don't show error to user since message was sent successfully
+      }
     } catch (error) {
       console.error('Error sending message:', error);
       toast({ title: "Error", description: "Failed to send message.", variant: "destructive" });
