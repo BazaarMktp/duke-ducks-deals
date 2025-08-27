@@ -30,13 +30,7 @@ serve(async (req) => {
     // Get conversation details to find the recipient
     const { data: conversation, error: conversationError } = await supabase
       .from('conversations')
-      .select(`
-        id,
-        buyer_id,
-        seller_id,
-        profiles!buyer_profile(profile_name, email),
-        profiles!seller_profile(profile_name, email)
-      `)
+      .select('id, buyer_id, seller_id')
       .eq('id', conversationId)
       .single();
 
@@ -63,10 +57,25 @@ serve(async (req) => {
       });
     }
 
-    // Determine recipient (the person who didn't send the message)
-    const recipientProfile = senderId === conversation.buyer_id 
-      ? conversation.profiles!seller_profile 
-      : conversation.profiles!buyer_profile;
+    // Determine recipient ID (the person who didn't send the message)
+    const recipientId = senderId === conversation.buyer_id 
+      ? conversation.seller_id 
+      : conversation.buyer_id;
+
+    // Get recipient profile
+    const { data: recipientProfile, error: recipientError } = await supabase
+      .from('profiles')
+      .select('profile_name, email')
+      .eq('id', recipientId)
+      .single();
+
+    if (recipientError || !recipientProfile) {
+      console.error('Error fetching recipient profile:', recipientError);
+      return new Response(JSON.stringify({ error: 'Recipient not found' }), {
+        status: 404,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
 
     if (!recipientProfile || !recipientProfile.email) {
       console.log('No recipient email found, skipping notification');
