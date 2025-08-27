@@ -39,7 +39,7 @@ const floatingCards = [
 
 export const HeroSection = () => {
   return (
-    <section className="relative bg-white min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative bg-gradient-to-br from-amber-50/30 via-white to-orange-50/20 min-h-screen flex items-center justify-center overflow-hidden">
       {/* Floating Cards */}
       {floatingCards.map((card, index) => (
         <div

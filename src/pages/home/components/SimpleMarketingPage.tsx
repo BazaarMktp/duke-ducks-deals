@@ -52,7 +52,7 @@ export const SimpleMarketingPage = ({ stats }: SimpleMarketingPageProps) => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-white">
       <HeroSection />
       <AnimatedSection direction="up" delay={0.1}>
         <HowItWorksSection />
