@@ -6,40 +6,40 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 210 11% 15%;
+    --background: 45 60% 92%; /* Eggshell */
+    --foreground: 221 50% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 210 11% 15%;
+    --card-foreground: 221 50% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 210 11% 15%;
+    --popover-foreground: 221 50% 15%;
 
-    /* Bazaar brand colors from Figma */
-    --primary: 18 87% 62%; /* Orange-red from buttons */
+    /* New color scheme */
+    --primary: 221 97% 21%; /* Royal Blue */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 220 13% 91%;
-    --secondary-foreground: 210 11% 15%;
+    --secondary: 205 100% 30%; /* Polynesian Blue */
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 220 13% 96%;
-    --muted-foreground: 215 16% 47%;
+    --muted: 45 30% 85%;
+    --muted-foreground: 221 30% 40%;
 
-    --accent: 210 40% 98%;
-    --accent-foreground: 210 11% 15%;
+    --accent: 81 40% 59%; /* Pistachio */
+    --accent-foreground: 221 50% 15%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 18 87% 62%;
+    --border: 45 30% 80%;
+    --input: 45 30% 85%;
+    --ring: 221 97% 21%;
 
     /* Brand specific colors */
-    --brand-orange: 18 87% 62%;
-    --brand-blue: 217 33% 17%;
-    --hot-deal: 11 100% 50%; /* For hot deal badges */
-    --success: 142 76% 36%;
+    --brand-orange: 25 56% 69%; /* Buff */
+    --brand-blue: 221 97% 21%; /* Royal Blue */
+    --hot-deal: 25 56% 69%; /* Buff for deal badges */
+    --success: 81 40% 59%; /* Pistachio for positive actions */
     --warning: 38 92% 50%;
 
     --radius: 0.75rem;

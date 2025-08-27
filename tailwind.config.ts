@@ -52,13 +52,13 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				// Bazaar brand colors
+				// Updated brand colors
 				brand: {
-					orange: 'hsl(var(--brand-orange))',
-					blue: 'hsl(var(--brand-blue))',
+					orange: 'hsl(var(--brand-orange))', // Buff
+					blue: 'hsl(var(--brand-blue))', // Royal Blue
 				},
-				'hot-deal': 'hsl(var(--hot-deal))',
-				success: 'hsl(var(--success))',
+				'hot-deal': 'hsl(var(--hot-deal))', // Buff for deal badges
+				success: 'hsl(var(--success))', // Pistachio
 				warning: 'hsl(var(--warning))',
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
