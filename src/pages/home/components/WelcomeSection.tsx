@@ -16,6 +16,7 @@ export const WelcomeSection = ({ user }: WelcomeSectionProps) => {
           backgroundImage: `url('/lovable-uploads/b78b0861-a175-4fd0-835e-08d13103ea11.png')`
         }}
       />
+      <div className="absolute inset-0 bg-black/20" />
       <div className="container relative mx-auto px-4">
         <div>
           <h1 className="text-3xl font-bold text-white">
