@@ -29,7 +29,7 @@ const MarketplaceItemCard = ({
 
   return (
     <Card 
-      className={`hover:shadow-lg transition-shadow overflow-hidden ${
+      className={`group hover:shadow-lg transition-all duration-300 cursor-pointer border-border/50 hover:border-primary/20 overflow-hidden ${
         listing.listing_type === 'wanted' ? 'border-blue-200 bg-blue-50/50' : ''
       } ${listing.featured ? 'border-yellow-400 border-2' : ''}`}
     >
