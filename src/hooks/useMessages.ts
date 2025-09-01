@@ -90,13 +90,15 @@ export const useMessages = (selectedConversation: string | null) => {
 
       // Send email notification
       try {
-        await supabase.functions.invoke('send-message-notification', {
+        console.log('Attempting to send email notification for conversation:', selectedConversation);
+        const { data, error } = await supabase.functions.invoke('send-message-notification', {
           body: {
             conversationId: selectedConversation,
             senderId: user.id,
             message: newMessage.trim()
           }
         });
+        console.log('Email notification response:', data, error);
       } catch (emailError) {
         console.error('Email notification failed (non-critical):', emailError);
         // Don't show error to user since message was sent successfully

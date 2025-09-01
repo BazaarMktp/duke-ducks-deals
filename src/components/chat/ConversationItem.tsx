@@ -37,11 +37,14 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
 
   return (
     <div
-      className={`p-4 cursor-pointer hover:bg-gray-50 border-b flex justify-between items-center ${
+      className={`p-4 border-b flex justify-between items-center ${
         isSelected ? 'bg-blue-50' : ''
       }`}
     >
-      <div className="flex-1" onClick={() => onSelect(conversation.id)}>
+      <div 
+        className="flex-1 cursor-pointer hover:bg-gray-50 rounded p-2 -m-2" 
+        onClick={() => onSelect(conversation.id)}
+      >
         <h4 className="font-semibold">
           {conversation.listings?.title || "Admin Message"}
         </h4>
