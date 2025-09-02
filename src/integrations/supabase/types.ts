@@ -824,9 +824,17 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_all_donations_count: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
       get_current_user_college_id: {
         Args: Record<PropertyKey, never>
         Returns: string
+      }
+      get_donation_stats: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
       }
       get_donations_count: {
         Args: Record<PropertyKey, never>
