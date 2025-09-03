@@ -856,6 +856,15 @@ export type Database = {
           profile_name: string
         }[]
       }
+      get_public_seller_info: {
+        Args: { profile_id: string }
+        Returns: {
+          avatar_url: string
+          is_verified: boolean
+          points: number
+          profile_name: string
+        }[]
+      }
       get_unread_message_count: {
         Args: { _user_id: string }
         Returns: number
