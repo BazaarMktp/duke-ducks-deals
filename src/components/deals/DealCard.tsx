@@ -65,7 +65,7 @@ export const DealCard: React.FC<DealCardProps> = ({
     } else if (validUntil <= oneMonthFromNow) {
       return { type: 'hot', label: 'Hot Deal', variant: 'destructive' as const, className: 'bg-red-500 text-white' };
     } else {
-      return { type: 'premium', label: 'Premium Deal', variant: 'secondary' as const, className: 'bg-blue-500 text-white' };
+      return { type: 'extended', label: 'Extended Deal', variant: 'secondary' as const, className: 'bg-blue-500 text-white' };
     }
   };
 
