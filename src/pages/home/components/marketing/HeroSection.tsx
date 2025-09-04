@@ -77,16 +77,13 @@ export const HeroSection = () => {
 
       {/* Main Content */}
       <div className="text-center max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Bazaar Badge */}
+        {/* Bazaar Logo */}
         <div className="inline-block bg-orange-50 px-4 py-2 rounded-full mb-8">
-          <span className="text-xl font-bold">
-            <span className="text-teal-600">B</span>
-            <span className="text-orange-500">a</span>
-            <span className="text-teal-600">z</span>
-            <span className="text-orange-500">a</span>
-            <span className="text-orange-500">a</span>
-            <span className="text-teal-600">r</span>
-          </span>
+          <img 
+            src="/lovable-uploads/010f2159-7ae2-4e7e-a71a-681407407a54.png" 
+            alt="Bazaar Logo" 
+            className="h-8 w-auto"
+          />
         </div>
 
         {/* Main Heading */}
