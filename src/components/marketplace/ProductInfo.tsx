@@ -66,7 +66,7 @@ const ProductInfo = ({
           {listingType === 'wanted' ? `Looking for: ${title}` : title}
         </h1>
         <div className="flex items-center gap-3">
-          <p className="text-2xl font-bold text-green-600">
+          <p className="text-2xl font-medium text-foreground">
             {listingType === 'wanted' 
               ? (price ? `Budget: $${price}` : 'Budget: Negotiable')
               : (price ? `$${price}` : 'Free')
