@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -35,6 +35,35 @@ export const DealCard: React.FC<DealCardProps> = ({
   onDelete 
 }) => {
   const navigate = useNavigate();
+  const [timeLeft, setTimeLeft] = useState<string>('');
+
+  useEffect(() => {
+    if (!deal.valid_until) return;
+
+    const updateCountdown = () => {
+      const now = new Date().getTime();
+      const expiry = new Date(deal.valid_until!).getTime();
+      const difference = expiry - now;
+
+      if (difference > 0) {
+        const hours = Math.floor(difference / (1000 * 60 * 60));
+        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        
+        if (hours < 24) {
+          setTimeLeft(`${hours}h ${minutes}m`);
+        } else {
+          setTimeLeft('');
+        }
+      } else {
+        setTimeLeft('EXPIRED');
+      }
+    };
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 60000); // Update every minute
+
+    return () => clearInterval(interval);
+  }, [deal.valid_until]);
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -59,6 +88,8 @@ export const DealCard: React.FC<DealCardProps> = ({
     threeDaysFromNow.setDate(now.getDate() + 3);
     const oneMonthFromNow = new Date();
     oneMonthFromNow.setMonth(now.getMonth() + 1);
+    const oneDayFromNow = new Date();
+    oneDayFromNow.setDate(now.getDate() + 1);
     
     const statuses = [];
     
@@ -73,6 +104,11 @@ export const DealCard: React.FC<DealCardProps> = ({
     // Then check if it's expiring very soon (within 3 days)
     if (validUntil <= threeDaysFromNow) {
       statuses.push({ type: 'expires-soon', label: 'Expires Soon', variant: 'outline' as const, className: 'text-orange-600 border-orange-200' });
+    }
+    
+    // Add countdown for deals expiring within 24 hours
+    if (validUntil <= oneDayFromNow && timeLeft && timeLeft !== 'EXPIRED') {
+      statuses.push({ type: 'countdown', label: timeLeft, variant: 'destructive' as const, className: 'bg-orange-500 text-white animate-pulse' });
     }
     
     return statuses;
