@@ -21,14 +21,20 @@ const MarketplaceItemCard = ({
   onToggleFavorite, 
   onStartConversation 
 }: MarketplaceItemCardProps) => {
-  // Extract display name from profile
+  // Extract display name from profile based on user login status
   const getDisplayName = () => {
+    // If user is not logged in, show generic "Bazaar Member"
+    if (!user) {
+      return "Bazaar Member";
+    }
+    
+    // If user is logged in but no profile data, show Anonymous
     if (!listing.profiles) return "Anonymous";
     
     const fullName = listing.profiles.full_name;
     const profileName = listing.profiles.profile_name;
     
-    // Extract first name from full_name if available
+    // For logged-in users, show first name only
     if (fullName) {
       return fullName.split(" ")[0];
     }
