@@ -81,7 +81,18 @@ export const ListingCard = ({
   return (
     <Card className="hover:shadow-lg transition-shadow">
       <CardHeader className="p-0">
-        <div className="h-48 bg-gray-50 rounded-t-lg overflow-hidden relative">
+        <div 
+          className="h-48 bg-gray-50 rounded-t-lg overflow-hidden relative cursor-pointer hover:opacity-90 transition-opacity"
+          onClick={() => {
+            if (listing.category === 'marketplace') {
+              navigate(`/marketplace/${listing.id}`);
+            } else if (listing.category === 'housing') {
+              navigate(`/housing/${listing.id}`);
+            } else if (listing.category === 'services') {
+              navigate(`/services/${listing.id}`);
+            }
+          }}
+        >
           <img 
             src={listing.images?.[0] || "/placeholder.svg"} 
             alt={listing.title}

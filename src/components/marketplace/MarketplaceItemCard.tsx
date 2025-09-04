@@ -36,13 +36,15 @@ const MarketplaceItemCard = ({
       <CardContent className="p-0 h-full flex flex-col">
         {/* Only show image for offers, not for requests */}
         {listing.listing_type === 'offer' && (
-          <div className="h-32 sm:h-48 overflow-hidden rounded-t-lg bg-gray-50 relative flex-shrink-0">
-            <img
-              src={listing.images?.[0] || "/placeholder.svg"}
-              alt={listing.title}
-              className="w-full h-full object-cover hover:scale-105 transition-transform"
-            />
-          </div>
+          <Link to={`/marketplace/${listing.id}`}>
+            <div className="h-32 sm:h-48 overflow-hidden rounded-t-lg bg-gray-50 relative flex-shrink-0 cursor-pointer hover:opacity-90 transition-opacity">
+              <img
+                src={listing.images?.[0] || "/placeholder.svg"}
+                alt={listing.title}
+                className="w-full h-full object-cover hover:scale-105 transition-transform"
+              />
+            </div>
+          </Link>
         )}
         
         <div className={`p-2 sm:p-4 flex-1 flex flex-col ${listing.listing_type === 'wanted' ? 'pt-3 sm:pt-6' : ''}`}>

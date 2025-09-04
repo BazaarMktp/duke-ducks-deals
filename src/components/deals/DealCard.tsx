@@ -63,7 +63,10 @@ export const DealCard: React.FC<DealCardProps> = ({
     <Card className="group hover:shadow-lg transition-all duration-300 cursor-pointer border-border/50 hover:border-primary/20">
       <CardHeader className="pb-4">
         {deal.image_url && (
-          <div className="aspect-video w-full overflow-hidden rounded-lg bg-muted">
+          <div 
+            className="aspect-video w-full overflow-hidden rounded-lg bg-muted cursor-pointer hover:opacity-90 transition-opacity"
+            onClick={() => navigate(`/devils-deals/${deal.id}`)}
+          >
             <img
               src={deal.image_url}
               alt={deal.title}
