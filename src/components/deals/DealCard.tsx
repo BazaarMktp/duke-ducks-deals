@@ -167,7 +167,7 @@ export const DealCard: React.FC<DealCardProps> = ({
           <div className="flex items-center gap-2 mb-4">
             {deal.original_price && deal.discounted_price && (
               <>
-                <span className="text-lg font-bold text-primary">
+                <span className="text-lg font-medium text-primary">
                   {formatPrice(deal.discounted_price)}
                 </span>
                 <span className="text-sm text-muted-foreground line-through">
@@ -176,7 +176,7 @@ export const DealCard: React.FC<DealCardProps> = ({
               </>
             )}
             {deal.discounted_price && !deal.original_price && (
-              <span className="text-lg font-bold text-primary">
+              <span className="text-lg font-medium text-primary">
                 {formatPrice(deal.discounted_price)}
               </span>
             )}

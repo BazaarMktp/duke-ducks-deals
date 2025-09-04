@@ -14,7 +14,7 @@ export const useMarketplace = (user: any, searchQuery: string, sortBy: string, a
       setLoading(true);
       let query = supabase
         .from('listings')
-        .select('*, profiles(profile_name)')
+        .select('*, profiles(profile_name, full_name, avatar_url, college_id, is_verified)')
         .eq('category', 'marketplace')
         .eq('status', 'active')
         .eq('listing_type', activeListingType);

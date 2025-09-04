@@ -21,10 +21,20 @@ const MarketplaceItemCard = ({
   onToggleFavorite, 
   onStartConversation 
 }: MarketplaceItemCardProps) => {
-  // Extract first name from profile_name since full_name might not be available
+  // Extract display name from profile
   const getDisplayName = () => {
-    if (!user || !listing.profiles?.profile_name) return null;
-    return listing.profiles.profile_name;
+    if (!listing.profiles) return 'Anonymous';
+    
+    // Prioritize full_name, then profile_name
+    const fullName = listing.profiles.full_name;
+    const profileName = listing.profiles.profile_name;
+    
+    if (fullName) {
+      // Return first name only for privacy
+      return fullName.split(' ')[0];
+    }
+    
+    return profileName || 'Anonymous';
   };
 
   return (
@@ -66,9 +76,15 @@ const MarketplaceItemCard = ({
                   {listing.listing_type === 'wanted' ? `Looking for: ${listing.title}` : listing.title}
                 </h3>
               </Link>
-              {getDisplayName() && (
-                <p className="text-xs sm:text-sm text-muted-foreground mb-1 sm:mb-2 truncate">by {getDisplayName()}</p>
-              )}
+              <p className="text-xs sm:text-sm text-muted-foreground mb-1 sm:mb-2 truncate flex items-center gap-1">
+                <span>by {getDisplayName()}</span>
+                {listing.profiles?.is_verified && (
+                  <span className="text-blue-600 font-medium">✓ Verified</span>
+                )}
+                {user && (
+                  <span className="text-blue-600">• Duke Student</span>
+                )}
+              </p>
             </div>
           </div>
           
@@ -77,14 +93,14 @@ const MarketplaceItemCard = ({
           <div className="flex justify-between items-center mb-2 sm:mb-3 flex-wrap gap-1">
             {listing.listing_type === 'offer' ? (
               <>
-                <p className="text-lg sm:text-xl font-bold text-foreground">
+                <p className="text-lg sm:text-xl font-medium text-foreground">
                   {listing.price ? `$${listing.price}` : 'Free'}
                 </p>
                 <Badge variant="outline" className="text-xs">Available</Badge>
               </>
             ) : (
               <>
-                <p className="text-sm sm:text-lg font-bold text-blue-600">
+                <p className="text-sm sm:text-lg font-medium text-blue-600">
                   {listing.price ? `Budget: $${listing.price}` : 'Budget: Negotiable'}
                 </p>
                 <Badge variant="outline" className="text-blue-600 border-blue-300 text-xs">Wanted</Badge>

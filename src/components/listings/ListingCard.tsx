@@ -139,7 +139,7 @@ export const ListingCard = ({
         )}
 
         {listing.price && (
-          <p className="text-xl font-bold text-green-600 mb-3">
+          <p className="text-xl font-medium text-foreground mb-3">
             ${listing.price}
             {listing.category === 'housing' ? '/month' : listing.category === 'services' ? '/hour' : ''}
           </p>
