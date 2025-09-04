@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Heart, MessageCircle, Search } from "lucide-react";
+import { Heart, MessageCircle, Search, BadgeCheck } from "lucide-react";
 import { MarketplaceListing } from "./types";
 
 interface MarketplaceItemCardProps {
@@ -25,15 +25,15 @@ const MarketplaceItemCard = ({
   const getDisplayName = () => {
     if (!listing.profiles) return 'Anonymous';
     
-    // Prioritize full_name, then profile_name
     const fullName = listing.profiles.full_name;
     const profileName = listing.profiles.profile_name;
     
-    if (fullName) {
-      // Return first name only for privacy
-      return fullName.split(' ')[0];
+    // If user is logged in, show full name for better transparency
+    if (user && fullName) {
+      return fullName;
     }
     
+    // Fallback to profile name
     if (profileName) {
       return profileName;
     }
@@ -83,9 +83,8 @@ const MarketplaceItemCard = ({
               <p className="text-xs sm:text-sm text-muted-foreground mb-1 sm:mb-2 truncate flex items-center gap-1">
                 <span>by {getDisplayName()}</span>
                 {listing.profiles?.is_verified && (
-                  <span className="text-blue-600 font-medium">✓ Verified</span>
+                  <BadgeCheck size={14} className="text-blue-600" />
                 )}
-                <span className="text-blue-600">• Duke Student</span>
               </p>
             </div>
           </div>
