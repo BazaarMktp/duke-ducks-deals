@@ -23,14 +23,14 @@ const MarketplaceItemCard = ({
 }: MarketplaceItemCardProps) => {
   // Extract display name from profile
   const getDisplayName = () => {
-    if (!listing.profiles) return 'Anonymous';
+    if (!listing.profiles) return "Anonymous";
     
     const fullName = listing.profiles.full_name;
     const profileName = listing.profiles.profile_name;
     
-    // If user is logged in, show full name for better transparency
-    if (user && fullName) {
-      return fullName;
+    // Extract first name from full_name if available
+    if (fullName) {
+      return fullName.split(" ")[0];
     }
     
     // Fallback to profile name
@@ -38,7 +38,7 @@ const MarketplaceItemCard = ({
       return profileName;
     }
     
-    return 'Anonymous';
+    return "Anonymous";
   };
 
   return (
