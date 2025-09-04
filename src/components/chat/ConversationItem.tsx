@@ -42,7 +42,7 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
       }`}
     >
       <div 
-        className="flex-1 cursor-pointer hover:bg-gray-50 rounded p-2 -m-2" 
+        className="flex-1 cursor-pointer hover:bg-gray-50 rounded p-2" 
         onClick={() => onSelect(conversation.id)}
       >
         <h4 className="font-semibold">
