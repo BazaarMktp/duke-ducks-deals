@@ -120,7 +120,7 @@ const MarketplaceItemCard = ({
               </Button>
             )}
             <Link to={`/marketplace/${listing.id}`} className="flex-1 min-w-0">
-              <Button size="sm" className="w-full text-xs sm:text-sm px-1 sm:px-3">
+              <Button variant="ghost" size="sm" className="w-full text-xs sm:text-sm px-1 sm:px-3 hover:bg-muted/50 text-muted-foreground hover:text-foreground">
                 {listing.listing_type === 'wanted' ? 'I Can Help' : 'View Details'}
               </Button>
             </Link>
