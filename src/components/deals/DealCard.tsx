@@ -95,7 +95,7 @@ export const DealCard: React.FC<DealCardProps> = ({
     
     // First check if it's a hot deal (expires within a month)
     if (validUntil <= oneMonthFromNow) {
-      statuses.push({ type: 'hot', label: 'Hot Deal', variant: 'destructive' as const, className: 'bg-red-500 text-white' });
+      statuses.push({ type: 'hot', label: '🔥 Hot Deal', variant: 'destructive' as const, className: 'bg-red-500 text-white' });
     } else {
       // Extended deal (expires after a month)
       statuses.push({ type: 'extended', label: 'Extended Deal', variant: 'secondary' as const, className: 'bg-blue-500 text-white' });
