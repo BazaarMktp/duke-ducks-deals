@@ -51,8 +51,8 @@ export const DealCard: React.FC<DealCardProps> = ({
     });
   };
 
-  const getDealStatus = () => {
-    if (!deal.valid_until) return null;
+  const getDealStatuses = () => {
+    if (!deal.valid_until) return [];
     const validUntil = new Date(deal.valid_until);
     const now = new Date();
     const threeDaysFromNow = new Date();
@@ -60,13 +60,22 @@ export const DealCard: React.FC<DealCardProps> = ({
     const oneMonthFromNow = new Date();
     oneMonthFromNow.setMonth(now.getMonth() + 1);
     
-    if (validUntil <= threeDaysFromNow) {
-      return { type: 'expires-soon', label: 'Expires Soon', variant: 'outline' as const, className: 'text-orange-600 border-orange-200' };
-    } else if (validUntil <= oneMonthFromNow) {
-      return { type: 'hot', label: 'Hot Deal', variant: 'destructive' as const, className: 'bg-red-500 text-white' };
+    const statuses = [];
+    
+    // First check if it's a hot deal (expires within a month)
+    if (validUntil <= oneMonthFromNow) {
+      statuses.push({ type: 'hot', label: 'Hot Deal', variant: 'destructive' as const, className: 'bg-red-500 text-white' });
     } else {
-      return { type: 'extended', label: 'Extended Deal', variant: 'secondary' as const, className: 'bg-blue-500 text-white' };
+      // Extended deal (expires after a month)
+      statuses.push({ type: 'extended', label: 'Extended Deal', variant: 'secondary' as const, className: 'bg-blue-500 text-white' });
     }
+    
+    // Then check if it's expiring very soon (within 3 days)
+    if (validUntil <= threeDaysFromNow) {
+      statuses.push({ type: 'expires-soon', label: 'Expires Soon', variant: 'outline' as const, className: 'text-orange-600 border-orange-200' });
+    }
+    
+    return statuses;
   };
 
   return (
@@ -97,12 +106,12 @@ export const DealCard: React.FC<DealCardProps> = ({
                 </Badge>
               )}
               {(() => {
-                const status = getDealStatus();
-                return status ? (
-                  <Badge variant={status.variant} className={status.className}>
+                const statuses = getDealStatuses();
+                return statuses.map((status, index) => (
+                  <Badge key={index} variant={status.variant} className={status.className}>
                     {status.label}
                   </Badge>
-                ) : null;
+                ));
               })()}
             </div>
           </div>
