@@ -77,7 +77,7 @@ const MarketplaceItemCard = ({
           <div className="flex justify-between items-center mb-2 sm:mb-3 flex-wrap gap-1">
             {listing.listing_type === 'offer' ? (
               <>
-                <p className="text-lg sm:text-xl font-bold text-green-600">
+                <p className="text-lg sm:text-xl font-bold text-foreground">
                   {listing.price ? `$${listing.price}` : 'Free'}
                 </p>
                 <Badge variant="outline" className="text-xs">Available</Badge>
