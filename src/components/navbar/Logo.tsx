@@ -5,7 +5,7 @@ const Logo = () => {
   return (
     <Link to="/" className="flex items-center">
       <img 
-        src="/lovable-uploads/ab5a5857-7332-4da1-b76a-f8de90b92080.png" 
+        src="/lovable-uploads/010f2159-7ae2-4e7e-a71a-681407407a54.png" 
         alt="Bazaar Logo" 
         className="h-16 w-auto"
       />
