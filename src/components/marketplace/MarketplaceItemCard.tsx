@@ -34,7 +34,11 @@ const MarketplaceItemCard = ({
       return fullName.split(' ')[0];
     }
     
-    return profileName || 'Anonymous';
+    if (profileName) {
+      return profileName;
+    }
+    
+    return 'Anonymous';
   };
 
   return (
@@ -81,9 +85,7 @@ const MarketplaceItemCard = ({
                 {listing.profiles?.is_verified && (
                   <span className="text-blue-600 font-medium">✓ Verified</span>
                 )}
-                {user && (
-                  <span className="text-blue-600">• Duke Student</span>
-                )}
+                <span className="text-blue-600">• Duke Student</span>
               </p>
             </div>
           </div>
