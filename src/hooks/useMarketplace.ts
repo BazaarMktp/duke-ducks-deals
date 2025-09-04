@@ -14,7 +14,10 @@ export const useMarketplace = (user: any, searchQuery: string, sortBy: string, a
       setLoading(true);
       let query = supabase
         .from('listings')
-        .select('*, profiles(profile_name, full_name, avatar_url, college_id, is_verified)')
+        .select(`
+          *,
+          profiles!user_id(profile_name, full_name, avatar_url, college_id, is_verified)
+        `)
         .eq('category', 'marketplace')
         .eq('status', 'active')
         .eq('listing_type', activeListingType);
@@ -44,6 +47,7 @@ export const useMarketplace = (user: any, searchQuery: string, sortBy: string, a
         .order(orderColumn, { ascending });
 
       if (error) throw error;
+      console.log('Marketplace listings data:', data); // Debug log
       setListings(data || []);
     } catch (error) {
       console.error('Error fetching listings:', error);
