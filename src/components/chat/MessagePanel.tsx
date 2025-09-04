@@ -21,14 +21,31 @@ const MessagePanel: React.FC<MessagePanelProps> = ({
   onBack,
 }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const previousMessagesLength = useRef<number>(0);
+  const isFirstLoad = useRef<boolean>(true);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
-    scrollToBottom();
+    // Only scroll to bottom if:
+    // 1. We're adding new messages to an existing conversation (not switching conversations)
+    // 2. It's not the first load of messages for a conversation
+    if (!isFirstLoad.current && messages.length > previousMessagesLength.current) {
+      scrollToBottom();
+    }
+    
+    // Update the previous length and mark that we've loaded at least once
+    previousMessagesLength.current = messages.length;
+    isFirstLoad.current = false;
   }, [messages]);
+
+  // Reset first load flag when conversation changes
+  useEffect(() => {
+    isFirstLoad.current = true;
+    previousMessagesLength.current = 0;
+  }, [selectedConversation]);
 
   return (
     <Card className="md:col-span-2">
