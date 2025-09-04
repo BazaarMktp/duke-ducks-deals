@@ -51,12 +51,22 @@ export const DealCard: React.FC<DealCardProps> = ({
     });
   };
 
-  const isExpiringSoon = () => {
-    if (!deal.valid_until) return false;
+  const getDealStatus = () => {
+    if (!deal.valid_until) return null;
     const validUntil = new Date(deal.valid_until);
+    const now = new Date();
     const threeDaysFromNow = new Date();
-    threeDaysFromNow.setDate(threeDaysFromNow.getDate() + 3);
-    return validUntil <= threeDaysFromNow;
+    threeDaysFromNow.setDate(now.getDate() + 3);
+    const oneMonthFromNow = new Date();
+    oneMonthFromNow.setMonth(now.getMonth() + 1);
+    
+    if (validUntil <= threeDaysFromNow) {
+      return { type: 'expires-soon', label: 'Expires Soon', variant: 'outline' as const, className: 'text-orange-600 border-orange-200' };
+    } else if (validUntil <= oneMonthFromNow) {
+      return { type: 'hot', label: 'Hot Deal', variant: 'destructive' as const, className: 'bg-red-500 text-white' };
+    } else {
+      return { type: 'premium', label: 'Premium Deal', variant: 'secondary' as const, className: 'bg-blue-500 text-white' };
+    }
   };
 
   return (
@@ -76,15 +86,25 @@ export const DealCard: React.FC<DealCardProps> = ({
         )}
         
         <div className="space-y-2">
-          <div className="flex items-start justify-between">
+          <div className="flex items-start justify-between gap-2">
             <h3 className="font-semibold text-lg line-clamp-2 group-hover:text-primary transition-colors">
               {deal.title}
             </h3>
-            {deal.discount_percentage && (
-              <Badge variant="destructive" className="ml-2 shrink-0">
-                {deal.discount_percentage}% OFF
-              </Badge>
-            )}
+            <div className="flex gap-1 shrink-0">
+              {deal.discount_percentage && (
+                <Badge variant="destructive">
+                  {deal.discount_percentage}% OFF
+                </Badge>
+              )}
+              {(() => {
+                const status = getDealStatus();
+                return status ? (
+                  <Badge variant={status.variant} className={status.className}>
+                    {status.label}
+                  </Badge>
+                ) : null;
+              })()}
+            </div>
           </div>
           
           <p className="text-sm text-muted-foreground font-medium">
@@ -122,11 +142,6 @@ export const DealCard: React.FC<DealCardProps> = ({
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Calendar className="w-4 h-4" />
             <span>Valid until {formatDate(deal.valid_until)}</span>
-            {isExpiringSoon() && (
-              <Badge variant="outline" className="text-xs text-orange-600 border-orange-200">
-                Expires Soon
-              </Badge>
-            )}
           </div>
         )}
       </CardContent>
