@@ -122,8 +122,8 @@ export default function DevilsDeals() {
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Devil's Deals</h1>
-            <p className="text-gray-600 mt-2">
+            <h1 className="text-3xl font-bold text-primary">Devil's Deals</h1>
+            <p className="text-primary/70 mt-2">
               Exclusive discounts and deals for Duke students
             </p>
           </div>
