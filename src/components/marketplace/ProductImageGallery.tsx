@@ -21,7 +21,7 @@ const ProductImageGallery = ({ images, title, currentImageIndex, onImageChange }
         <img
           src={images?.[currentImageIndex] || "/placeholder.svg"}
           alt={title}
-          className="w-full h-96 object-cover rounded-lg"
+          className="w-full h-96 object-contain rounded-lg bg-gray-50"
         />
         {images && images.length > 0 && (
           <Dialog>
