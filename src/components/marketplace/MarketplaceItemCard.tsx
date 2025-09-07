@@ -95,6 +95,8 @@ const MarketplaceItemCard = ({
             </div>
           </div>
           
+          <p className="text-xs sm:text-sm text-gray-600 mb-2 sm:mb-3 line-clamp-2 flex-1">{listing.description}</p>
+          
           <div className="flex justify-between items-center mb-2 sm:mb-3 flex-wrap gap-1">
             {listing.listing_type === 'offer' ? (
               <>
