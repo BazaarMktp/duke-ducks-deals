@@ -82,6 +82,8 @@ export const useMyListings = () => {
 
   const handleStatusToggle = async (listingId: string, currentStatus: string) => {
     console.log('handleStatusToggle called with:', { listingId, currentStatus, userId: user?.id });
+    console.log('User object:', user);
+    console.log('Auth.uid check:', user?.id);
     
     if (!user) {
       console.log('No user found, showing login error');
@@ -94,6 +96,12 @@ export const useMyListings = () => {
     
     try {
       console.log('Attempting to update listing status:', listingId);
+      
+      // Let's test the current user authentication first
+      const { data: authTest, error: authError } = await supabase.auth.getUser();
+      console.log('Current auth user:', authTest?.user?.id);
+      console.log('Auth error:', authError);
+      
       const { error } = await supabase
         .from('listings')
         .update({ 
@@ -104,7 +112,12 @@ export const useMyListings = () => {
         .eq('user_id', user.id);
 
       if (error) {
-        console.error('Status toggle error:', error);
+        console.error('Status toggle error details:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        });
         throw error;
       }
 
