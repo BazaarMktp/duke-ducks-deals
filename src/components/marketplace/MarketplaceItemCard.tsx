@@ -57,11 +57,11 @@ const MarketplaceItemCard = ({
         {/* Only show image for offers, not for requests */}
         {listing.listing_type === 'offer' && (
           <Link to={`/marketplace/${listing.id}`}>
-            <div className="h-32 sm:h-48 overflow-hidden rounded-t-lg bg-gray-50 relative flex-shrink-0 cursor-pointer hover:opacity-90 transition-opacity">
+            <div className="h-40 sm:h-56 overflow-hidden rounded-t-lg bg-gray-50 relative flex-shrink-0 cursor-pointer hover:opacity-90 transition-opacity">
               <img
                 src={listing.images?.[0] || "/placeholder.svg"}
                 alt={listing.title}
-                className="w-full h-full object-cover hover:scale-105 transition-transform"
+                className="w-full h-full object-contain hover:scale-105 transition-transform"
               />
             </div>
           </Link>
