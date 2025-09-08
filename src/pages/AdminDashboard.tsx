@@ -11,6 +11,7 @@ import DonationManagement from "@/components/admin/DonationManagement";
 import ReportManagement from "@/components/admin/ReportManagement";
 import FeedbackManagement from "@/components/admin/FeedbackManagement";
 import { PerformanceAnalytics } from "@/components/admin/PerformanceAnalytics";
+import { AutoFeatureControl } from "@/components/admin/AutoFeatureControl";
 
 const AdminDashboard = () => {
   const { user, loading: authLoading } = useAuth();
@@ -36,7 +37,7 @@ const AdminDashboard = () => {
       </div>
       
       <Tabs defaultValue="analytics" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-7">
+        <TabsList className="grid w-full grid-cols-8">
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
           <TabsTrigger value="users">Users</TabsTrigger>
           <TabsTrigger value="listings">Listings</TabsTrigger>
@@ -44,6 +45,7 @@ const AdminDashboard = () => {
           <TabsTrigger value="donations">Donations</TabsTrigger>
           <TabsTrigger value="feedback">Feedback</TabsTrigger>
           <TabsTrigger value="performance">Performance</TabsTrigger>
+          <TabsTrigger value="featuring">Auto-Feature</TabsTrigger>
           <TabsTrigger value="support">Support</TabsTrigger>
         </TabsList>
 
@@ -73,6 +75,10 @@ const AdminDashboard = () => {
 
         <TabsContent value="performance">
           <PerformanceAnalytics />
+        </TabsContent>
+
+        <TabsContent value="featuring">
+          <AutoFeatureControl />
         </TabsContent>
 
         <TabsContent value="support">
