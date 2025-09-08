@@ -50,12 +50,17 @@ export const useMyListings = () => {
   };
 
   const handleDelete = async (listingId: string) => {
+    if (!user) {
+      toast.error("Please log in to delete listings.");
+      return;
+    }
+
     try {
       const { error } = await supabase
         .from('listings')
         .delete()
         .eq('id', listingId)
-        .eq('user_id', user?.id);
+        .eq('user_id', user.id);
 
       if (error) throw error;
 
@@ -68,6 +73,11 @@ export const useMyListings = () => {
   };
 
   const handleStatusToggle = async (listingId: string, currentStatus: string) => {
+    if (!user) {
+      toast.error("Please log in to update listings.");
+      return;
+    }
+
     const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
     
     try {
@@ -78,7 +88,7 @@ export const useMyListings = () => {
           updated_at: new Date().toISOString()
         })
         .eq('id', listingId)
-        .eq('user_id', user?.id);
+        .eq('user_id', user.id);
 
       if (error) throw error;
 
@@ -98,6 +108,11 @@ export const useMyListings = () => {
   };
 
   const handleMarkAsSold = async (listingId: string, soldOnBazaar: boolean, soldElsewhereLocation?: string) => {
+    if (!user) {
+      toast.error("Please log in to update listings.");
+      return;
+    }
+
     try {
       const updateData = {
         status: 'sold' as const,
@@ -111,7 +126,7 @@ export const useMyListings = () => {
         .from('listings')
         .update(updateData)
         .eq('id', listingId)
-        .eq('user_id', user?.id);
+        .eq('user_id', user.id);
 
       if (error) throw error;
 
