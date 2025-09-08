@@ -370,6 +370,45 @@ export type Database = {
           },
         ]
       }
+      image_performance_metrics: {
+        Row: {
+          created_at: string
+          id: string
+          image_size_bytes: number | null
+          image_url: string
+          is_lazy_loaded: boolean | null
+          load_time_ms: number
+          page_url: string
+          user_id: string | null
+          viewport_height: number | null
+          viewport_width: number | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_size_bytes?: number | null
+          image_url: string
+          is_lazy_loaded?: boolean | null
+          load_time_ms: number
+          page_url: string
+          user_id?: string | null
+          viewport_height?: number | null
+          viewport_width?: number | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_size_bytes?: number | null
+          image_url?: string
+          is_lazy_loaded?: boolean | null
+          load_time_ms?: number
+          page_url?: string
+          user_id?: string | null
+          viewport_height?: number | null
+          viewport_width?: number | null
+        }
+        Relationships: []
+      }
       listing_recommendations: {
         Row: {
           clicked: boolean | null
@@ -579,6 +618,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      performance_metrics: {
+        Row: {
+          connection_type: string | null
+          created_at: string
+          id: string
+          metric_name: string
+          page_url: string
+          rating: string
+          user_agent: string | null
+          user_id: string | null
+          value: number
+        }
+        Insert: {
+          connection_type?: string | null
+          created_at?: string
+          id?: string
+          metric_name: string
+          page_url: string
+          rating: string
+          user_agent?: string | null
+          user_id?: string | null
+          value: number
+        }
+        Update: {
+          connection_type?: string | null
+          created_at?: string
+          id?: string
+          metric_name?: string
+          page_url?: string
+          rating?: string
+          user_agent?: string | null
+          user_id?: string | null
+          value?: number
+        }
+        Relationships: []
       }
       profiles: {
         Row: {

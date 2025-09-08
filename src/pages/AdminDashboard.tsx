@@ -1,4 +1,3 @@
-
 import { useAdmin } from "@/contexts/AdminContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,6 +10,7 @@ import AdminStats from "@/components/admin/AdminStats";
 import DonationManagement from "@/components/admin/DonationManagement";
 import ReportManagement from "@/components/admin/ReportManagement";
 import FeedbackManagement from "@/components/admin/FeedbackManagement";
+import { PerformanceAnalytics } from "@/components/admin/PerformanceAnalytics";
 
 const AdminDashboard = () => {
   const { user, loading: authLoading } = useAuth();
@@ -43,6 +43,7 @@ const AdminDashboard = () => {
           <TabsTrigger value="reports">Reports</TabsTrigger>
           <TabsTrigger value="donations">Donations</TabsTrigger>
           <TabsTrigger value="feedback">Feedback</TabsTrigger>
+          <TabsTrigger value="performance">Performance</TabsTrigger>
           <TabsTrigger value="support">Support</TabsTrigger>
         </TabsList>
 
@@ -68,6 +69,10 @@ const AdminDashboard = () => {
 
         <TabsContent value="feedback">
           <FeedbackManagement />
+        </TabsContent>
+
+        <TabsContent value="performance">
+          <PerformanceAnalytics />
         </TabsContent>
 
         <TabsContent value="support">

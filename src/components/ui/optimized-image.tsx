@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { cn } from '@/lib/utils';
+import { usePerformanceTracking } from '@/hooks/usePerformanceTracking';
 
 interface OptimizedImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   src: string;
@@ -22,6 +23,8 @@ export const OptimizedImage = ({
   const [error, setError] = useState(false);
   const [inView, setInView] = useState(!lazy);
   const imgRef = useRef<HTMLImageElement>(null);
+  const [loadStartTime, setLoadStartTime] = useState<number | null>(null);
+  const { trackImagePerformance } = usePerformanceTracking();
 
   useEffect(() => {
     if (!lazy) return;
@@ -45,6 +48,10 @@ export const OptimizedImage = ({
   }, [lazy]);
 
   const handleLoad = () => {
+    if (loadStartTime) {
+      const loadTime = performance.now() - loadStartTime;
+      trackImagePerformance(src, loadTime, undefined, lazy);
+    }
     setIsLoaded(true);
   };
 
@@ -52,6 +59,12 @@ export const OptimizedImage = ({
     setError(true);
     setIsLoaded(true);
   };
+
+  useEffect(() => {
+    if (inView && !loadStartTime) {
+      setLoadStartTime(performance.now());
+    }
+  }, [inView, loadStartTime]);
 
   return (
     <div 
