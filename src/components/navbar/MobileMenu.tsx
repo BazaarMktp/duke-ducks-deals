@@ -27,7 +27,7 @@ const MobileMenu = ({ user, isOpen, onClose, onSignOut, unreadMessages }: Mobile
 
   const navigation = [
     { name: "Home", href: "/home", icon: Home },
-    { name: "Blue Devil's Marketplace", href: "/marketplace", icon: ShoppingCart },
+    { name: "Marketplace", href: "/marketplace", icon: ShoppingCart },
     { name: "Devil's Deals", href: "/devils-deals", icon: Percent },
   ];
 

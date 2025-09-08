@@ -64,25 +64,29 @@ const ChatInterface = () => {
       </div>
       
       {/* Mobile: Show conversation list or message panel, Desktop: Show both */}
-      <div className="md:hidden">
+      <div className="md:hidden h-[calc(100vh-200px)]">
         {selectedConversation ? (
-          <MessagePanel
-            selectedConversation={selectedConversation}
-            messages={messages}
-            currentUserId={user.id}
-            onSendMessage={sendMessage}
-            onBack={() => handleSelectConversation(null)}
-          />
+          <div className="h-full border rounded-lg bg-white">
+            <MessagePanel
+              selectedConversation={selectedConversation}
+              messages={messages}
+              currentUserId={user.id}
+              onSendMessage={sendMessage}
+              onBack={() => handleSelectConversation(null)}
+            />
+          </div>
         ) : (
-          <ConversationList
-            conversations={conversations}
-            selectedConversation={selectedConversation}
-            currentUserId={user.id}
-            showArchived={showArchived}
-            onSelectConversation={handleSelectConversation}
-            onArchiveConversation={archiveConversation}
-            onDeleteConversation={deleteConversation}
-          />
+          <div className="h-full border rounded-lg bg-white overflow-hidden">
+            <ConversationList
+              conversations={conversations}
+              selectedConversation={selectedConversation}
+              currentUserId={user.id}
+              showArchived={showArchived}
+              onSelectConversation={handleSelectConversation}
+              onArchiveConversation={archiveConversation}
+              onDeleteConversation={deleteConversation}
+            />
+          </div>
         )}
       </div>
       
