@@ -10,6 +10,7 @@ import SupportTickets from "@/components/admin/SupportTickets";
 import AdminStats from "@/components/admin/AdminStats";
 import DonationManagement from "@/components/admin/DonationManagement";
 import ReportManagement from "@/components/admin/ReportManagement";
+import FeedbackManagement from "@/components/admin/FeedbackManagement";
 
 const AdminDashboard = () => {
   const { user, loading: authLoading } = useAuth();
@@ -35,12 +36,13 @@ const AdminDashboard = () => {
       </div>
       
       <Tabs defaultValue="analytics" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-6">
+        <TabsList className="grid w-full grid-cols-7">
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
           <TabsTrigger value="users">Users</TabsTrigger>
           <TabsTrigger value="listings">Listings</TabsTrigger>
           <TabsTrigger value="reports">Reports</TabsTrigger>
           <TabsTrigger value="donations">Donations</TabsTrigger>
+          <TabsTrigger value="feedback">Feedback</TabsTrigger>
           <TabsTrigger value="support">Support</TabsTrigger>
         </TabsList>
 
@@ -62,6 +64,10 @@ const AdminDashboard = () => {
 
         <TabsContent value="donations">
           <DonationManagement />
+        </TabsContent>
+
+        <TabsContent value="feedback">
+          <FeedbackManagement />
         </TabsContent>
 
         <TabsContent value="support">
