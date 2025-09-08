@@ -95,16 +95,20 @@ const FeedbackManagement = () => {
     try {
       const { error } = await supabase
         .from('support_tickets')
-        .update({ status: newStatus, updated_at: new Date().toISOString() })
+        .update({ status: newStatus })
         .eq('id', ticketId);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
+      }
 
       toast.success(`Feedback status updated to ${newStatus}`);
       fetchFeedbackTickets();
     } catch (error) {
       console.error('Error updating feedback status:', error);
-      toast.error('Failed to update feedback status');
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      toast.error(`Failed to update feedback status: ${errorMessage}`);
     }
   };
 
