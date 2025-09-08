@@ -25,9 +25,11 @@ const Navbar = () => {
   return (
     <nav className="bg-white shadow-sm border-b sticky top-0 z-50">
       <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center h-16">
+        <div className="relative flex justify-between items-center h-16">
           <Logo />
-          <Navigation />
+          <div className="absolute left-1/2 transform -translate-x-1/2">
+            <Navigation />
+          </div>
           <UserMenu user={user} onSignOut={handleSignOut} unreadMessages={unreadCount} />
 
           {/* Mobile menu button */}
