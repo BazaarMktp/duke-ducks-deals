@@ -940,12 +940,19 @@ export type Database = {
         Returns: number
       }
       calculate_engagement_score: {
-        Args: {
-          clicks?: number
-          favorites?: number
-          messages?: number
-          views?: number
-        }
+        Args:
+          | {
+              clicks?: number
+              favorites?: number
+              messages?: number
+              views?: number
+            }
+          | {
+              p_clicks?: number
+              p_favorites?: number
+              p_messages?: number
+              p_views?: number
+            }
         Returns: number
       }
       get_all_donations_count: {
