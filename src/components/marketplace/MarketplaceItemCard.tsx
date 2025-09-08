@@ -62,6 +62,8 @@ const MarketplaceItemCard = ({
                 src={listing.images?.[0] || "/placeholder.svg"}
                 alt={listing.title}
                 className="w-full h-full object-cover hover:scale-105 transition-transform"
+                loading="lazy"
+                decoding="async"
               />
             </div>
           </Link>

@@ -241,6 +241,8 @@ const Cart = () => {
                       src={item.listing.images?.[0] || "/placeholder.svg"} 
                       alt={item.listing.title}
                       className="w-24 h-24 object-cover rounded-lg"
+                      loading="lazy"
+                      decoding="async"
                     />
                     <div className="flex-1">
                       <div className="flex justify-between items-start mb-2">

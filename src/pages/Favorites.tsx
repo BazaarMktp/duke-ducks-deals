@@ -160,6 +160,8 @@ const Favorites = () => {
                   src={listing.images?.[0] || "/placeholder.svg"} 
                   alt={listing.title}
                   className="w-full h-48 object-cover rounded-t-lg"
+                  loading="lazy"
+                  decoding="async"
                 />
               </CardHeader>
               <CardContent className="p-4">

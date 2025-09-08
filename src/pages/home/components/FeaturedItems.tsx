@@ -42,6 +42,8 @@ export const FeaturedItems = ({ featuredListings, isLoading }: FeaturedItemsProp
                         src={item.images[0]} 
                         alt={item.title}
                         className="w-full h-full object-cover"
+                        loading="lazy"
+                        decoding="async"
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center bg-gray-200">

@@ -96,7 +96,9 @@ export const ListingCard = ({
           <img 
             src={listing.images?.[0] || "/placeholder.svg"} 
             alt={listing.title}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+            loading="lazy"
+            decoding="async"
           />
         </div>
       </CardHeader>

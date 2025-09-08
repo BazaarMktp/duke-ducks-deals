@@ -234,6 +234,8 @@ const Housing = () => {
                       src={listing.images[0]} 
                       alt={listing.title}
                       className="w-full h-48 object-cover rounded-t-lg"
+                      loading="lazy"
+                      decoding="async"
                     />
                   ) : (
                     <div className="w-full h-48 bg-gray-200 rounded-t-lg flex items-center justify-center">
