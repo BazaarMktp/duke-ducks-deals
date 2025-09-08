@@ -14,8 +14,8 @@ const Home = () => {
     return (
       <>
         <Helmet>
-          <title>Bazaar Duke — Home</title>
-          <meta name="description" content="Bazaar Duke connects students to buy, sell, and trade on campus." />
+          <title>Bazaar — Home</title>
+          <meta name="description" content="Student marketplace connecting students to buy, sell, and trade on campus." />
           <link rel="canonical" href="https://bazaar.lovable.app/home" />
         </Helmet>
         <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -32,8 +32,8 @@ const Home = () => {
     return (
       <>
         <Helmet>
-          <title>Bazaar Duke — Dashboard</title>
-          <meta name="description" content="Your personalized Bazaar Duke dashboard with featured listings and stats." />
+          <title>Bazaar — Dashboard</title>
+          <meta name="description" content="Your personalized student marketplace dashboard with featured listings and stats." />
           <link rel="canonical" href="https://bazaar.lovable.app/home" />
         </Helmet>
         <Dashboard 
@@ -49,11 +49,11 @@ const Home = () => {
 
   return (
     <>
-      <Helmet>
-        <title>Bazaar Duke — Home</title>
-        <meta name="description" content="Explore Duke's student marketplace: browse, buy, and sell with peers." />
-        <link rel="canonical" href="https://bazaar.lovable.app/home" />
-      </Helmet>
+        <Helmet>
+          <title>Bazaar — Home</title>
+          <meta name="description" content="Student marketplace for browsing, buying, and selling with fellow students on campus." />
+          <link rel="canonical" href="https://bazaar.lovable.app/home" />
+        </Helmet>
       <SimpleMarketingPage stats={stats} />
     </>
   );

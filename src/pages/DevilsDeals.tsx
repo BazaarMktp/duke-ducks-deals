@@ -115,8 +115,8 @@ export default function DevilsDeals() {
   return (
     <>
       <Helmet>
-        <title>Devil's Deals – Exclusive Student Discounts | Bazaar Duke</title>
-        <meta name="description" content="Discover exclusive student discounts and local deals from businesses around Duke University. Save money on food, services, and more." />
+        <title>Devil's Deals – Exclusive Student Discounts | Bazaar</title>
+        <meta name="description" content="Discover exclusive student discounts and local deals from businesses around campus. Save money on food, services, and more." />
         <link rel="canonical" href={`${window.location.origin}/devils-deals`} />
       </Helmet>
       <div className="container mx-auto px-4 py-8">

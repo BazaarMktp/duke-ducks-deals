@@ -24,11 +24,11 @@ const Marketplace = () => {
   return (
       <div className="container mx-auto px-4 py-8">
         <Helmet>
-          <title>Bazaar Duke Marketplace | Buy & Sell on Campus</title>
-          <meta name="description" content="Buy and sell items on Duke's student marketplace. Browse offers and wanted posts." />
+          <title>Bazaar Marketplace | Buy & Sell on Campus</title>
+          <meta name="description" content="Student marketplace for buying and selling textbooks, electronics, furniture and more. Connect with fellow students safely." />
           <link rel="canonical" href="https://bazaar.lovable.app/marketplace" />
         </Helmet>
-        <h1 className="sr-only">Bazaar Duke Marketplace - Buy and Sell on Campus</h1>
+        <h1 className="sr-only">Bazaar Marketplace - Buy and Sell on Campus</h1>
         <MarketplaceHeader user={user} activeListingType={activeListingType} />
 
       <ListingTypeToggle 
