@@ -409,6 +409,42 @@ export type Database = {
         }
         Relationships: []
       }
+      listing_engagement: {
+        Row: {
+          clicks_count: number | null
+          created_at: string | null
+          engagement_score: number | null
+          favorites_count: number | null
+          id: string
+          last_updated: string | null
+          listing_id: string
+          messages_count: number | null
+          views_count: number | null
+        }
+        Insert: {
+          clicks_count?: number | null
+          created_at?: string | null
+          engagement_score?: number | null
+          favorites_count?: number | null
+          id?: string
+          last_updated?: string | null
+          listing_id: string
+          messages_count?: number | null
+          views_count?: number | null
+        }
+        Update: {
+          clicks_count?: number | null
+          created_at?: string | null
+          engagement_score?: number | null
+          favorites_count?: number | null
+          id?: string
+          last_updated?: string | null
+          listing_id?: string
+          messages_count?: number | null
+          views_count?: number | null
+        }
+        Relationships: []
+      }
       listing_recommendations: {
         Row: {
           clicked: boolean | null
@@ -899,6 +935,19 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      auto_feature_desirable_listings: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
+      calculate_engagement_score: {
+        Args: {
+          clicks?: number
+          favorites?: number
+          messages?: number
+          views?: number
+        }
+        Returns: number
+      }
       get_all_donations_count: {
         Args: Record<PropertyKey, never>
         Returns: number
@@ -950,6 +999,10 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      update_listing_engagement: {
+        Args: { listing_id_param: string }
+        Returns: undefined
       }
     }
     Enums: {
