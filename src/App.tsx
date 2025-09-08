@@ -10,7 +10,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { AdminProvider } from "@/contexts/AdminContext";
 import { AuthRedirectHandler } from "@/components/auth/AuthRedirectHandler";
 import { SharedLinkWrapper } from "@/components/shared/SharedLinkWrapper";
-import { usePerformanceTracking } from "@/hooks/usePerformanceTracking";
+import { PerformanceTracker } from "@/components/PerformanceTracker";
 import Navbar from "@/components/Navbar";
 import Index from "./pages/Index";
 import Home from "./pages/Home";
@@ -48,7 +48,6 @@ const queryClient = new QueryClient();
 
 function App() {
   const [isAuthProcessing, setIsAuthProcessing] = useState(false);
-  usePerformanceTracking();
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -56,6 +55,7 @@ function App() {
         <TooltipProvider>
           <AuthProvider>
           <AdminProvider>
+            <PerformanceTracker />
             <Toaster />
             <Sonner />
             <HashRouter>
