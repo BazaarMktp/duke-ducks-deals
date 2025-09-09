@@ -20,7 +20,7 @@ const About = () => {
       name: "Sumeet Batra",
       role: "Head of Product and Project",
       bio: "Product strategist dedicated to understanding student needs and delivering innovative platform solutions.",
-      image: "/placeholder.svg"
+      image: "/lovable-uploads/85b6ff7a-14e6-43e9-9cd1-5d12eedf92ce.png"
     },
     {
       name: "Sathvika Gandavarapu",
