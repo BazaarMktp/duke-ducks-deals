@@ -87,9 +87,12 @@ serve(async (req) => {
     // Initialize Resend
     const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
 
+    console.log('Attempting to send email to:', recipientProfile.email);
+    console.log('Using RESEND_API_KEY:', Deno.env.get('RESEND_API_KEY') ? 'Set' : 'Not set');
+    
     // Send email notification
     const emailResult = await resend.emails.send({
-      from: 'Bazaar <noreply@resend.dev>',
+      from: 'Bazaar <onboarding@resend.dev>',
       to: [recipientProfile.email],
       subject: `New message from ${senderProfile.profile_name}`,
       html: `
