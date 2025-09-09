@@ -6,7 +6,7 @@ const About = () => {
   const teamMembers = [
     {
       name: "William Peña",
-      role: "Head of Technology",
+      role: "Founder/Head of Technology",
       bio: "Industrial Engineer with UX/UI design and backend development experience, passionate about creating seamless student experiences.",
       image: "/lovable-uploads/d967c344-819e-48c1-8f23-516a1a026c15.png"
     },
