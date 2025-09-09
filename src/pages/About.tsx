@@ -14,7 +14,7 @@ const About = () => {
       name: "Ann Marie",
       role: "Head of Outreach and Co-strategy", 
       bio: "Strategic visionary focused on building sustainable growth and fostering campus community connections.",
-      image: "/placeholder.svg"
+      image: "/lovable-uploads/c27bc51c-5c07-4177-a329-76cd00fa654d.png"
     },
     {
       name: "Sumeet Batra",
@@ -26,7 +26,7 @@ const About = () => {
       name: "Sathvika Gandavarapu",
       role: "Head of Marketing and Co-strategy",
       bio: "Marketing specialist building brand awareness and connecting with student communities across campuses.",
-      image: "/placeholder.svg"
+      image: "/lovable-uploads/4c18aff2-be8d-4a27-899a-8b311b78164b.png"
     },
     {
       name: "Namisha Metha",
