@@ -27,8 +27,20 @@ export default defineConfig(({ mode }) => ({
           vendor: ['react', 'react-dom'],
           ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-select'],
         },
+        assetFileNames: (assetInfo) => {
+          if (!assetInfo.name) return `assets/[name]-[hash][extname]`;
+          const info = assetInfo.name.split('.');
+          const ext = info[info.length - 1];
+          if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(ext)) {
+            return `assets/img/[name]-[hash][extname]`;
+          }
+          return `assets/[name]-[hash][extname]`;
+        },
+        chunkFileNames: 'assets/js/[name]-[hash].js',
+        entryFileNames: 'assets/js/[name]-[hash].js',
       },
     },
+    assetsInlineLimit: 4096,
   },
   css: {
     devSourcemap: mode === 'development',
