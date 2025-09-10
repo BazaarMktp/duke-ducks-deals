@@ -224,6 +224,47 @@ export type Database = {
           },
         ]
       }
+      deal_metrics: {
+        Row: {
+          created_at: string
+          deal_id: string | null
+          id: string
+          ip_address: string | null
+          metric_type: string
+          page_url: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          deal_id?: string | null
+          id?: string
+          ip_address?: string | null
+          metric_type: string
+          page_url?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          deal_id?: string | null
+          id?: string
+          ip_address?: string | null
+          metric_type?: string
+          page_url?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deal_metrics_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       deals: {
         Row: {
           business_email: string | null
@@ -962,6 +1003,17 @@ export type Database = {
       get_current_user_college_id: {
         Args: Record<PropertyKey, never>
         Returns: string
+      }
+      get_deal_analytics: {
+        Args: { deal_id_param?: string }
+        Returns: {
+          deal_id: string
+          latest_activity: string
+          total_deal_clicks: number
+          total_deal_views: number
+          total_page_visits: number
+          unique_visitors: number
+        }[]
       }
       get_donation_stats: {
         Args: Record<PropertyKey, never>

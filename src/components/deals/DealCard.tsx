@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Calendar, Eye, Edit, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useDealMetrics } from '@/hooks/useDealMetrics';
 
 interface Deal {
   id: string;
@@ -35,7 +36,13 @@ export const DealCard: React.FC<DealCardProps> = ({
   onDelete 
 }) => {
   const navigate = useNavigate();
+  const { trackDealClick, trackDealView } = useDealMetrics();
   const [timeLeft, setTimeLeft] = useState<string>('');
+
+  // Track deal view when card is rendered
+  useEffect(() => {
+    trackDealView(deal.id);
+  }, [deal.id, trackDealView]);
 
   useEffect(() => {
     if (!deal.valid_until) return;
@@ -80,6 +87,16 @@ export const DealCard: React.FC<DealCardProps> = ({
     });
   };
 
+  const handleViewDetails = () => {
+    trackDealClick(deal.id);
+    navigate(`/devils-deals/${deal.id}`);
+  };
+
+  const handleImageClick = () => {
+    trackDealClick(deal.id);
+    navigate(`/devils-deals/${deal.id}`);
+  };
+
   const getDealStatuses = () => {
     if (!deal.valid_until) return [];
     const validUntil = new Date(deal.valid_until);
@@ -120,7 +137,7 @@ export const DealCard: React.FC<DealCardProps> = ({
         {deal.image_url && (
           <div 
             className="aspect-video w-full overflow-hidden rounded-lg bg-muted cursor-pointer hover:opacity-90 transition-opacity"
-            onClick={() => navigate(`/devils-deals/${deal.id}`)}
+            onClick={handleImageClick}
           >
             <img
               src={deal.image_url}
@@ -194,7 +211,7 @@ export const DealCard: React.FC<DealCardProps> = ({
       <CardFooter className="pt-0">
         <div className="flex gap-2 w-full">
           <Button
-            onClick={() => navigate(`/devils-deals/${deal.id}`)}
+            onClick={handleViewDetails}
             className="flex-1"
             variant={isAuthenticated ? "default" : "outline"}
           >

@@ -11,6 +11,7 @@ import DonationManagement from "@/components/admin/DonationManagement";
 import ReportManagement from "@/components/admin/ReportManagement";
 import FeedbackManagement from "@/components/admin/FeedbackManagement";
 import { PerformanceAnalytics } from "@/components/admin/PerformanceAnalytics";
+import { DealsAnalytics } from "@/components/admin/analytics/DealsAnalytics";
 import { AutoFeatureControl } from "@/components/admin/AutoFeatureControl";
 
 const AdminDashboard = () => {
@@ -44,7 +45,8 @@ const AdminDashboard = () => {
           <TabsTrigger value="reports">Reports</TabsTrigger>
           <TabsTrigger value="donations">Donations</TabsTrigger>
           <TabsTrigger value="feedback">Feedback</TabsTrigger>
-          <TabsTrigger value="performance">Performance</TabsTrigger>
+              <TabsTrigger value="performance">Performance</TabsTrigger>
+              <TabsTrigger value="deals">Devils Deals</TabsTrigger>
           <TabsTrigger value="featuring">Auto-Feature</TabsTrigger>
           <TabsTrigger value="support">Support</TabsTrigger>
         </TabsList>
@@ -73,9 +75,13 @@ const AdminDashboard = () => {
           <FeedbackManagement />
         </TabsContent>
 
-        <TabsContent value="performance">
-          <PerformanceAnalytics />
-        </TabsContent>
+            <TabsContent value="performance">
+              <PerformanceAnalytics />
+            </TabsContent>
+            
+            <TabsContent value="deals">
+              <DealsAnalytics />
+            </TabsContent>
 
         <TabsContent value="featuring">
           <AutoFeatureControl />

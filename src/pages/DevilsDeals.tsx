@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -10,6 +10,7 @@ import { DealCreateDialog } from '@/components/deals/DealCreateDialog';
 import { DealEditDialog } from '@/components/deals/DealEditDialog';
 import { EmptyDealsState } from '@/components/deals/EmptyDealsState';
 import { useToast } from '@/hooks/use-toast';
+import { useDealMetrics } from '@/hooks/useDealMetrics';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -44,11 +45,17 @@ export default function DevilsDeals() {
   const { user } = useAuth();
   const { isAdmin } = useAdmin();
   const { toast } = useToast();
+  const { trackPageVisit } = useDealMetrics();
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editingDeal, setEditingDeal] = useState<Deal | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [dealToDelete, setDealToDelete] = useState<string | null>(null);
+
+  // Track page visit on component mount
+  useEffect(() => {
+    trackPageVisit();
+  }, [trackPageVisit]);
 
   const { data: deals, isLoading, refetch } = useQuery({
     queryKey: ['deals'],
