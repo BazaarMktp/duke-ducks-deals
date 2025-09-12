@@ -92,7 +92,7 @@ serve(async (req) => {
     
     // Send email notification
     const emailResult = await resend.emails.send({
-      from: 'Bazaar <noreply@yourdomain.com>', // Replace with your verified domain
+      from: 'Bazaar <info@thebazaarapp.com>', // Replace with your verified domain
       to: [recipientProfile.email],
       subject: `New message from ${senderProfile.profile_name}`,
       html: `
