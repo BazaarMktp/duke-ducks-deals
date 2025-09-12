@@ -85,12 +85,19 @@ serve(async (req) => {
     }
 
     // Initialize Resend
-    const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
+    const resendApiKey = Deno.env.get('RESEND_API_KEY');
+    if (!resendApiKey) {
+      throw new Error('RESEND_API_KEY environment variable is not set');
+    }
+    
+    const resend = new Resend(resendApiKey);
 
     console.log('Attempting to send email to:', recipientProfile.email);
-    console.log('Using RESEND_API_KEY:', Deno.env.get('RESEND_API_KEY') ? 'Set' : 'Not set');
+    console.log('RESEND_API_KEY is set:', !!resendApiKey);
+    console.log('RESEND_API_KEY format check:', resendApiKey.startsWith('re_') ? 'Valid format' : 'Invalid format - should start with re_');
     
     // Send email notification
+    console.log('Sending email with from address: info@thebazaarapp.com');
     const emailResult = await resend.emails.send({
       from: 'Bazaar <info@thebazaarapp.com>', // Replace with your verified domain
       to: [recipientProfile.email],
@@ -128,6 +135,11 @@ serve(async (req) => {
       `,
     });
 
+    if (emailResult.error) {
+      console.error('Resend API error:', emailResult.error);
+      throw new Error(`Resend API error: ${emailResult.error.message}`);
+    }
+    
     console.log('Email sent successfully:', emailResult);
 
     return new Response(JSON.stringify({ 
