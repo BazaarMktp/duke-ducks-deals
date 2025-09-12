@@ -31,15 +31,22 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isCurrentUser })
 
   const senderName = isAdminSender ? 'Admin' : message.profiles?.profile_name;
 
+  const isUnread = !message.is_read && !isCurrentUser;
+
   return (
     <div className={`flex ${isCurrentUser ? 'justify-end' : 'justify-start'}`}>
       <div
-        className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+        className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg relative ${
           isCurrentUser
             ? 'bg-blue-500 text-white'
+            : isUnread
+            ? 'bg-primary/10 text-foreground ring-2 ring-primary/30'
             : 'bg-gray-200 text-gray-800'
         }`}
       >
+        {isUnread && (
+          <div className="absolute -left-2 top-2 w-3 h-3 bg-primary rounded-full"></div>
+        )}
         {!isCurrentUser && (
           <p className={`text-xs font-semibold mb-1 ${isAdminSender ? 'text-red-600' : 'text-gray-600'}`}>
             {senderName}

@@ -45,9 +45,16 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
         className="flex-1 cursor-pointer hover:bg-gray-50 rounded p-2" 
         onClick={() => onSelect(conversation.id)}
       >
-        <h4 className="font-semibold">
-          {conversation.listings?.title || "Admin Message"}
-        </h4>
+        <div className="flex items-center justify-between">
+          <h4 className="font-semibold">
+            {conversation.listings?.title || "Admin Message"}
+          </h4>
+          {conversation.unread_count && conversation.unread_count > 0 && (
+            <span className="bg-primary text-primary-foreground text-xs font-bold px-2 py-1 rounded-full min-w-[20px] text-center">
+              {conversation.unread_count}
+            </span>
+          )}
+        </div>
         <p className="text-sm text-gray-600">with {partnerName}</p>
       </div>
       <DropdownMenu>

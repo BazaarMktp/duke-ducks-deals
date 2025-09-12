@@ -19,6 +19,7 @@ export interface Conversation {
   archived_by_seller: boolean;
   deleted_by_buyer: boolean;
   deleted_by_seller: boolean;
+  unread_count?: number;
   listings: {
     title: string;
   } | null;
