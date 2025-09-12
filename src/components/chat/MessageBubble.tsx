@@ -40,8 +40,8 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isCurrentUser })
           isCurrentUser
             ? 'bg-blue-500 text-white'
             : isUnread
-            ? 'bg-primary/10 text-foreground ring-2 ring-primary/30'
-            : 'bg-gray-200 text-gray-800'
+            ? 'bg-primary/20 text-foreground ring-2 ring-primary border-l-4 border-primary font-semibold'
+            : 'bg-muted text-muted-foreground'
         }`}
       >
         {isUnread && (
