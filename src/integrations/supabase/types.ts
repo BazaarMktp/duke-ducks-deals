@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      achievements: {
+        Row: {
+          category: Database["public"]["Enums"]["achievement_category"]
+          created_at: string
+          description: string
+          icon_name: string | null
+          id: string
+          is_active: boolean
+          name: string
+          points_reward: number
+          rarity: Database["public"]["Enums"]["achievement_rarity"]
+          requirements: Json
+          xp_reward: number
+        }
+        Insert: {
+          category: Database["public"]["Enums"]["achievement_category"]
+          created_at?: string
+          description: string
+          icon_name?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          points_reward?: number
+          rarity?: Database["public"]["Enums"]["achievement_rarity"]
+          requirements?: Json
+          xp_reward?: number
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["achievement_category"]
+          created_at?: string
+          description?: string
+          icon_name?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          points_reward?: number
+          rarity?: Database["public"]["Enums"]["achievement_rarity"]
+          requirements?: Json
+          xp_reward?: number
+        }
+        Relationships: []
+      }
       ai_interactions: {
         Row: {
           ai_suggestion: Json | null
@@ -138,6 +180,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      challenges: {
+        Row: {
+          challenge_type: Database["public"]["Enums"]["challenge_type"]
+          created_at: string
+          description: string
+          ends_at: string | null
+          id: string
+          is_active: boolean
+          points_reward: number
+          requirements: Json
+          starts_at: string
+          title: string
+          xp_reward: number
+        }
+        Insert: {
+          challenge_type: Database["public"]["Enums"]["challenge_type"]
+          created_at?: string
+          description: string
+          ends_at?: string | null
+          id?: string
+          is_active?: boolean
+          points_reward?: number
+          requirements?: Json
+          starts_at?: string
+          title: string
+          xp_reward?: number
+        }
+        Update: {
+          challenge_type?: Database["public"]["Enums"]["challenge_type"]
+          created_at?: string
+          description?: string
+          ends_at?: string | null
+          id?: string
+          is_active?: boolean
+          points_reward?: number
+          requirements?: Json
+          starts_at?: string
+          title?: string
+          xp_reward?: number
+        }
+        Relationships: []
       }
       colleges: {
         Row: {
@@ -375,6 +459,45 @@ export type Database = {
           },
         ]
       }
+      email_preferences: {
+        Row: {
+          achievement_notifications: boolean
+          created_at: string
+          deal_notifications: boolean
+          frequency: Database["public"]["Enums"]["email_frequency"]
+          id: string
+          marketing_emails: boolean
+          message_notifications: boolean
+          updated_at: string
+          user_id: string
+          weekly_digest: boolean
+        }
+        Insert: {
+          achievement_notifications?: boolean
+          created_at?: string
+          deal_notifications?: boolean
+          frequency?: Database["public"]["Enums"]["email_frequency"]
+          id?: string
+          marketing_emails?: boolean
+          message_notifications?: boolean
+          updated_at?: string
+          user_id: string
+          weekly_digest?: boolean
+        }
+        Update: {
+          achievement_notifications?: boolean
+          created_at?: string
+          deal_notifications?: boolean
+          frequency?: Database["public"]["Enums"]["email_frequency"]
+          id?: string
+          marketing_emails?: boolean
+          message_notifications?: boolean
+          updated_at?: string
+          user_id?: string
+          weekly_digest?: boolean
+        }
+        Relationships: []
+      }
       favorites: {
         Row: {
           created_at: string | null
@@ -447,6 +570,42 @@ export type Database = {
           user_id?: string | null
           viewport_height?: number | null
           viewport_width?: number | null
+        }
+        Relationships: []
+      }
+      leaderboard_entries: {
+        Row: {
+          created_at: string
+          id: string
+          leaderboard_type: string
+          period_end: string
+          period_start: string
+          rank: number | null
+          score: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          leaderboard_type: string
+          period_end: string
+          period_start: string
+          rank?: number | null
+          score?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          leaderboard_type?: string
+          period_end?: string
+          period_start?: string
+          rank?: number | null
+          score?: number
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -888,6 +1047,38 @@ export type Database = {
         }
         Relationships: []
       }
+      user_achievements: {
+        Row: {
+          achievement_id: string
+          earned_at: string
+          id: string
+          progress: Json | null
+          user_id: string
+        }
+        Insert: {
+          achievement_id: string
+          earned_at?: string
+          id?: string
+          progress?: Json | null
+          user_id: string
+        }
+        Update: {
+          achievement_id?: string
+          earned_at?: string
+          id?: string
+          progress?: Json | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_achievements_achievement_id_fkey"
+            columns: ["achievement_id"]
+            isOneToOne: false
+            referencedRelation: "achievements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_ai_preferences: {
         Row: {
           auto_categorize: boolean | null
@@ -950,6 +1141,107 @@ export type Database = {
           },
         ]
       }
+      user_challenge_progress: {
+        Row: {
+          challenge_id: string
+          completed_at: string | null
+          created_at: string
+          id: string
+          progress: Json
+          status: Database["public"]["Enums"]["challenge_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          challenge_id: string
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          progress?: Json
+          status?: Database["public"]["Enums"]["challenge_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          challenge_id?: string
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          progress?: Json
+          status?: Database["public"]["Enums"]["challenge_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_challenge_progress_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "challenges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_engagement_events: {
+        Row: {
+          created_at: string
+          event_data: Json | null
+          event_type: string
+          id: string
+          points_earned: number | null
+          user_id: string
+          xp_earned: number | null
+        }
+        Insert: {
+          created_at?: string
+          event_data?: Json | null
+          event_type: string
+          id?: string
+          points_earned?: number | null
+          user_id: string
+          xp_earned?: number | null
+        }
+        Update: {
+          created_at?: string
+          event_data?: Json | null
+          event_type?: string
+          id?: string
+          points_earned?: number | null
+          user_id?: string
+          xp_earned?: number | null
+        }
+        Relationships: []
+      }
+      user_levels: {
+        Row: {
+          created_at: string
+          current_level: number
+          current_xp: number
+          id: string
+          total_xp: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_level?: number
+          current_xp?: number
+          id?: string
+          total_xp?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_level?: number
+          current_xp?: number
+          id?: string
+          total_xp?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string | null
@@ -976,6 +1268,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      add_user_xp: {
+        Args: {
+          points_amount?: number
+          user_id_param: string
+          xp_amount: number
+        }
+        Returns: undefined
+      }
       auto_feature_desirable_listings: {
         Args: Record<PropertyKey, never>
         Returns: number
@@ -994,6 +1294,10 @@ export type Database = {
               p_messages?: number
               p_views?: number
             }
+        Returns: number
+      }
+      calculate_level_from_xp: {
+        Args: { xp: number }
         Returns: number
       }
       get_all_donations_count: {
@@ -1065,6 +1369,13 @@ export type Database = {
       }
     }
     Enums: {
+      achievement_category:
+        | "social"
+        | "trading"
+        | "community"
+        | "milestone"
+        | "special"
+      achievement_rarity: "common" | "uncommon" | "rare" | "epic" | "legendary"
       app_role: "admin" | "user"
       badge_type:
         | "FIRST_POST"
@@ -1072,6 +1383,9 @@ export type Database = {
         | "COMMUNITY_HELPER"
         | "ECO_WARRIOR"
         | "VERIFIED_BLUE_DEVIL"
+      challenge_status: "active" | "completed" | "expired"
+      challenge_type: "daily" | "weekly" | "monthly" | "special"
+      email_frequency: "instant" | "daily" | "weekly" | "never"
       housing_type: "sublease" | "for_rent" | "roommate_wanted"
       listing_category: "marketplace" | "housing" | "services"
       listing_status: "active" | "sold" | "inactive"
@@ -1203,6 +1517,14 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      achievement_category: [
+        "social",
+        "trading",
+        "community",
+        "milestone",
+        "special",
+      ],
+      achievement_rarity: ["common", "uncommon", "rare", "epic", "legendary"],
       app_role: ["admin", "user"],
       badge_type: [
         "FIRST_POST",
@@ -1211,6 +1533,9 @@ export const Constants = {
         "ECO_WARRIOR",
         "VERIFIED_BLUE_DEVIL",
       ],
+      challenge_status: ["active", "completed", "expired"],
+      challenge_type: ["daily", "weekly", "monthly", "special"],
+      email_frequency: ["instant", "daily", "weekly", "never"],
       housing_type: ["sublease", "for_rent", "roommate_wanted"],
       listing_category: ["marketplace", "housing", "services"],
       listing_status: ["active", "sold", "inactive"],
