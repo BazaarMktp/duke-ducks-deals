@@ -1356,6 +1356,10 @@ export type Database = {
         Args: { _user_id: string }
         Returns: number
       }
+      get_user_xp_rank: {
+        Args: { user_id_param: string }
+        Returns: number
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
