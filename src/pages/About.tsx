@@ -18,7 +18,7 @@ const About = () => {
     },
     {
       name: "Sumeet Batra",
-      role: "Head of Product and Project",
+      role: "Growth Operations",
       bio: "Product strategist dedicated to understanding student needs and delivering innovative platform solutions.",
       image: "/lovable-uploads/85b6ff7a-14e6-43e9-9cd1-5d12eedf92ce.png"
     },
@@ -30,7 +30,7 @@ const About = () => {
     },
     {
       name: "Namisha Metha",
-      role: "Head of Product Design UX/UI",
+      role: "Product Development",
       bio: "Design expert focused on creating intuitive and beautiful user experiences that enhance student engagement and platform usability.",
       image: "/placeholder.svg"
     }
