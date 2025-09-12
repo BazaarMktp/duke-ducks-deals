@@ -6,13 +6,18 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, Settings, Trophy, Target } from "lucide-react";
 import ProfilePictureUpload from "@/components/ProfilePictureUpload";
 import { Badge } from "./profile/types";
 import UserBadges from "@/components/profile/UserBadges";
 import VerificationProgress from "@/components/profile/VerificationProgress";
 import { useUserVerification } from "@/hooks/useUserVerification";
+import { LevelDisplay } from "@/components/gamification/LevelDisplay";
+import { AchievementShowcase } from "@/components/gamification/AchievementShowcase";
+import { ChallengeDisplay } from "@/components/gamification/ChallengeDisplay";
+import { EmailPreferences } from "@/components/gamification/EmailPreferences";
 
 const Profile = () => {
   const { user } = useAuth();
@@ -141,73 +146,109 @@ const Profile = () => {
     <div className="container mx-auto px-4 py-8">
       <VerificationProgress profile={profile} isVerified={isVerified} />
       
-      <Card>
-        <CardHeader className="flex flex-row flex-wrap justify-between items-start">
-          <div className="flex items-center gap-3">
-            <CardTitle>Profile Settings</CardTitle>
-            <UserBadges badges={badges} inline />
-          </div>
-          <div className="text-right">
-            <p className="text-sm font-medium text-gray-500">Campus Cred</p>
-            <p className="text-2xl font-bold text-blue-600">{profile.points}</p>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-8">
-          <ProfilePictureUpload
-            currentAvatarUrl={profile.avatar_url}
-            profileName={profile.profile_name}
-            onAvatarUpdate={handleAvatarUpdate}
-          />
+      <Tabs defaultValue="profile" className="w-full mt-8">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="profile" className="flex items-center gap-2">
+            <Settings className="h-4 w-4" />
+            Profile
+          </TabsTrigger>
+          <TabsTrigger value="gamification" className="flex items-center gap-2">
+            <Trophy className="h-4 w-4" />
+            Progress
+          </TabsTrigger>
+          <TabsTrigger value="challenges" className="flex items-center gap-2">
+            <Target className="h-4 w-4" />
+            Challenges
+          </TabsTrigger>
+          <TabsTrigger value="preferences">
+            Email Settings
+          </TabsTrigger>
+        </TabsList>
 
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="profile_name">Username</Label>
-              <Input 
-                id="profile_name" 
-                value={profile.profile_name} 
-                onChange={(e) => setProfile({ ...profile, profile_name: e.target.value })} 
+        <TabsContent value="profile" className="mt-6">
+          <Card>
+            <CardHeader className="flex flex-row flex-wrap justify-between items-start">
+              <div className="flex items-center gap-3">
+                <CardTitle>Profile Settings</CardTitle>
+                <UserBadges badges={badges} inline />
+              </div>
+              <div className="text-right">
+                <p className="text-sm font-medium text-gray-500">Campus Cred</p>
+                <p className="text-2xl font-bold text-blue-600">{profile.points}</p>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-8">
+              <LevelDisplay showDetails={true} />
+              
+              <ProfilePictureUpload
+                currentAvatarUrl={profile.avatar_url}
+                profileName={profile.profile_name}
+                onAvatarUpdate={handleAvatarUpdate}
               />
-            </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="full_name">Full Name</Label>
-              <Input 
-                id="full_name" 
-                value={profile.full_name} 
-                onChange={(e) => setProfile({ ...profile, full_name: e.target.value })} 
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" value={profile.email} disabled />
-              <p className="text-sm text-gray-500">Email cannot be changed</p>
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="phone_number">Phone Number</Label>
-              <Input 
-                id="phone_number" 
-                value={profile.phone_number || ""} 
-                onChange={(e) => setProfile({ ...profile, phone_number: e.target.value })} 
-              />
-            </div>
-            
-            <Button 
-              onClick={handleUpdate} 
-              className="w-full mt-4" 
-              disabled={loading}
-            >
-              {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null} 
-              Save Changes
-            </Button>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="profile_name">Username</Label>
+                  <Input 
+                    id="profile_name" 
+                    value={profile.profile_name} 
+                    onChange={(e) => setProfile({ ...profile, profile_name: e.target.value })} 
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="full_name">Full Name</Label>
+                  <Input 
+                    id="full_name" 
+                    value={profile.full_name} 
+                    onChange={(e) => setProfile({ ...profile, full_name: e.target.value })} 
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input id="email" value={profile.email} disabled />
+                  <p className="text-sm text-gray-500">Email cannot be changed</p>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="phone_number">Phone Number</Label>
+                  <Input 
+                    id="phone_number" 
+                    value={profile.phone_number || ""} 
+                    onChange={(e) => setProfile({ ...profile, phone_number: e.target.value })} 
+                  />
+                </div>
+                
+                <Button 
+                  onClick={handleUpdate} 
+                  className="w-full mt-4" 
+                  disabled={loading}
+                >
+                  {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null} 
+                  Save Changes
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          <div className="mt-8">
+            <UserBadges badges={badges} />
           </div>
-        </CardContent>
-      </Card>
+        </TabsContent>
 
-      <div className="mt-8">
-        <UserBadges badges={badges} />
-      </div>
+        <TabsContent value="gamification" className="mt-6">
+          <AchievementShowcase />
+        </TabsContent>
+
+        <TabsContent value="challenges" className="mt-6">
+          <ChallengeDisplay />
+        </TabsContent>
+
+        <TabsContent value="preferences" className="mt-6">
+          <EmailPreferences />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
