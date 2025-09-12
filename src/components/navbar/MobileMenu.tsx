@@ -57,7 +57,14 @@ const MobileMenu = ({ user, isOpen, onClose, onSignOut, unreadMessages }: Mobile
               <MessageCircle size={20} />
               <span>Messages</span>
               {unreadMessages > 0 && (
-                <span className="absolute top-1 left-3 bg-red-500 text-white text-xs rounded-full w-2 h-2"></span>
+                <>
+                  <span className="bg-red-500 text-white text-xs font-semibold rounded-full h-5 w-5 flex items-center justify-center ml-auto">
+                    {unreadMessages}
+                  </span>
+                  <span className="absolute -top-1 left-16 bg-blue-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wide">
+                    NEW
+                  </span>
+                </>
               )}
             </Link>
             <Link
