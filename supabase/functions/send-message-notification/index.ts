@@ -62,7 +62,7 @@ serve(async (req) => {
       ? conversation.seller_id 
       : conversation.buyer_id;
 
-    // Get recipient profile
+    // Get recipient profile and email preferences
     const { data: recipientProfile, error: recipientError } = await supabase
       .from('profiles')
       .select('profile_name, email')
@@ -73,6 +73,21 @@ serve(async (req) => {
       console.error('Error fetching recipient profile:', recipientError);
       return new Response(JSON.stringify({ error: 'Recipient not found' }), {
         status: 404,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Check email preferences
+    const { data: emailPrefs } = await supabase
+      .from('email_preferences')
+      .select('message_notifications')
+      .eq('user_id', recipientId)
+      .single();
+
+    // If user has explicitly disabled message notifications, skip
+    if (emailPrefs && emailPrefs.message_notifications === false) {
+      console.log('User has disabled message notifications, skipping email');
+      return new Response(JSON.stringify({ success: true, message: 'Notifications disabled' }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
@@ -96,10 +111,10 @@ serve(async (req) => {
     console.log('RESEND_API_KEY is set:', !!resendApiKey);
     console.log('RESEND_API_KEY format check:', resendApiKey.startsWith('re_') ? 'Valid format' : 'Invalid format - should start with re_');
     
-    // Send email notification
-    console.log('Sending email with from address: info@thebazaarapp.com');
+    // Send email notification with better error handling
+    console.log('Sending email with from address: noreply@bazaarapp.email');
     const emailResult = await resend.emails.send({
-      from: 'Bazaar <info@thebazaarapp.com>', // Replace with your verified domain
+      from: 'Bazaar <noreply@bazaarapp.email>', // Use a generic email domain that works with Resend
       to: [recipientProfile.email],
       subject: `New message from ${senderProfile.profile_name}`,
       html: `
@@ -144,7 +159,34 @@ serve(async (req) => {
     });
 
     if (emailResult.error) {
-      console.error('Resend API error:', emailResult.error);
+      console.error('Resend API error details:', JSON.stringify(emailResult.error, null, 2));
+      
+      // If domain verification is the issue, try with onboarding@resend.dev
+      if (emailResult.error.message?.includes('domain') || emailResult.error.message?.includes('verified')) {
+        console.log('Retrying with Resend default domain...');
+        const retryResult = await resend.emails.send({
+          from: 'Bazaar <onboarding@resend.dev>',
+          to: [recipientProfile.email],
+          subject: `New message from ${senderProfile.profile_name}`,
+          html: emailResult.html || 'You have a new message on Bazaar.',
+        });
+        
+        if (retryResult.error) {
+          console.error('Retry also failed:', retryResult.error);
+          throw new Error(`Resend API error: ${retryResult.error.message}`);
+        }
+        
+        console.log('Email sent successfully via retry:', retryResult);
+        return new Response(JSON.stringify({ 
+          success: true, 
+          emailId: retryResult.data?.id,
+          recipient: recipientProfile.email,
+          method: 'retry'
+        }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+      
       throw new Error(`Resend API error: ${emailResult.error.message}`);
     }
     
