@@ -32,6 +32,17 @@ export const useChat = () => {
     if (user) {
       fetchConversations(showArchived);
     }
+    
+    // Listen for unread message updates to refresh conversations
+    const handleUnreadUpdate = () => {
+      fetchConversations(showArchived);
+    };
+    
+    window.addEventListener('unread-messages-updated', handleUnreadUpdate);
+    
+    return () => {
+      window.removeEventListener('unread-messages-updated', handleUnreadUpdate);
+    };
   }, [user, showArchived, fetchConversations]);
 
   const handleSelectConversation = (convId: string | null) => {

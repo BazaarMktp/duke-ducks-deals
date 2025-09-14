@@ -62,14 +62,9 @@ const UserMenu = ({ user, onSignOut, unreadMessages }: UserMenuProps) => {
           <Button variant="ghost" size="sm" className="p-2">
             <MessageCircle size={20} />
             {unreadMessages > 0 && (
-              <>
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                  {unreadMessages}
-                </span>
-                <span className="absolute -top-2 -left-2 bg-blue-600 text-white text-xs font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wide">
-                  NEW
-                </span>
-              </>
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                {unreadMessages}
+              </span>
             )}
           </Button>
         </Link>

@@ -40,7 +40,7 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
   return (
     <div
       className={`p-4 border-b flex justify-between items-center ${
-        isSelected ? 'bg-blue-50' : hasUnreadMessages ? 'bg-blue-25 border-l-4 border-blue-500' : ''
+        isSelected ? 'bg-blue-50' : hasUnreadMessages ? 'bg-blue-50/30 border-l-4 border-blue-500' : ''
       }`}
     >
       <div 

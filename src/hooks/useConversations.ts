@@ -42,7 +42,23 @@ export const useConversations = () => {
       const { data, error } = await query.order('updated_at', { ascending: false });
 
       if (error) throw error;
-      setConversations(data || []);
+      
+      // Fetch unread counts for each conversation
+      const conversationsWithUnread = await Promise.all((data || []).map(async (conv) => {
+        const { data: unreadData } = await supabase
+          .from('messages')
+          .select('id')
+          .eq('conversation_id', conv.id)
+          .neq('sender_id', user.id)
+          .eq('is_read', false);
+        
+        return {
+          ...conv,
+          unread_count: unreadData?.length || 0
+        };
+      }));
+      
+      setConversations(conversationsWithUnread);
     } catch (error) {
       console.error('Error fetching conversations:', error);
       toast({ title: "Error", description: "Could not fetch conversations.", variant: "destructive" });
