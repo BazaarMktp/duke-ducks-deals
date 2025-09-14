@@ -118,7 +118,7 @@ serve(async (req) => {
             </div>
             
             <p style="margin: 16px 0 0 0;">
-              <a href="${Deno.env.get('SUPABASE_URL')?.replace('supabase.co', 'vercel.app') || 'https://your-app.com'}/#/messages" 
+              <a href="https://c1cf69b6-2b91-4104-88bb-70fcfb51b5b3.lovableproject.com/#/messages" 
                  style="background: #3b82f6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
                 Reply to Message
               </a>
