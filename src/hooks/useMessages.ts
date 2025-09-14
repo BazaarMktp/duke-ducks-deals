@@ -122,10 +122,25 @@ export const useMessages = (selectedConversation: string | null) => {
           { event: 'INSERT', schema: 'public', table: 'messages', filter: `conversation_id=eq.${selectedConversation}` },
            (payload) => {
              console.log('New message received from:', payload.new?.sender_id, 'current user:', user?.id);
-             fetchMessages(selectedConversation);
-             // Only mark as read if the message is not from the current user
-             if (payload.new && payload.new.sender_id !== user?.id) {
-               setTimeout(() => markMessagesAsRead(selectedConversation), 100);
+             // Immediately add the new message to the local state for instant display
+             if (payload.new) {
+               const newMessage: any = {
+                 id: payload.new.id,
+                 message: payload.new.message,
+                 sender_id: payload.new.sender_id,
+                 created_at: payload.new.created_at,
+                 is_read: payload.new.is_read,
+                 profiles: { profile_name: 'Loading...' }
+               };
+               setMessages(prev => [...prev, newMessage]);
+               
+               // Fetch complete message details after adding it
+               setTimeout(() => fetchMessages(selectedConversation), 50);
+               
+               // Only mark as read if the message is not from the current user
+               if (payload.new.sender_id !== user?.id) {
+                 setTimeout(() => markMessagesAsRead(selectedConversation), 100);
+               }
              }
            }
          )

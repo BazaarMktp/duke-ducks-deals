@@ -35,10 +35,12 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
   
   const partnerName = partnerProfile?.profile_name === 'Admin' ? 'Admin' : (partnerProfile?.profile_name || 'Unknown User');
 
+  const hasUnreadMessages = conversation.unread_count && conversation.unread_count > 0;
+
   return (
     <div
       className={`p-4 border-b flex justify-between items-center ${
-        isSelected ? 'bg-blue-50' : ''
+        isSelected ? 'bg-blue-50' : hasUnreadMessages ? 'bg-blue-25 border-l-4 border-blue-500' : ''
       }`}
     >
       <div 
@@ -46,16 +48,16 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
         onClick={() => onSelect(conversation.id)}
       >
         <div className="flex items-center justify-between">
-          <h4 className="font-semibold">
+          <h4 className={`font-semibold ${hasUnreadMessages ? 'text-blue-700' : ''}`}>
             {conversation.listings?.title || "Admin Message"}
           </h4>
-          {conversation.unread_count && conversation.unread_count > 0 && (
-            <span className="bg-primary text-primary-foreground text-xs font-bold px-2 py-1 rounded-full min-w-[20px] text-center">
-              {conversation.unread_count}
-            </span>
+          {hasUnreadMessages && (
+            <div className="w-3 h-3 bg-red-500 rounded-full"></div>
           )}
         </div>
-        <p className="text-sm text-gray-600">with {partnerName}</p>
+        <p className={`text-sm ${hasUnreadMessages ? 'text-blue-600 font-medium' : 'text-gray-600'}`}>
+          with {partnerName}
+        </p>
       </div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

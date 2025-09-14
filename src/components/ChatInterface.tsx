@@ -3,7 +3,7 @@ import { useChat } from "@/hooks/useChat";
 import { Button } from "@/components/ui/button";
 import { HeadphonesIcon } from "lucide-react";
 import ConversationList from "./chat/ConversationList";
-import MessagePanel from "./chat/MessagePanel";
+import MessagePanelWithInput from "./chat/MessagePanelWithInput";
 import FeedbackButton from "./feedback/FeedbackButton";
 
 const ChatInterface = () => {
@@ -67,7 +67,7 @@ const ChatInterface = () => {
       <div className="md:hidden h-[calc(100vh-200px)]">
         {selectedConversation ? (
           <div className="h-full border rounded-lg bg-white">
-            <MessagePanel
+            <MessagePanelWithInput
               selectedConversation={selectedConversation}
               messages={messages}
               currentUserId={user.id}
@@ -101,7 +101,7 @@ const ChatInterface = () => {
           onArchiveConversation={archiveConversation}
           onDeleteConversation={deleteConversation}
         />
-        <MessagePanel
+        <MessagePanelWithInput
           selectedConversation={selectedConversation}
           messages={messages}
           currentUserId={user.id}

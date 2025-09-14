@@ -41,22 +41,9 @@ export const useConversation = () => {
         if (convError) throw convError;
         conversationId = newConv.id;
 
-        // Only send initial message when creating NEW conversation
-        const defaultMessage = product.listing_type === 'wanted' 
-          ? "Hi, I have what you're looking for and would like to help!"
-          : "Hi, I am interested in this item";
-
-        await supabase
-          .from('messages')
-          .insert({
-            conversation_id: conversationId,
-            sender_id: user.id,
-            message: defaultMessage
-          });
-
         toast({
-          title: "Message sent!",
-          description: "Redirecting to chat...",
+          title: "Chat created!",
+          description: "Opening conversation...",
         });
       } else {
         // Conversation exists, just redirect without sending message
@@ -66,8 +53,17 @@ export const useConversation = () => {
         });
       }
 
-      // Navigate to messages with the specific conversation
-      navigate('/messages');
+      // Navigate to messages with the specific conversation and pre-populate message
+      const defaultMessage = product.listing_type === 'wanted' 
+        ? "Hi, I have what you're looking for and would like to help!"
+        : "Hi, is this available?";
+      
+      navigate('/messages', { 
+        state: { 
+          conversationId, 
+          initialMessage: defaultMessage 
+        }
+      });
 
     } catch (error) {
       console.error('Error starting conversation:', error);

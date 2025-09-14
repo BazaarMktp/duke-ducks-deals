@@ -104,7 +104,10 @@ serve(async (req) => {
       subject: `New message from ${senderProfile.profile_name}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-          <div style="background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; padding: 20px; border-radius: 8px 8px 0 0;">
+          <div style="background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; padding: 20px; border-radius: 8px 8px 0 0; text-align: center;">
+            <img src="https://c1cf69b6-2b91-4104-88bb-70fcfb51b5b3.lovableproject.com/lovable-uploads/010f2159-7ae2-4e7e-a71a-681407407a54.png" 
+                 alt="Bazaar Logo" 
+                 style="height: 40px; width: auto; margin-bottom: 10px;">
             <h1 style="margin: 0; font-size: 24px;">New Message on Bazaar</h1>
           </div>
           
@@ -114,22 +117,27 @@ serve(async (req) => {
             <p style="margin: 0 0 16px 0;">You have a new message from <strong>${senderProfile.profile_name}</strong>:</p>
             
             <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 16px; margin: 16px 0;">
-              <p style="margin: 0; font-style: italic; color: #475569;">${message}</p>
+              <p style="margin: 0; font-style: italic; color: #475569;">"${message}"</p>
             </div>
             
-            <p style="margin: 16px 0 0 0;">
+            <p style="margin: 16px 0 0 0; text-align: center;">
               <a href="https://c1cf69b6-2b91-4104-88bb-70fcfb51b5b3.lovableproject.com/#/messages" 
-                 style="background: #3b82f6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">
+                 style="background: #3b82f6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: bold;">
                 Reply to Message
               </a>
             </p>
             
             <hr style="margin: 20px 0; border: none; border-top: 1px solid #e5e7eb;">
             
-            <p style="margin: 0; font-size: 14px; color: #6b7280;">
-              This email was sent because you have an active conversation on Bazaar. 
-              You can manage your notification preferences in your account settings.
-            </p>
+            <div style="text-align: center;">
+              <img src="https://c1cf69b6-2b91-4104-88bb-70fcfb51b5b3.lovableproject.com/lovable-uploads/010f2159-7ae2-4e7e-a71a-681407407a54.png" 
+                   alt="Bazaar Logo" 
+                   style="height: 24px; width: auto; margin-bottom: 8px;">
+              <p style="margin: 0; font-size: 14px; color: #6b7280;">
+                This email was sent because you have an active conversation on Bazaar. 
+                You can manage your notification preferences in your account settings.
+              </p>
+            </div>
           </div>
         </div>
       `,
