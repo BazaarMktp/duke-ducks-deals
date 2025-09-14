@@ -112,9 +112,9 @@ serve(async (req) => {
     console.log('RESEND_API_KEY format check:', resendApiKey.startsWith('re_') ? 'Valid format' : 'Invalid format - should start with re_');
     
     // Send email notification with better error handling
-    console.log('Sending email with from address: noreply@bazaarapp.email');
+    console.log('Sending email with from address: info@thebazaarapp.com');
     const emailResult = await resend.emails.send({
-      from: 'Bazaar <noreply@bazaarapp.email>', // Use a generic email domain that works with Resend
+      from: 'Bazaar <info@thebazaarapp.com>',
       to: [recipientProfile.email],
       subject: `New message from ${senderProfile.profile_name}`,
       html: `
