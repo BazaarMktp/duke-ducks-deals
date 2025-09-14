@@ -32,7 +32,7 @@ const About = () => {
       name: "Namisha Metha",
       role: "Product Development",
       bio: "Design expert focused on creating intuitive and beautiful user experiences that enhance student engagement and platform usability.",
-      image: "/placeholder.svg"
+      image: "/lovable-uploads/namisha-headshot.jpg"
     }
   ];
 
