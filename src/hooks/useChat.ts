@@ -5,8 +5,8 @@ import { useConversations } from "@/hooks/useConversations";
 import { useMessages } from "@/hooks/useMessages";
 import { useChatActions } from "@/hooks/useChatActions";
 
-export const useChat = () => {
-  const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
+export const useChat = (initialConversationId?: string) => {
+  const [selectedConversation, setSelectedConversation] = useState<string | null>(initialConversationId || null);
   const { user } = useAuth();
 
   const {

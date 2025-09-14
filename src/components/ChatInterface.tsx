@@ -2,11 +2,15 @@
 import { useChat } from "@/hooks/useChat";
 import { Button } from "@/components/ui/button";
 import { HeadphonesIcon } from "lucide-react";
+import { useLocation } from "react-router-dom";
 import ConversationList from "./chat/ConversationList";
 import MessagePanelWithInput from "./chat/MessagePanelWithInput";
 import FeedbackButton from "./feedback/FeedbackButton";
 
 const ChatInterface = () => {
+  const location = useLocation();
+  const { conversationId } = location.state || {};
+  
   const {
     user,
     loading,
@@ -20,7 +24,7 @@ const ChatInterface = () => {
     deleteConversation,
     contactSupport,
     toggleShowArchived,
-  } = useChat();
+  } = useChat(conversationId);
 
   if (!user) {
     return (
