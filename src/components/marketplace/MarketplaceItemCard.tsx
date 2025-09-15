@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Heart, MessageCircle, Search, BadgeCheck } from "lucide-react";
 import { MarketplaceListing } from "./types";
+import { OptimizedImage } from "@/components/ui/optimized-image";
+import { generateBlurDataURL } from "@/utils/imageUtils";
 
 interface MarketplaceItemCardProps {
   listing: MarketplaceListing;
@@ -58,12 +60,13 @@ const MarketplaceItemCard = ({
         {listing.listing_type === 'offer' && (
           <Link to={`/marketplace/${listing.id}`}>
             <div className="h-40 sm:h-56 overflow-hidden rounded-t-lg bg-gray-50 relative flex-shrink-0 cursor-pointer hover:opacity-90 transition-opacity">
-              <img
+              <OptimizedImage
                 src={listing.images?.[0] || "/placeholder.svg"}
                 alt={listing.title}
                 className="w-full h-full object-cover hover:scale-105 transition-transform"
-                loading="lazy"
-                decoding="async"
+                lazy={true}
+                blurDataURL={generateBlurDataURL()}
+                aspectRatio="video"
               />
             </div>
           </Link>

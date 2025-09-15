@@ -7,6 +7,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import ImageEditor from './ImageEditor';
+import { OptimizedImage } from '@/components/ui/optimized-image';
 
 interface ImageUploadProps {
   images: string[];
@@ -164,10 +165,12 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ images, onImagesChange, maxIm
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {images.map((image, index) => (
             <div key={index} className="relative group">
-              <img
+              <OptimizedImage
                 src={image}
                 alt={`Upload ${index + 1}`}
                 className="w-full h-32 object-contain bg-gray-50 rounded-lg border"
+                aspectRatio="video"
+                priority={index === 0}
               />
               <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity flex gap-1">
                 <Button

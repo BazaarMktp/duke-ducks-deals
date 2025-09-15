@@ -9,6 +9,8 @@ import { SoldConfirmationDialog } from "./SoldConfirmationDialog";
 import { Listing } from "@/hooks/useMyListings";
 import { differenceInDays, parseISO } from "date-fns";
 import { getPrivacyAwareLocation } from "@/utils/locationPrivacy";
+import { OptimizedImage } from "@/components/ui/optimized-image";
+import { generateBlurDataURL } from "@/utils/imageUtils";
 
 interface ListingCardProps {
   listing: Listing;
@@ -93,12 +95,13 @@ export const ListingCard = ({
             }
           }}
         >
-          <img 
+          <OptimizedImage 
             src={listing.images?.[0] || "/placeholder.svg"} 
             alt={listing.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
-            loading="lazy"
-            decoding="async"
+            lazy={true}
+            blurDataURL={generateBlurDataURL()}
+            aspectRatio="video"
           />
         </div>
       </CardHeader>

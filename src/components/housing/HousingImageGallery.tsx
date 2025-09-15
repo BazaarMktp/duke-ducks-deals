@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Expand } from "lucide-react";
+import { OptimizedImage } from "@/components/ui/optimized-image";
 
 interface HousingImageGalleryProps {
   images: string[];
@@ -23,10 +24,12 @@ const HousingImageGallery = ({
   return (
     <div>
       <div className="mb-4 relative">
-        <img
+        <OptimizedImage
           src={images?.[currentImageIndex] || "/placeholder.svg"}
           alt={title}
           className="w-full h-96 object-cover rounded-lg"
+          priority={currentImageIndex === 0}
+          aspectRatio="video"
         />
         {images && images.length > 0 && (
           <Dialog>
@@ -47,10 +50,11 @@ const HousingImageGallery = ({
                     <CarouselContent>
                       {images.map((image, index) => (
                         <CarouselItem key={index}>
-                          <img
+                          <OptimizedImage
                             src={image}
                             alt={`${title} ${index + 1}`}
                             className="w-full max-h-[70vh] object-contain mx-auto"
+                            lazy={false}
                           />
                         </CarouselItem>
                       ))}
@@ -59,10 +63,11 @@ const HousingImageGallery = ({
                     <CarouselNext className="right-2" />
                   </Carousel>
                 ) : (
-                  <img
+                  <OptimizedImage
                     src={images[0]}
                     alt={`${title} 1`}
                     className="max-w-full max-h-[80vh] object-contain"
+                    lazy={false}
                   />
                 )}
                 {images.length > 1 && (
@@ -75,10 +80,11 @@ const HousingImageGallery = ({
                           index === expandedImageIndex ? 'ring-2 ring-blue-500' : ''
                         }`}
                       >
-                        <img
+                        <OptimizedImage
                           src={image}
                           alt={`${title} ${index + 1}`}
                           className="w-full h-full object-cover"
+                          aspectRatio="square"
                         />
                       </button>
                     ))}
@@ -99,10 +105,11 @@ const HousingImageGallery = ({
                 index === currentImageIndex ? 'ring-2 ring-blue-500' : ''
               }`}
             >
-              <img
+              <OptimizedImage
                 src={image}
                 alt={`${title} ${index + 1}`}
                 className="w-full h-full object-cover"
+                aspectRatio="square"
               />
             </button>
           ))}

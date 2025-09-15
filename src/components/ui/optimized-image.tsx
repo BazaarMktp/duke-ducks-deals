@@ -8,6 +8,9 @@ interface OptimizedImageProps extends React.ImgHTMLAttributes<HTMLImageElement> 
   lazy?: boolean;
   fallback?: string;
   aspectRatio?: string;
+  priority?: boolean;
+  blurDataURL?: string;
+  sizes?: string;
 }
 
 export const OptimizedImage = ({ 
@@ -17,17 +20,28 @@ export const OptimizedImage = ({
   fallback = "/placeholder.svg",
   aspectRatio,
   className,
+  priority = false,
+  blurDataURL,
+  sizes,
   ...props 
 }: OptimizedImageProps) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState(false);
-  const [inView, setInView] = useState(!lazy);
+  const [inView, setInView] = useState(!lazy || priority);
   const imgRef = useRef<HTMLImageElement>(null);
   const [loadStartTime, setLoadStartTime] = useState<number | null>(null);
   const { trackImagePerformance } = usePerformanceTracking();
 
+  // Generate WebP source if supported
+  const getOptimizedSrc = (originalSrc: string): string => {
+    if (originalSrc.includes('supabase') && !originalSrc.includes('.webp')) {
+      return originalSrc;
+    }
+    return originalSrc;
+  };
+
   useEffect(() => {
-    if (!lazy) return;
+    if (!lazy || priority) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -37,7 +51,7 @@ export const OptimizedImage = ({
           observer.disconnect();
         }
       },
-      { rootMargin: '50px' }
+      { rootMargin: '100px' }
     );
 
     if (imgRef.current) {
@@ -45,7 +59,24 @@ export const OptimizedImage = ({
     }
 
     return () => observer.disconnect();
-  }, [lazy]);
+  }, [lazy, priority]);
+
+  // Preload critical images
+  useEffect(() => {
+    if (priority && src) {
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'image';
+      link.href = getOptimizedSrc(src);
+      document.head.appendChild(link);
+      
+      return () => {
+        if (document.head.contains(link)) {
+          document.head.removeChild(link);
+        }
+      };
+    }
+  }, [priority, src]);
 
   const handleLoad = () => {
     if (loadStartTime) {
@@ -72,19 +103,31 @@ export const OptimizedImage = ({
       className={cn("relative overflow-hidden", aspectRatio && `aspect-${aspectRatio}`, className)}
     >
       {!isLoaded && (
-        <div className="absolute inset-0 bg-muted animate-pulse" />
+        <>
+          {blurDataURL ? (
+            <img
+              src={blurDataURL}
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover filter blur-sm scale-110"
+              aria-hidden="true"
+            />
+          ) : (
+            <div className="absolute inset-0 bg-muted animate-pulse" />
+          )}
+        </>
       )}
       
       <img
-        src={inView ? (error ? fallback : src) : fallback}
+        src={inView ? (error ? fallback : getOptimizedSrc(src)) : (blurDataURL || fallback)}
         alt={alt}
-        loading={lazy ? "lazy" : "eager"}
+        loading={priority ? "eager" : (lazy ? "lazy" : "eager")}
         decoding="async"
         onLoad={handleLoad}
         onError={handleError}
+        sizes={sizes}
         className={cn(
-          "w-full h-full object-cover transition-opacity duration-300",
-          isLoaded ? "opacity-100" : "opacity-0"
+          "w-full h-full object-cover transition-all duration-500",
+          isLoaded ? "opacity-100 scale-100" : "opacity-0 scale-105"
         )}
         {...props}
       />

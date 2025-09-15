@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Calendar, Eye, Edit, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useDealMetrics } from '@/hooks/useDealMetrics';
+import { OptimizedImage } from '@/components/ui/optimized-image';
+import { generateBlurDataURL } from '@/utils/imageUtils';
 
 interface Deal {
   id: string;
@@ -139,10 +141,13 @@ export const DealCard: React.FC<DealCardProps> = ({
             className="aspect-video w-full overflow-hidden rounded-lg bg-muted cursor-pointer hover:opacity-90 transition-opacity"
             onClick={handleImageClick}
           >
-            <img
+            <OptimizedImage
               src={deal.image_url}
               alt={deal.title}
               className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+              lazy={true}
+              blurDataURL={generateBlurDataURL()}
+              aspectRatio="video"
             />
           </div>
         )}
