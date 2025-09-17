@@ -3,9 +3,7 @@ import { Link } from "react-router-dom";
 import { 
   Home, 
   ShoppingCart, 
-  Percent,
-  Calendar,
-  Users
+  Percent
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -15,8 +13,6 @@ const Navigation = () => {
   const navigation = [
     { name: "Home", href: "/home", icon: Home, showWhenLoggedOut: true },
     { name: "Marketplace", href: "/marketplace", icon: ShoppingCart, showWhenLoggedOut: true },
-    { name: "Campus Life", href: "/campus-life", icon: Calendar, showWhenLoggedOut: true },
-    { name: "Roommates", href: "/roommate-finder", icon: Users, showWhenLoggedOut: true },
     { name: "Devil's Deals", href: "/devils-deals", icon: Percent, showWhenLoggedOut: true },
   ];
 
