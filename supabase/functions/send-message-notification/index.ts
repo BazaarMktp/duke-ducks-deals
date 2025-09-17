@@ -27,12 +27,22 @@ serve(async (req) => {
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Get conversation details to find the recipient
-    const { data: conversation, error: conversationError } = await supabase
-      .from('conversations')
-      .select('id, buyer_id, seller_id')
-      .eq('id', conversationId)
-      .single();
+    // Get all required data in parallel for better performance
+    const [conversationResult, senderResult] = await Promise.all([
+      supabase
+        .from('conversations')
+        .select('id, buyer_id, seller_id')
+        .eq('id', conversationId)
+        .single(),
+      supabase
+        .from('profiles')
+        .select('profile_name, email')
+        .eq('id', senderId)
+        .single()
+    ]);
+
+    const { data: conversation, error: conversationError } = conversationResult;
+    const { data: senderProfile, error: senderError } = senderResult;
 
     if (conversationError || !conversation) {
       console.error('Error fetching conversation:', conversationError);
@@ -41,13 +51,6 @@ serve(async (req) => {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
-
-    // Get sender profile
-    const { data: senderProfile, error: senderError } = await supabase
-      .from('profiles')
-      .select('profile_name, email')
-      .eq('id', senderId)
-      .single();
 
     if (senderError || !senderProfile) {
       console.error('Error fetching sender profile:', senderError);
@@ -62,12 +65,22 @@ serve(async (req) => {
       ? conversation.seller_id 
       : conversation.buyer_id;
 
-    // Get recipient profile and email preferences
-    const { data: recipientProfile, error: recipientError } = await supabase
-      .from('profiles')
-      .select('profile_name, email')
-      .eq('id', recipientId)
-      .single();
+    // Get recipient profile and email preferences in parallel
+    const [recipientResult, emailPrefsResult] = await Promise.all([
+      supabase
+        .from('profiles')
+        .select('profile_name, email')
+        .eq('id', recipientId)
+        .single(),
+      supabase
+        .from('email_preferences')
+        .select('message_notifications')
+        .eq('user_id', recipientId)
+        .single()
+    ]);
+
+    const { data: recipientProfile, error: recipientError } = recipientResult;
+    const { data: emailPrefs } = emailPrefsResult;
 
     if (recipientError || !recipientProfile) {
       console.error('Error fetching recipient profile:', recipientError);
@@ -76,13 +89,6 @@ serve(async (req) => {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
-
-    // Check email preferences
-    const { data: emailPrefs } = await supabase
-      .from('email_preferences')
-      .select('message_notifications')
-      .eq('user_id', recipientId)
-      .single();
 
     // If user has explicitly disabled message notifications, skip
     if (emailPrefs && emailPrefs.message_notifications === false) {
