@@ -142,6 +142,54 @@ export type Database = {
         }
         Relationships: []
       }
+      campus_events: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          end_time: string | null
+          event_type: string
+          id: string
+          is_active: boolean | null
+          location: string | null
+          relevance_score: number | null
+          source_url: string | null
+          start_time: string | null
+          tags: string[] | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          end_time?: string | null
+          event_type: string
+          id?: string
+          is_active?: boolean | null
+          location?: string | null
+          relevance_score?: number | null
+          source_url?: string | null
+          start_time?: string | null
+          tags?: string[] | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          end_time?: string | null
+          event_type?: string
+          id?: string
+          is_active?: boolean | null
+          location?: string | null
+          relevance_score?: number | null
+          source_url?: string | null
+          start_time?: string | null
+          tags?: string[] | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       cart_items: {
         Row: {
           created_at: string | null
@@ -895,11 +943,14 @@ export type Database = {
         Row: {
           avatar_url: string | null
           college_id: string
+          compatibility_score_cache: Json | null
           created_at: string | null
           email: string
           full_name: string
+          housing_preferences: Json | null
           id: string
           is_verified: boolean | null
+          lifestyle_preferences: Json | null
           phone_number: string | null
           points: number
           profile_name: string
@@ -908,11 +959,14 @@ export type Database = {
         Insert: {
           avatar_url?: string | null
           college_id: string
+          compatibility_score_cache?: Json | null
           created_at?: string | null
           email: string
           full_name: string
+          housing_preferences?: Json | null
           id: string
           is_verified?: boolean | null
+          lifestyle_preferences?: Json | null
           phone_number?: string | null
           points?: number
           profile_name: string
@@ -921,11 +975,14 @@ export type Database = {
         Update: {
           avatar_url?: string | null
           college_id?: string
+          compatibility_score_cache?: Json | null
           created_at?: string | null
           email?: string
           full_name?: string
+          housing_preferences?: Json | null
           id?: string
           is_verified?: boolean | null
+          lifestyle_preferences?: Json | null
           phone_number?: string | null
           points?: number
           profile_name?: string
@@ -978,6 +1035,138 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      roommate_matches: {
+        Row: {
+          compatibility_score: number
+          created_at: string | null
+          expires_at: string | null
+          id: string
+          match_explanation: Json | null
+          status: string | null
+          user1_id: string
+          user2_id: string
+        }
+        Insert: {
+          compatibility_score: number
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          match_explanation?: Json | null
+          status?: string | null
+          user1_id: string
+          user2_id: string
+        }
+        Update: {
+          compatibility_score?: number
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          match_explanation?: Json | null
+          status?: string | null
+          user1_id?: string
+          user2_id?: string
+        }
+        Relationships: []
+      }
+      roommate_preferences: {
+        Row: {
+          additional_preferences: string | null
+          budget_max: number | null
+          budget_min: number | null
+          cleanliness_level: number | null
+          created_at: string | null
+          guests_ok: boolean | null
+          id: string
+          lease_length: string | null
+          move_in_date: string | null
+          noise_tolerance: number | null
+          pet_friendly: boolean | null
+          preferred_location: string | null
+          sleep_schedule: string | null
+          smoking_ok: boolean | null
+          social_level: number | null
+          study_habits: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          additional_preferences?: string | null
+          budget_max?: number | null
+          budget_min?: number | null
+          cleanliness_level?: number | null
+          created_at?: string | null
+          guests_ok?: boolean | null
+          id?: string
+          lease_length?: string | null
+          move_in_date?: string | null
+          noise_tolerance?: number | null
+          pet_friendly?: boolean | null
+          preferred_location?: string | null
+          sleep_schedule?: string | null
+          smoking_ok?: boolean | null
+          social_level?: number | null
+          study_habits?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          additional_preferences?: string | null
+          budget_max?: number | null
+          budget_min?: number | null
+          cleanliness_level?: number | null
+          created_at?: string | null
+          guests_ok?: boolean | null
+          id?: string
+          lease_length?: string | null
+          move_in_date?: string | null
+          noise_tolerance?: number | null
+          pet_friendly?: boolean | null
+          preferred_location?: string | null
+          sleep_schedule?: string | null
+          smoking_ok?: boolean | null
+          social_level?: number | null
+          study_habits?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      scraped_sources: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          last_scraped: string | null
+          name: string
+          scrape_frequency: unknown | null
+          selector_config: Json | null
+          source_type: string
+          url: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          last_scraped?: string | null
+          name: string
+          scrape_frequency?: unknown | null
+          selector_config?: Json | null
+          source_type: string
+          url: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          last_scraped?: string | null
+          name?: string
+          scrape_frequency?: unknown | null
+          selector_config?: Json | null
+          source_type?: string
+          url?: string
+        }
+        Relationships: []
       }
       support_responses: {
         Row: {
@@ -1209,6 +1398,57 @@ export type Database = {
           points_earned?: number | null
           user_id?: string
           xp_earned?: number | null
+        }
+        Relationships: []
+      }
+      user_event_interactions: {
+        Row: {
+          created_at: string | null
+          event_id: string
+          id: string
+          interaction_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          event_id: string
+          id?: string
+          interaction_type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          event_id?: string
+          id?: string
+          interaction_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_interests: {
+        Row: {
+          created_at: string | null
+          id: string
+          interest_type: string
+          interest_value: string
+          priority: number | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          interest_type: string
+          interest_value: string
+          priority?: number | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          interest_type?: string
+          interest_value?: string
+          priority?: number | null
+          user_id?: string
         }
         Relationships: []
       }
