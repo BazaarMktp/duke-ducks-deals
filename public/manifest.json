@@ -1,0 +1,49 @@
+{
+  "name": "Bazaar - Student Marketplace",
+  "short_name": "Bazaar",
+  "description": "Student marketplace for buying and selling textbooks, electronics, furniture, and more",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F5F5F5",
+  "theme_color": "#1F2937",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "shopping", "social"],
+  "shortcuts": [
+    {
+      "name": "Browse Marketplace",
+      "short_name": "Browse",
+      "description": "Browse available items",
+      "url": "/marketplace",
+      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "My Listings",
+      "short_name": "My Items",
+      "description": "View your listings",
+      "url": "/my-listings",
+      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Messages",
+      "short_name": "Messages",
+      "description": "Check your messages",
+      "url": "/messages",
+      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
+    }
+  ]
+}

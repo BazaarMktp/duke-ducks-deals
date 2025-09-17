@@ -11,6 +11,8 @@ import { AdminProvider } from "@/contexts/AdminContext";
 import { AuthRedirectHandler } from "@/components/auth/AuthRedirectHandler";
 import { SharedLinkWrapper } from "@/components/shared/SharedLinkWrapper";
 import { PerformanceTracker } from "@/components/PerformanceTracker";
+import { PWAInstallPrompt } from "@/components/PWAInstallPrompt";
+import { OfflineIndicator } from "@/components/OfflineIndicator";
 import Navbar from "@/components/Navbar";
 import Index from "./pages/Index";
 import Home from "./pages/Home";
@@ -57,6 +59,8 @@ function App() {
           <AuthProvider>
           <AdminProvider>
             <PerformanceTracker />
+            <PWAInstallPrompt />
+            <OfflineIndicator />
             <Toaster />
             <Sonner />
             <HashRouter>
