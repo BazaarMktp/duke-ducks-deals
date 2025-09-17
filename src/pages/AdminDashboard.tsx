@@ -38,17 +38,17 @@ const AdminDashboard = () => {
       </div>
       
       <Tabs defaultValue="analytics" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-8">
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
-          <TabsTrigger value="users">Users</TabsTrigger>
-          <TabsTrigger value="listings">Listings</TabsTrigger>
-          <TabsTrigger value="reports">Reports</TabsTrigger>
-          <TabsTrigger value="donations">Donations</TabsTrigger>
-          <TabsTrigger value="feedback">Feedback</TabsTrigger>
-              <TabsTrigger value="performance">Performance</TabsTrigger>
-              <TabsTrigger value="deals">Devils Deals</TabsTrigger>
-          <TabsTrigger value="featuring">Auto-Feature</TabsTrigger>
-          <TabsTrigger value="support">Support</TabsTrigger>
+        <TabsList className="flex w-full overflow-x-auto">
+          <TabsTrigger value="analytics" className="whitespace-nowrap">Analytics</TabsTrigger>
+          <TabsTrigger value="users" className="whitespace-nowrap">Users</TabsTrigger>
+          <TabsTrigger value="listings" className="whitespace-nowrap">Listings</TabsTrigger>
+          <TabsTrigger value="reports" className="whitespace-nowrap">Reports</TabsTrigger>
+          <TabsTrigger value="donations" className="whitespace-nowrap">Donations</TabsTrigger>
+          <TabsTrigger value="feedback" className="whitespace-nowrap">Feedback</TabsTrigger>
+          <TabsTrigger value="performance" className="whitespace-nowrap">Performance</TabsTrigger>
+          <TabsTrigger value="deals" className="whitespace-nowrap">Devils Deals</TabsTrigger>
+          <TabsTrigger value="featuring" className="whitespace-nowrap">Auto-Feature</TabsTrigger>
+          <TabsTrigger value="support" className="whitespace-nowrap">Support</TabsTrigger>
         </TabsList>
 
         <TabsContent value="analytics">
