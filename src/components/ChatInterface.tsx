@@ -45,42 +45,71 @@ const ChatInterface = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Messages</h1>
-        <div className="flex gap-2">
-          <FeedbackButton />
-          <Button
-            variant="outline"
-            onClick={contactSupport}
-            className="flex items-center gap-2"
-          >
-            <HeadphonesIcon size={16} />
-            Contact Support
-          </Button>
-          <Button
-            variant={showArchived ? "default" : "outline"}
-            onClick={toggleShowArchived}
-          >
-            {showArchived ? "Show Active" : "Show Archived"}
-          </Button>
+    <div className="flex flex-col h-screen bg-background">
+      {/* Mobile Header */}
+      <div className="md:hidden border-b bg-card/50 backdrop-blur-sm">
+        <div className="px-4 py-3">
+          <div className="flex items-center justify-between">
+            <h1 className="text-xl font-semibold">Messages</h1>
+            <div className="flex gap-1">
+              <FeedbackButton />
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={contactSupport}
+                className="h-8 w-8 p-0"
+              >
+                <HeadphonesIcon size={14} />
+              </Button>
+              <Button
+                variant={showArchived ? "default" : "ghost"}
+                size="sm"
+                onClick={toggleShowArchived}
+                className="text-xs px-2 py-1 h-7"
+              >
+                {showArchived ? "Active" : "Archive"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Desktop Header */}
+      <div className="hidden md:block container mx-auto px-4 py-8">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-3xl font-bold">Messages</h1>
+          <div className="flex gap-2">
+            <FeedbackButton />
+            <Button
+              variant="outline"
+              onClick={contactSupport}
+              className="flex items-center gap-2"
+            >
+              <HeadphonesIcon size={16} />
+              Contact Support
+            </Button>
+            <Button
+              variant={showArchived ? "default" : "outline"}
+              onClick={toggleShowArchived}
+            >
+              {showArchived ? "Show Active" : "Show Archived"}
+            </Button>
+          </div>
         </div>
       </div>
       
-      {/* Mobile: Show conversation list or message panel, Desktop: Show both */}
-      <div className="md:hidden h-[calc(100vh-200px)]">
+      {/* Mobile: Full screen chat interface */}
+      <div className="md:hidden flex-1 flex flex-col">
         {selectedConversation ? (
-          <div className="h-full border rounded-lg bg-white">
-            <MessagePanelWithInput
-              selectedConversation={selectedConversation}
-              messages={messages}
-              currentUserId={user.id}
-              onSendMessage={sendMessage}
-              onBack={() => handleSelectConversation(null)}
-            />
-          </div>
+          <MessagePanelWithInput
+            selectedConversation={selectedConversation}
+            messages={messages}
+            currentUserId={user.id}
+            onSendMessage={sendMessage}
+            onBack={() => handleSelectConversation(null)}
+          />
         ) : (
-          <div className="h-full border rounded-lg bg-white overflow-hidden">
+          <div className="flex-1 bg-card">
             <ConversationList
               conversations={conversations}
               selectedConversation={selectedConversation}
@@ -95,22 +124,24 @@ const ChatInterface = () => {
       </div>
       
       {/* Desktop: Show both side by side */}
-      <div className="hidden md:grid md:grid-cols-3 gap-6 h-[600px]">
-        <ConversationList
-          conversations={conversations}
-          selectedConversation={selectedConversation}
-          currentUserId={user.id}
-          showArchived={showArchived}
-          onSelectConversation={handleSelectConversation}
-          onArchiveConversation={archiveConversation}
-          onDeleteConversation={deleteConversation}
-        />
-        <MessagePanelWithInput
-          selectedConversation={selectedConversation}
-          messages={messages}
-          currentUserId={user.id}
-          onSendMessage={sendMessage}
-        />
+      <div className="hidden md:block container mx-auto px-4">
+        <div className="grid md:grid-cols-3 gap-6 h-[600px]">
+          <ConversationList
+            conversations={conversations}
+            selectedConversation={selectedConversation}
+            currentUserId={user.id}
+            showArchived={showArchived}
+            onSelectConversation={handleSelectConversation}
+            onArchiveConversation={archiveConversation}
+            onDeleteConversation={deleteConversation}
+          />
+          <MessagePanelWithInput
+            selectedConversation={selectedConversation}
+            messages={messages}
+            currentUserId={user.id}
+            onSendMessage={sendMessage}
+          />
+        </div>
       </div>
     </div>
   );

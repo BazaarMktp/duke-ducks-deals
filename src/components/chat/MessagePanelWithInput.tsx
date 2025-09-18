@@ -64,24 +64,26 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
   };
 
   return (
-    <Card className="md:col-span-2">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          {onBack && (
-            <button 
-              onClick={onBack}
-              className="md:hidden p-1 hover:bg-gray-100 rounded"
-            >
-              ←
-            </button>
-          )}
-          {selectedConversation ? 'Chat' : 'Select a conversation'}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="flex flex-col h-[calc(100vh-200px)] md:h-[calc(600px-70px)]">
+    <>
+      {/* Mobile Layout */}
+      <div className="md:hidden flex flex-col h-full">
         {selectedConversation ? (
           <>
-            <div className="flex-1 overflow-y-auto space-y-4 mb-4 p-4">
+            {/* Mobile Header with Back Button */}
+            <div className="flex items-center gap-3 p-4 border-b bg-card/50 backdrop-blur-sm">
+              <button 
+                onClick={onBack}
+                className="p-2 hover:bg-muted rounded-full transition-colors"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+              </button>
+              <h2 className="font-semibold text-lg">Chat</h2>
+            </div>
+            
+            {/* Messages Area */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-muted/20">
               {messages.map((message) => (
                 <MessageBubble
                   key={message.id}
@@ -91,7 +93,9 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
               ))}
               <div ref={messagesEndRef} />
             </div>
-            <div className="p-4 border-t">
+            
+            {/* Input Area */}
+            <div className="p-4 border-t bg-card/80 backdrop-blur-sm">
               <MessageInput 
                 onSendMessage={handleSendMessage} 
                 initialMessage={initialMessage}
@@ -100,11 +104,46 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
           </>
         ) : (
           <div className="flex-1 flex items-center justify-center">
-            <p className="text-gray-500">Select a conversation to start chatting</p>
+            <p className="text-muted-foreground">Select a conversation to start chatting</p>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+
+      {/* Desktop Layout */}
+      <Card className="hidden md:block md:col-span-2">
+        <CardHeader>
+          <CardTitle>
+            {selectedConversation ? 'Chat' : 'Select a conversation'}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col h-[calc(600px-70px)]">
+          {selectedConversation ? (
+            <>
+              <div className="flex-1 overflow-y-auto space-y-4 mb-4 p-4">
+                {messages.map((message) => (
+                  <MessageBubble
+                    key={message.id}
+                    message={message}
+                    isCurrentUser={message.sender_id === currentUserId}
+                  />
+                ))}
+                <div ref={messagesEndRef} />
+              </div>
+              <div className="p-4 border-t">
+                <MessageInput 
+                  onSendMessage={handleSendMessage} 
+                  initialMessage={initialMessage}
+                />
+              </div>
+            </>
+          ) : (
+            <div className="flex-1 flex items-center justify-center">
+              <p className="text-muted-foreground">Select a conversation to start chatting</p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </>
   );
 };
 

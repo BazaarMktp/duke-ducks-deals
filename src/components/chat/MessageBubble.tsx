@@ -34,26 +34,36 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message, isCurrentUser })
   const isUnread = !message.is_read && !isCurrentUser;
 
   return (
-    <div className={`flex ${isCurrentUser ? 'justify-end' : 'justify-start'}`}>
+    <div className={`flex ${isCurrentUser ? 'justify-end' : 'justify-start'} mb-2`}>
       <div
-        className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg relative ${
+        className={`max-w-[280px] sm:max-w-xs lg:max-w-md px-4 py-3 rounded-2xl relative shadow-sm ${
           isCurrentUser
-            ? 'bg-blue-500 text-white'
+            ? 'bg-primary text-primary-foreground rounded-br-md'
             : isUnread
-            ? 'bg-blue-600 text-white ring-2 ring-blue-400 border-l-4 border-blue-300 font-semibold shadow-lg'
-            : 'bg-muted text-muted-foreground'
+            ? 'bg-accent text-accent-foreground ring-2 ring-primary/20 border-l-4 border-primary shadow-md'
+            : 'bg-card text-card-foreground border rounded-bl-md'
         }`}
       >
         {isUnread && (
-          <div className="absolute -left-2 top-2 w-3 h-3 bg-primary rounded-full"></div>
+          <div className="absolute -left-2 top-3 w-2 h-2 bg-primary rounded-full animate-pulse"></div>
         )}
-        {!isCurrentUser && (
-          <p className={`text-xs font-semibold mb-1 ${isAdminSender ? 'text-red-600' : 'text-gray-600'}`}>
+        {!isCurrentUser && senderName && (
+          <p className={`text-xs font-medium mb-2 ${
+            isAdminSender 
+              ? 'text-destructive' 
+              : isCurrentUser 
+                ? 'text-primary-foreground/80' 
+                : 'text-muted-foreground'
+          }`}>
             {senderName}
           </p>
         )}
-        <p className="text-sm">{message.message}</p>
-        <p className={`text-xs mt-1 ${isCurrentUser ? 'text-blue-100' : 'text-gray-500'}`}>
+        <p className="text-sm leading-relaxed break-words">{message.message}</p>
+        <p className={`text-xs mt-2 ${
+          isCurrentUser 
+            ? 'text-primary-foreground/70' 
+            : 'text-muted-foreground/70'
+        }`}>
           {new Date(message.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
         </p>
       </div>

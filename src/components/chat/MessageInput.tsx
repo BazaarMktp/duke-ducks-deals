@@ -40,19 +40,24 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, initialMessa
   };
 
   return (
-    <div className="flex gap-2">
-      <Input
-        value={newMessage}
-        onChange={(e) => setNewMessage(e.target.value)}
-        placeholder="Type your message..."
-        onKeyPress={handleKeyPress}
-        disabled={sending}
-      />
+    <div className="flex gap-3 items-end">
+      <div className="flex-1">
+        <Input
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
+          placeholder="Type your message..."
+          onKeyPress={handleKeyPress}
+          disabled={sending}
+          className="rounded-full border-2 px-4 py-3 text-sm resize-none focus:ring-2 focus:ring-primary/20 transition-all"
+        />
+      </div>
       <Button 
         onClick={handleSend} 
         disabled={!newMessage.trim() || sending}
+        size="icon"
+        className="rounded-full h-10 w-10 shrink-0 shadow-md hover:shadow-lg transition-all"
       >
-        <Send size={16} />
+        <Send size={18} />
       </Button>
     </div>
   );
