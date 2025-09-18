@@ -30,7 +30,19 @@ const getMetricRating = (name: string, value: number): 'good' | 'needs-improveme
 export const usePerformanceTracking = () => {
   const { user } = useAuth();
 
+  // Track which metrics have already been sent to prevent duplicates
+  const sentMetrics = new Set<string>();
+
   const trackWebVitals = async (metric: WebVitalsMetric) => {
+    const metricKey = `${metric.name}-${metric.value}`;
+    
+    // Prevent duplicate tracking of the same metric
+    if (sentMetrics.has(metricKey)) {
+      return;
+    }
+    
+    sentMetrics.add(metricKey);
+    
     try {
       const { error } = await supabase
         .from('performance_metrics')
