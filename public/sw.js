@@ -146,15 +146,15 @@ self.addEventListener('push', event => {
   
   const options = {
     body: data.body,
-    icon: '/lovable-uploads/e320291f-9728-4467-9927-a32cc7ae8ac9.png',
-    badge: '/lovable-uploads/e320291f-9728-4467-9927-a32cc7ae8ac9.png',
+    icon: '/lovable-uploads/bazaar-app-icon.png',
+    badge: '/lovable-uploads/bazaar-app-icon.png',
     tag: data.tag || 'bazaar-notification',
     data: data.data,
     actions: [
       {
         action: 'view',
         title: 'View',
-        icon: '/lovable-uploads/e320291f-9728-4467-9927-a32cc7ae8ac9.png'
+        icon: '/lovable-uploads/bazaar-app-icon.png'
       },
       {
         action: 'dismiss',
