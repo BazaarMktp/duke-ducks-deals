@@ -6,6 +6,8 @@ import { Heart, MapPin, MessageCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
+import { useConversation } from "@/hooks/useConversation";
 
 interface FavoriteListing {
   id: string;
@@ -26,6 +28,8 @@ const Favorites = () => {
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const { startConversation } = useConversation();
 
   const fetchFavorites = useCallback(async () => {
     if (!user) return;
@@ -124,6 +128,30 @@ const Favorites = () => {
     }
   };
 
+  const handleViewDetails = (listing: FavoriteListing) => {
+    const detailRoute = `/${listing.category}/${listing.id}`;
+    navigate(detailRoute);
+  };
+
+  const handleStartConversation = (listing: FavoriteListing) => {
+    // Convert FavoriteListing to Product format for useConversation
+    const product = {
+      id: listing.id,
+      title: listing.title,
+      description: listing.description,
+      price: listing.price,
+      images: listing.images,
+      user_id: '', // This will be handled by the conversation hook
+      created_at: new Date().toISOString(), // Fallback date
+      listing_type: 'offer', // Default to offer
+      profiles: {
+        ...listing.profiles,
+        created_at: new Date().toISOString() // Fallback date
+      }
+    };
+    startConversation(product);
+  };
+
   if (!user) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -193,10 +221,18 @@ const Favorites = () => {
                   >
                     <Heart size={16} className="fill-current" />
                   </Button>
-                  <Button size="sm" className="flex-1">
+                  <Button 
+                    size="sm" 
+                    className="flex-1"
+                    onClick={() => handleViewDetails(listing)}
+                  >
                     View Details
                   </Button>
-                  <Button variant="outline" size="sm">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => handleStartConversation(listing)}
+                  >
                     <MessageCircle size={16} />
                   </Button>
                 </div>
