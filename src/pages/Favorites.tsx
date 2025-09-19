@@ -18,6 +18,7 @@ interface FavoriteListing {
   housing_type: string;
   location: string;
   images: string[];
+  user_id: string;
   profiles: {
     profile_name: string;
   };
@@ -48,6 +49,7 @@ const Favorites = () => {
             housing_type,
             location,
             images,
+            user_id,
             profiles!listings_user_id_fkey(profile_name)
           )
         `)
@@ -64,6 +66,7 @@ const Favorites = () => {
         housing_type: fav.listings.housing_type,
         location: fav.listings.location,
         images: fav.listings.images || [],
+        user_id: fav.listings.user_id,
         profiles: fav.listings.profiles
       })) || [];
 
@@ -141,7 +144,7 @@ const Favorites = () => {
       description: listing.description,
       price: listing.price,
       images: listing.images,
-      user_id: '', // This will be handled by the conversation hook
+      user_id: listing.user_id,
       created_at: new Date().toISOString(), // Fallback date
       listing_type: 'offer', // Default to offer
       profiles: {
