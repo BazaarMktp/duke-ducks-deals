@@ -46,7 +46,7 @@ const ChatInterface = () => {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-background">
+    <div className="flex flex-col flex-1 min-h-0 bg-background">
       {/* Mobile Header */}
       <div className="md:hidden border-b bg-card/50 backdrop-blur-sm">
         <div className="px-4 py-3">
