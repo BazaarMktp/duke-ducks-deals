@@ -126,8 +126,8 @@ const ChatInterface = () => {
       </div>
       
       {/* Desktop: Show both side by side */}
-      <div className="hidden md:block container mx-auto px-4 pb-8">
-        <div className="grid md:grid-cols-3 gap-6 h-[600px] max-h-[calc(100vh-200px)]">
+      <div className="hidden md:block container mx-auto px-4 pb-20">
+        <div className="grid md:grid-cols-3 gap-6 h-[600px] max-h-[calc(100vh-200px)] mb-8">
           <ConversationList
             conversations={conversations}
             selectedConversation={selectedConversation}

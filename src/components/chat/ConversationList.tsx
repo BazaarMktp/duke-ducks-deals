@@ -24,7 +24,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
   onDeleteConversation,
 }) => {
   return (
-    <Card className="md:col-span-1 shadow-sm h-full flex flex-col">
+    <Card className="md:col-span-1 shadow-sm h-full flex flex-col bg-card border rounded-lg">
       <CardHeader className="pb-3 flex-shrink-0">
         <CardTitle className="text-xl">
           {showArchived ? "Archived Conversations" : "Messages"}

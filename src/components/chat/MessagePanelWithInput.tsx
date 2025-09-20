@@ -158,7 +158,7 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
       </div>
 
       {/* Desktop Layout */}
-      <Card className="hidden md:block md:col-span-2">
+      <Card className="hidden md:block md:col-span-2 bg-card border rounded-lg">
         <CardHeader className="pb-3">
           <CardTitle>
             {selectedConversation ? 'Chat' : 'Select a conversation'}
