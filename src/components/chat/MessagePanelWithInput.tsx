@@ -158,13 +158,13 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
       </div>
 
       {/* Desktop Layout */}
-      <Card className="hidden md:block md:col-span-2 bg-card border rounded-lg">
-        <CardHeader className="pb-3">
+      <Card className="hidden md:block md:col-span-2 bg-card border rounded-lg h-full flex flex-col">
+        <CardHeader className="pb-3 flex-shrink-0">
           <CardTitle>
             {selectedConversation ? 'Chat' : 'Select a conversation'}
           </CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-col h-[calc(600px-70px)] p-0">
+        <CardContent className="flex flex-col flex-1 min-h-0 p-0">
           {selectedConversation ? (
             <>
               <div className="flex-1 overflow-y-auto px-4 py-2 relative">

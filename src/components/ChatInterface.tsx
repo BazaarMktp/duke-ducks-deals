@@ -46,7 +46,7 @@ const ChatInterface = () => {
   }
 
   return (
-    <div className="flex flex-col flex-1 min-h-0 bg-background">
+    <div className="flex h-full flex-col overflow-hidden bg-background">
       {/* Mobile Header */}
       <div className="md:hidden border-b bg-card/50 backdrop-blur-sm">
         <div className="px-4 py-3">
@@ -126,8 +126,8 @@ const ChatInterface = () => {
       </div>
       
       {/* Desktop: Show both side by side */}
-      <div className="hidden md:block container mx-auto px-4 pb-20">
-        <div className="grid md:grid-cols-3 gap-6 h-[600px] max-h-[calc(100vh-200px)] mb-8">
+      <div className="hidden md:flex container mx-auto px-4 pb-6 flex-1 min-h-0">
+        <div className="grid md:grid-cols-3 gap-6 flex-1 min-h-0">
           <ConversationList
             conversations={conversations}
             selectedConversation={selectedConversation}
@@ -137,13 +137,13 @@ const ChatInterface = () => {
             onArchiveConversation={archiveConversation}
             onDeleteConversation={deleteConversation}
           />
-        <MessagePanelWithInput
-          selectedConversation={selectedConversation}
-          messages={messages}
-          currentUserId={user.id}
-          onSendMessage={sendMessage}
-          onLikeUpdate={updateMessageLikes}
-        />
+          <MessagePanelWithInput
+            selectedConversation={selectedConversation}
+            messages={messages}
+            currentUserId={user.id}
+            onSendMessage={sendMessage}
+            onLikeUpdate={updateMessageLikes}
+          />
         </div>
       </div>
     </div>
