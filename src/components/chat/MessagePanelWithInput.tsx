@@ -142,7 +142,7 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
             </div>
             
             {/* Input Area - Fixed at bottom */}
-            <div className="flex-shrink-0 p-4 border-t bg-background/95 backdrop-blur-sm shadow-lg">
+            <div className="flex-shrink-0 p-4 pt-3 pb-[max(1rem,env(safe-area-inset-bottom))] border-t bg-background/95 backdrop-blur-sm shadow-lg">
               <MessageInput 
                 onSendMessage={handleSendMessage} 
                 initialMessage={initialMessage}
