@@ -100,7 +100,7 @@ const ChatInterface = () => {
       </div>
       
       {/* Mobile: Full screen chat interface */}
-      <div className="md:hidden flex-1 flex flex-col">
+      <div className="md:hidden flex-1 flex flex-col overflow-hidden">
         {selectedConversation ? (
           <MessagePanelWithInput
             selectedConversation={selectedConversation}
@@ -111,7 +111,7 @@ const ChatInterface = () => {
             onBack={() => handleSelectConversation(null)}
           />
         ) : (
-          <div className="flex-1 bg-card">
+          <div className="flex-1 overflow-hidden">
             <ConversationList
               conversations={conversations}
               selectedConversation={selectedConversation}

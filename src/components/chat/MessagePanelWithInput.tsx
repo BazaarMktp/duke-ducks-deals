@@ -32,7 +32,13 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
   const [initialMessage, setInitialMessage] = useState<string>('');
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ 
+        behavior: "smooth",
+        block: "end",
+        inline: "nearest"
+      });
+    }
   };
 
   useEffect(() => {
@@ -48,7 +54,7 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
     // Scroll to bottom when new messages arrive or conversation changes
     if (messages.length > 0) {
       // For first load, scroll immediately to show latest messages
-      if (isFirstLoad.current || selectedConversation) {
+      if (isFirstLoad.current) {
         setTimeout(() => scrollToBottom(), 100);
       } 
       // For new messages, scroll smoothly
@@ -60,7 +66,7 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
     // Update the previous length and mark that we've loaded at least once
     previousMessagesLength.current = messages.length;
     isFirstLoad.current = false;
-  }, [messages, selectedConversation]);
+  }, [messages]);
 
   // Reset first load flag when conversation changes
   useEffect(() => {
@@ -128,9 +134,9 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
             </div>
             
             {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto p-4 bg-muted/20">
+            <div className="flex-1 overflow-y-auto p-4 bg-muted/20 relative">
               {renderMessages()}
-              <div ref={messagesEndRef} />
+              <div ref={messagesEndRef} className="h-1" />
             </div>
             
             {/* Input Area */}
@@ -161,9 +167,9 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
         <CardContent className="flex flex-col h-[calc(600px-70px)] p-0">
           {selectedConversation ? (
             <>
-              <div className="flex-1 overflow-y-auto px-4 py-2">
+              <div className="flex-1 overflow-y-auto px-4 py-2 relative">
                 {renderMessages()}
-                <div ref={messagesEndRef} />
+                <div ref={messagesEndRef} className="h-1" />
               </div>
               <div className="p-4 border-t bg-muted/20">
                 <MessageInput 
