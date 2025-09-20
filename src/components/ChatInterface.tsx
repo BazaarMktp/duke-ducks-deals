@@ -20,6 +20,7 @@ const ChatInterface = () => {
     showArchived,
     handleSelectConversation,
     sendMessage,
+    updateMessageLikes,
     archiveConversation,
     deleteConversation,
     contactSupport,
@@ -106,6 +107,7 @@ const ChatInterface = () => {
             messages={messages}
             currentUserId={user.id}
             onSendMessage={sendMessage}
+            onLikeUpdate={updateMessageLikes}
             onBack={() => handleSelectConversation(null)}
           />
         ) : (
@@ -135,12 +137,13 @@ const ChatInterface = () => {
             onArchiveConversation={archiveConversation}
             onDeleteConversation={deleteConversation}
           />
-          <MessagePanelWithInput
-            selectedConversation={selectedConversation}
-            messages={messages}
-            currentUserId={user.id}
-            onSendMessage={sendMessage}
-          />
+        <MessagePanelWithInput
+          selectedConversation={selectedConversation}
+          messages={messages}
+          currentUserId={user.id}
+          onSendMessage={sendMessage}
+          onLikeUpdate={updateMessageLikes}
+        />
         </div>
       </div>
     </div>

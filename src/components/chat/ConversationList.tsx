@@ -24,17 +24,32 @@ const ConversationList: React.FC<ConversationListProps> = ({
   onDeleteConversation,
 }) => {
   return (
-    <Card className="md:col-span-1">
-      <CardHeader>
-        <CardTitle>{showArchived ? "Archived Conversations" : "Active Conversations"}</CardTitle>
+    <Card className="md:col-span-1 shadow-sm">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-xl">
+          {showArchived ? "Archived Conversations" : "Messages"}
+        </CardTitle>
       </CardHeader>
       <CardContent className="p-0 overflow-y-auto h-[calc(100vh-200px)] md:h-[calc(600px-70px)]">
         {conversations.length === 0 ? (
-          <p className="p-4 text-gray-500 text-center">
-            {showArchived ? "No archived conversations" : "No conversations yet"}
-          </p>
+          <div className="p-6 text-center">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-muted flex items-center justify-center">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-muted-foreground">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+            </div>
+            <h3 className="font-semibold text-foreground mb-2">
+              {showArchived ? "No archived conversations" : "No messages yet"}
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              {showArchived 
+                ? "Your archived conversations will appear here" 
+                : "Start a conversation by messaging someone about their listing"
+              }
+            </p>
+          </div>
         ) : (
-          <div className="space-y-2">
+          <div className="divide-y">
             {conversations.map((conv) => (
               <ConversationItem
                 key={conv.id}

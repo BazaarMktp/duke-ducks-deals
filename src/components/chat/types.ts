@@ -5,8 +5,10 @@ export interface Message {
   sender_id: string;
   created_at: string;
   is_read: boolean;
+  likes?: string[]; // Array of user IDs who liked the message
   profiles: {
     profile_name: string;
+    avatar_url?: string;
   };
 }
 
@@ -20,13 +22,17 @@ export interface Conversation {
   deleted_by_buyer: boolean;
   deleted_by_seller: boolean;
   unread_count?: number;
+  last_message_preview?: string;
+  last_message_at?: string;
   listings: {
     title: string;
   } | null;
   buyer_profile: {
     profile_name: string;
+    avatar_url?: string;
   };
   seller_profile: {
     profile_name: string;
+    avatar_url?: string;
   };
 }

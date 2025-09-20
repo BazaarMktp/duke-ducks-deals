@@ -61,16 +61,30 @@ export const useMessages = (selectedConversation: string | null) => {
           sender_id,
           created_at,
           is_read,
-          profiles!messages_sender_id_fkey(profile_name)
+          likes,
+          profiles!messages_sender_id_fkey(profile_name, avatar_url)
         `)
         .eq('conversation_id', conversationId)
         .order('created_at', { ascending: true });
 
       if (error) throw error;
-      setMessages(data || []);
+      
+      // Transform the data to ensure likes is always a string array
+      const transformedMessages = (data || []).map(msg => ({
+        ...msg,
+        likes: Array.isArray(msg.likes) ? msg.likes.filter((like): like is string => typeof like === 'string') : []
+      }));
+      
+      setMessages(transformedMessages);
     } catch (error) {
       console.error('Error fetching messages:', error);
     }
+  }, []);
+
+  const updateMessageLikes = useCallback((messageId: string, newLikes: string[]) => {
+    setMessages(prev => prev.map(msg => 
+      msg.id === messageId ? { ...msg, likes: newLikes } : msg
+    ));
   }, []);
 
   const sendMessage = async (newMessage: string) => {
@@ -166,6 +180,7 @@ export const useMessages = (selectedConversation: string | null) => {
   return {
     messages,
     sendingMessage,
-    sendMessage
+    sendMessage,
+    updateMessageLikes
   };
 };

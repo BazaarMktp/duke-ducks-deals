@@ -23,7 +23,8 @@ export const useChat = (initialConversationId?: string) => {
   const {
     messages,
     sendingMessage,
-    sendMessage
+    sendMessage,
+    updateMessageLikes
   } = useMessages(selectedConversation);
 
   const { contactSupport } = useChatActions();
@@ -78,6 +79,7 @@ export const useChat = (initialConversationId?: string) => {
     sendingMessage,
     handleSelectConversation,
     sendMessage,
+    updateMessageLikes,
     archiveConversation: handleArchiveConversation,
     deleteConversation: handleDeleteConversation,
     contactSupport,

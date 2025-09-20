@@ -3,7 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Message } from './types';
 import MessageBubble from './MessageBubble';
 import MessageInput from './MessageInput';
+import DateSeparator from './DateSeparator';
+import NewMessageIndicator from './NewMessageIndicator';
 import { useLocation } from 'react-router-dom';
+import { shouldShowDateSeparator } from '@/utils/timeUtils';
 
 interface MessagePanelWithInputProps {
   selectedConversation: string | null;
@@ -11,6 +14,7 @@ interface MessagePanelWithInputProps {
   currentUserId: string;
   onSendMessage: (message: string) => void;
   onBack?: () => void;
+  onLikeUpdate?: (messageId: string, newLikes: string[]) => void;
 }
 
 const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
@@ -19,6 +23,7 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
   currentUserId,
   onSendMessage,
   onBack,
+  onLikeUpdate,
 }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const previousMessagesLength = useRef<number>(0);
@@ -40,17 +45,22 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
   }, [location.state, selectedConversation]);
 
   useEffect(() => {
-    // Only scroll to bottom if:
-    // 1. We're adding new messages to an existing conversation (not switching conversations)
-    // 2. It's not the first load of messages for a conversation
-    if (!isFirstLoad.current && messages.length > previousMessagesLength.current) {
-      scrollToBottom();
+    // Scroll to bottom when new messages arrive or conversation changes
+    if (messages.length > 0) {
+      // For first load, scroll immediately to show latest messages
+      if (isFirstLoad.current || selectedConversation) {
+        setTimeout(() => scrollToBottom(), 100);
+      } 
+      // For new messages, scroll smoothly
+      else if (messages.length > previousMessagesLength.current) {
+        scrollToBottom();
+      }
     }
     
     // Update the previous length and mark that we've loaded at least once
     previousMessagesLength.current = messages.length;
     isFirstLoad.current = false;
-  }, [messages]);
+  }, [messages, selectedConversation]);
 
   // Reset first load flag when conversation changes
   useEffect(() => {
@@ -61,6 +71,41 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
   const handleSendMessage = (message: string) => {
     onSendMessage(message);
     setInitialMessage(''); // Clear initial message after sending
+  };
+
+  // Find first unread message to show new message indicator
+  const firstUnreadIndex = messages.findIndex(msg => !msg.is_read && msg.sender_id !== currentUserId);
+
+  const renderMessages = () => {
+    return messages.map((message, index) => {
+      const prevMessage = index > 0 ? messages[index - 1] : undefined;
+      const nextMessage = index < messages.length - 1 ? messages[index + 1] : undefined;
+      
+      const showDateSeparator = shouldShowDateSeparator(
+        message.created_at, 
+        prevMessage?.created_at
+      );
+      
+      const showNewMessageIndicator = firstUnreadIndex === index;
+      const showAvatar = !nextMessage || nextMessage.sender_id !== message.sender_id;
+
+      return (
+        <React.Fragment key={message.id}>
+          {showDateSeparator && (
+            <DateSeparator date={message.created_at} />
+          )}
+          {showNewMessageIndicator && (
+            <NewMessageIndicator />
+          )}
+          <MessageBubble
+            message={message}
+            isCurrentUser={message.sender_id === currentUserId}
+            showAvatar={showAvatar}
+            onLikeUpdate={onLikeUpdate}
+          />
+        </React.Fragment>
+      );
+    });
   };
 
   return (
@@ -83,14 +128,8 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
             </div>
             
             {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-muted/20">
-              {messages.map((message) => (
-                <MessageBubble
-                  key={message.id}
-                  message={message}
-                  isCurrentUser={message.sender_id === currentUserId}
-                />
-              ))}
+            <div className="flex-1 overflow-y-auto p-4 bg-muted/20">
+              {renderMessages()}
               <div ref={messagesEndRef} />
             </div>
             
@@ -104,32 +143,29 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
           </>
         ) : (
           <div className="flex-1 flex items-center justify-center">
-            <p className="text-muted-foreground">Select a conversation to start chatting</p>
+            <div className="text-center">
+              <h3 className="text-lg font-semibold text-foreground mb-2">Your Messages</h3>
+              <p className="text-muted-foreground">Select a conversation to start chatting</p>
+            </div>
           </div>
         )}
       </div>
 
       {/* Desktop Layout */}
       <Card className="hidden md:block md:col-span-2">
-        <CardHeader>
+        <CardHeader className="pb-3">
           <CardTitle>
             {selectedConversation ? 'Chat' : 'Select a conversation'}
           </CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-col h-[calc(600px-70px)]">
+        <CardContent className="flex flex-col h-[calc(600px-70px)] p-0">
           {selectedConversation ? (
             <>
-              <div className="flex-1 overflow-y-auto space-y-4 mb-4 p-4">
-                {messages.map((message) => (
-                  <MessageBubble
-                    key={message.id}
-                    message={message}
-                    isCurrentUser={message.sender_id === currentUserId}
-                  />
-                ))}
+              <div className="flex-1 overflow-y-auto px-4 py-2">
+                {renderMessages()}
                 <div ref={messagesEndRef} />
               </div>
-              <div className="p-4 border-t">
+              <div className="p-4 border-t bg-muted/20">
                 <MessageInput 
                   onSendMessage={handleSendMessage} 
                   initialMessage={initialMessage}
@@ -138,7 +174,10 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
             </>
           ) : (
             <div className="flex-1 flex items-center justify-center">
-              <p className="text-muted-foreground">Select a conversation to start chatting</p>
+              <div className="text-center">
+                <h3 className="text-lg font-semibold text-foreground mb-2">Your Messages</h3>
+                <p className="text-muted-foreground">Select a conversation to start chatting</p>
+              </div>
             </div>
           )}
         </CardContent>

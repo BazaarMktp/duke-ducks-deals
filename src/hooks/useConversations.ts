@@ -27,9 +27,11 @@ export const useConversations = () => {
           archived_by_seller,
           deleted_by_buyer,
           deleted_by_seller,
+          last_message_preview,
+          last_message_at,
           listings!left(title),
-          buyer_profile:profiles!conversations_buyer_id_fkey(profile_name),
-          seller_profile:profiles!conversations_seller_id_fkey(profile_name)
+          buyer_profile:profiles!conversations_buyer_id_fkey(profile_name, avatar_url),
+          seller_profile:profiles!conversations_seller_id_fkey(profile_name, avatar_url)
         `)
         .or(`buyer_id.eq.${user.id},seller_id.eq.${user.id}`);
 
@@ -39,7 +41,7 @@ export const useConversations = () => {
         query = query.or(`and(buyer_id.eq.${user.id},archived_by_buyer.eq.false,deleted_by_buyer.eq.false),and(seller_id.eq.${user.id},archived_by_seller.eq.false,deleted_by_seller.eq.false)`);
       }
 
-      const { data, error } = await query.order('updated_at', { ascending: false });
+      const { data, error } = await query.order('last_message_at', { ascending: false, nullsFirst: false }).order('updated_at', { ascending: false });
 
       if (error) throw error;
       
