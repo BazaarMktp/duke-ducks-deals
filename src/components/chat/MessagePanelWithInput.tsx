@@ -117,14 +117,14 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
   return (
     <>
       {/* Mobile Layout */}
-      <div className="md:hidden h-full flex flex-col">
+      <div className="md:hidden h-full flex flex-col bg-background">
         {selectedConversation ? (
-          <>
+          <div className="h-full flex flex-col">
             {/* Mobile Header with Back Button */}
-            <div className="flex items-center gap-3 p-4 border-b bg-card/50 backdrop-blur-sm flex-shrink-0">
+            <div className="flex items-center gap-3 p-4 border-b bg-background/95 backdrop-blur-sm flex-shrink-0 shadow-sm">
               <button 
                 onClick={onBack}
-                className="p-2 hover:bg-muted rounded-full transition-colors"
+                className="flex items-center justify-center h-10 w-10 hover:bg-muted rounded-full transition-colors"
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M19 12H5M12 19l-7-7 7-7"/>
@@ -134,19 +134,21 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
             </div>
             
             {/* Messages Area - Flexible */}
-            <div className="flex-1 overflow-y-auto p-4 pb-20 bg-muted/20 relative min-h-0">
-              {renderMessages()}
-              <div ref={messagesEndRef} className="h-1" />
+            <div className="flex-1 overflow-y-auto bg-muted/30 relative min-h-0">
+              <div className="p-4 pb-6">
+                {renderMessages()}
+                <div ref={messagesEndRef} className="h-1" />
+              </div>
             </div>
             
             {/* Input Area - Fixed at bottom */}
-            <div className="absolute bottom-0 left-0 right-0 p-4 border-t bg-card/90 backdrop-blur-sm">
+            <div className="flex-shrink-0 p-4 border-t bg-background/95 backdrop-blur-sm shadow-lg">
               <MessageInput 
                 onSendMessage={handleSendMessage} 
                 initialMessage={initialMessage}
               />
             </div>
-          </>
+          </div>
         ) : (
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center">

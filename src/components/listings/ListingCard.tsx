@@ -80,8 +80,19 @@ export const ListingCard = ({
     return listing.category !== 'services' && listing.status === 'active';
   };
 
+  const isSold = listing.status === 'sold';
+
   return (
-    <Card className="hover:shadow-lg transition-shadow">
+    <Card className={`hover:shadow-lg transition-shadow relative ${isSold ? 'opacity-75' : ''}`}>
+      {/* Sold Badge - Position absolutely on top */}
+      {isSold && (
+        <div className="absolute top-2 right-2 z-10">
+          <Badge className="bg-red-600 text-white font-bold text-xs shadow-lg">
+            SOLD
+          </Badge>
+        </div>
+      )}
+      
       <CardHeader className="p-0">
         <div 
           className="h-48 bg-gray-50 rounded-t-lg overflow-hidden relative cursor-pointer hover:opacity-90 transition-opacity"

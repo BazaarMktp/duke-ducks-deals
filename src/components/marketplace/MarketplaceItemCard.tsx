@@ -49,13 +49,24 @@ const MarketplaceItemCard = ({
     return "Anonymous";
   };
 
+  const isSold = listing.status === 'sold';
+
   return (
     <Card 
-      className={`group hover:shadow-lg transition-all duration-300 cursor-pointer border-border/50 hover:border-primary/20 overflow-hidden ${
+      className={`group hover:shadow-lg transition-all duration-300 cursor-pointer border-border/50 hover:border-primary/20 overflow-hidden relative ${
         listing.listing_type === 'wanted' ? 'border-blue-200 bg-blue-50/50' : ''
-      } ${listing.featured ? 'border-yellow-400 border-2' : ''}`}
+      } ${listing.featured ? 'border-yellow-400 border-2' : ''} ${isSold ? 'opacity-75' : ''}`}
     >
       <CardContent className="p-0 h-full flex flex-col">
+        {/* Sold Badge - Position absolutely on top */}
+        {isSold && (
+          <div className="absolute top-2 right-2 z-10">
+            <Badge className="bg-red-600 text-white font-bold text-xs shadow-lg">
+              SOLD
+            </Badge>
+          </div>
+        )}
+        
         {/* Only show image for offers, not for requests */}
         {listing.listing_type === 'offer' && (
           <Link to={`/marketplace/${listing.id}`}>
