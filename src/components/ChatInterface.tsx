@@ -100,7 +100,7 @@ const ChatInterface = () => {
       </div>
       
       {/* Mobile: Full screen chat interface */}
-      <div className="md:hidden flex-1 flex flex-col min-h-0 max-h-[calc(100vh-120px)]">
+      <div className="md:hidden flex-1 flex flex-col min-h-0 h-[calc(100vh-120px)]">
         {selectedConversation ? (
           <MessagePanelWithInput
             selectedConversation={selectedConversation}

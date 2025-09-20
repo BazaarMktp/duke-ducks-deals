@@ -117,7 +117,7 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
   return (
     <>
       {/* Mobile Layout */}
-      <div className="md:hidden flex flex-col h-full">
+      <div className="md:hidden h-full flex flex-col">
         {selectedConversation ? (
           <>
             {/* Mobile Header with Back Button */}
@@ -134,13 +134,13 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
             </div>
             
             {/* Messages Area - Flexible */}
-            <div className="flex-1 overflow-y-auto p-4 bg-muted/20 relative min-h-0">
+            <div className="flex-1 overflow-y-auto p-4 pb-20 bg-muted/20 relative min-h-0">
               {renderMessages()}
               <div ref={messagesEndRef} className="h-1" />
             </div>
             
             {/* Input Area - Fixed at bottom */}
-            <div className="p-4 border-t bg-card/80 backdrop-blur-sm flex-shrink-0">
+            <div className="absolute bottom-0 left-0 right-0 p-4 border-t bg-card/90 backdrop-blur-sm">
               <MessageInput 
                 onSendMessage={handleSendMessage} 
                 initialMessage={initialMessage}
