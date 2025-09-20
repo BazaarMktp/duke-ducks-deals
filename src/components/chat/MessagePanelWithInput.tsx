@@ -121,7 +121,7 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
         {selectedConversation ? (
           <>
             {/* Mobile Header with Back Button */}
-            <div className="flex items-center gap-3 p-4 border-b bg-card/50 backdrop-blur-sm">
+            <div className="flex items-center gap-3 p-4 border-b bg-card/50 backdrop-blur-sm flex-shrink-0">
               <button 
                 onClick={onBack}
                 className="p-2 hover:bg-muted rounded-full transition-colors"
@@ -133,14 +133,14 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
               <h2 className="font-semibold text-lg">Chat</h2>
             </div>
             
-            {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto p-4 bg-muted/20 relative">
+            {/* Messages Area - Flexible */}
+            <div className="flex-1 overflow-y-auto p-4 bg-muted/20 relative min-h-0">
               {renderMessages()}
               <div ref={messagesEndRef} className="h-1" />
             </div>
             
-            {/* Input Area */}
-            <div className="p-4 border-t bg-card/80 backdrop-blur-sm">
+            {/* Input Area - Fixed at bottom */}
+            <div className="p-4 border-t bg-card/80 backdrop-blur-sm flex-shrink-0">
               <MessageInput 
                 onSendMessage={handleSendMessage} 
                 initialMessage={initialMessage}
@@ -167,11 +167,13 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
         <CardContent className="flex flex-col flex-1 min-h-0 p-0">
           {selectedConversation ? (
             <>
-              <div className="flex-1 overflow-y-auto px-4 py-2 relative">
+              {/* Messages Area - Flexible */}
+              <div className="flex-1 overflow-y-auto px-4 py-2 relative min-h-0">
                 {renderMessages()}
                 <div ref={messagesEndRef} className="h-1" />
               </div>
-              <div className="p-4 border-t bg-muted/20">
+              {/* Input Area - Fixed at bottom */}
+              <div className="p-4 border-t bg-muted/20 flex-shrink-0">
                 <MessageInput 
                   onSendMessage={handleSendMessage} 
                   initialMessage={initialMessage}
