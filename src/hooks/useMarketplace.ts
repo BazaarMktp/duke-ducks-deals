@@ -12,7 +12,9 @@ export const useMarketplace = (user: any, searchQuery: string, sortBy: string, a
   const fetchListings = useCallback(async () => {
     try {
       setLoading(true);
-      let query = supabase
+      
+      // Fetch active listings
+      let activeQuery = supabase
         .from('listings')
         .select(`
           *,
@@ -22,8 +24,22 @@ export const useMarketplace = (user: any, searchQuery: string, sortBy: string, a
         .eq('status', 'active')
         .eq('listing_type', activeListingType);
 
+      // Fetch recent sold listings (last 30 days) to show social proof
+      let soldQuery = supabase
+        .from('listings')
+        .select(`
+          *,
+          profiles!user_id(profile_name, full_name, avatar_url, college_id, is_verified)
+        `)
+        .eq('category', 'marketplace')
+        .eq('status', 'sold')
+        .eq('listing_type', activeListingType)
+        .gte('sold_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString())
+        .limit(20); // Limit sold items to avoid overwhelming
+
       if (searchQuery) {
-        query = query.or(`title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`);
+        activeQuery = activeQuery.or(`title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`);
+        soldQuery = soldQuery.or(`title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`);
       }
 
       const getOrderOptions = () => {
@@ -42,13 +58,37 @@ export const useMarketplace = (user: any, searchQuery: string, sortBy: string, a
 
       const { column: orderColumn, ascending } = getOrderOptions();
 
-      const { data, error } = await query
-        .order('featured', { ascending: false })
-        .order(orderColumn, { ascending });
+      // Execute both queries
+      const [activeResult, soldResult] = await Promise.all([
+        activeQuery
+          .order('featured', { ascending: false })
+          .order(orderColumn, { ascending }),
+        soldQuery.order('sold_at', { ascending: false })
+      ]);
 
-      if (error) throw error;
-      console.log('Marketplace listings data:', data); // Debug log
-      setListings(data || []);
+      if (activeResult.error) throw activeResult.error;
+      if (soldResult.error) throw soldResult.error;
+
+      const activeListings = activeResult.data || [];
+      const soldListings = soldResult.data || [];
+
+      // Combine and randomize the listings
+      const allListings = [...activeListings, ...soldListings];
+      
+      // Fisher-Yates shuffle algorithm to randomize
+      for (let i = allListings.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [allListings[i], allListings[j]] = [allListings[j], allListings[i]];
+      }
+
+      // Keep featured items at the top
+      const featuredItems = allListings.filter(item => item.featured);
+      const nonFeaturedItems = allListings.filter(item => !item.featured);
+      
+      const finalListings = [...featuredItems, ...nonFeaturedItems];
+
+      console.log('Marketplace listings data:', { active: activeListings.length, sold: soldListings.length, total: finalListings.length });
+      setListings(finalListings);
     } catch (error) {
       console.error('Error fetching listings:', error);
       toast.error("Failed to load marketplace items");

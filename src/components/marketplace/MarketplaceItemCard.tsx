@@ -49,7 +49,7 @@ const MarketplaceItemCard = ({
     return "Anonymous";
   };
 
-  const isSold = listing.status === 'sold';
+  const isSold = listing.status === 'sold' || listing.sold_at;
 
   return (
     <Card 

@@ -20,4 +20,6 @@ export interface MarketplaceListing {
   category: string;
   allow_pickup?: boolean;
   allow_meet_on_campus?: boolean;
+  sold_at?: string;
+  sold_on_bazaar?: boolean;
 }
