@@ -15,6 +15,7 @@ interface MessagePanelWithInputProps {
   onSendMessage: (message: string) => void;
   onBack?: () => void;
   onLikeUpdate?: (messageId: string, newLikes: string[]) => void;
+  renderMode?: 'auto' | 'mobile' | 'desktop';
 }
 
 const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
@@ -24,6 +25,7 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
   onSendMessage,
   onBack,
   onLikeUpdate,
+  renderMode = 'auto',
 }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const previousMessagesLength = useRef<number>(0);
@@ -114,10 +116,15 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
     });
   };
 
+  const isMobileOnly = renderMode === 'mobile';
+  const isDesktopOnly = renderMode === 'desktop';
+  const mobileWrapperClass = `${isDesktopOnly ? 'hidden' : 'md:hidden'} h-full flex flex-col bg-background`;
+  const desktopWrapperClass = `${isMobileOnly ? 'hidden' : 'hidden md:block'} md:col-span-2 bg-card border rounded-lg h-full flex flex-col`;
+
   return (
     <>
       {/* Mobile Layout */}
-      <div className="md:hidden h-full flex flex-col bg-background">
+      <div className={mobileWrapperClass}>
         {selectedConversation ? (
           <div className="h-full flex flex-col">
             {/* Mobile Header with Back Button */}
@@ -160,7 +167,7 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
       </div>
 
       {/* Desktop Layout */}
-      <Card className="hidden md:block md:col-span-2 bg-card border rounded-lg h-full flex flex-col">
+      <Card className={desktopWrapperClass}>
         <CardHeader className="pb-3 flex-shrink-0">
           <CardTitle>
             {selectedConversation ? 'Chat' : 'Select a conversation'}
