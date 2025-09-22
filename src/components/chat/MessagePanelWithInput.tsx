@@ -121,10 +121,10 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
   const mobileWrapperClass = `${isDesktopOnly ? 'hidden' : 'md:hidden'} h-full flex flex-col bg-background`;
   const desktopWrapperClass = `${isMobileOnly ? 'hidden' : 'hidden md:block'} md:col-span-2 bg-card border rounded-lg h-full flex flex-col`;
 
-  return (
-    <>
-      {/* Mobile Layout */}
-      <div className={mobileWrapperClass}>
+  // Determine render behavior
+  if (renderMode === 'mobile') {
+    return (
+      <div className="h-full flex flex-col bg-background">
         {selectedConversation ? (
           <div className="h-full flex flex-col">
             {/* Mobile Header with Back Button */}
@@ -139,7 +139,6 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
               </button>
               <h2 className="font-semibold text-lg">Chat</h2>
             </div>
-            
             {/* Messages Area - Flexible */}
             <div className="flex-1 overflow-y-auto bg-muted/30 relative min-h-0">
               <div className="p-4 pb-6">
@@ -147,7 +146,6 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
                 <div ref={messagesEndRef} className="h-1" />
               </div>
             </div>
-            
             {/* Input Area - Fixed at bottom */}
             <div className="flex-shrink-0 p-4 pt-3 pb-[env(safe-area-inset-bottom)] border-t bg-background/95 backdrop-blur-sm shadow-lg">
               <MessageInput 
@@ -165,9 +163,12 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
           </div>
         )}
       </div>
+    );
+  }
 
-      {/* Desktop Layout */}
-      <Card className={desktopWrapperClass}>
+  if (renderMode === 'desktop') {
+    return (
+      <Card className="md:col-span-2 bg-card border rounded-lg h-full flex flex-col">
         <CardHeader className="pb-3 flex-shrink-0">
           <CardTitle>
             {selectedConversation ? 'Chat' : 'Select a conversation'}
@@ -187,6 +188,70 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
                   onSendMessage={handleSendMessage} 
                   initialMessage={initialMessage}
                 />
+              </div>
+            </>
+          ) : (
+            <div className="flex-1 flex items-center justify-center">
+              <div className="text-center">
+                <h3 className="text-lg font-semibold text-foreground mb-2">Your Messages</h3>
+                <p className="text-muted-foreground">Select a conversation to start chatting</p>
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // Auto (fallback) renders both with responsive classes
+  return (
+    <>
+      <div className="md:hidden h-full flex flex-col bg-background">
+        {selectedConversation ? (
+          <div className="h-full flex flex-col">
+            <div className="flex items-center gap-3 p-4 border-b bg-background/95 backdrop-blur-sm flex-shrink-0 shadow-sm">
+              <button onClick={onBack} className="flex items-center justify-center h-10 w-10 hover:bg-muted rounded-full transition-colors">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+              </button>
+              <h2 className="font-semibold text-lg">Chat</h2>
+            </div>
+            <div className="flex-1 overflow-y-auto bg-muted/30 relative min-h-0">
+              <div className="p-4 pb-6">
+                {renderMessages()}
+                <div ref={messagesEndRef} className="h-1" />
+              </div>
+            </div>
+            <div className="flex-shrink-0 p-4 pt-3 pb-[env(safe-area-inset-bottom)] border-t bg-background/95 backdrop-blur-sm shadow-lg">
+              <MessageInput onSendMessage={handleSendMessage} initialMessage={initialMessage} />
+            </div>
+          </div>
+        ) : (
+          <div className="flex-1 flex items-center justify-center">
+            <div className="text-center">
+              <h3 className="text-lg font-semibold text-foreground mb-2">Your Messages</h3>
+              <p className="text-muted-foreground">Select a conversation to start chatting</p>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <Card className="hidden md:block md:col-span-2 bg-card border rounded-lg h-full flex flex-col">
+        <CardHeader className="pb-3 flex-shrink-0">
+          <CardTitle>
+            {selectedConversation ? 'Chat' : 'Select a conversation'}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col flex-1 min-h-0 p-0">
+          {selectedConversation ? (
+            <>
+              <div className="flex-1 overflow-y-auto px-4 py-2 relative min-h-0">
+                {renderMessages()}
+                <div ref={messagesEndRef} className="h-1" />
+              </div>
+              <div className="px-4 pt-3 pb-[env(safe-area-inset-bottom)] border-t bg-background/95 backdrop-blur-sm flex-shrink-0">
+                <MessageInput onSendMessage={handleSendMessage} initialMessage={initialMessage} />
               </div>
             </>
           ) : (
