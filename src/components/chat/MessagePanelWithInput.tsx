@@ -147,7 +147,7 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
               </div>
             </div>
             {/* Input Area - Fixed at bottom */}
-            <div className="flex-shrink-0 px-3 py-4 pt-3 pb-[env(safe-area-inset-bottom)] mb-4 border-t bg-background/95 backdrop-blur-sm shadow-lg">
+            <div className="flex-shrink-0 px-3 pt-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] mb-4 border-t bg-background/95 backdrop-blur-sm shadow-lg">
               <MessageInput 
                 onSendMessage={handleSendMessage} 
                 initialMessage={initialMessage}
@@ -183,7 +183,7 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
                 <div ref={messagesEndRef} className="h-1" />
               </div>
               {/* Input Area - Fixed at bottom */}
-              <div className="px-4 pt-3 pb-[env(safe-area-inset-bottom)] border-t bg-background/95 backdrop-blur-sm flex-shrink-0">
+              <div className="px-4 pt-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] border-t bg-background/95 backdrop-blur-sm flex-shrink-0">
                 <MessageInput 
                   onSendMessage={handleSendMessage} 
                   initialMessage={initialMessage}
@@ -223,7 +223,7 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
                 <div ref={messagesEndRef} className="h-1" />
               </div>
             </div>
-            <div className="flex-shrink-0 px-4 py-4 pt-3 pb-[env(safe-area-inset-bottom)] mb-4 border-t bg-background/95 backdrop-blur-sm shadow-lg">
+            <div className="flex-shrink-0 px-4 pt-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] mb-4 border-t bg-background/95 backdrop-blur-sm shadow-lg">
               <MessageInput onSendMessage={handleSendMessage} initialMessage={initialMessage} />
             </div>
           </div>
