@@ -40,7 +40,7 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, initialMessa
   };
 
   return (
-    <div className="flex gap-3 items-center px-4">
+    <div className="flex gap-3 items-center">
       <div className="flex-1">
         <Input
           value={newMessage}
