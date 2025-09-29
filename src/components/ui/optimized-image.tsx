@@ -48,6 +48,21 @@ export const OptimizedImage = ({
     return originalSrc;
   };
 
+  // Generate responsive srcset for Supabase images
+  const getSrcSet = (originalSrc: string): string | undefined => {
+    if (!originalSrc.includes('supabase.co/storage/v1/object/public/')) return undefined;
+    const widths = [320, 480, 640, 800, 1024, 1280, 1600];
+    const quality = priority ? '85' : '75';
+    return widths
+      .map((w) => {
+        const url = new URL(originalSrc);
+        url.searchParams.set('width', String(w));
+        url.searchParams.set('quality', quality);
+        return `${url.toString()} ${w}w`;
+      })
+      .join(', ');
+  };
+
   useEffect(() => {
     if (!lazy || priority) return;
 
@@ -59,7 +74,7 @@ export const OptimizedImage = ({
           observer.disconnect();
         }
       },
-      { rootMargin: '100px' }
+      { rootMargin: '400px 0px' }
     );
 
     if (imgRef.current) {
@@ -134,6 +149,7 @@ export const OptimizedImage = ({
         onLoad={handleLoad}
         onError={handleError}
         sizes={sizes || "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"}
+        srcSet={inView && !error ? getSrcSet(src) : undefined}
         className={cn(
           "w-full h-full object-cover transition-all duration-300",
           isLoaded ? "opacity-100 scale-100" : "opacity-0 scale-105"
