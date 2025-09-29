@@ -109,6 +109,41 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
   const firstUnreadIndex = messages.findIndex(msg => !msg.is_read && msg.sender_id !== currentUserId);
 
   const renderMessages = () => {
+    // Show welcome frame for new conversations
+    if (messages.length === 0) {
+      return (
+        <div className="flex items-center justify-center h-full px-4">
+          <div className="max-w-md w-full">
+            <div className="bg-gradient-to-br from-primary/5 to-primary/10 border-2 border-primary/20 rounded-2xl p-8 text-center animate-scale-in">
+              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-primary">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Start the Conversation</h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                {conversationData?.listings?.title 
+                  ? `Send a message about "${conversationData.listings.title}"`
+                  : "Send your first message to begin chatting"
+                }
+              </p>
+              <div className="flex flex-wrap gap-2 justify-center">
+                <div className="px-3 py-1.5 bg-background/80 backdrop-blur-sm rounded-full text-xs border border-border">
+                  💬 Be respectful
+                </div>
+                <div className="px-3 py-1.5 bg-background/80 backdrop-blur-sm rounded-full text-xs border border-border">
+                  🤝 Stay safe
+                </div>
+                <div className="px-3 py-1.5 bg-background/80 backdrop-blur-sm rounded-full text-xs border border-border">
+                  ⚡ Respond quickly
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return messages.map((message, index) => {
       const prevMessage = index > 0 ? messages[index - 1] : undefined;
       const nextMessage = index < messages.length - 1 ? messages[index + 1] : undefined;
