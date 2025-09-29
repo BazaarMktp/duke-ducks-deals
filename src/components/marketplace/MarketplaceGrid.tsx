@@ -1,6 +1,7 @@
 
 import MarketplaceItemCard from "./MarketplaceItemCard";
 import { MarketplaceListing } from "./types";
+import { useConversation } from "@/hooks/useConversation";
 
 interface MarketplaceGridProps {
   listings: MarketplaceListing[];
@@ -12,9 +13,25 @@ interface MarketplaceGridProps {
 }
 
 const MarketplaceGrid = ({ listings, user, favorites, onToggleFavorite, loading, activeListingType }: MarketplaceGridProps) => {
+  const { startConversation } = useConversation();
+
   const handleStartConversation = (listing: MarketplaceListing) => {
-    // This function will be implemented when needed
-    console.log('Starting conversation for listing:', listing.id);
+    // Map listing to the minimal Product shape required by startConversation
+    startConversation({
+      id: listing.id,
+      title: listing.title,
+      description: listing.description,
+      price: listing.price,
+      images: listing.images,
+      user_id: listing.user_id,
+      created_at: listing.created_at,
+      listing_type: listing.listing_type,
+      profiles: {
+        profile_name: listing.profiles?.profile_name || 'Bazaar Member',
+        avatar_url: listing.profiles?.avatar_url,
+        created_at: listing.created_at,
+      },
+    } as any);
   };
 
   if (loading) {
