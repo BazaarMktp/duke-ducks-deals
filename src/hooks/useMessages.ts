@@ -62,6 +62,7 @@ export const useMessages = (selectedConversation: string | null) => {
           created_at,
           is_read,
           likes,
+          attachments,
           profiles!messages_sender_id_fkey(profile_name, avatar_url)
         `)
         .eq('conversation_id', conversationId)
@@ -87,39 +88,92 @@ export const useMessages = (selectedConversation: string | null) => {
     ));
   }, []);
 
-  const sendMessage = async (newMessage: string) => {
-    if (!newMessage.trim() || !selectedConversation || !user || sendingMessage) return;
+  const sendMessage = async (newMessage: string, attachments?: any[]) => {
+    if ((!newMessage.trim() && !attachments?.length) || !selectedConversation || !user || sendingMessage) return;
 
     setSendingMessage(true);
+    
+    // Create optimistic message
+    const tempId = `temp_${Date.now()}`;
+    const optimisticMessage: Message = {
+      id: tempId,
+      message: newMessage.trim(),
+      sender_id: user.id,
+      created_at: new Date().toISOString(),
+      is_read: true,
+      likes: [],
+      attachments: attachments || [],
+      status: 'pending',
+      profiles: { 
+        profile_name: 'You',
+        avatar_url: undefined
+      }
+    };
+
+    // Add optimistic message to UI immediately
+    setMessages(prev => [...prev, optimisticMessage]);
+
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('messages')
         .insert({
           conversation_id: selectedConversation,
           sender_id: user.id,
-          message: newMessage.trim()
-        });
+          message: newMessage.trim(),
+          attachments: attachments || []
+        })
+        .select(`
+          id,
+          message,
+          sender_id,
+          created_at,
+          is_read,
+          likes,
+          attachments,
+          profiles!messages_sender_id_fkey(profile_name, avatar_url)
+        `)
+        .single();
 
       if (error) throw error;
 
-      // Send email notification
+      // Replace optimistic message with real one
+      setMessages(prev => 
+        prev.map(msg => 
+          msg.id === tempId 
+            ? { ...data, status: 'sent' } 
+            : msg
+        )
+      );
+
+      // Send email notification (non-blocking)
       try {
-        console.log('Attempting to send email notification for conversation:', selectedConversation);
-        const { data, error } = await supabase.functions.invoke('send-message-notification', {
+        await supabase.functions.invoke('send-message-notification', {
           body: {
             conversationId: selectedConversation,
             senderId: user.id,
             message: newMessage.trim()
           }
         });
-        console.log('Email notification response:', data, error);
       } catch (emailError) {
         console.error('Email notification failed (non-critical):', emailError);
-        // Don't show error to user since message was sent successfully
       }
     } catch (error) {
       console.error('Error sending message:', error);
-      toast({ title: "Error", description: "Failed to send message.", variant: "destructive" });
+      
+      // Mark optimistic message as failed
+      setMessages(prev => 
+        prev.map(msg => 
+          msg.id === tempId 
+            ? { ...msg, status: 'failed' } 
+            : msg
+        )
+      );
+      
+      toast({ 
+        title: "Error", 
+        description: "Failed to send message. Tap to retry.", 
+        variant: "destructive" 
+      });
     } finally {
       setSendingMessage(false);
     }

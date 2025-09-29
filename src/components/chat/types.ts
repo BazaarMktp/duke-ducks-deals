@@ -1,4 +1,11 @@
 
+export interface MessageAttachment {
+  url: string;
+  type: 'image';
+  name: string;
+  size: number;
+}
+
 export interface Message {
   id: string;
   message: string;
@@ -6,6 +13,8 @@ export interface Message {
   created_at: string;
   is_read: boolean;
   likes?: string[]; // Array of user IDs who liked the message
+  attachments?: MessageAttachment[];
+  status?: 'pending' | 'sent' | 'failed'; // For optimistic updates
   profiles: {
     profile_name: string;
     avatar_url?: string;

@@ -1,12 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
-import { Heart } from 'lucide-react';
+import { Heart, AlertCircle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { Message } from './types';
 import { formatMessageTime } from '@/utils/timeUtils';
 import { useMessageLikes } from '@/hooks/useMessageLikes';
 import ProfileAvatar from './ProfileAvatar';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 
 interface MessageBubbleProps {
   message: Message;
@@ -22,6 +23,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
   onLikeUpdate 
 }) => {
   const [isAdminSender, setIsAdminSender] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const { user } = useAuth();
   const { toggleLike, isLoading } = useMessageLikes();
 
@@ -94,7 +96,41 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
             </p>
           )}
           
-          <p className="text-sm leading-relaxed">{message.message}</p>
+          {message.message && <p className="text-sm leading-relaxed">{message.message}</p>}
+          
+          {/* Image Attachments */}
+          {message.attachments && message.attachments.length > 0 && (
+            <div className={`grid gap-2 ${message.attachments.length === 1 ? 'grid-cols-1' : 'grid-cols-2'} ${message.message ? 'mt-2' : ''}`}>
+              {message.attachments.map((attachment, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setSelectedImage(attachment.url)}
+                  className="relative overflow-hidden rounded-lg hover:opacity-90 transition-opacity"
+                >
+                  <img 
+                    src={attachment.url} 
+                    alt={attachment.name}
+                    className="w-full h-32 object-cover"
+                  />
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Status indicator for sent messages */}
+          {isCurrentUser && message.status && (
+            <div className="text-xs mt-1 flex items-center gap-1">
+              {message.status === 'pending' && (
+                <span className="text-muted-foreground">Sending...</span>
+              )}
+              {message.status === 'failed' && (
+                <span className="text-destructive flex items-center gap-1">
+                  <AlertCircle size={12} />
+                  Failed
+                </span>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Timestamp and Like button */}
@@ -123,6 +159,19 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
           </button>
         </div>
       </div>
+
+      {/* Image Viewer Dialog */}
+      <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
+        <DialogContent className="max-w-4xl p-0 bg-transparent border-none">
+          <div className="relative">
+            <img 
+              src={selectedImage || ''} 
+              alt="Full size"
+              className="w-full h-auto max-h-[90vh] object-contain rounded-lg"
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
