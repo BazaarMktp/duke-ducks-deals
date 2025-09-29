@@ -110,6 +110,7 @@ const ChatInterface = () => {
             onLikeUpdate={updateMessageLikes}
             onBack={() => handleSelectConversation(null)}
             renderMode="mobile"
+            conversationData={conversations.find(c => c.id === selectedConversation)}
           />
         ) : (
           <ConversationList
@@ -143,6 +144,7 @@ const ChatInterface = () => {
             onSendMessage={sendMessage}
             onLikeUpdate={updateMessageLikes}
             renderMode="desktop"
+            conversationData={conversations.find(c => c.id === selectedConversation)}
           />
         </div>
       </div>

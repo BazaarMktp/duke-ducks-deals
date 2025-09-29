@@ -70,7 +70,9 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
               </span>
             )}
             {hasUnreadMessages && (
-              <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+              <span className="flex items-center gap-1">
+                <div className="w-2 h-2 bg-primary rounded-full animate-pulse"></div>
+              </span>
             )}
           </div>
         </div>

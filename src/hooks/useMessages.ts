@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-import { Message } from "@/components/chat/types";
+import { Message, MessageAttachment } from "@/components/chat/types";
 
 export const useMessages = (selectedConversation: string | null) => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -70,10 +70,11 @@ export const useMessages = (selectedConversation: string | null) => {
 
       if (error) throw error;
       
-      // Transform the data to ensure likes is always a string array
+      // Transform the data to ensure likes and attachments are properly typed
       const transformedMessages = (data || []).map(msg => ({
         ...msg,
-        likes: Array.isArray(msg.likes) ? msg.likes.filter((like): like is string => typeof like === 'string') : []
+        likes: Array.isArray(msg.likes) ? msg.likes.filter((like): like is string => typeof like === 'string') : [],
+        attachments: (Array.isArray(msg.attachments) ? msg.attachments : []) as unknown as MessageAttachment[]
       }));
       
       setMessages(transformedMessages);
@@ -140,7 +141,12 @@ export const useMessages = (selectedConversation: string | null) => {
       setMessages(prev => 
         prev.map(msg => 
           msg.id === tempId 
-            ? { ...data, status: 'sent' } 
+            ? { 
+                ...data, 
+                status: 'sent' as const,
+                likes: Array.isArray(data.likes) ? data.likes.filter((like): like is string => typeof like === 'string') : [],
+                attachments: (Array.isArray(data.attachments) ? data.attachments : []) as unknown as MessageAttachment[]
+              } 
             : msg
         )
       );

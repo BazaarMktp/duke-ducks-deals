@@ -12,10 +12,17 @@ interface MessagePanelWithInputProps {
   selectedConversation: string | null;
   messages: Message[];
   currentUserId: string;
-  onSendMessage: (message: string) => void;
+  onSendMessage: (message: string, attachments?: any[]) => void;
   onBack?: () => void;
   onLikeUpdate?: (messageId: string, newLikes: string[]) => void;
   renderMode?: 'mobile' | 'desktop';
+  conversationData?: {
+    buyer_id: string;
+    seller_id: string;
+    buyer_profile?: { profile_name?: string };
+    seller_profile?: { profile_name?: string };
+    listings?: { title?: string };
+  } | null;
 }
 
 const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
@@ -26,6 +33,7 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
   onBack,
   onLikeUpdate,
   renderMode = 'mobile',
+  conversationData,
 }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const previousMessagesLength = useRef<number>(0);
@@ -76,9 +84,25 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
     previousMessagesLength.current = 0;
   }, [selectedConversation]);
 
-  const handleSendMessage = (message: string) => {
-    onSendMessage(message);
+  const handleSendMessage = (message: string, attachments?: any[]) => {
+    onSendMessage(message, attachments);
     setInitialMessage(''); // Clear initial message after sending
+  };
+
+  // Get conversation context for header
+  const getConversationHeader = () => {
+    if (!conversationData) return 'Chat';
+    
+    const isBuyer = conversationData.buyer_id === currentUserId;
+    const partnerName = isBuyer 
+      ? conversationData.seller_profile?.profile_name || 'User'
+      : conversationData.buyer_profile?.profile_name || 'User';
+    const itemTitle = conversationData.listings?.title;
+    
+    if (itemTitle) {
+      return `${partnerName} • ${itemTitle}`;
+    }
+    return partnerName;
   };
 
   // Find first unread message to show new message indicator
@@ -131,7 +155,14 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
                   <path d="M19 12H5M12 19l-7-7 7-7"/>
                 </svg>
               </button>
-              <h2 className="font-semibold text-lg">Chat</h2>
+              <div className="flex-1 min-w-0">
+                <h2 className="font-semibold text-base truncate">{getConversationHeader()}</h2>
+                {conversationData?.listings?.title && (
+                  <p className="text-xs text-muted-foreground truncate">
+                    {conversationData.listings.title}
+                  </p>
+                )}
+              </div>
             </div>
             {/* Messages Area - Flexible */}
             <div className="flex-1 overflow-y-auto bg-muted/30 relative min-h-0">
@@ -164,8 +195,8 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
     return (
       <Card className="md:col-span-2 bg-card border rounded-lg h-full flex flex-col">
         <CardHeader className="pb-3 flex-shrink-0">
-          <CardTitle>
-            {selectedConversation ? 'Chat' : 'Select a conversation'}
+          <CardTitle className="truncate">
+            {selectedConversation ? getConversationHeader() : 'Select a conversation'}
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col flex-1 min-h-0 p-0">
