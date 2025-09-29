@@ -38,25 +38,57 @@ export const getImageDimensions = (src: string): Promise<{ width: number; height
   });
 };
 
-export const compressImage = (file: File, quality: number = 0.8, maxWidth: number = 1920): Promise<Blob> => {
-  return new Promise((resolve) => {
+export const compressImage = async (
+  file: File, 
+  quality: number = 0.8, 
+  maxWidth: number = 1920,
+  maxHeight: number = 1920
+): Promise<Blob> => {
+  return new Promise((resolve, reject) => {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     const img = new Image();
     
     img.onload = () => {
-      const { width, height } = img;
-      const ratio = Math.min(maxWidth / width, maxWidth / height);
+      let { width, height } = img;
       
-      canvas.width = width * ratio;
-      canvas.height = height * ratio;
+      // Calculate new dimensions while maintaining aspect ratio
+      if (width > maxWidth || height > maxHeight) {
+        const ratio = Math.min(maxWidth / width, maxHeight / height);
+        width = width * ratio;
+        height = height * ratio;
+      }
+      
+      canvas.width = width;
+      canvas.height = height;
       
       if (ctx) {
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        canvas.toBlob(resolve as BlobCallback, 'image/jpeg', quality);
+        // Enable image smoothing for better quality
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        canvas.toBlob(
+          (blob) => {
+            if (blob) {
+              resolve(blob);
+            } else {
+              reject(new Error('Failed to compress image'));
+            }
+          },
+          'image/jpeg',
+          quality
+        );
+      } else {
+        reject(new Error('Failed to get canvas context'));
       }
     };
     
+    img.onerror = () => reject(new Error('Failed to load image'));
     img.src = URL.createObjectURL(file);
   });
+};
+
+export const createThumbnail = async (file: File, maxSize: number = 400): Promise<Blob> => {
+  return compressImage(file, 0.7, maxSize, maxSize);
 };

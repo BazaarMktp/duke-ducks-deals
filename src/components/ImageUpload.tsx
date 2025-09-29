@@ -8,6 +8,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import ImageEditor from './ImageEditor';
 import { OptimizedImage } from '@/components/ui/optimized-image';
+import { compressImage } from '@/utils/imageUtils';
 
 interface ImageUploadProps {
   images: string[];
@@ -25,23 +26,35 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ images, onImagesChange, maxIm
   const uploadImage = async (file: File) => {
     if (!user) return null;
 
-    const fileExt = file.name.split('.').pop();
-    const fileName = `${user.id}/${Math.random()}.${fileExt}`;
+    try {
+      // Compress image before uploading
+      const compressedBlob = await compressImage(file, 0.85, 1920, 1920);
+      
+      const fileExt = 'jpg'; // Always save as JPG after compression
+      const fileName = `${user.id}/${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
 
-    const { data, error } = await supabase.storage
-      .from('listing-images')
-      .upload(fileName, file);
+      const { data, error } = await supabase.storage
+        .from('listing-images')
+        .upload(fileName, compressedBlob, {
+          contentType: 'image/jpeg',
+          cacheControl: '31536000', // Cache for 1 year
+          upsert: false
+        });
 
-    if (error) {
-      console.error('Upload error:', error);
+      if (error) {
+        console.error('Upload error:', error);
+        return null;
+      }
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('listing-images')
+        .getPublicUrl(data.path);
+
+      return publicUrl;
+    } catch (error) {
+      console.error('Image processing error:', error);
       return null;
     }
-
-    const { data: { publicUrl } } = supabase.storage
-      .from('listing-images')
-      .getPublicUrl(data.path);
-
-    return publicUrl;
   };
 
   const uploadDataURL = async (dataURL: string) => {
@@ -84,21 +97,41 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ images, onImagesChange, maxIm
 
     setUploading(true);
     const newImages: string[] = [];
+    let processedCount = 0;
 
     for (const file of Array.from(files)) {
-      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+      if (file.size > 10 * 1024 * 1024) { // 10MB limit before compression
         toast({
           title: "File too large",
-          description: `${file.name} is too large. Maximum size is 5MB.`,
+          description: `${file.name} is too large. Maximum size is 10MB.`,
           variant: "destructive",
         });
         continue;
       }
 
+      processedCount++;
+      toast({
+        title: "Processing images",
+        description: `Compressing image ${processedCount} of ${files.length}...`,
+      });
+
       const url = await uploadImage(file);
       if (url) {
         newImages.push(url);
+      } else {
+        toast({
+          title: "Upload failed",
+          description: `Failed to upload ${file.name}`,
+          variant: "destructive",
+        });
       }
+    }
+
+    if (newImages.length > 0) {
+      toast({
+        title: "Success",
+        description: `Uploaded ${newImages.length} image${newImages.length > 1 ? 's' : ''} successfully!`,
+      });
     }
 
     onImagesChange([...images, ...newImages]);

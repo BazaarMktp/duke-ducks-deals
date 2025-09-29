@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { compressImage } from '@/utils/imageUtils';
 
 export interface Attachment {
   url: string;
@@ -67,15 +68,21 @@ export const useMessageAttachments = () => {
       for (const file of files) {
         if (!validateFile(file)) continue;
 
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${user.id}/${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+        setUploadProgress(prev => ({ ...prev, [file.name]: 10 }));
 
-        setUploadProgress(prev => ({ ...prev, [file.name]: 0 }));
+        // Compress image for faster upload and loading
+        const compressedBlob = await compressImage(file, 0.8, 1920, 1920);
+        
+        setUploadProgress(prev => ({ ...prev, [file.name]: 40 }));
+
+        const fileExt = 'jpg';
+        const fileName = `${user.id}/${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
 
         const { data, error } = await supabase.storage
           .from('message-attachments')
-          .upload(fileName, file, {
-            cacheControl: '3600',
+          .upload(fileName, compressedBlob, {
+            contentType: 'image/jpeg',
+            cacheControl: '31536000', // Cache for 1 year
             upsert: false
           });
 
@@ -89,6 +96,8 @@ export const useMessageAttachments = () => {
           continue;
         }
 
+        setUploadProgress(prev => ({ ...prev, [file.name]: 80 }));
+
         const { data: { publicUrl } } = supabase.storage
           .from('message-attachments')
           .getPublicUrl(fileName);
@@ -97,7 +106,7 @@ export const useMessageAttachments = () => {
           url: publicUrl,
           type: 'image',
           name: file.name,
-          size: file.size
+          size: compressedBlob.size // Use compressed size
         });
 
         setUploadProgress(prev => ({ ...prev, [file.name]: 100 }));

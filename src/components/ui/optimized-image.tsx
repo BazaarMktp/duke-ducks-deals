@@ -32,10 +32,18 @@ export const OptimizedImage = ({
   const [loadStartTime, setLoadStartTime] = useState<number | null>(null);
   const { trackImagePerformance } = usePerformanceTracking();
 
-  // Generate WebP source if supported
+  // Add Supabase image transformation for faster loading
   const getOptimizedSrc = (originalSrc: string): string => {
-    if (originalSrc.includes('supabase') && !originalSrc.includes('.webp')) {
-      return originalSrc;
+    // For Supabase storage URLs, we can add transformation parameters
+    if (originalSrc.includes('supabase.co/storage/v1/object/public/')) {
+      // Add width parameter to resize images on the server side
+      const url = new URL(originalSrc);
+      // For list views, use smaller images
+      if (!priority && lazy) {
+        url.searchParams.set('width', '800');
+        url.searchParams.set('quality', '80');
+      }
+      return url.toString();
     }
     return originalSrc;
   };
@@ -122,11 +130,12 @@ export const OptimizedImage = ({
         alt={alt}
         loading={priority ? "eager" : (lazy ? "lazy" : "eager")}
         decoding="async"
+        fetchPriority={priority ? "high" : "auto"}
         onLoad={handleLoad}
         onError={handleError}
-        sizes={sizes}
+        sizes={sizes || "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"}
         className={cn(
-          "w-full h-full object-cover transition-all duration-500",
+          "w-full h-full object-cover transition-all duration-300",
           isLoaded ? "opacity-100 scale-100" : "opacity-0 scale-105"
         )}
         {...props}
