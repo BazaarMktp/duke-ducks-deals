@@ -1,6 +1,12 @@
 // Utility functions for image optimization
 
+// Cached blur data URL to avoid regenerating on every call
+let cachedBlurDataURL: string | null = null;
+
 export const generateBlurDataURL = (width: number = 10, height: number = 10): string => {
+  // Return cached version if available
+  if (cachedBlurDataURL) return cachedBlurDataURL;
+  
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
   
@@ -17,7 +23,8 @@ export const generateBlurDataURL = (width: number = 10, height: number = 10): st
     ctx.fillRect(0, 0, width, height);
   }
   
-  return canvas.toDataURL('image/jpeg', 0.1);
+  cachedBlurDataURL = canvas.toDataURL('image/jpeg', 0.1);
+  return cachedBlurDataURL;
 };
 
 export const preloadImage = (src: string): Promise<void> => {
