@@ -81,11 +81,18 @@ export const useMarketplace = (user: any, searchQuery: string, sortBy: string, a
         [allListings[i], allListings[j]] = [allListings[j], allListings[i]];
       }
 
-      // Keep featured items at the top
-      const featuredItems = allListings.filter(item => item.featured);
-      const nonFeaturedItems = allListings.filter(item => !item.featured);
+      // Sort: featured > new (< 5 days) > rest
+      const fiveDaysAgo = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000);
       
-      const finalListings = [...featuredItems, ...nonFeaturedItems];
+      const featuredItems = allListings.filter(item => item.featured);
+      const newItems = allListings.filter(item => 
+        !item.featured && new Date(item.created_at) > fiveDaysAgo
+      );
+      const regularItems = allListings.filter(item => 
+        !item.featured && new Date(item.created_at) <= fiveDaysAgo
+      );
+      
+      const finalListings = [...featuredItems, ...newItems, ...regularItems];
 
       console.log('Marketplace listings data:', { active: activeListings.length, sold: soldListings.length, total: finalListings.length });
       setListings(finalListings);

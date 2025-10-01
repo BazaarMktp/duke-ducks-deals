@@ -50,6 +50,7 @@ const MarketplaceItemCard = ({
   };
 
   const isSold = listing.status === 'sold' || listing.sold_at;
+  const isNew = new Date(listing.created_at) > new Date(Date.now() - 5 * 24 * 60 * 60 * 1000);
 
   return (
     <Card 
@@ -89,6 +90,9 @@ const MarketplaceItemCard = ({
               <div className="flex items-center gap-1 sm:gap-2 mb-1 flex-wrap">
                 {listing.featured && (
                   <Badge className="bg-yellow-400 text-yellow-900 font-bold text-xs">Featured</Badge>
+                )}
+                {!listing.featured && isNew && (
+                  <Badge className="bg-blue-500 text-white font-bold text-xs">NEW</Badge>
                 )}
                 {listing.listing_type === 'wanted' && (
                   <Badge variant="outline" className="text-blue-600 border-blue-300 text-xs">
