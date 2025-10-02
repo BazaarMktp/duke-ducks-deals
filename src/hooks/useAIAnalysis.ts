@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { secureLog } from '@/utils/secureLogger';
 
 export const useAIAnalysis = () => {
   const [loading, setLoading] = useState(false);
@@ -16,7 +17,7 @@ export const useAIAnalysis = () => {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error moderating content:', error);
+      secureLog.error('Content moderation failed', error);
       toast({
         title: "Moderation Error",
         description: "Failed to moderate content. Proceeding with manual review.",
@@ -38,7 +39,7 @@ export const useAIAnalysis = () => {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error generating description:', error);
+      secureLog.error('Description generation failed', error);
       toast({
         title: "Generation Error",
         description: "Failed to generate description.",
@@ -60,7 +61,7 @@ export const useAIAnalysis = () => {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error suggesting category:', error);
+      secureLog.error('Category suggestion failed', error);
       return null;
     } finally {
       setLoading(false);
@@ -76,7 +77,7 @@ export const useAIAnalysis = () => {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error in enhanced search:', error);
+      secureLog.error('Enhanced search failed', error);
       return { keywords: query, category: null, priceRange: null, condition: null, urgency: null };
     }
   };
@@ -103,7 +104,7 @@ export const useAIAnalysis = () => {
 
       if (error) throw error;
     } catch (error) {
-      console.error('Error tracking AI interaction:', error);
+      secureLog.error('AI interaction tracking failed', error);
     }
   };
 

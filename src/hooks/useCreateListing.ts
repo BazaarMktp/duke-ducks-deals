@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { useAIAnalysis } from "./useAIAnalysis";
+import { secureLog } from "@/utils/secureLogger";
 
 
 export type ListingFormData = {
@@ -147,7 +148,7 @@ export const useCreateListing = () => {
       toast.success(`Your ${formData.category} ${actionText} has been posted successfully.`);
       navigate('/my-listings');
     } catch (error) {
-      console.error('Error creating listing:', error);
+      secureLog.error('Listing creation failed', error);
       toast.error("Failed to create listing. Please try again.");
     } finally {
       setLoading(false);

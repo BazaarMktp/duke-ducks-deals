@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './AuthContext';
+import { secureLog } from '@/utils/secureLogger';
 
 interface AdminContextType {
   isAdmin: boolean;
@@ -40,7 +41,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         if (error) throw error;
         setIsAdmin(data || false);
       } catch (error) {
-        console.error('Error checking admin status:', error);
+        secureLog.error('Admin status check failed', error);
         setIsAdmin(false);
       } finally {
         setLoading(false);

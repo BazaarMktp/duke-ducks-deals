@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.auto-feature-listings]
 verify_jwt = false
+
+[functions.moderate-content]
+verify_jwt = true

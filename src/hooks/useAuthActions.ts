@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { secureLog } from "@/utils/secureLogger";
 
 export const useAuthActions = () => {
   const { signIn, signUp } = useAuth();
@@ -10,11 +11,11 @@ export const useAuthActions = () => {
   const navigate = useNavigate();
 
   const handleLogin = async (email: string, password: string) => {
-    console.log('Attempting login with email:', email);
+    secureLog.info('Attempting login');
     const { error } = await signIn(email, password);
     
     if (error) {
-      console.log('Login error:', error.message);
+      secureLog.error('Login failed', error);
       toast({
         title: "Error",
         description: error.message,
@@ -22,7 +23,7 @@ export const useAuthActions = () => {
       });
       return false;
     } else {
-      console.log('Login successful');
+      secureLog.info('Login successful');
       toast({
         title: "Success",
         description: "Logged in successfully!",
@@ -40,7 +41,7 @@ export const useAuthActions = () => {
     profileName: string, 
     selectedCollegeId: string
   ) => {
-    console.log('Attempting signup with email:', email);
+    secureLog.info('Attempting signup');
     
     // Validate email domain (only duke.edu allowed)
     if (!email.endsWith('@duke.edu')) {
@@ -75,7 +76,7 @@ export const useAuthActions = () => {
     const { error } = await signUp(email, password, fullName, profileName);
     
     if (error) {
-      console.log('Signup error:', error.message);
+      secureLog.error('Signup failed', error);
       toast({
         title: "Error",
         description: error.message,
@@ -83,7 +84,7 @@ export const useAuthActions = () => {
       });
       return false;
     } else {
-      console.log('Signup successful, redirecting to email validation');
+      secureLog.info('Signup successful');
       navigate("/email-validation", { state: { email }, replace: true });
       return true;
     }
@@ -99,7 +100,7 @@ export const useAuthActions = () => {
       return false;
     }
 
-    console.log('Attempting password reset for email:', email);
+    secureLog.info('Attempting password reset');
     
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -107,7 +108,7 @@ export const useAuthActions = () => {
       });
 
       if (error) {
-        console.log('Password reset error:', error.message);
+        secureLog.error('Password reset failed', error);
         toast({
           title: "Error",
           description: error.message,
@@ -115,7 +116,7 @@ export const useAuthActions = () => {
         });
         return false;
       } else {
-        console.log('Password reset email sent successfully');
+        secureLog.info('Password reset email sent');
         toast({
           title: "Success",
           description: "Password reset email sent! Check your inbox for instructions.",
@@ -123,7 +124,7 @@ export const useAuthActions = () => {
         return true;
       }
     } catch (error) {
-      console.error('Password reset error:', error);
+      secureLog.error('Password reset exception', error);
       toast({
         title: "Error",
         description: "An unexpected error occurred",
