@@ -6,6 +6,7 @@ import { useMarketplace } from "@/hooks/useMarketplace";
 import MarketplaceHeader from "@/components/marketplace/MarketplaceHeader";
 import MarketplaceFilters from "@/components/marketplace/MarketplaceFilters";
 import MarketplaceGrid from "@/components/marketplace/MarketplaceGrid";
+import { AIRecommendations } from "@/components/ai/AIRecommendations";
 import { Helmet } from "react-helmet-async";
 
 const Marketplace = () => {
@@ -36,6 +37,8 @@ const Marketplace = () => {
         onTypeChange={setActiveListingType}
         category="marketplace"
       />
+
+      <AIRecommendations />
 
       <MarketplaceFilters
         searchQuery={searchQuery}

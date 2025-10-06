@@ -13,6 +13,7 @@ import { SharedLinkWrapper } from "@/components/shared/SharedLinkWrapper";
 import { PerformanceTracker } from "@/components/PerformanceTracker";
 import { PWAInstallPrompt } from "@/components/PWAInstallPrompt";
 import { OfflineIndicator } from "@/components/OfflineIndicator";
+import { CampusChatbot } from "@/components/ai/CampusChatbot";
 import Navbar from "@/components/Navbar";
 import Index from "./pages/Index";
 import Home from "./pages/Home";
@@ -186,6 +187,7 @@ function App() {
                     </Routes>
                   </main>
                   <Footer />
+                  <CampusChatbot />
                 </div>
               </SharedLinkWrapper>
             </HashRouter>

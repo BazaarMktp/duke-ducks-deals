@@ -4,13 +4,21 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Send, Image, X } from "lucide-react";
 import { useMessageAttachments } from "@/hooks/useMessageAttachments";
+import { SmartReplies } from "@/components/ai/SmartReplies";
 
 interface MessageInputProps {
   onSendMessage: (message: string, attachments?: any[]) => void;
   initialMessage?: string;
+  lastMessage?: string;
+  listingTitle?: string;
 }
 
-const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, initialMessage }) => {
+const MessageInput: React.FC<MessageInputProps> = ({ 
+  onSendMessage, 
+  initialMessage,
+  lastMessage,
+  listingTitle
+}) => {
   const [newMessage, setNewMessage] = useState(initialMessage || "");
   const [sending, setSending] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -87,6 +95,15 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage, initialMessa
 
   return (
     <div className="space-y-2">
+      {/* AI Smart Replies */}
+      {lastMessage && listingTitle && !newMessage && (
+        <SmartReplies
+          lastMessage={lastMessage}
+          listingTitle={listingTitle}
+          onSelectReply={(reply) => setNewMessage(reply)}
+        />
+      )}
+
       {/* Image Previews */}
       {previewUrls.length > 0 && (
         <div className="flex gap-2 px-2 flex-wrap">

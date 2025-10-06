@@ -8,6 +8,7 @@ import { Sparkles, Loader2 } from "lucide-react";
 import ImageUpload from "@/components/ImageUpload";
 import { getTitlePlaceholder, getDescriptionPlaceholder, getLocationPlaceholder } from "../posting/utils/placeholderText";
 import { useAIAnalysis } from "@/hooks/useAIAnalysis";
+import { PriceSuggestion } from "@/components/ai/PriceSuggestion";
 import type { ListingFormData } from '@/hooks/useCreateListing';
 
 interface ListingFormFieldsProps {
@@ -125,6 +126,16 @@ const ListingFormFields: React.FC<ListingFormFieldsProps> = ({
           />
         </div>
       </div>
+
+      {formData.listingType === 'offer' && formData.title && formData.description && (
+        <PriceSuggestion
+          title={formData.title}
+          category={formData.category}
+          condition="good"
+          description={formData.description}
+          onPriceSelect={(price) => handleInputChange("price", price.toString())}
+        />
+      )}
 
       <div className="flex items-center space-x-2">
         <Checkbox
