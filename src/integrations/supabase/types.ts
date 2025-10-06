@@ -1632,7 +1632,7 @@ export type Database = {
         | "milestone"
         | "special"
       achievement_rarity: "common" | "uncommon" | "rare" | "epic" | "legendary"
-      app_role: "admin" | "user"
+      app_role: "admin" | "user" | "business"
       badge_type:
         | "FIRST_POST"
         | "TOP_TRADER"
@@ -1781,7 +1781,7 @@ export const Constants = {
         "special",
       ],
       achievement_rarity: ["common", "uncommon", "rare", "epic", "legendary"],
-      app_role: ["admin", "user"],
+      app_role: ["admin", "user", "business"],
       badge_type: [
         "FIRST_POST",
         "TOP_TRADER",
