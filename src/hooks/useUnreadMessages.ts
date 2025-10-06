@@ -24,7 +24,6 @@ export const useUnreadMessages = () => {
       if (error) {
         throw error;
       }
-      console.log('Fetched unread count:', data);
       const count = data || 0;
       setUnreadCount(count);
     } catch (error) {
@@ -49,7 +48,6 @@ export const useUnreadMessages = () => {
   // Listen for custom event to refresh unread count
   useEffect(() => {
     const handleUnreadUpdate = async () => {
-      console.log('Unread messages update event received');
       if (!user?.id) {
         setUnreadCount(0);
         return;
@@ -62,7 +60,6 @@ export const useUnreadMessages = () => {
         if (error) {
           throw error;
         }
-        console.log('Fetched unread count via custom event:', data);
         const count = data || 0;
         setUnreadCount(count);
       } catch (error) {
@@ -100,7 +97,6 @@ export const useUnreadMessages = () => {
         if (error) {
           throw error;
         }
-        console.log('Fetched unread count via realtime:', data);
         const count = data || 0;
         setUnreadCount(count);
       } catch (error) {
@@ -120,8 +116,6 @@ export const useUnreadMessages = () => {
             table: 'messages',
           },
           (payload: any) => {
-            console.log('Message change detected:', payload.eventType, 'payload:', payload);
-            
             // Handle different event types
             if (payload.eventType === 'INSERT') {
               // New message - refresh if it's not from the current user
@@ -155,7 +149,6 @@ export const useUnreadMessages = () => {
           },
           (payload: any) => {
             // Also listen to conversation changes that might affect message counts
-            console.log('Conversation change detected:', payload.eventType);
             const buyerId = payload.new?.buyer_id || payload.old?.buyer_id;
             const sellerId = payload.new?.seller_id || payload.old?.seller_id;
             

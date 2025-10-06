@@ -105,22 +105,8 @@ function App() {
                       <Route path="/campus-life" element={<CampusLife />} />
                       <Route path="/roommate-finder" element={<RoommateFinder />} />
                       <Route path="/native-features" element={<NativeFeatures />} />
-                      <Route
-                        path="/business-onboarding"
-                        element={
-                          <ProtectedRoute>
-                            <BusinessOnboarding />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="/business-dashboard"
-                        element={
-                          <ProtectedRoute>
-                            <BusinessDashboard />
-                          </ProtectedRoute>
-                        }
-                      />
+                      <Route path="/business-onboarding" element={<BusinessOnboarding />} />
+                      <Route path="/business-dashboard" element={<BusinessDashboard />} />
                       <Route
                         path="/messages"
                         element={
