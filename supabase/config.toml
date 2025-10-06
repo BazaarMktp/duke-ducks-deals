@@ -8,3 +8,21 @@ verify_jwt = false
 
 [functions.moderate-content]
 verify_jwt = true
+
+[functions.smart-messaging]
+verify_jwt = true
+
+[functions.price-intelligence]
+verify_jwt = true
+
+[functions.personalized-recommendations]
+verify_jwt = true
+
+[functions.campus-chatbot]
+verify_jwt = true
+
+[functions.visual-search]
+verify_jwt = true
+
+[functions.listing-assistant]
+verify_jwt = true
