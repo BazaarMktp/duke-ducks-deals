@@ -46,6 +46,8 @@ import DealDetail from "./pages/DealDetail";
 import NativeFeatures from "./pages/NativeFeatures";
 import CampusLife from "./pages/CampusLife";
 import RoommateFinder from "./pages/RoommateFinder";
+import BusinessOnboarding from "./pages/BusinessOnboarding";
+import BusinessDashboard from "./pages/BusinessDashboard";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Footer from "@/components/Footer";
@@ -103,6 +105,22 @@ function App() {
                       <Route path="/campus-life" element={<CampusLife />} />
                       <Route path="/roommate-finder" element={<RoommateFinder />} />
                       <Route path="/native-features" element={<NativeFeatures />} />
+                      <Route
+                        path="/business-onboarding"
+                        element={
+                          <ProtectedRoute>
+                            <BusinessOnboarding />
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="/business-dashboard"
+                        element={
+                          <ProtectedRoute>
+                            <BusinessDashboard />
+                          </ProtectedRoute>
+                        }
+                      />
                       <Route
                         path="/messages"
                         element={

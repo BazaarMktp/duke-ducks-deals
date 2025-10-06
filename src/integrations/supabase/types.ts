@@ -142,6 +142,128 @@ export type Database = {
         }
         Relationships: []
       }
+      business_ads: {
+        Row: {
+          ad_type: string | null
+          approval_status: string | null
+          approved_at: string | null
+          approved_by: string | null
+          business_id: string
+          clicks: number | null
+          created_at: string
+          description: string
+          display_priority: number | null
+          ends_at: string | null
+          id: string
+          image_url: string | null
+          impressions: number | null
+          is_active: boolean | null
+          link_url: string | null
+          starts_at: string | null
+          title: string
+          updated_at: string
+          video_url: string | null
+        }
+        Insert: {
+          ad_type?: string | null
+          approval_status?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
+          business_id: string
+          clicks?: number | null
+          created_at?: string
+          description: string
+          display_priority?: number | null
+          ends_at?: string | null
+          id?: string
+          image_url?: string | null
+          impressions?: number | null
+          is_active?: boolean | null
+          link_url?: string | null
+          starts_at?: string | null
+          title: string
+          updated_at?: string
+          video_url?: string | null
+        }
+        Update: {
+          ad_type?: string | null
+          approval_status?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
+          business_id?: string
+          clicks?: number | null
+          created_at?: string
+          description?: string
+          display_priority?: number | null
+          ends_at?: string | null
+          id?: string
+          image_url?: string | null
+          impressions?: number | null
+          is_active?: boolean | null
+          link_url?: string | null
+          starts_at?: string | null
+          title?: string
+          updated_at?: string
+          video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "business_ads_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "business_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      business_profiles: {
+        Row: {
+          business_address: string | null
+          business_description: string | null
+          business_email: string | null
+          business_logo_url: string | null
+          business_name: string
+          business_phone: string | null
+          business_website: string | null
+          created_at: string
+          id: string
+          is_verified: boolean | null
+          updated_at: string
+          user_id: string
+          verification_status: string | null
+        }
+        Insert: {
+          business_address?: string | null
+          business_description?: string | null
+          business_email?: string | null
+          business_logo_url?: string | null
+          business_name: string
+          business_phone?: string | null
+          business_website?: string | null
+          created_at?: string
+          id?: string
+          is_verified?: boolean | null
+          updated_at?: string
+          user_id: string
+          verification_status?: string | null
+        }
+        Update: {
+          business_address?: string | null
+          business_description?: string | null
+          business_email?: string | null
+          business_logo_url?: string | null
+          business_name?: string
+          business_phone?: string | null
+          business_website?: string | null
+          created_at?: string
+          id?: string
+          is_verified?: boolean | null
+          updated_at?: string
+          user_id?: string
+          verification_status?: string | null
+        }
+        Relationships: []
+      }
       campus_events: {
         Row: {
           created_at: string | null

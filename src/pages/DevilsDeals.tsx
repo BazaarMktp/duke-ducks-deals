@@ -9,6 +9,7 @@ import { DealCard } from '@/components/deals/DealCard';
 import { DealCreateDialog } from '@/components/deals/DealCreateDialog';
 import { DealEditDialog } from '@/components/deals/DealEditDialog';
 import { EmptyDealsState } from '@/components/deals/EmptyDealsState';
+import { PromoAdsDisplay } from '@/components/deals/PromoAdsDisplay';
 import { useToast } from '@/hooks/use-toast';
 import { useDealMetrics } from '@/hooks/useDealMetrics';
 import {
@@ -135,13 +136,28 @@ export default function DevilsDeals() {
             </p>
           </div>
           
-          {isAdmin && (
-            <Button onClick={() => setIsCreateDialogOpen(true)} className="flex items-center gap-2">
-              <Plus size={16} />
-              Create Deal
-            </Button>
-          )}
+          <div className="flex gap-2">
+            {!isAdmin && user && (
+              <Button 
+                variant="outline" 
+                onClick={() => window.location.href = '#/business-onboarding'}
+                className="flex items-center gap-2"
+              >
+                <Plus size={16} />
+                Promote Your Business
+              </Button>
+            )}
+            {isAdmin && (
+              <Button onClick={() => setIsCreateDialogOpen(true)} className="flex items-center gap-2">
+                <Plus size={16} />
+                Create Deal
+              </Button>
+            )}
+          </div>
         </div>
+
+        {/* Promotional Ads */}
+        <PromoAdsDisplay />
 
         {isLoading ? (
           <div className="text-center py-12">
