@@ -33,6 +33,7 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Info } from 'lucide-react';
+import { AdImageUpload } from '@/components/business/AdImageUpload';
 
 interface PublicAdSubmissionDialogProps {
   open: boolean;
@@ -276,13 +277,13 @@ export const PublicAdSubmissionDialog: React.FC<PublicAdSubmissionDialogProps> =
                 name="image_url"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Image URL *</FormLabel>
+                    <FormLabel>Advertisement Image</FormLabel>
                     <FormControl>
-                      <Input placeholder="https://example.com/your-ad-image.jpg" {...field} />
+                      <AdImageUpload
+                        imageUrl={field.value || ''}
+                        onImageChange={field.onChange}
+                      />
                     </FormControl>
-                    <FormDescription>
-                      Upload your image to a hosting service and provide the URL (recommended: 1200x400px for banner)
-                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}

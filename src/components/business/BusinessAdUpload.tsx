@@ -32,6 +32,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 
+import { AdImageUpload } from '@/components/business/AdImageUpload';
+
 const adSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   description: z.string().min(1, 'Description is required'),
@@ -184,13 +186,13 @@ export const BusinessAdUpload: React.FC<BusinessAdUploadProps> = ({
               name="image_url"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Image URL</FormLabel>
+                  <FormLabel>Advertisement Image</FormLabel>
                   <FormControl>
-                    <Input placeholder="https://example.com/ad-image.jpg" {...field} />
+                    <AdImageUpload
+                      imageUrl={field.value || ''}
+                      onImageChange={field.onChange}
+                    />
                   </FormControl>
-                  <FormDescription>
-                    Upload your image and provide the URL
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

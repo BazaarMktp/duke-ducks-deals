@@ -27,7 +27,7 @@ export const businessAdSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   description: z.string().min(10, 'Description must be at least 10 characters'),
   ad_type: z.enum(['banner', 'sidebar', 'featured']),
-  image_url: z.string().url('Must be a valid image URL'),
+  image_url: z.string().min(1, 'Image is required').url('Must be a valid image URL'),
   link_url: z.string().url('Must be a valid URL'),
   starts_at: z.string().optional(),
   ends_at: z.string().optional(),
