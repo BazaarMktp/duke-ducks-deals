@@ -20,12 +20,15 @@ export const dealSchema = z.object({
 });
 
 export const businessAdSchema = z.object({
+  business_name: z.string().min(2, 'Business name is required'),
+  business_email: z.string().email('Valid email is required'),
+  business_phone: z.string().optional(),
+  business_website: z.string().url('Must be a valid URL').optional().or(z.literal('')),
   title: z.string().min(1, 'Title is required'),
-  description: z.string().min(1, 'Description is required'),
-  ad_type: z.enum(['banner', 'sidebar', 'popup', 'featured']),
-  image_url: z.string().url('Must be a valid URL').optional().or(z.literal('')),
-  video_url: z.string().url('Must be a valid URL').optional().or(z.literal('')),
-  link_url: z.string().url('Must be a valid URL').optional().or(z.literal('')),
+  description: z.string().min(10, 'Description must be at least 10 characters'),
+  ad_type: z.enum(['banner', 'sidebar', 'featured']),
+  image_url: z.string().url('Must be a valid image URL'),
+  link_url: z.string().url('Must be a valid URL'),
   starts_at: z.string().optional(),
   ends_at: z.string().optional(),
 });

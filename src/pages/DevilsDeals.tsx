@@ -42,6 +42,8 @@ interface Deal {
   terms_and_conditions?: string;
 }
 
+import { PublicAdSubmissionDialog } from '@/components/deals/PublicAdSubmissionDialog';
+
 export default function DevilsDeals() {
   const { user } = useAuth();
   const { isAdmin } = useAdmin();
@@ -49,6 +51,7 @@ export default function DevilsDeals() {
   const { trackPageVisit } = useDealMetrics();
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isPublicAdDialogOpen, setIsPublicAdDialogOpen] = useState(false);
   const [editingDeal, setEditingDeal] = useState<Deal | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [dealToDelete, setDealToDelete] = useState<string | null>(null);
@@ -137,14 +140,14 @@ export default function DevilsDeals() {
           </div>
           
           <div className="flex gap-2">
-            {!isAdmin && user && (
+            {!isAdmin && (
               <Button 
                 variant="outline" 
-                onClick={() => window.location.href = '#/business-onboarding'}
+                onClick={() => setIsPublicAdDialogOpen(true)}
                 className="flex items-center gap-2"
               >
                 <Plus size={16} />
-                Promote Your Business
+                Advertise Your Business
               </Button>
             )}
             {isAdmin && (
@@ -182,6 +185,11 @@ export default function DevilsDeals() {
             onCreateDeal={() => setIsCreateDialogOpen(true)}
           />
         )}
+
+        <PublicAdSubmissionDialog
+          open={isPublicAdDialogOpen}
+          onOpenChange={setIsPublicAdDialogOpen}
+        />
 
         <DealCreateDialog
           open={isCreateDialogOpen}
