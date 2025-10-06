@@ -42,23 +42,6 @@ export const useGeminiAI = () => {
     }
   };
 
-  const getRecommendations = async (userId: string) => {
-    try {
-      setLoading(true);
-      const { data, error } = await supabase.functions.invoke('personalized-recommendations', {
-        body: { userId }
-      });
-
-      if (error) throw error;
-      return data.recommendations || [];
-    } catch (error) {
-      console.error('Recommendations error:', error);
-      return [];
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const chatWithBot = async (messages: any[], userId: string) => {
     try {
       const { data, error } = await supabase.functions.invoke('campus-chatbot', {
@@ -99,7 +82,6 @@ export const useGeminiAI = () => {
     loading,
     getPriceSuggestion,
     getSmartReplies,
-    getRecommendations,
     chatWithBot,
     getListingAssistance
   };
