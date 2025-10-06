@@ -13,6 +13,7 @@ import FeedbackManagement from "@/components/admin/FeedbackManagement";
 import { PerformanceAnalytics } from "@/components/admin/PerformanceAnalytics";
 import { DealsAnalytics } from "@/components/admin/analytics/DealsAnalytics";
 import { AutoFeatureControl } from "@/components/admin/AutoFeatureControl";
+import { BusinessAdsManagement } from "@/components/admin/BusinessAdsManagement";
 
 const AdminDashboard = () => {
   const { user, loading: authLoading } = useAuth();
@@ -47,6 +48,7 @@ const AdminDashboard = () => {
           <TabsTrigger value="feedback" className="whitespace-nowrap">Feedback</TabsTrigger>
           <TabsTrigger value="performance" className="whitespace-nowrap">Performance</TabsTrigger>
           <TabsTrigger value="deals" className="whitespace-nowrap">Devils Deals</TabsTrigger>
+          <TabsTrigger value="ads" className="whitespace-nowrap">Business Ads</TabsTrigger>
           <TabsTrigger value="featuring" className="whitespace-nowrap">Auto-Feature</TabsTrigger>
           <TabsTrigger value="support" className="whitespace-nowrap">Support</TabsTrigger>
         </TabsList>
@@ -81,6 +83,10 @@ const AdminDashboard = () => {
             
             <TabsContent value="deals">
               <DealsAnalytics />
+            </TabsContent>
+
+            <TabsContent value="ads">
+              <BusinessAdsManagement />
             </TabsContent>
 
         <TabsContent value="featuring">
