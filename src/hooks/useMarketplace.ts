@@ -72,30 +72,40 @@ export const useMarketplace = (user: any, searchQuery: string, sortBy: string, a
       const activeListings = activeResult.data || [];
       const soldListings = soldResult.data || [];
 
-      // Combine and randomize the listings
+      // Combine listings
       const allListings = [...activeListings, ...soldListings];
       
-      // Fisher-Yates shuffle algorithm to randomize
-      for (let i = allListings.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [allListings[i], allListings[j]] = [allListings[j], allListings[i]];
-      }
-
-      // Sort: featured > new (< 5 days) > rest
+      // Sort: featured first, then new (< 5 days), then apply user sort
       const fiveDaysAgo = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000);
       
-      const featuredItems = allListings.filter(item => item.featured);
-      const newItems = allListings.filter(item => 
-        !item.featured && new Date(item.created_at) > fiveDaysAgo
-      );
-      const regularItems = allListings.filter(item => 
-        !item.featured && new Date(item.created_at) <= fiveDaysAgo
-      );
-      
-      const finalListings = [...featuredItems, ...newItems, ...regularItems];
+      const sortedListings = allListings.sort((a, b) => {
+        // 1. Featured items always first
+        if (a.featured && !b.featured) return -1;
+        if (!a.featured && b.featured) return 1;
+        
+        // 2. Within same featured status, prioritize new items
+        const aIsNew = new Date(a.created_at) > fiveDaysAgo;
+        const bIsNew = new Date(b.created_at) > fiveDaysAgo;
+        
+        if (aIsNew && !bIsNew) return -1;
+        if (!aIsNew && bIsNew) return 1;
+        
+        // 3. Within same featured and new status, apply user's sort choice
+        switch (sortBy) {
+          case 'price_low':
+            return (a.price || 0) - (b.price || 0);
+          case 'price_high':
+            return (b.price || 0) - (a.price || 0);
+          case 'oldest':
+            return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+          case 'newest':
+          default:
+            return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+        }
+      });
 
-      console.log('Marketplace listings data:', { active: activeListings.length, sold: soldListings.length, total: finalListings.length });
-      setListings(finalListings);
+      console.log('Marketplace listings data:', { active: activeListings.length, sold: soldListings.length, total: sortedListings.length });
+      setListings(sortedListings);
     } catch (error) {
       console.error('Error fetching listings:', error);
       toast.error("Failed to load marketplace items");
