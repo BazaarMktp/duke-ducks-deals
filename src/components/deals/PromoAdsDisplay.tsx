@@ -1,13 +1,10 @@
 import React, { useEffect } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Card } from '@/components/ui/card';
-import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 export const PromoAdsDisplay: React.FC = () => {
-  const queryClient = useQueryClient();
-
   const { data: ads } = useQuery({
     queryKey: ['promo-ads'],
     queryFn: async () => {
