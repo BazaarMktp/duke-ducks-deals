@@ -18,8 +18,13 @@ export const AIRecommendations = () => {
 
   const loadRecommendations = async () => {
     if (!user) return;
-    const recs = await getRecommendations(user.id);
-    setRecommendations(recs);
+    try {
+      const recs = await getRecommendations(user.id);
+      setRecommendations(recs);
+    } catch (error) {
+      console.error('Failed to load recommendations:', error);
+      // Fail silently - don't block page render
+    }
   };
 
   if (!user || recommendations.length === 0) return null;
