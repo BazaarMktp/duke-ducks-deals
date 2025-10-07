@@ -10,7 +10,7 @@ import { Progress } from "@/components/ui/progress";
 import { Sparkles, MapPin, ArrowRight, ArrowLeft, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import ImageUpload from "@/components/ImageUpload";
-import { SmartPriceSuggestion } from "@/components/listings/SmartPriceSuggestion";
+
 import { CrossPostDialog } from "@/components/listings/CrossPostDialog";
 import { useLocationService } from "@/hooks/useLocationService";
 import { supabase } from "@/integrations/supabase/client";
@@ -34,7 +34,7 @@ export default function SmartCreateListing() {
     allowPickup: true,
     allowMeetOnCampus: true
   });
-  const [priceIndicator, setPriceIndicator] = useState<'low' | 'fair' | 'high'>('fair');
+  
   const [showCrossPost, setShowCrossPost] = useState(false);
   const [createdListingId, setCreatedListingId] = useState<string>('');
   const [loading, setLoading] = useState(false);
@@ -43,7 +43,7 @@ export default function SmartCreateListing() {
   const navigate = useNavigate();
   const { requestLocation, getLocationSuggestions, loading: locationLoading } = useLocationService();
 
-  const totalSteps = 5;
+  const totalSteps = 4;
   const progress = (step / totalSteps) * 100;
 
   const handleAnalyzeImages = async () => {
@@ -232,35 +232,8 @@ export default function SmartCreateListing() {
                 />
               </div>
 
-              <div className="flex gap-2">
-                <Button variant="outline" onClick={() => setStep(1)}>
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back
-                </Button>
-                <Button onClick={() => setStep(3)} className="flex-1">
-                  Continue
-                  <ArrowRight className="h-4 w-4 ml-2" />
-                </Button>
-              </div>
-            </div>
-          )}
-
-          {/* Step 3: Smart Price Suggestion */}
-          {step === 3 && (
-            <div className="space-y-4">
-              <SmartPriceSuggestion
-                title={formData.title}
-                category={formData.category}
-                condition="good"
-                description={formData.description}
-                onPriceSelect={(price, indicator) => {
-                  setFormData(prev => ({ ...prev, price: price.toString() }));
-                  setPriceIndicator(indicator);
-                }}
-              />
-
               <div>
-                <Label htmlFor="price">Your Price *</Label>
+                <Label htmlFor="price">Price *</Label>
                 <Input
                   id="price"
                   type="number"
@@ -272,11 +245,11 @@ export default function SmartCreateListing() {
               </div>
 
               <div className="flex gap-2">
-                <Button variant="outline" onClick={() => setStep(2)}>
+                <Button variant="outline" onClick={() => setStep(1)}>
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Back
                 </Button>
-                <Button onClick={() => setStep(4)} className="flex-1" disabled={!formData.price}>
+                <Button onClick={() => setStep(3)} className="flex-1" disabled={!formData.price}>
                   Continue
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
@@ -284,8 +257,8 @@ export default function SmartCreateListing() {
             </div>
           )}
 
-          {/* Step 4: Location */}
-          {step === 4 && (
+          {/* Step 3: Location */}
+          {step === 3 && (
             <div className="space-y-4">
               <div>
                 <Label htmlFor="location">Location</Label>
@@ -314,11 +287,11 @@ export default function SmartCreateListing() {
               </div>
 
               <div className="flex gap-2">
-                <Button variant="outline" onClick={() => setStep(3)}>
+                <Button variant="outline" onClick={() => setStep(2)}>
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Back
                 </Button>
-                <Button onClick={() => setStep(5)} className="flex-1">
+                <Button onClick={() => setStep(4)} className="flex-1">
                   Continue
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
@@ -326,8 +299,8 @@ export default function SmartCreateListing() {
             </div>
           )}
 
-          {/* Step 5: Final Options */}
-          {step === 5 && (
+          {/* Step 4: Final Options */}
+          {step === 4 && (
             <div className="space-y-4">
               <div className="space-y-3">
                 <Label>Listing Type</Label>
@@ -387,7 +360,7 @@ export default function SmartCreateListing() {
               </div>
 
               <div className="flex gap-2">
-                <Button variant="outline" onClick={() => setStep(4)}>
+                <Button variant="outline" onClick={() => setStep(3)}>
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Back
                 </Button>
