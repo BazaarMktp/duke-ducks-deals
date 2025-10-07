@@ -61,7 +61,9 @@ const MarketplaceFilters = ({ searchQuery, setSearchQuery, sortBy, setSortBy, ac
       </Select>
     </div>
     
-    <MarketplaceTags listings={listings} onTagClick={handleTagClick} />
+    {activeListingType === 'offer' && (
+      <MarketplaceTags listings={listings} onTagClick={handleTagClick} />
+    )}
     </div>
   );
 };
