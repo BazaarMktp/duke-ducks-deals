@@ -4,7 +4,7 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { MessageCircle, X, Send, Sparkles } from 'lucide-react';
-import { useGeminiAI } from '@/hooks/useGeminiAI';
+import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface Message {
@@ -20,7 +20,20 @@ export const CampusChatbot = () => {
   const [input, setInput] = useState('');
   const [isSending, setIsSending] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const { chatWithBot } = useGeminiAI();
+  
+  const chatWithBot = async (messages: any[], userId: string) => {
+    try {
+      const { data, error } = await supabase.functions.invoke('campus-chatbot', {
+        body: { messages, userId }
+      });
+
+      if (error) throw error;
+      return data.message;
+    } catch (error) {
+      console.error('Chatbot error:', error);
+      return "Sorry, I'm having trouble responding right now. Please try again.";
+    }
+  };
   const { user } = useAuth();
 
   useEffect(() => {

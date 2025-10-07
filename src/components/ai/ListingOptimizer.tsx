@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Sparkles, Lightbulb } from 'lucide-react';
-import { useGeminiAI } from '@/hooks/useGeminiAI';
+import { supabase } from '@/integrations/supabase/client';
 
 interface ListingOptimizerProps {
   title: string;
@@ -21,7 +21,24 @@ export const ListingOptimizer = ({
 }: ListingOptimizerProps) => {
   const [titleSuggestions, setTitleSuggestions] = useState<any>(null);
   const [descriptionResult, setDescriptionResult] = useState<any>(null);
-  const { getListingAssistance, loading } = useGeminiAI();
+  const [loading, setLoading] = useState(false);
+
+  const getListingAssistance = async (type: string, data: any) => {
+    try {
+      setLoading(true);
+      const { data: result, error } = await supabase.functions.invoke('listing-assistant', {
+        body: { type, data }
+      });
+
+      if (error) throw error;
+      return result;
+    } catch (error) {
+      console.error('Listing assistant error:', error);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const improveTitles = async () => {
     const result = await getListingAssistance('improve_title', { title, category });

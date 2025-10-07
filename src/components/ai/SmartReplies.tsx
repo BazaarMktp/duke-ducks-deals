@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Sparkles } from 'lucide-react';
-import { useGeminiAI } from '@/hooks/useGeminiAI';
+import { supabase } from '@/integrations/supabase/client';
 
 interface SmartRepliesProps {
   lastMessage: string;
@@ -12,7 +12,20 @@ interface SmartRepliesProps {
 export const SmartReplies = ({ lastMessage, listingTitle, onSelectReply }: SmartRepliesProps) => {
   const [replies, setReplies] = useState<string[]>([]);
   const [isVisible, setIsVisible] = useState(false);
-  const { getSmartReplies } = useGeminiAI();
+  
+  const getSmartReplies = async (lastMessage: string, listingTitle: string) => {
+    try {
+      const { data, error } = await supabase.functions.invoke('smart-messaging', {
+        body: { type: 'suggest_reply', context: { lastMessage, listingTitle } }
+      });
+
+      if (error) throw error;
+      return JSON.parse(data.result);
+    } catch (error) {
+      console.error('Smart replies error:', error);
+      return [];
+    }
+  };
 
   useEffect(() => {
     if (lastMessage && listingTitle) {

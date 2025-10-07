@@ -29,27 +29,6 @@ export const useAIAnalysis = () => {
     }
   };
 
-  const generateDescription = async (title: string, category: string, images?: string[]) => {
-    try {
-      setLoading(true);
-      const { data, error } = await supabase.functions.invoke('generate-description', {
-        body: { title, category, images }
-      });
-
-      if (error) throw error;
-      return data;
-    } catch (error) {
-      secureLog.error('Description generation failed', error);
-      toast({
-        title: "Generation Error",
-        description: "Failed to generate description.",
-        variant: "destructive",
-      });
-      return null;
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const suggestCategory = async (title: string, description?: string, images?: string[]) => {
     try {
@@ -111,7 +90,6 @@ export const useAIAnalysis = () => {
   return {
     loading,
     moderateContent,
-    generateDescription,
     suggestCategory,
     enhancedSearch,
     trackAIInteraction
