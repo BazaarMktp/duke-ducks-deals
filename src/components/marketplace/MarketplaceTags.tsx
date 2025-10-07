@@ -10,25 +10,30 @@ const MarketplaceTags = ({ listings, onTagClick }: MarketplaceTagsProps) => {
   // Fixed tags that always appear
   const fixedTags = ["microwave", "fridge", "furniture"];
   
-  // Generate dynamic tags from listings
+  // Generate dynamic tags from AI-validated item_tag field
   const generateDynamicTags = () => {
     const tagCount: { [key: string]: number } = {};
     
     listings.forEach(listing => {
-      const title = listing.title.toLowerCase();
-      const category = listing.category?.toLowerCase() || "";
+      // Use AI-validated item_tag if available, fall back to text search
+      const itemTag = (listing as any).item_tag;
       
-      // Extract common item types
-      const keywords = [
-        "textbook", "laptop", "chair", "desk", "bed", "couch", 
-        "table", "lamp", "tv", "monitor", "keyboard", "mouse"
-      ];
-      
-      keywords.forEach(keyword => {
-        if (title.includes(keyword) || category.includes(keyword)) {
-          tagCount[keyword] = (tagCount[keyword] || 0) + 1;
-        }
-      });
+      if (itemTag && itemTag !== 'other') {
+        tagCount[itemTag] = (tagCount[itemTag] || 0) + 1;
+      } else {
+        // Fallback to text search for uncategorized items
+        const title = listing.title.toLowerCase();
+        const keywords = [
+          "textbook", "laptop", "chair", "desk", "bed", "couch", 
+          "table", "lamp", "tv", "monitor", "keyboard", "mouse"
+        ];
+        
+        keywords.forEach(keyword => {
+          if (title.includes(keyword)) {
+            tagCount[keyword] = (tagCount[keyword] || 0) + 1;
+          }
+        });
+      }
     });
     
     // Get top 5 dynamic tags

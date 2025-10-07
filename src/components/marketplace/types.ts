@@ -22,4 +22,5 @@ export interface MarketplaceListing {
   allow_meet_on_campus?: boolean;
   sold_at?: string;
   sold_on_bazaar?: boolean;
+  item_tag?: string | null;
 }

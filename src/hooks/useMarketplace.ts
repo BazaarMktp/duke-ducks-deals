@@ -38,8 +38,19 @@ export const useMarketplace = (user: any, searchQuery: string, sortBy: string, a
         .limit(20); // Limit sold items to avoid overwhelming
 
       if (searchQuery) {
-        activeQuery = activeQuery.or(`title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`);
-        soldQuery = soldQuery.or(`title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`);
+        // Check if search query matches a tag keyword - if so, use item_tag for accurate filtering
+        const tagKeywords = ["microwave", "fridge", "furniture", "textbook", "laptop", "chair", "desk", "bed", "couch", "table", "lamp", "tv", "monitor", "keyboard", "mouse"];
+        const isTagSearch = tagKeywords.some(tag => searchQuery.toLowerCase().includes(tag));
+        
+        if (isTagSearch) {
+          // For tag searches, prioritize item_tag but also search title as fallback
+          activeQuery = activeQuery.or(`item_tag.ilike.%${searchQuery}%,title.ilike.%${searchQuery}%`);
+          soldQuery = soldQuery.or(`item_tag.ilike.%${searchQuery}%,title.ilike.%${searchQuery}%`);
+        } else {
+          // For general searches, search title and description
+          activeQuery = activeQuery.or(`title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`);
+          soldQuery = soldQuery.or(`title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`);
+        }
       }
 
       const getOrderOptions = () => {

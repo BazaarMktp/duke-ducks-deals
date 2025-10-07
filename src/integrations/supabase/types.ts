@@ -887,6 +887,7 @@ export type Database = {
           housing_type: Database["public"]["Enums"]["housing_type"] | null
           id: string
           images: string[] | null
+          item_tag: string | null
           latitude: number | null
           listing_type: Database["public"]["Enums"]["listing_type"]
           location: string | null
@@ -921,6 +922,7 @@ export type Database = {
           housing_type?: Database["public"]["Enums"]["housing_type"] | null
           id?: string
           images?: string[] | null
+          item_tag?: string | null
           latitude?: number | null
           listing_type?: Database["public"]["Enums"]["listing_type"]
           location?: string | null
@@ -955,6 +957,7 @@ export type Database = {
           housing_type?: Database["public"]["Enums"]["housing_type"] | null
           id?: string
           images?: string[] | null
+          item_tag?: string | null
           latitude?: number | null
           listing_type?: Database["public"]["Enums"]["listing_type"]
           location?: string | null

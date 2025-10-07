@@ -142,7 +142,27 @@ export const useCreateListing = () => {
         moderationStatus === 'approved' ? 'auto_approved' : 'flagged_for_review'
       );
 
-      // AI analysis will be triggered automatically by the database after listing creation
+      // Call categorize-listing function for marketplace items with images
+      if (formData.category === 'marketplace' && formData.images.length > 0) {
+        try {
+          const { data: categoryData, error: categoryError } = await supabase.functions.invoke('categorize-listing', {
+            body: { listingId: newListing.id }
+          });
+
+          if (!categoryError && categoryData?.tag) {
+            // Update the listing with the AI-validated tag
+            await supabase
+              .from('listings')
+              .update({ item_tag: categoryData.tag })
+              .eq('id', newListing.id);
+            
+            console.log('Item categorized as:', categoryData.tag);
+          }
+        } catch (categoryError) {
+          console.error('Error categorizing item:', categoryError);
+          // Don't fail the listing creation if categorization fails
+        }
+      }
 
       const actionText = formData.listingType === 'wanted' ? 'request' : 'listing';
       toast.success(`Your ${formData.category} ${actionText} has been posted successfully.`);
