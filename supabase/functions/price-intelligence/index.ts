@@ -73,9 +73,9 @@ Return as JSON: { "min": number, "max": number, "recommended": number, "justific
     
     // Parse JSON from response
     const jsonMatch = content.match(/\{[\s\S]*\}/);
-    const priceData = jsonMatch ? JSON.parse(jsonMatch[0]) : null;
+    const priceSuggestion = jsonMatch ? JSON.parse(jsonMatch[0]) : null;
 
-    return new Response(JSON.stringify(priceData), {
+    return new Response(JSON.stringify(priceSuggestion), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
