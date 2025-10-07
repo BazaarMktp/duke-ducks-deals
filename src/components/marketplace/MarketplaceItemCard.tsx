@@ -51,6 +51,10 @@ const MarketplaceItemCard = ({
 
   const isSold = listing.status === 'sold' || listing.sold_at;
   const isNew = new Date(listing.created_at) > new Date(Date.now() - 5 * 24 * 60 * 60 * 1000);
+  
+  // Check if this is a microwave listing for Unboxed service
+  const isMicrowave = listing.title.toLowerCase().includes('microwave') || 
+                     listing.category?.toLowerCase().includes('microwave');
 
   return (
     <Card 
@@ -98,6 +102,11 @@ const MarketplaceItemCard = ({
                   <Badge variant="outline" className="text-blue-600 border-blue-300 text-xs">
                     <Search size={10} className="mr-1" />
                     Looking For
+                  </Badge>
+                )}
+                {isMicrowave && listing.listing_type === 'offer' && (
+                  <Badge className="bg-blue-600 text-white font-bold text-xs">
+                    Unboxed
                   </Badge>
                 )}
               </div>

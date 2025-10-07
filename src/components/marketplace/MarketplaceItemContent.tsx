@@ -28,6 +28,9 @@ const MarketplaceItemContent = ({
   onAddToCart,
   onStartConversation
 }: MarketplaceItemContentProps) => {
+  // Check if this is a microwave listing for Unboxed service
+  const isMicrowave = product.title.toLowerCase().includes('microwave');
+
   // For requests (wanted), we don't show images and use a single column layout
   if (product.listing_type === 'wanted') {
     return (
@@ -57,6 +60,9 @@ const MarketplaceItemContent = ({
             onAddToCart={onAddToCart}
             onStartConversation={onStartConversation}
             listingType={product.listing_type}
+            productTitle={product.title}
+            productPrice={product.price || 0}
+            isUnboxed={isMicrowave}
           />
         </div>
 
@@ -113,6 +119,9 @@ const MarketplaceItemContent = ({
             onAddToCart={onAddToCart}
             onStartConversation={onStartConversation}
             listingType={product.listing_type}
+            productTitle={product.title}
+            productPrice={product.price || 0}
+            isUnboxed={isMicrowave}
           />
         </div>
 

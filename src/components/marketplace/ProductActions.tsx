@@ -1,9 +1,11 @@
 
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Heart, ShoppingCart, MessageSquare } from "lucide-react";
 import FeedbackButton from "@/components/feedback/FeedbackButton";
+import UnboxedCheckoutDialog from "./UnboxedCheckoutDialog";
 
 interface ProductActionsProps {
   user: any;
@@ -14,6 +16,9 @@ interface ProductActionsProps {
   onAddToCart: () => void;
   onStartConversation: () => void;
   listingType?: string;
+  productTitle?: string;
+  productPrice?: number;
+  isUnboxed?: boolean;
 }
 
 const ProductActions = ({ 
@@ -24,8 +29,12 @@ const ProductActions = ({
   onToggleFavorite, 
   onAddToCart, 
   onStartConversation,
-  listingType = 'offer'
+  listingType = 'offer',
+  productTitle = '',
+  productPrice = 0,
+  isUnboxed = false
 }: ProductActionsProps) => {
+  const [showUnboxedDialog, setShowUnboxedDialog] = useState(false);
   if (!user) {
     return (
       <Card>
@@ -59,52 +68,67 @@ const ProductActions = ({
   }
 
   return (
-    <Card>
-      <CardContent className="p-6">
-        <div className="space-y-3">
-          {listingType === 'offer' && (
-            <>
+    <>
+      <Card>
+        <CardContent className="p-6">
+          <div className="space-y-3">
+            {listingType === 'offer' && (
+              <>
+                <Button
+                  onClick={onToggleFavorite}
+                  variant="outline"
+                  className={`w-full ${isFavorite ? 'text-red-500' : ''}`}
+                >
+                  <Heart size={16} className={`mr-2 ${isFavorite ? 'fill-current' : ''}`} />
+                  {isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
+                </Button>
+                
+                <Button
+                  onClick={onAddToCart}
+                  disabled={isInCart}
+                  variant="outline"
+                  className="w-full"
+                >
+                  <ShoppingCart size={16} className="mr-2" />
+                  {isInCart ? 'Already in Cart' : 'Add to Cart'}
+                </Button>
+              </>
+            )}
+            
+            {isUnboxed && listingType === 'offer' ? (
+              <Button onClick={() => setShowUnboxedDialog(true)} className="w-full bg-blue-600 hover:bg-blue-700">
+                Buy through Unboxed
+              </Button>
+            ) : (
+              <Button onClick={onStartConversation} className="w-full">
+                <MessageSquare size={16} className="mr-2" />
+                {listingType === 'wanted' ? 'I Can Help!' : 'Message Seller'}
+              </Button>
+            )}
+
+            {listingType === 'wanted' && (
               <Button
                 onClick={onToggleFavorite}
                 variant="outline"
                 className={`w-full ${isFavorite ? 'text-red-500' : ''}`}
               >
                 <Heart size={16} className={`mr-2 ${isFavorite ? 'fill-current' : ''}`} />
-                {isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
+                {isFavorite ? 'Remove from Saved' : 'Save Request'}
               </Button>
-              
-              <Button
-                onClick={onAddToCart}
-                disabled={isInCart}
-                variant="outline"
-                className="w-full"
-              >
-                <ShoppingCart size={16} className="mr-2" />
-                {isInCart ? 'Already in Cart' : 'Add to Cart'}
-              </Button>
-            </>
-          )}
-          
-          <Button onClick={onStartConversation} className="w-full">
-            <MessageSquare size={16} className="mr-2" />
-            {listingType === 'wanted' ? 'I Can Help!' : 'Message Seller'}
-          </Button>
+            )}
 
-          {listingType === 'wanted' && (
-            <Button
-              onClick={onToggleFavorite}
-              variant="outline"
-              className={`w-full ${isFavorite ? 'text-red-500' : ''}`}
-            >
-              <Heart size={16} className={`mr-2 ${isFavorite ? 'fill-current' : ''}`} />
-              {isFavorite ? 'Remove from Saved' : 'Save Request'}
-            </Button>
-          )}
+            <FeedbackButton variant="ghost" className="w-full" />
+          </div>
+        </CardContent>
+      </Card>
 
-          <FeedbackButton variant="ghost" className="w-full" />
-        </div>
-      </CardContent>
-    </Card>
+      <UnboxedCheckoutDialog
+        open={showUnboxedDialog}
+        onOpenChange={setShowUnboxedDialog}
+        productTitle={productTitle}
+        productPrice={productPrice}
+      />
+    </>
   );
 };
 

@@ -43,6 +43,7 @@ const Marketplace = () => {
         sortBy={sortBy}
         setSortBy={setSortBy}
         activeListingType={activeListingType}
+        listings={listings}
       />
 
       <MarketplaceGrid

@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Search, Sparkles } from "lucide-react";
 import { useAIAnalysis } from "@/hooks/useAIAnalysis";
 import { useState } from 'react';
+import MarketplaceTags from "./MarketplaceTags";
+import { MarketplaceListing } from "./types";
 
 interface MarketplaceFiltersProps {
   searchQuery: string;
@@ -12,9 +14,10 @@ interface MarketplaceFiltersProps {
   sortBy: string;
   setSortBy: (sort: string) => void;
   activeListingType: 'offer' | 'wanted';
+  listings: MarketplaceListing[];
 }
 
-const MarketplaceFilters = ({ searchQuery, setSearchQuery, sortBy, setSortBy, activeListingType }: MarketplaceFiltersProps) => {
+const MarketplaceFilters = ({ searchQuery, setSearchQuery, sortBy, setSortBy, activeListingType, listings }: MarketplaceFiltersProps) => {
   const { enhancedSearch } = useAIAnalysis();
   const [isEnhancedSearch, setIsEnhancedSearch] = useState(false);
 
@@ -36,7 +39,14 @@ const MarketplaceFilters = ({ searchQuery, setSearchQuery, sortBy, setSortBy, ac
       setIsEnhancedSearch(false);
     }
   };
+
+  const handleTagClick = (tag: string) => {
+    setSearchQuery(tag);
+  };
+
   return (
+    <div>
+
     <div className="flex flex-col md:flex-row gap-4 mb-6">
       <div className="relative flex-1 flex gap-2">
         <div className="relative flex-1">
@@ -75,6 +85,9 @@ const MarketplaceFilters = ({ searchQuery, setSearchQuery, sortBy, setSortBy, ac
           )}
         </SelectContent>
       </Select>
+    </div>
+    
+    <MarketplaceTags listings={listings} onTagClick={handleTagClick} />
     </div>
   );
 };
