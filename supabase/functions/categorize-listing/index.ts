@@ -37,11 +37,19 @@ serve(async (req) => {
     const content = [
       {
         type: "text",
-        text: `Analyze this marketplace listing and categorize it. 
+        text: `Analyze this marketplace listing and categorize it by VALIDATING the text against the actual image.
+
 Title: ${listing.title}
 Description: ${listing.description || 'No description'}
 
-Based on the title and description, identify the main item type. Return ONLY ONE of these exact tags: "microwave", "fridge", "furniture", "textbook", "laptop", "chair", "desk", "bed", "couch", "table", "lamp", "tv", "monitor", "keyboard", "mouse", or "other".
+CRITICAL INSTRUCTIONS:
+1. First, analyze what the image actually shows
+2. Then compare it to what the title/description claims
+3. ONLY return a specific category tag if the image clearly matches the text description
+4. If the text says "microwave" but the image shows something else (laptop, chair, etc.), return "other"
+5. If there's ANY doubt or mismatch between image and text, return "other"
+
+Available tags: "microwave", "fridge", "furniture", "textbook", "laptop", "chair", "desk", "bed", "couch", "table", "lamp", "tv", "monitor", "keyboard", "mouse", or "other"
 
 Respond with ONLY the tag, nothing else.`
       }
