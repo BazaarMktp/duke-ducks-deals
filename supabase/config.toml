@@ -26,3 +26,6 @@ verify_jwt = true
 
 [functions.listing-assistant]
 verify_jwt = true
+
+[functions.analyze-listing-image]
+verify_jwt = true

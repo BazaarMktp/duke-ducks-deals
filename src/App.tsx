@@ -36,6 +36,7 @@ import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import MyListings from "./pages/MyListings";
 import CreateListing from "./pages/CreateListing";
+import SmartCreateListing from "./pages/SmartCreateListing";
 import EditListing from "./pages/EditListing";
 import Favorites from "./pages/Favorites";
 import Cart from "./pages/Cart";
@@ -144,6 +145,14 @@ function App() {
                         element={
                           <ProtectedRoute>
                             <CreateListing />
+                          </ProtectedRoute>
+                        }
+                      />
+                      <Route
+                        path="/smart-create-listing"
+                        element={
+                          <ProtectedRoute>
+                            <SmartCreateListing />
                           </ProtectedRoute>
                         }
                       />
