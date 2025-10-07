@@ -48,6 +48,7 @@ const MarketplaceItemContent = ({
           listingOwnerId={product.user_id}
           isInConversation={false} // TODO: Add conversation detection
           isAdmin={false} // TODO: Add admin detection
+          isUnboxed={isMicrowave}
         />
 
         <div className="mb-6">
@@ -107,6 +108,7 @@ const MarketplaceItemContent = ({
           listingOwnerId={product.user_id}
           isInConversation={false} // TODO: Add conversation detection
           isAdmin={false} // TODO: Add admin detection
+          isUnboxed={isMicrowave}
         />
 
         <div className="mb-6">

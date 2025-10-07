@@ -47,20 +47,6 @@ export const useAIAnalysis = () => {
     }
   };
 
-  const enhancedSearch = async (query: string) => {
-    try {
-      const { data, error } = await supabase.functions.invoke('enhanced-search', {
-        body: { query }
-      });
-
-      if (error) throw error;
-      return data;
-    } catch (error) {
-      secureLog.error('Enhanced search failed', error);
-      return { keywords: query, category: null, priceRange: null, condition: null, urgency: null };
-    }
-  };
-
   const trackAIInteraction = async (
     listingId: string | null,
     interactionType: string,
@@ -91,7 +77,6 @@ export const useAIAnalysis = () => {
     loading,
     moderateContent,
     suggestCategory,
-    enhancedSearch,
     trackAIInteraction
   };
 };

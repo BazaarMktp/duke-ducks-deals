@@ -8,7 +8,7 @@ interface MarketplaceTagsProps {
 
 const MarketplaceTags = ({ listings, onTagClick }: MarketplaceTagsProps) => {
   // Fixed tags that always appear
-  const fixedTags = ["microwaves", "fridges", "furniture"];
+  const fixedTags = ["microwave", "fridge", "furniture"];
   
   // Generate dynamic tags from listings
   const generateDynamicTags = () => {
@@ -41,8 +41,10 @@ const MarketplaceTags = ({ listings, onTagClick }: MarketplaceTagsProps) => {
   const dynamicTags = generateDynamicTags();
   
   return (
-    <div className="flex flex-wrap gap-2 mb-6">
-      {fixedTags.map(tag => (
+    <div className="mb-6">
+      <p className="text-sm text-muted-foreground mb-2">Suggested:</p>
+      <div className="flex flex-wrap gap-2">
+        {fixedTags.map(tag => (
         <Badge
           key={tag}
           variant="outline"
@@ -62,6 +64,7 @@ const MarketplaceTags = ({ listings, onTagClick }: MarketplaceTagsProps) => {
           {tag}
         </Badge>
       ))}
+      </div>
     </div>
   );
 };

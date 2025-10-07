@@ -16,6 +16,7 @@ interface ProductInfoProps {
   listingOwnerId?: string;
   isInConversation?: boolean;
   isAdmin?: boolean;
+  isUnboxed?: boolean;
 }
 
 const ProductInfo = ({ 
@@ -30,7 +31,8 @@ const ProductInfo = ({
   userId,
   listingOwnerId,
   isInConversation = false,
-  isAdmin = false
+  isAdmin = false,
+  isUnboxed = false
 }: ProductInfoProps) => {
   const getTransactionMethods = () => {
     const methods = [];
@@ -59,6 +61,11 @@ const ProductInfo = ({
             <Badge variant="outline" className="text-blue-600 border-blue-300">
               <Search size={12} className="mr-1" />
               Request
+            </Badge>
+          )}
+          {isUnboxed && listingType === 'offer' && (
+            <Badge className="bg-blue-600 text-white hover:bg-blue-700">
+              Unboxed
             </Badge>
           )}
         </div>
