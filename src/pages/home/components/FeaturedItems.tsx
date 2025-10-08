@@ -56,7 +56,6 @@ export const FeaturedItems = ({ featuredListings, isLoading }: FeaturedItemsProp
                     <p className="text-blue-600 font-bold mb-1">
                       {item.price !== undefined ? `$${item.price.toFixed(2)}` : 'Contact for price'}
                     </p>
-                    <p className="text-sm text-gray-600 mb-2 line-clamp-2">{item.description || 'No description available'}</p>
                     <p className="text-sm text-gray-500">by {item.seller || 'Unknown'}</p>
                   </CardContent>
                 </Card>

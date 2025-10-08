@@ -26,7 +26,7 @@ const FlipCard = ({
           {/* Front Face */}
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-lg border bg-card shadow-sm [backface-visibility:hidden]">
             <div className={`${iconColor} w-10 h-10 rounded-full flex items-center justify-center`}>
-              <Icon size={20} className="text-white" />
+              <Icon size={20} />
             </div>
             <h3 className="text-sm font-semibold">{title}</h3>
           </div>
@@ -52,8 +52,8 @@ export const QuickActions = () => {
             icon={Plus}
             title="Create Listing"
             description="Post items you're offering"
-            iconColor="bg-blue-500"
-            bgColor="bg-blue-500"
+            iconColor="bg-blue-100 text-blue-600"
+            bgColor="bg-blue-600"
           />
           
           <FlipCard
@@ -62,8 +62,8 @@ export const QuickActions = () => {
             icon={Search}
             title="Create Request"
             description="Post what you're looking for"
-            iconColor="bg-green-500"
-            bgColor="bg-green-500"
+            iconColor="bg-green-100 text-green-600"
+            bgColor="bg-green-600"
           />
           
           <FlipCard
@@ -71,8 +71,8 @@ export const QuickActions = () => {
             icon={Heart}
             title="Favorites"
             description="View your saved items"
-            iconColor="bg-purple-500"
-            bgColor="bg-purple-500"
+            iconColor="bg-purple-100 text-purple-600"
+            bgColor="bg-purple-600"
           />
         </div>
       </div>

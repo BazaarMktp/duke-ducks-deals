@@ -43,7 +43,6 @@ export const FeaturedRequests = ({ featuredRequests }: FeaturedRequestsProps) =>
                   <p className="text-blue-600 font-bold mb-1">
                     {request.price ? `Budget: $${request.price}` : 'Budget: Negotiable'}
                   </p>
-                  <p className="text-sm text-gray-600 mb-2 line-clamp-2">{request.description || 'No description available'}</p>
                   <p className="text-sm text-gray-500">by {request.requester || 'Unknown'}</p>
                   <Link to={`/${request.category}/${request.id}`} className="block mt-3">
                     <Button size="sm" className="w-full">I Can Help</Button>
