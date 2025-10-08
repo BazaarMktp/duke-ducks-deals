@@ -46,10 +46,9 @@ const MarketplaceTags = ({ listings, onTagClick }: MarketplaceTagsProps) => {
   const dynamicTags = generateDynamicTags();
   
   return (
-    <div className="mb-6">
-      <p className="text-sm text-muted-foreground mb-2">Suggested:</p>
-      <div className="flex flex-wrap gap-2">
-        {fixedTags.map(tag => (
+    <div className="mb-6 flex items-center flex-wrap gap-2">
+      <p className="text-sm text-muted-foreground">Suggested:</p>
+      {fixedTags.map(tag => (
         <Badge
           key={tag}
           variant="outline"
@@ -69,7 +68,6 @@ const MarketplaceTags = ({ listings, onTagClick }: MarketplaceTagsProps) => {
           {tag}
         </Badge>
       ))}
-      </div>
     </div>
   );
 };
