@@ -57,10 +57,10 @@ export const Dashboard = ({
         />
       </div>
       <QuickActions />
-      <div className="text-left">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <FeaturedItems featuredListings={featuredListings} isLoading={isLoading} />
+        <FeaturedRequests featuredRequests={featuredRequests} />
       </div>
-      <FeaturedRequests featuredRequests={featuredRequests} />
       <StatsSection stats={stats} />
     </div>
   );

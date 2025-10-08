@@ -12,7 +12,7 @@ interface FeaturedRequestsProps {
 export const FeaturedRequests = ({ featuredRequests }: FeaturedRequestsProps) => {
   return (
     <section className="py-8 bg-white">
-      <div className="container mx-auto px-4">
+      <div className="px-4">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold">Recent Requests</h2>
           <div className="flex gap-2">
@@ -29,7 +29,7 @@ export const FeaturedRequests = ({ featuredRequests }: FeaturedRequestsProps) =>
             </CardContent>
           </Card>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {featuredRequests.map((request) => (
               <Card key={request.id} className="hover:shadow-lg transition-shadow border-blue-200 bg-blue-50/50">
                 <CardContent className="p-4">
