@@ -12,12 +12,12 @@ interface FeaturedItemsProps {
 
 export const FeaturedItems = ({ featuredListings, isLoading }: FeaturedItemsProps) => {
   return (
-    <section className="py-8">
+    <section className="py-4 bg-gray-50">
       <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold">Featured Marketplace Items</h2>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold">Featured Marketplace Items</h2>
           <Link to="/marketplace">
-            <Button variant="outline">View All</Button>
+            <Button variant="outline" size="sm">View All</Button>
           </Link>
         </div>
         
@@ -32,7 +32,7 @@ export const FeaturedItems = ({ featuredListings, isLoading }: FeaturedItemsProp
             </CardContent>
           </Card>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
             {featuredListings.map((item) => (
               <Link key={item.id} to={`/marketplace/${item.id}`}>
                 <Card className="hover:shadow-lg transition-shadow cursor-pointer">
