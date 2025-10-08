@@ -1,62 +1,79 @@
 
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plus, Search, Heart } from "lucide-react";
+
+const FlipCard = ({ 
+  to, 
+  icon: Icon, 
+  title, 
+  description, 
+  iconColor, 
+  bgColor,
+  state 
+}: { 
+  to: string; 
+  icon: any; 
+  title: string; 
+  description: string; 
+  iconColor: string; 
+  bgColor: string;
+  state?: any;
+}) => {
+  return (
+    <Link to={to} state={state}>
+      <div className="group h-24 [perspective:1000px]">
+        <div className="relative h-full w-full transition-all duration-500 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
+          {/* Front Face */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-lg border bg-card shadow-sm [backface-visibility:hidden]">
+            <div className={`${iconColor} w-10 h-10 rounded-full flex items-center justify-center`}>
+              <Icon size={20} className="text-white" />
+            </div>
+            <h3 className="text-sm font-semibold">{title}</h3>
+          </div>
+          
+          {/* Back Face */}
+          <div className={`absolute inset-0 flex items-center justify-center rounded-lg ${bgColor} p-4 [backface-visibility:hidden] [transform:rotateY(180deg)]`}>
+            <p className="text-white text-center text-sm font-medium">{description}</p>
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+};
 
 export const QuickActions = () => {
   return (
-    <section className="py-4 bg-white">
+    <section className="py-3 bg-white">
       <div className="container mx-auto px-4">
-        <h2 className="text-xl font-bold mb-4 text-center">Quick Actions</h2>
+        <h2 className="text-xl font-bold mb-3 text-center">Quick Actions</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 max-w-3xl mx-auto">
-          <Link to="/create-listing">
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer group">
-              <CardHeader className="text-center p-4">
-                <div className="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
-                  <Plus className="text-blue-600" size={20} />
-                </div>
-                <CardTitle className="group-hover:text-blue-600 transition-colors text-base">
-                  Create Listing
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-4 pt-0">
-                <p className="text-gray-600 text-center text-sm">Post items you're offering</p>
-              </CardContent>
-            </Card>
-          </Link>
-
-          <Link to="/create-listing" state={{ listingType: 'wanted' }}>
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer group">
-              <CardHeader className="text-center p-4">
-                <div className="bg-green-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
-                  <Search className="text-green-600" size={20} />
-                </div>
-                <CardTitle className="group-hover:text-green-600 transition-colors text-base">
-                  Create Request
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-4 pt-0">
-                <p className="text-gray-600 text-center text-sm">Post what you're looking for</p>
-              </CardContent>
-            </Card>
-          </Link>
-
-          <Link to="/favorites">
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer group">
-              <CardHeader className="text-center p-4">
-                <div className="bg-purple-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
-                  <Heart className="text-purple-600" size={20} />
-                </div>
-                <CardTitle className="group-hover:text-purple-600 transition-colors text-base">
-                  Favorites
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-4 pt-0">
-                <p className="text-gray-600 text-center text-sm">View your saved items</p>
-              </CardContent>
-            </Card>
-          </Link>
+          <FlipCard
+            to="/create-listing"
+            icon={Plus}
+            title="Create Listing"
+            description="Post items you're offering"
+            iconColor="bg-blue-500"
+            bgColor="bg-blue-500"
+          />
+          
+          <FlipCard
+            to="/create-listing"
+            state={{ listingType: 'wanted' }}
+            icon={Search}
+            title="Create Request"
+            description="Post what you're looking for"
+            iconColor="bg-green-500"
+            bgColor="bg-green-500"
+          />
+          
+          <FlipCard
+            to="/favorites"
+            icon={Heart}
+            title="Favorites"
+            description="View your saved items"
+            iconColor="bg-purple-500"
+            bgColor="bg-purple-500"
+          />
         </div>
       </div>
     </section>
