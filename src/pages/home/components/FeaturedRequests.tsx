@@ -11,7 +11,7 @@ interface FeaturedRequestsProps {
 
 export const FeaturedRequests = ({ featuredRequests }: FeaturedRequestsProps) => {
   return (
-    <section className="py-8 bg-white">
+    <section className="py-8 bg-background">
       <div className="px-4">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold">Recent Requests</h2>
