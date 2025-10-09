@@ -58,7 +58,7 @@ const ProductInfo = ({
       <div>
         <div className="flex items-center gap-2 mb-3">
           {listingType === 'wanted' && (
-            <Badge variant="outline" className="text-blue-600 border-blue-300">
+            <Badge className="bg-blue-100 text-blue-600">
               <Search size={12} className="mr-1" />
               Request
             </Badge>
@@ -80,7 +80,7 @@ const ProductInfo = ({
             }
           </p>
           {listingType === 'offer' && openToNegotiation && (
-            <Badge variant="outline" className="text-orange-600 border-orange-300">
+            <Badge className="bg-orange-100 text-orange-600">
               <HandCoins size={12} className="mr-1" />
               Open to negotiation
             </Badge>
