@@ -51,8 +51,7 @@ const MarketplaceTags = ({ listings, onTagClick }: MarketplaceTagsProps) => {
       {fixedTags.map(tag => (
         <Badge
           key={tag}
-          variant="outline"
-          className="cursor-pointer hover:bg-primary/10 border-blue-500 text-foreground capitalize px-3 py-1.5 transition-all"
+          className="cursor-pointer hover:bg-primary/10 bg-blue-50 text-foreground capitalize px-3 py-1.5 transition-all"
           onClick={() => onTagClick(tag)}
         >
           {tag}
