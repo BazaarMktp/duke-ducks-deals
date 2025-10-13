@@ -62,7 +62,7 @@ export default function DevilsDeals() {
   }, [trackPageVisit]);
 
   const { data: deals, isLoading, refetch } = useQuery({
-    queryKey: ['deals'],
+    queryKey: ['deals', isAdmin],
     queryFn: async () => {
       let query = supabase.from('deals').select('*');
       

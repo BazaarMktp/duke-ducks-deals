@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useAdmin } from '@/contexts/AdminContext';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -22,17 +23,21 @@ export default function DealDetail() {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { isAdmin } = useAdmin();
 
   const { data: deal, isLoading } = useQuery({
     queryKey: ['deal', id],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from('deals')
         .select('*')
-        .eq('id', id)
-        .eq('is_active', true)
-        .single();
+        .eq('id', id);
 
+      if (!isAdmin) {
+        query = query.eq('is_active', true);
+      }
+
+      const { data, error } = await query.maybeSingle();
       if (error) throw error;
       return data;
     },
