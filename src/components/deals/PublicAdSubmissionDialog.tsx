@@ -1,7 +1,8 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { businessAdSchema } from '@/validations/dealSchemas';
+import { dealSchema } from '@/validations/dealSchemas';
+import { z } from 'zod';
 import { useMutation } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import {
@@ -20,20 +21,13 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Info } from 'lucide-react';
-import { AdImageUpload } from '@/components/business/AdImageUpload';
+
 
 interface PublicAdSubmissionDialogProps {
   open: boolean;
@@ -46,25 +40,26 @@ export const PublicAdSubmissionDialog: React.FC<PublicAdSubmissionDialogProps> =
 }) => {
   const { toast } = useToast();
 
-  const form = useForm({
-    resolver: zodResolver(businessAdSchema),
+  const form = useForm<z.infer<typeof dealSchema>>({
+    resolver: zodResolver(dealSchema),
     defaultValues: {
-      business_name: '',
-      business_email: '',
-      business_phone: '',
-      business_website: '',
       title: '',
       description: '',
-      ad_type: 'banner' as const,
+      business_name: '',
+      discount_percentage: 0,
+      original_price: 0,
+      discounted_price: 0,
+      business_website: '',
+      business_phone: '',
+      business_email: '',
       image_url: '',
-      link_url: '',
-      starts_at: '',
-      ends_at: '',
+      terms_and_conditions: '',
+      valid_until: '',
     },
   });
 
   const submitAdMutation = useMutation({
-    mutationFn: async (data: any) => {
+    mutationFn: async (data: z.infer<typeof dealSchema>) => {
       // First, create or get business profile
       const { data: existingBusiness, error: checkError } = await supabase
         .from('business_profiles')
@@ -77,7 +72,6 @@ export const PublicAdSubmissionDialog: React.FC<PublicAdSubmissionDialogProps> =
       if (existingBusiness) {
         businessId = existingBusiness.id;
       } else {
-        // Create new business profile
         // Create new business profile without returning the row to avoid SELECT RLS on returning
         const generatedId = (typeof crypto !== 'undefined' && 'randomUUID' in crypto)
           ? crypto.randomUUID()
@@ -89,7 +83,7 @@ export const PublicAdSubmissionDialog: React.FC<PublicAdSubmissionDialogProps> =
             id: generatedId,
             user_id: null, // Allow null for public submissions
             business_name: data.business_name,
-            business_email: data.business_email,
+            business_email: data.business_email || '',
             business_phone: data.business_phone,
             business_website: data.business_website,
             verification_status: 'pending',
@@ -99,21 +93,25 @@ export const PublicAdSubmissionDialog: React.FC<PublicAdSubmissionDialogProps> =
         businessId = generatedId;
       }
 
-      // Now create the ad
-      const { error: adError } = await supabase.from('business_ads').insert({
-        business_id: businessId,
+      // Create the deal in the deals table (same as admin)
+      const { error: dealError } = await supabase.from('deals').insert({
         title: data.title,
         description: data.description,
-        ad_type: data.ad_type,
+        business_name: data.business_name,
+        discount_percentage: data.discount_percentage || null,
+        original_price: data.original_price || null,
+        discounted_price: data.discounted_price || null,
+        business_website: data.business_website || null,
+        business_phone: data.business_phone || null,
+        business_email: data.business_email || null,
         image_url: data.image_url || null,
-        link_url: data.link_url || null,
-        starts_at: data.starts_at ? new Date(data.starts_at).toISOString() : new Date().toISOString(),
-        ends_at: data.ends_at ? new Date(data.ends_at).toISOString() : null,
-        approval_status: 'pending',
-        is_active: false,
+        terms_and_conditions: data.terms_and_conditions || null,
+        created_by: businessId, // Use business_id as created_by since no user auth
+        valid_until: data.valid_until ? new Date(data.valid_until).toISOString() : null,
+        is_active: false, // Requires approval
       });
 
-      if (adError) throw adError;
+      if (dealError) throw dealError;
     },
     onSuccess: () => {
       toast({
@@ -136,25 +134,36 @@ export const PublicAdSubmissionDialog: React.FC<PublicAdSubmissionDialogProps> =
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Promote Your Business on Devil's Deals</DialogTitle>
+          <DialogTitle>Submit Your Deal to Devil's Deals</DialogTitle>
           <DialogDescription>
-            Submit your promotional ad for review. Bazaar admin will approve it before it goes live.
+            Submit your deal for review. Bazaar admin will approve it before it goes live.
           </DialogDescription>
         </DialogHeader>
 
         <Alert>
           <Info className="h-4 w-4" />
           <AlertDescription>
-            All ads require admin approval before being displayed. You'll be notified via email once approved.
+            All deals require admin approval before being displayed. You'll be notified via email once approved.
           </AlertDescription>
         </Alert>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit((data) => submitAdMutation.mutate(data))} className="space-y-6">
-            {/* Business Information */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Business Information</h3>
-              
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem className="col-span-full">
+                    <FormLabel>Deal Title *</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Amazing discount on..." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <FormField
                 control={form.control}
                 name="business_name"
@@ -162,51 +171,129 @@ export const PublicAdSubmissionDialog: React.FC<PublicAdSubmissionDialogProps> =
                   <FormItem>
                     <FormLabel>Business Name *</FormLabel>
                     <FormControl>
-                      <Input placeholder="Your Business Name" {...field} />
+                      <Input placeholder="Business name" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="business_email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Business Email *</FormLabel>
-                      <FormControl>
-                        <Input type="email" placeholder="contact@business.com" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+              <FormField
+                control={form.control}
+                name="discount_percentage"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Discount %</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="25"
+                        {...field}
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                <FormField
-                  control={form.control}
-                  name="business_phone"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Business Phone</FormLabel>
-                      <FormControl>
-                        <Input placeholder="+1 (555) 123-4567" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+              <FormField
+                control={form.control}
+                name="original_price"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Original Price</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        placeholder="100.00"
+                        {...field}
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
+              <FormField
+                control={form.control}
+                name="discounted_price"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Sale Price</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        placeholder="75.00"
+                        {...field}
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="valid_until"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Valid Until</FormLabel>
+                    <FormControl>
+                      <Input type="date" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description *</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Describe the deal..."
+                      className="resize-none"
+                      rows={3}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="image_url"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Image URL</FormLabel>
+                  <FormControl>
+                    <Input placeholder="https://example.com/image.jpg" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <FormField
                 control={form.control}
                 name="business_website"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Business Website</FormLabel>
+                    <FormLabel>Website</FormLabel>
                     <FormControl>
-                      <Input placeholder="yourbusiness.com" {...field} />
+                      <Input placeholder="business.com" {...field} />
                     </FormControl>
                     <FormDescription className="text-xs">
                       You can enter with or without https://
@@ -215,152 +302,65 @@ export const PublicAdSubmissionDialog: React.FC<PublicAdSubmissionDialogProps> =
                   </FormItem>
                 )}
               />
+
+              <FormField
+                control={form.control}
+                name="business_phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Phone</FormLabel>
+                    <FormControl>
+                      <Input placeholder="(555) 123-4567" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="business_email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input placeholder="contact@business.com" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
 
-            {/* Ad Information */}
-            <div className="space-y-4 border-t pt-4">
-              <h3 className="text-lg font-semibold">Advertisement Details</h3>
-              
-              <FormField
-                control={form.control}
-                name="title"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Ad Title *</FormLabel>
-                    <FormControl>
-                      <Input placeholder="20% Off for Duke Students!" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            <FormField
+              control={form.control}
+              name="terms_and_conditions"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Terms & Conditions</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Terms and conditions for this deal..."
+                      className="resize-none"
+                      rows={3}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Description *</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Describe your offer in detail..."
-                        rows={3}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="ad_type"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Ad Type</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select ad type" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="banner">Banner - Horizontal display at top</SelectItem>
-                        <SelectItem value="sidebar">Sidebar - Vertical side display</SelectItem>
-                        <SelectItem value="featured">Featured - Premium placement</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormDescription>
-                      Choose where your ad will appear on the page
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="image_url"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Advertisement Image</FormLabel>
-                    <FormControl>
-                      <AdImageUpload
-                        imageUrl={field.value || ''}
-                        onImageChange={field.onChange}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="link_url"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Destination URL *</FormLabel>
-                    <FormControl>
-                      <Input placeholder="yourbusiness.com/special-offer" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      Where should users go when they click your ad? (You can enter with or without https://)
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="starts_at"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Start Date</FormLabel>
-                      <FormControl>
-                        <Input type="date" {...field} />
-                      </FormControl>
-                      <FormDescription>When should your ad start running?</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="ends_at"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>End Date (Optional)</FormLabel>
-                      <FormControl>
-                        <Input type="date" {...field} />
-                      </FormControl>
-                      <FormDescription>Leave empty for ongoing promotion</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </div>
-
-            <div className="flex gap-3 border-t pt-4">
+            <div className="flex justify-end gap-3">
               <Button
                 type="button"
                 variant="outline"
                 onClick={() => onOpenChange(false)}
-                className="flex-1"
               >
                 Cancel
               </Button>
-              <Button
-                type="submit"
-                disabled={submitAdMutation.isPending}
-                className="flex-1"
-              >
-                {submitAdMutation.isPending ? 'Submitting...' : 'Submit for Approval'}
+              <Button type="submit" disabled={submitAdMutation.isPending}>
+                {submitAdMutation.isPending ? 'Submitting...' : 'Submit Deal'}
               </Button>
             </div>
           </form>
