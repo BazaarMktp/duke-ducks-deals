@@ -64,11 +64,11 @@ export default function DevilsDeals() {
   const { data: deals, isLoading, refetch } = useQuery({
     queryKey: ['deals'],
     queryFn: async () => {
-      const query = supabase.from('deals').select('*');
+      let query = supabase.from('deals').select('*');
       
       // Admins see all deals, regular users see only active and non-expired deals
       if (!isAdmin) {
-        query
+        query = query
           .eq('is_active', true)
           .or('valid_until.is.null,valid_until.gt.' + new Date().toISOString());
       }
