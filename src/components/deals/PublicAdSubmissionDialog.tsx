@@ -78,21 +78,25 @@ export const PublicAdSubmissionDialog: React.FC<PublicAdSubmissionDialogProps> =
         businessId = existingBusiness.id;
       } else {
         // Create new business profile
-        const { data: newBusiness, error: businessError } = await supabase
+        // Create new business profile without returning the row to avoid SELECT RLS on returning
+        const generatedId = (typeof crypto !== 'undefined' && 'randomUUID' in crypto)
+          ? crypto.randomUUID()
+          : `biz_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+
+        const { error: businessError } = await supabase
           .from('business_profiles')
           .insert({
+            id: generatedId,
             user_id: null, // Allow null for public submissions
             business_name: data.business_name,
             business_email: data.business_email,
             business_phone: data.business_phone,
             business_website: data.business_website,
             verification_status: 'pending',
-          })
-          .select('id')
-          .single();
+          });
 
         if (businessError) throw businessError;
-        businessId = newBusiness.id;
+        businessId = generatedId;
       }
 
       // Now create the ad
