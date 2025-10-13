@@ -27,6 +27,7 @@ export const dealSchema = z.object({
   business_email: z.string().email().optional().or(z.literal('')),
   image_url: z.string().optional().or(z.literal('')).transform(normalizeUrl).pipe(z.string().url().optional().or(z.literal(''))),
   terms_and_conditions: z.string().optional(),
+  valid_from: z.string().optional(),
   valid_until: z.string().optional(),
 });
 

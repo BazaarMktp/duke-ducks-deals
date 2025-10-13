@@ -47,14 +47,15 @@ export const PublicAdSubmissionDialog: React.FC<PublicAdSubmissionDialogProps> =
       title: '',
       description: '',
       business_name: '',
-      discount_percentage: 0,
-      original_price: 0,
-      discounted_price: 0,
+      discount_percentage: undefined as unknown as number | undefined,
+      original_price: undefined as unknown as number | undefined,
+      discounted_price: undefined as unknown as number | undefined,
       business_website: '',
       business_phone: '',
       business_email: '',
       image_url: '',
       terms_and_conditions: '',
+      valid_from: '',
       valid_until: '',
     },
   });
@@ -108,6 +109,7 @@ export const PublicAdSubmissionDialog: React.FC<PublicAdSubmissionDialogProps> =
         image_url: data.image_url || null,
         terms_and_conditions: data.terms_and_conditions || null,
         created_by: businessId, // Use business_id as created_by since no user auth
+        valid_from: data.valid_from ? new Date(data.valid_from).toISOString() : new Date().toISOString(),
         valid_until: data.valid_until ? new Date(data.valid_until).toISOString() : null,
         is_active: false, // Requires approval
       });
@@ -292,8 +294,12 @@ export const PublicAdSubmissionDialog: React.FC<PublicAdSubmissionDialogProps> =
                           type="number"
                           placeholder="25"
                           className="h-11 text-base"
-                          {...field}
-                          onChange={(e) => field.onChange(Number(e.target.value))}
+                        {...field}
+                        value={field.value ?? ''}
+                        onChange={(e) => {
+                          const v = e.target.value;
+                          field.onChange(v === '' ? undefined : Number(v));
+                        }}
                         />
                       </FormControl>
                       <FormMessage />
@@ -313,8 +319,12 @@ export const PublicAdSubmissionDialog: React.FC<PublicAdSubmissionDialogProps> =
                           step="0.01"
                           placeholder="100.00"
                           className="h-11 text-base"
-                          {...field}
-                          onChange={(e) => field.onChange(Number(e.target.value))}
+                        {...field}
+                        value={field.value ?? ''}
+                        onChange={(e) => {
+                          const v = e.target.value;
+                          field.onChange(v === '' ? undefined : Number(v));
+                        }}
                         />
                       </FormControl>
                       <FormMessage />
@@ -334,8 +344,12 @@ export const PublicAdSubmissionDialog: React.FC<PublicAdSubmissionDialogProps> =
                           step="0.01"
                           placeholder="75.00"
                           className="h-11 text-base"
-                          {...field}
-                          onChange={(e) => field.onChange(Number(e.target.value))}
+                        {...field}
+                        value={field.value ?? ''}
+                        onChange={(e) => {
+                          const v = e.target.value;
+                          field.onChange(v === '' ? undefined : Number(v));
+                        }}
                         />
                       </FormControl>
                       <FormMessage />
@@ -364,26 +378,49 @@ export const PublicAdSubmissionDialog: React.FC<PublicAdSubmissionDialogProps> =
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="valid_until"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-base">Valid Until (Optional)</FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="date" 
-                        className="h-11 text-base"
-                        {...field} 
-                      />
-                    </FormControl>
-                    <FormDescription className="text-sm">
-                      Leave empty for ongoing deals
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="valid_from"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-base">Start Date</FormLabel>
+                      <FormControl>
+                        <Input 
+                          type="date" 
+                          className="h-11 text-base"
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormDescription className="text-sm">
+                        When should this deal start?
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="valid_until"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-base">End Date (Optional)</FormLabel>
+                      <FormControl>
+                        <Input 
+                          type="date" 
+                          className="h-11 text-base"
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormDescription className="text-sm">
+                        Leave empty for ongoing deals
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
               <FormField
                 control={form.control}
