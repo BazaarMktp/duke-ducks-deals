@@ -107,6 +107,31 @@ export default function DevilsDeals() {
     },
   });
 
+  const approveDealMutation = useMutation({
+    mutationFn: async (dealId: string) => {
+      const { error } = await supabase
+        .from('deals')
+        .update({ is_active: true })
+        .eq('id', dealId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast({ title: 'Approved', description: 'Deal approved and published.' });
+      refetch();
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to approve deal',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  const handleApproveDeal = (dealId: string) => {
+    approveDealMutation.mutate(dealId);
+  };
+
   const handleEditDeal = (deal: Deal) => {
     setEditingDeal(deal);
     setIsEditDialogOpen(true);
@@ -176,6 +201,7 @@ export default function DevilsDeals() {
                 isAdmin={isAdmin}
                 onEdit={isAdmin ? handleEditDeal : undefined}
                 onDelete={isAdmin ? handleDeleteDeal : undefined}
+                onApprove={isAdmin ? handleApproveDeal : undefined}
               />
             ))}
           </div>

@@ -28,6 +28,7 @@ interface DealCardProps {
   isAdmin?: boolean;
   onEdit?: (deal: Deal) => void;
   onDelete?: (dealId: string) => void;
+  onApprove?: (dealId: string) => void;
 }
 
 export const DealCard: React.FC<DealCardProps> = ({ 
@@ -35,7 +36,8 @@ export const DealCard: React.FC<DealCardProps> = ({
   isAuthenticated, 
   isAdmin = false,
   onEdit,
-  onDelete 
+  onDelete,
+  onApprove,
 }) => {
   const isPendingApproval = !deal.is_active;
   const navigate = useNavigate();
@@ -230,32 +232,48 @@ export const DealCard: React.FC<DealCardProps> = ({
             {isAuthenticated ? "View Details" : "Login to View Details"}
           </Button>
           
-          {isAdmin && onEdit && (
-            <Button
-              onClick={(e) => {
-                e.stopPropagation();
-                onEdit(deal);
-              }}
-              variant="outline"
-              size="icon"
-              className="shrink-0"
-            >
-              <Edit className="w-4 h-4" />
-            </Button>
-          )}
-          
-          {isAdmin && onDelete && (
-            <Button
-              onClick={(e) => {
-                e.stopPropagation();
-                onDelete(deal.id);
-              }}
-              variant="outline"
-              size="icon"
-              className="shrink-0 text-destructive hover:text-destructive"
-            >
-              <Trash2 className="w-4 h-4" />
-            </Button>
+          {isAdmin && (
+            <>
+              {isPendingApproval && onApprove && (
+                <Button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onApprove(deal.id);
+                  }}
+                  className="shrink-0"
+                >
+                  Approve
+                </Button>
+              )}
+
+              {onEdit && (
+                <Button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onEdit(deal);
+                  }}
+                  variant="outline"
+                  size="icon"
+                  className="shrink-0"
+                >
+                  <Edit className="w-4 h-4" />
+                </Button>
+              )}
+              
+              {onDelete && (
+                <Button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDelete(deal.id);
+                  }}
+                  variant="outline"
+                  size="icon"
+                  className="shrink-0 text-destructive hover:text-destructive"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              )}
+            </>
           )}
         </div>
       </CardFooter>
