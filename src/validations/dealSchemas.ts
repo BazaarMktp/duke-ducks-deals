@@ -4,14 +4,15 @@ import { z } from 'zod';
  * Shared validation schemas for Devil's Deals
  */
 
-// Helper to normalize URLs - adds https:// if missing
+// Helper to normalize URLs - adds https:// if missing (but skip data URLs)
 const normalizeUrl = (url: string): string => {
   if (!url) return url;
   const trimmed = url.trim();
-  if (trimmed && !trimmed.match(/^https?:\/\//i)) {
-    return `https://${trimmed}`;
+  // Don't modify data URLs or URLs that already have a protocol
+  if (trimmed.startsWith('data:') || trimmed.match(/^https?:\/\//i)) {
+    return trimmed;
   }
-  return trimmed;
+  return `https://${trimmed}`;
 };
 
 export const dealSchema = z.object({
@@ -37,7 +38,12 @@ export const businessAdSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   description: z.string().min(10, 'Description must be at least 10 characters'),
   ad_type: z.enum(['banner', 'sidebar', 'featured']),
-  image_url: z.string().min(1, 'Image is required').transform(normalizeUrl).pipe(z.string().url('Must be a valid image URL')),
+  image_url: z.string().min(1, 'Image is required').transform(normalizeUrl).pipe(
+    z.string().refine(
+      (val) => val.startsWith('data:') || val.match(/^https?:\/\//i),
+      'Must be a valid image URL or data URI'
+    )
+  ),
   link_url: z.string().transform(normalizeUrl).pipe(z.string().url('Must be a valid URL')),
   starts_at: z.string().optional(),
   ends_at: z.string().optional(),

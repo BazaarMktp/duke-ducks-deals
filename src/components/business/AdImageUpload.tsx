@@ -25,20 +25,20 @@ export const AdImageUpload: React.FC<AdImageUploadProps> = ({
       // Compress image before uploading
       const compressedBlob = await compressImage(file, 0.85, 1920, 1080);
       
-      const fileExt = 'jpg';
+      const fileExt = file.name.split('.').pop() || 'jpg';
       const fileName = `business-ads/${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
 
       const { data, error } = await supabase.storage
         .from('listing-images')
         .upload(fileName, compressedBlob, {
-          contentType: 'image/jpeg',
+          contentType: file.type || 'image/jpeg',
           cacheControl: '31536000',
           upsert: false
         });
 
       if (error) {
         console.error('Upload error:', error);
-        return null;
+        throw new Error(error.message);
       }
 
       const { data: { publicUrl } } = supabase.storage
@@ -48,7 +48,7 @@ export const AdImageUpload: React.FC<AdImageUploadProps> = ({
       return publicUrl;
     } catch (error) {
       console.error('Image processing error:', error);
-      return null;
+      throw error;
     }
   };
 
@@ -80,18 +80,17 @@ export const AdImageUpload: React.FC<AdImageUploadProps> = ({
       description: 'Compressing and uploading your image...',
     });
 
-    const url = await uploadImage(file);
-    
-    if (url) {
+    try {
+      const url = await uploadImage(file);
       onImageChange(url);
       toast({
         title: 'Success',
         description: 'Image uploaded successfully!',
       });
-    } else {
+    } catch (error: any) {
       toast({
         title: 'Upload failed',
-        description: 'Failed to upload image. Please try again.',
+        description: error.message || 'Failed to upload image. Please try again.',
         variant: 'destructive',
       });
     }
