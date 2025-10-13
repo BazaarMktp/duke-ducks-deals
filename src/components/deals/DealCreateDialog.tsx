@@ -14,6 +14,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -24,6 +25,16 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 
+// Helper to normalize URLs - adds https:// if missing
+const normalizeUrl = (url: string): string => {
+  if (!url) return url;
+  const trimmed = url.trim();
+  if (trimmed && !trimmed.match(/^https?:\/\//i)) {
+    return `https://${trimmed}`;
+  }
+  return trimmed;
+};
+
 const dealSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   description: z.string().min(1, 'Description is required'),
@@ -31,10 +42,10 @@ const dealSchema = z.object({
   discount_percentage: z.number().min(0).max(100).optional(),
   original_price: z.number().min(0).optional(),
   discounted_price: z.number().min(0).optional(),
-  business_website: z.string().url().optional().or(z.literal('')),
+  business_website: z.string().optional().or(z.literal('')).transform(normalizeUrl).pipe(z.string().url().optional().or(z.literal(''))),
   business_phone: z.string().optional(),
   business_email: z.string().email().optional().or(z.literal('')),
-  image_url: z.string().url().optional().or(z.literal('')),
+  image_url: z.string().optional().or(z.literal('')).transform(normalizeUrl).pipe(z.string().url().optional().or(z.literal(''))),
   terms_and_conditions: z.string().optional(),
   valid_until: z.string().optional(),
 });
@@ -279,8 +290,11 @@ export const DealCreateDialog: React.FC<DealCreateDialogProps> = ({
                   <FormItem>
                     <FormLabel>Website</FormLabel>
                     <FormControl>
-                      <Input placeholder="https://business.com" {...field} />
+                      <Input placeholder="business.com" {...field} />
                     </FormControl>
+                    <FormDescription className="text-xs">
+                      You can enter with or without https://
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}

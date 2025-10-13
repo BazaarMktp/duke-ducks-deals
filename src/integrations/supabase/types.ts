@@ -1657,6 +1657,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: number
       }
+      business_has_approved_ads: {
+        Args: { business_id_param: string }
+        Returns: boolean
+      }
       calculate_engagement_score: {
         Args:
           | {

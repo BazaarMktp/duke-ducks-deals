@@ -202,8 +202,11 @@ export const PublicAdSubmissionDialog: React.FC<PublicAdSubmissionDialogProps> =
                   <FormItem>
                     <FormLabel>Business Website</FormLabel>
                     <FormControl>
-                      <Input placeholder="https://yourbusiness.com" {...field} />
+                      <Input placeholder="yourbusiness.com" {...field} />
                     </FormControl>
+                    <FormDescription className="text-xs">
+                      You can enter with or without https://
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -296,10 +299,10 @@ export const PublicAdSubmissionDialog: React.FC<PublicAdSubmissionDialogProps> =
                   <FormItem>
                     <FormLabel>Destination URL *</FormLabel>
                     <FormControl>
-                      <Input placeholder="https://yourbusiness.com/special-offer" {...field} />
+                      <Input placeholder="yourbusiness.com/special-offer" {...field} />
                     </FormControl>
                     <FormDescription>
-                      Where should users go when they click your ad?
+                      Where should users go when they click your ad? (You can enter with or without https://)
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
