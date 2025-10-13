@@ -37,6 +37,7 @@ export const DealCard: React.FC<DealCardProps> = ({
   onEdit,
   onDelete 
 }) => {
+  const isPendingApproval = !deal.is_active;
   const navigate = useNavigate();
   const { trackDealClick, trackDealView } = useDealMetrics();
   const [timeLeft, setTimeLeft] = useState<string>('');
@@ -157,7 +158,12 @@ export const DealCard: React.FC<DealCardProps> = ({
             <h3 className="font-semibold text-lg line-clamp-2 group-hover:text-primary transition-colors">
               {deal.title}
             </h3>
-            <div className="flex gap-1 shrink-0">
+            <div className="flex gap-1 shrink-0 flex-wrap">
+              {isPendingApproval && isAdmin && (
+                <Badge variant="outline" className="bg-yellow-100 text-yellow-800 border-yellow-300">
+                  Pending Approval
+                </Badge>
+              )}
               {deal.discount_percentage && (
                 <Badge variant="destructive">
                   {deal.discount_percentage}% OFF

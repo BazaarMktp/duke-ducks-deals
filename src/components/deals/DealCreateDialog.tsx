@@ -103,6 +103,7 @@ export const DealCreateDialog: React.FC<DealCreateDialogProps> = ({
         terms_and_conditions: data.terms_and_conditions || null,
         created_by: user!.id,
         valid_until: data.valid_until ? new Date(data.valid_until).toISOString() : null,
+        is_active: false, // Deals require admin approval before going live
       };
 
       console.log('Prepared deal data:', dealData);
@@ -118,7 +119,7 @@ export const DealCreateDialog: React.FC<DealCreateDialogProps> = ({
     onSuccess: () => {
       toast({
         title: 'Success',
-        description: 'Deal created successfully!',
+        description: 'Deal submitted for admin approval!',
       });
       form.reset();
       onSuccess();
