@@ -1,13 +1,20 @@
 import { Star } from "lucide-react";
+import { Stats } from "../../types";
+import { formatUserCount } from "@/utils/numberFormatting";
 
-export const TestimonialsSection = () => {
+interface TestimonialsSectionProps {
+  stats?: Stats;
+}
+
+export const TestimonialsSection = ({ stats }: TestimonialsSectionProps) => {
+  const userCount = stats ? formatUserCount(stats.totalUsers) : "150+";
   return (
     <section className="py-16 bg-gradient-to-br from-blue-50 to-blue-100/50">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto bg-white border-2 border-gray-200 rounded-2xl p-8 md:p-12 shadow-lg">
           <div className="text-center">
             <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-12">
-              Join 150+ students already saving
+              Join {userCount} students already saving
             </h2>
             
             <blockquote className="text-lg text-muted-foreground mb-6">

@@ -53,7 +53,7 @@ export const SimpleMarketingPage = ({ stats }: SimpleMarketingPageProps) => {
 
   return (
     <div className="min-h-screen bg-white">
-      <HeroSection />
+      <HeroSection stats={stats} />
       <AnimatedSection direction="up" delay={0.1}>
         <HowItWorksSection />
       </AnimatedSection>
@@ -64,7 +64,7 @@ export const SimpleMarketingPage = ({ stats }: SimpleMarketingPageProps) => {
         <FeaturesSection />
       </AnimatedSection>
       <AnimatedSection direction="right" delay={0.2}>
-        <TestimonialsSection />
+        <TestimonialsSection stats={stats} />
       </AnimatedSection>
       <AnimatedSection direction="up" delay={0.1}>
         <CTASection />

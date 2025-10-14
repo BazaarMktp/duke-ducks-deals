@@ -1,5 +1,6 @@
 
 import { Stats } from "../types";
+import { formatUserCount } from "@/utils/numberFormatting";
 
 interface StatsSectionProps {
   stats: Stats;
@@ -7,7 +8,7 @@ interface StatsSectionProps {
 
 export const StatsSection = ({ stats }: StatsSectionProps) => {
   const statsDisplay = [
-    { label: "Students", value: stats.totalUsers.toString() },
+    { label: "Students", value: formatUserCount(stats.totalUsers) },
     { label: "Active Listings", value: stats.activeListings.toString() },
   ];
 

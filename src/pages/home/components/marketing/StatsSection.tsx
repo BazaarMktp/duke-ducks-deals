@@ -1,6 +1,7 @@
 
 import { ShoppingCart, Users } from "lucide-react";
 import { Stats } from "../../types";
+import { formatUserCount } from "@/utils/numberFormatting";
 
 interface StatsSectionProps {
   stats: Stats;
@@ -8,7 +9,7 @@ interface StatsSectionProps {
 
 export const StatsSection = ({ stats }: StatsSectionProps) => {
   const statsDisplay = [
-    { label: "Students", value: stats.totalUsers.toString(), icon: Users },
+    { label: "Students", value: formatUserCount(stats.totalUsers), icon: Users },
     { label: "Active Listings", value: stats.activeListings.toString(), icon: ShoppingCart },
   ];
 

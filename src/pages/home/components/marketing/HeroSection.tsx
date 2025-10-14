@@ -1,43 +1,51 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
+import { Stats } from "../../types";
+import { formatUserCount } from "@/utils/numberFormatting";
 
-const floatingCards = [
-  {
-    text: "Saved $500 on textbooks this semester!",
-    author: "Sarah M.",
-    position: "top-20 left-10",
-    rotation: "-rotate-3"
-  },
-  {
-    text: "Coffee Machine",
-    price: "$45",
-    image: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixlib=rb-4.1.0&q=80&w=300",
-    position: "top-32 right-16",
-    rotation: "rotate-2"
-  },
-  {
-    text: "Dorm Essentials",
-    price: "$25",
-    image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixlib=rb-4.1.0&q=80&w=300",
-    position: "top-40 left-32",
-    rotation: "rotate-1"
-  },
-  {
-    text: "150+",
-    subtitle: "Happy Students",
-    position: "bottom-40 left-8",
-    rotation: "rotate-1"
-  },
-  {
-    text: "Everything I need for campus life in one place",
-    author: "Alex K.",
-    position: "bottom-20 right-12",
-    rotation: "-rotate-2"
-  }
-];
+interface HeroSectionProps {
+  stats?: Stats;
+}
 
-export const HeroSection = () => {
+export const HeroSection = ({ stats }: HeroSectionProps) => {
+  const userCount = stats ? formatUserCount(stats.totalUsers) : "150+";
+  
+  const floatingCards = [
+    {
+      text: "Saved $500 on textbooks this semester!",
+      author: "Sarah M.",
+      position: "top-20 left-10",
+      rotation: "-rotate-3"
+    },
+    {
+      text: "Coffee Machine",
+      price: "$45",
+      image: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixlib=rb-4.1.0&q=80&w=300",
+      position: "top-32 right-16",
+      rotation: "rotate-2"
+    },
+    {
+      text: "Dorm Essentials",
+      price: "$25",
+      image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixlib=rb-4.1.0&q=80&w=300",
+      position: "top-40 left-32",
+      rotation: "rotate-1"
+    },
+    {
+      text: userCount,
+      subtitle: "Happy Students",
+      position: "bottom-40 left-8",
+      rotation: "rotate-1"
+    },
+    {
+      text: "Everything I need for campus life in one place",
+      author: "Alex K.",
+      position: "bottom-20 right-12",
+      rotation: "-rotate-2"
+    }
+  ];
+
   return (
     <section className="relative bg-gradient-to-br from-amber-50/30 via-white to-orange-50/20 min-h-screen flex items-center justify-center overflow-hidden">
       {/* Floating Cards */}
@@ -117,7 +125,7 @@ export const HeroSection = () => {
           </div>
           <div className="flex items-center space-x-2">
             <span className="text-blue-500">👥</span>
-            <span>150+ Students</span>
+            <span>{userCount} Students</span>
           </div>
           <div className="flex items-center space-x-2">
             <span className="text-green-500">🚚</span>
