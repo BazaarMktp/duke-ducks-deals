@@ -1,14 +1,14 @@
 
-import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Plus, Search } from "lucide-react";
 
 interface MarketplaceHeaderProps {
   user: any;
   activeListingType: 'offer' | 'wanted';
+  onCreateListing?: () => void;
 }
 
-const MarketplaceHeader = ({ user, activeListingType }: MarketplaceHeaderProps) => {
+const MarketplaceHeader = ({ user, activeListingType, onCreateListing }: MarketplaceHeaderProps) => {
   return (
     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
       <div>
@@ -23,22 +23,23 @@ const MarketplaceHeader = ({ user, activeListingType }: MarketplaceHeaderProps) 
         </p>
       </div>
       
-      {user && (
-        <Link to="/create-listing">
-          <Button className="flex items-center gap-2">
-            {activeListingType === 'offer' ? (
-              <>
-                <Plus size={16} />
-                Create Listing
-              </>
-            ) : (
-              <>
-                <Search size={16} />
-                Create Request
-              </>
-            )}
-          </Button>
-        </Link>
+      {user && onCreateListing && (
+        <Button 
+          className="flex items-center gap-2"
+          onClick={onCreateListing}
+        >
+          {activeListingType === 'offer' ? (
+            <>
+              <Plus size={16} />
+              Create Listing
+            </>
+          ) : (
+            <>
+              <Search size={16} />
+              Create Request
+            </>
+          )}
+        </Button>
       )}
     </div>
   );

@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import PostingForm from "@/components/PostingForm";
+import { UnifiedListingCreation } from "@/components/listings/UnifiedListingCreation";
 import ServicesHeader from "@/components/services/ServicesHeader";
 import ServicesSearch from "@/components/services/ServicesSearch";
 import ServicesCategories from "@/components/services/ServicesCategories";
@@ -65,14 +65,14 @@ const Services = () => {
       />
 
       {showPostingForm && (
-        <PostingForm
+        <UnifiedListingCreation
           category="services"
+          listingType={activeListingType}
           onClose={() => setShowPostingForm(false)}
           onSuccess={() => {
             fetchServiceListings();
             setShowPostingForm(false);
           }}
-          listingType={activeListingType}
         />
       )}
     </div>

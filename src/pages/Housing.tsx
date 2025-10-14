@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import ListingTypeToggle from "@/components/services/ListingTypeToggle";
+import { UnifiedListingCreation } from "@/components/listings/UnifiedListingCreation";
 
 // Define valid housing types
 type HousingType = "sublease" | "for_rent" | "roommate_wanted";
@@ -23,6 +24,7 @@ const Housing = () => {
   const [housingTypeFilter, setHousingTypeFilter] = useState<"all" | HousingType>("all");
   const [favorites, setFavorites] = useState([]);
   const [activeListingType, setActiveListingType] = useState<'offer' | 'wanted'>('offer');
+  const [showPostingForm, setShowPostingForm] = useState(false);
 
   useEffect(() => {
     fetchListings();
@@ -132,21 +134,22 @@ const Housing = () => {
         </div>
         
         {user && (
-          <Link to="/create-listing">
-            <Button className="flex items-center gap-2">
-              {activeListingType === 'offer' ? (
-                <>
-                  <Plus size={16} />
-                  Post Housing
-                </>
-              ) : (
-                <>
-                  <Search size={16} />
-                  Create Request
-                </>
-              )}
-            </Button>
-          </Link>
+          <Button 
+            className="flex items-center gap-2"
+            onClick={() => setShowPostingForm(true)}
+          >
+            {activeListingType === 'offer' ? (
+              <>
+                <Plus size={16} />
+                Post Housing
+              </>
+            ) : (
+              <>
+                <Search size={16} />
+                Create Request
+              </>
+            )}
+          </Button>
         )}
       </div>
 
@@ -306,6 +309,18 @@ const Housing = () => {
             );
           })}
         </div>
+      )}
+
+      {showPostingForm && (
+        <UnifiedListingCreation
+          category="housing"
+          listingType={activeListingType}
+          onClose={() => setShowPostingForm(false)}
+          onSuccess={() => {
+            fetchListings();
+            setShowPostingForm(false);
+          }}
+        />
       )}
     </div>
   );

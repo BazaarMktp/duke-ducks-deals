@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import ImageUpload from "@/components/ImageUpload";
 import TransactionMethods from "./TransactionMethods";
 import HelpText from "./HelpText";
+import { ListingOptimizer } from "@/components/ai/ListingOptimizer";
 import { getTitlePlaceholder, getDescriptionPlaceholder, getLocationPlaceholder } from "./utils/placeholderText";
 
 interface PostingFormFieldsProps {
@@ -69,6 +70,15 @@ const PostingFormFields: React.FC<PostingFormFieldsProps> = ({
           </p>
         )}
       </div>
+
+      {/* AI Optimization - Optional Suggestions */}
+      <ListingOptimizer
+        title={formData.title}
+        description={formData.description}
+        category={category}
+        onTitleSuggestion={(newTitle) => onInputChange("title", newTitle)}
+        onDescriptionSuggestion={(newDesc) => onInputChange("description", newDesc)}
+      />
 
       <div>
         <Label className="text-base font-medium">Images *</Label>

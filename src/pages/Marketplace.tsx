@@ -6,6 +6,7 @@ import { useMarketplace } from "@/hooks/useMarketplace";
 import MarketplaceHeader from "@/components/marketplace/MarketplaceHeader";
 import MarketplaceFilters from "@/components/marketplace/MarketplaceFilters";
 import MarketplaceGrid from "@/components/marketplace/MarketplaceGrid";
+import { UnifiedListingCreation } from "@/components/listings/UnifiedListingCreation";
 import { Helmet } from "react-helmet-async";
 
 const Marketplace = () => {
@@ -13,6 +14,7 @@ const Marketplace = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("newest");
   const [activeListingType, setActiveListingType] = useState<'offer' | 'wanted'>('offer');
+  const [showPostingForm, setShowPostingForm] = useState(false);
 
   const { listings, loading, favorites, toggleFavorite } = useMarketplace(
     user,
@@ -29,7 +31,11 @@ const Marketplace = () => {
           <link rel="canonical" href="https://bazaar.lovable.app/marketplace" />
         </Helmet>
         <h1 className="sr-only">Bazaar Marketplace - Buy and Sell on Campus</h1>
-        <MarketplaceHeader user={user} activeListingType={activeListingType} />
+        <MarketplaceHeader 
+          user={user} 
+          activeListingType={activeListingType}
+          onCreateListing={() => setShowPostingForm(true)}
+        />
 
       <ListingTypeToggle 
         activeType={activeListingType}
@@ -54,6 +60,18 @@ const Marketplace = () => {
         onToggleFavorite={toggleFavorite}
         activeListingType={activeListingType}
       />
+
+      {showPostingForm && (
+        <UnifiedListingCreation
+          category="marketplace"
+          listingType={activeListingType}
+          onClose={() => setShowPostingForm(false)}
+          onSuccess={() => {
+            setShowPostingForm(false);
+            // The listings will auto-refresh due to the query dependency
+          }}
+        />
+      )}
     </div>
   );
 };
