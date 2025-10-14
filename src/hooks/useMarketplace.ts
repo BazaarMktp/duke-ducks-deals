@@ -142,6 +142,27 @@ export const useMarketplace = (user: any, searchQuery: string, sortBy: string, a
 
   useEffect(() => {
     fetchListings();
+
+    // Subscribe to real-time changes in listings table
+    const channel = supabase
+      .channel('marketplace-listings-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'listings',
+          filter: `category=eq.marketplace`,
+        },
+        () => {
+          fetchListings();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [fetchListings]);
   
   useEffect(() => {
