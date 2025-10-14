@@ -145,7 +145,7 @@ Check it out: ${listingUrl}`;
                   setSelectedPlatforms(prev => ({ ...prev, dukeList: checked as boolean }))
                 }
               />
-              <Label htmlFor="dukeList" className="flex-1">Duke List (Email)</Label>
+              <Label htmlFor="dukeList" className="flex-1">Duke Email</Label>
               <Button
                 size="sm"
                 variant="outline"
