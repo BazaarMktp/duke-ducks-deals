@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -6,11 +6,12 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
-import { Sparkles, MapPin, ArrowRight, ArrowLeft, Loader2 } from "lucide-react";
+import { Sparkles, MapPin, ArrowRight, ArrowLeft, Loader2, Save } from "lucide-react";
 import { toast } from "sonner";
 import ImageUpload from "@/components/ImageUpload";
 import { CrossPostDialog } from "@/components/listings/CrossPostDialog";
 import { useLocationService } from "@/hooks/useLocationService";
+import { useListingPreferences } from "@/hooks/useListingPreferences";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -45,9 +46,24 @@ export const AIListingWorkflow: React.FC<AIListingWorkflowProps> = ({
   const [showCrossPost, setShowCrossPost] = useState(false);
   const [createdListingId, setCreatedListingId] = useState<string>('');
   const [loading, setLoading] = useState(false);
+  const [saveAsDefault, setSaveAsDefault] = useState(false);
   
   const { user } = useAuth();
   const { requestLocation, getLocationSuggestions, loading: locationLoading } = useLocationService();
+  const { preferences, loading: preferencesLoading, savePreferences } = useListingPreferences();
+
+  // Load saved preferences when component mounts
+  useEffect(() => {
+    if (!preferencesLoading && preferences) {
+      setFormData(prev => ({
+        ...prev,
+        allowPickup: preferences.default_allow_pickup,
+        allowMeetOnCampus: preferences.default_allow_meet_on_campus,
+        allowDropOff: preferences.default_allow_drop_off,
+        location: preferences.default_location || ""
+      }));
+    }
+  }, [preferences, preferencesLoading]);
 
   const totalSteps = 4;
   const progress = (step / totalSteps) * 100;
@@ -138,6 +154,16 @@ export const AIListingWorkflow: React.FC<AIListingWorkflowProps> = ({
         .single();
 
       if (error) throw error;
+
+      // Save preferences if user checked "Save as default"
+      if (saveAsDefault) {
+        await savePreferences({
+          default_allow_pickup: formData.allowPickup,
+          default_allow_meet_on_campus: formData.allowMeetOnCampus,
+          default_allow_drop_off: formData.allowDropOff,
+          default_location: formData.location
+        });
+      }
 
       setCreatedListingId(newListing.id);
       toast.success('Listing created successfully!');
@@ -360,6 +386,21 @@ export const AIListingWorkflow: React.FC<AIListingWorkflowProps> = ({
                   }
                 />
                 <Label htmlFor="openToNegotiation">Open to negotiation</Label>
+              </div>
+
+              <div className="flex items-center space-x-2 bg-muted/50 p-3 rounded-lg">
+                <Checkbox 
+                  id="save-default-ai" 
+                  checked={saveAsDefault}
+                  onCheckedChange={(checked) => setSaveAsDefault(checked as boolean)}
+                />
+                <Label 
+                  htmlFor="save-default-ai" 
+                  className="text-sm font-normal cursor-pointer flex items-center gap-2"
+                >
+                  <Save className="h-3.5 w-3.5" />
+                  Save these settings as my defaults
+                </Label>
               </div>
 
               <div className="flex gap-2">

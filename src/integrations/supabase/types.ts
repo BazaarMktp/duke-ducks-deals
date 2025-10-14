@@ -821,6 +821,42 @@ export type Database = {
         }
         Relationships: []
       }
+      listing_preferences: {
+        Row: {
+          created_at: string
+          default_allow_drop_off: boolean
+          default_allow_meet_on_campus: boolean
+          default_allow_pickup: boolean
+          default_location: string | null
+          default_open_to_negotiation: boolean
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          default_allow_drop_off?: boolean
+          default_allow_meet_on_campus?: boolean
+          default_allow_pickup?: boolean
+          default_location?: string | null
+          default_open_to_negotiation?: boolean
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          default_allow_drop_off?: boolean
+          default_allow_meet_on_campus?: boolean
+          default_allow_pickup?: boolean
+          default_location?: string | null
+          default_open_to_negotiation?: boolean
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       listing_recommendations: {
         Row: {
           clicked: boolean | null

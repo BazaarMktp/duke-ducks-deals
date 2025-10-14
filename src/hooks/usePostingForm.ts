@@ -1,8 +1,9 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { useListingPreferences } from "./useListingPreferences";
 
 interface PostingFormData {
   title: string;
@@ -36,8 +37,23 @@ export const usePostingForm = ({ category, listingType, onSuccess, onClose }: Us
     allowDropOff: false,
   });
   const [loading, setLoading] = useState(false);
+  const [saveAsDefault, setSaveAsDefault] = useState(false);
   const { user } = useAuth();
   const { toast } = useToast();
+  const { preferences, loading: preferencesLoading, savePreferences } = useListingPreferences();
+
+  // Load saved preferences when component mounts
+  useEffect(() => {
+    if (!preferencesLoading && preferences) {
+      setFormData(prev => ({
+        ...prev,
+        allowPickup: preferences.default_allow_pickup,
+        allowMeetOnCampus: preferences.default_allow_meet_on_campus,
+        allowDropOff: preferences.default_allow_drop_off,
+        location: preferences.default_location || ""
+      }));
+    }
+  }, [preferences, preferencesLoading]);
 
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -151,6 +167,16 @@ export const usePostingForm = ({ category, listingType, onSuccess, onClose }: Us
 
       if (error) throw error;
 
+      // Save preferences if user checked "Save as default"
+      if (saveAsDefault) {
+        await savePreferences({
+          default_allow_pickup: formData.allowPickup,
+          default_allow_meet_on_campus: formData.allowMeetOnCampus,
+          default_allow_drop_off: formData.allowDropOff,
+          default_location: formData.location
+        });
+      }
+
       const actionText = listingType === 'wanted' ? 'request' : 'listing';
       toast({
         title: "Success!",
@@ -188,6 +214,8 @@ export const usePostingForm = ({ category, listingType, onSuccess, onClose }: Us
   return {
     formData,
     loading,
+    saveAsDefault,
+    setSaveAsDefault,
     handleInputChange,
     handleImagesChange,
     handleSubmit,

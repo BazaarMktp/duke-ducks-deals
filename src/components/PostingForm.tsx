@@ -21,6 +21,8 @@ const PostingForm: React.FC<PostingFormProps> = ({
   const {
     formData,
     loading,
+    saveAsDefault,
+    setSaveAsDefault,
     handleInputChange,
     handleImagesChange,
     handleSubmit,
@@ -46,6 +48,8 @@ const PostingForm: React.FC<PostingFormProps> = ({
               loading={loading}
               listingType={listingType}
               onClose={onClose}
+              saveAsDefault={saveAsDefault}
+              onSaveAsDefaultChange={setSaveAsDefault}
             />
           </form>
         </CardContent>
