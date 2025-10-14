@@ -38,7 +38,7 @@ export const CrossPostDialog = ({
 
   const shareMessage = `🎯 ${listingTitle}
 💰 $${listingPrice}
-📱 Posted by ${userName} on Duke Ducks Deals
+📱 Posted by ${userName} on Bazaar Marketplace
 
 Check it out: ${listingUrl}`;
 
@@ -51,10 +51,15 @@ Check it out: ${listingUrl}`;
 
   const handleShare = (platform: string) => {
     const encodedMessage = encodeURIComponent(shareMessage);
+    
+    // For Duke List email, create a properly formatted email URL
+    const emailSubject = encodeURIComponent(`${listingTitle} - $${listingPrice}`);
+    const emailBody = encodeURIComponent(shareMessage);
+    
     const urls = {
       whatsapp: `https://wa.me/?text=${encodedMessage}`,
       facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(listingUrl)}&quote=${encodedMessage}`,
-      dukeList: `mailto:?subject=${encodeURIComponent(listingTitle)}&body=${encodedMessage}`
+      dukeList: `mailto:?subject=${emailSubject}&body=${emailBody}`
     };
 
     window.open(urls[platform as keyof typeof urls], '_blank');
@@ -152,7 +157,7 @@ Check it out: ${listingUrl}`;
           </div>
 
           <p className="text-xs text-muted-foreground text-center">
-            Your listing will always show "Posted by {userName} on Duke Ducks Deals"
+            Your listing will always show "Posted by {userName} on Bazaar Marketplace"
           </p>
         </div>
       </DialogContent>
