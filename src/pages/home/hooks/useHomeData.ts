@@ -9,9 +9,9 @@ const fetchStats = async (): Promise<Stats> => {
       .select('*', { count: 'exact', head: true })
       .eq('status', 'active');
 
-    const { count: usersCount } = await supabase
-      .from('profiles')
-      .select('*', { count: 'exact', head: true });
+    // Use the RPC function to get user count (accessible even when not logged in)
+    const { data: usersCount } = await supabase
+      .rpc('get_total_users_count');
 
     const { data: donationsCount } = await supabase
       .rpc('get_donations_count');

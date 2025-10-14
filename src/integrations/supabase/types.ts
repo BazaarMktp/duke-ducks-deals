@@ -1769,6 +1769,10 @@ export type Database = {
           profile_name: string
         }[]
       }
+      get_total_users_count: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
       get_unread_message_count: {
         Args: { _user_id: string }
         Returns: number
