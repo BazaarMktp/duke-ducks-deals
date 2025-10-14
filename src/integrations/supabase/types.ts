@@ -1689,6 +1689,10 @@ export type Database = {
         }
         Returns: undefined
       }
+      auto_feature_biweekly: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       auto_feature_desirable_listings: {
         Args: Record<PropertyKey, never>
         Returns: number
