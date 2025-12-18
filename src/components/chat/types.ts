@@ -21,11 +21,26 @@ export interface Message {
   };
 }
 
+export interface ConversationItemReference {
+  id: string;
+  conversation_id: string;
+  listing_id: string;
+  referenced_at: string;
+  is_primary: boolean;
+  listing?: {
+    id: string;
+    title: string;
+    price: number | null;
+    images: string[] | null;
+    status: string;
+  };
+}
+
 export interface Conversation {
   id: string;
   buyer_id: string;
   seller_id: string;
-  listing_id: string;
+  listing_id: string | null;
   archived_by_buyer: boolean;
   archived_by_seller: boolean;
   deleted_by_buyer: boolean;
@@ -33,6 +48,7 @@ export interface Conversation {
   unread_count?: number;
   last_message_preview?: string;
   last_message_at?: string;
+  item_count?: number;
   listings: {
     title: string;
   } | null;
@@ -44,4 +60,5 @@ export interface Conversation {
     profile_name: string;
     avatar_url?: string;
   };
+  item_references?: ConversationItemReference[];
 }

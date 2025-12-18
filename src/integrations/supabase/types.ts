@@ -417,6 +417,45 @@ export type Database = {
         }
         Relationships: []
       }
+      conversation_item_references: {
+        Row: {
+          conversation_id: string
+          id: string
+          is_primary: boolean
+          listing_id: string
+          referenced_at: string
+        }
+        Insert: {
+          conversation_id: string
+          id?: string
+          is_primary?: boolean
+          listing_id: string
+          referenced_at?: string
+        }
+        Update: {
+          conversation_id?: string
+          id?: string
+          is_primary?: boolean
+          listing_id?: string
+          referenced_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversation_item_references_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversation_item_references_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       conversations: {
         Row: {
           archived_by_buyer: boolean | null
