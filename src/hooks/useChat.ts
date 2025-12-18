@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useConversations } from "@/hooks/useConversations";
 import { useMessages } from "@/hooks/useMessages";
@@ -17,13 +17,14 @@ export const useChat = (initialConversationId?: string) => {
     archiveConversation,
     deleteConversation,
     toggleShowArchived,
-    setConversations
+    setConversations,
+    moveConversationToTop
   } = useConversations();
 
   const {
     messages,
     sendingMessage,
-    sendMessage,
+    sendMessage: originalSendMessage,
     updateMessageLikes
   } = useMessages(selectedConversation);
 
@@ -49,6 +50,16 @@ export const useChat = (initialConversationId?: string) => {
   const handleSelectConversation = (convId: string | null) => {
     setSelectedConversation(convId);
   };
+
+  // Wrap sendMessage to also move conversation to top
+  const sendMessage = useCallback(async (message: string, attachments?: any[]) => {
+    await originalSendMessage(message, attachments);
+    
+    // Move the current conversation to the top after sending
+    if (selectedConversation) {
+      moveConversationToTop(selectedConversation, message.slice(0, 50));
+    }
+  }, [originalSendMessage, selectedConversation, moveConversationToTop]);
 
   const handleArchiveConversation = async (conversationId: string) => {
     await archiveConversation(conversationId);
