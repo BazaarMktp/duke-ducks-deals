@@ -45,22 +45,29 @@ export const useConversations = () => {
 
       if (error) throw error;
       
-      // Fetch unread counts for each conversation
-      const conversationsWithUnread = await Promise.all((data || []).map(async (conv) => {
-        const { data: unreadData } = await supabase
-          .from('messages')
-          .select('id')
-          .eq('conversation_id', conv.id)
-          .neq('sender_id', user.id)
-          .eq('is_read', false);
+      // Fetch unread counts and item counts for each conversation
+      const conversationsWithCounts = await Promise.all((data || []).map(async (conv) => {
+        const [unreadResult, itemCountResult] = await Promise.all([
+          supabase
+            .from('messages')
+            .select('id')
+            .eq('conversation_id', conv.id)
+            .neq('sender_id', user.id)
+            .eq('is_read', false),
+          supabase
+            .from('conversation_item_references')
+            .select('id', { count: 'exact', head: true })
+            .eq('conversation_id', conv.id)
+        ]);
         
         return {
           ...conv,
-          unread_count: unreadData?.length || 0
+          unread_count: unreadResult.data?.length || 0,
+          item_count: itemCountResult.count || 0
         };
       }));
       
-      setConversations(conversationsWithUnread);
+      setConversations(conversationsWithCounts);
     } catch (error) {
       console.error('Error fetching conversations:', error);
       toast({ title: "Error", description: "Could not fetch conversations.", variant: "destructive" });

@@ -4,6 +4,7 @@ import MessageBubble from './MessageBubble';
 import MessageInput from './MessageInput';
 import DateSeparator from './DateSeparator';
 import NewMessageIndicator from './NewMessageIndicator';
+import ConversationItemsPanel from './ConversationItemsPanel';
 import { useLocation } from 'react-router-dom';
 import { shouldShowDateSeparator } from '@/utils/timeUtils';
 import { ArrowLeft, MessageCircle, MoreVertical } from 'lucide-react';
@@ -97,7 +98,6 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
   };
 
   const partner = getPartnerInfo();
-  const listingTitle = conversationData?.listings?.title;
 
   // Find first unread message
   const firstUnreadIndex = messages.findIndex(msg => !msg.is_read && msg.sender_id !== currentUserId);
@@ -112,10 +112,7 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
             </div>
             <h3 className="text-lg font-semibold mb-2">Start the conversation</h3>
             <p className="text-sm text-muted-foreground mb-6">
-              {listingTitle 
-                ? `Send a message about "${listingTitle}"`
-                : "Say hello and start chatting!"
-              }
+              Say hello and start chatting!
             </p>
             <div className="flex flex-wrap gap-2 justify-center">
               <span className="px-3 py-1.5 bg-muted rounded-full text-xs">💬 Be friendly</span>
@@ -196,15 +193,15 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
               
               <div className="flex-1 min-w-0">
                 <h2 className="font-semibold text-base truncate">{partner.name}</h2>
-                {listingTitle && (
-                  <p className="text-xs text-muted-foreground truncate">{listingTitle}</p>
-                )}
               </div>
               
               <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full">
                 <MoreVertical size={20} />
               </Button>
             </div>
+            
+            {/* Items Panel */}
+            <ConversationItemsPanel conversationId={selectedConversation} />
             
             {/* Messages Area */}
             <div 
@@ -244,14 +241,11 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
             
             <div className="flex-1 min-w-0">
               <h2 className="font-semibold truncate">{partner.name}</h2>
-              {listingTitle && (
-                <p className="text-xs text-muted-foreground truncate flex items-center gap-1">
-                  <MessageCircle size={10} />
-                  {listingTitle}
-                </p>
-              )}
             </div>
           </div>
+          
+          {/* Items Panel */}
+          <ConversationItemsPanel conversationId={selectedConversation} />
           
           {/* Messages Area */}
           <div 

@@ -6,7 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Archive, Trash2, MoreHorizontal, MessageCircle } from "lucide-react";
+import { Archive, Trash2, MoreHorizontal, Package } from "lucide-react";
 import { Conversation } from './types';
 import ProfileAvatar from './ProfileAvatar';
 import { formatInstagramTime } from '@/utils/timeUtils';
@@ -36,6 +36,7 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
   
   const partnerName = partnerProfile?.profile_name === 'Admin' ? 'Admin' : (partnerProfile?.profile_name || 'Unknown User');
   const hasUnreadMessages = (conversation.unread_count ?? 0) > 0;
+  const itemCount = conversation.item_count || 0;
   const listingTitle = conversation.listings?.title;
 
   return (
@@ -81,13 +82,18 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
           )}
         </div>
         
-        {/* Listing title */}
-        {listingTitle && (
+        {/* Items badge or listing title */}
+        {itemCount > 1 ? (
           <p className="text-[11px] text-muted-foreground truncate mb-0.5 flex items-center gap-1">
-            <MessageCircle size={10} className="flex-shrink-0" />
+            <Package size={10} className="flex-shrink-0" />
+            <span className="truncate">{itemCount} items discussed</span>
+          </p>
+        ) : listingTitle ? (
+          <p className="text-[11px] text-muted-foreground truncate mb-0.5 flex items-center gap-1">
+            <Package size={10} className="flex-shrink-0" />
             <span className="truncate">{listingTitle}</span>
           </p>
-        )}
+        ) : null}
         
         {/* Last Message Preview */}
         <p className={`text-sm truncate ${
