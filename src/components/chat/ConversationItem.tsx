@@ -35,7 +35,7 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
     : conversation.buyer_profile;
   
   const partnerName = partnerProfile?.profile_name === 'Admin' ? 'Admin' : (partnerProfile?.profile_name || 'Unknown User');
-  const hasUnreadMessages = conversation.unread_count && conversation.unread_count > 0;
+  const hasUnreadMessages = (conversation.unread_count ?? 0) > 0;
   const listingTitle = conversation.listings?.title;
 
   return (
