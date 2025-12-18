@@ -3,17 +3,21 @@ import { Button } from "@/components/ui/button";
 import { Send, ImagePlus, X, Loader2 } from "lucide-react";
 import { useMessageAttachments } from "@/hooks/useMessageAttachments";
 import { Textarea } from "@/components/ui/textarea";
+import QuickReplies from "./QuickReplies";
+import MeetupSpotSelector from "./MeetupSpotSelector";
 
 interface MessageInputProps {
   onSendMessage: (message: string, attachments?: any[]) => void;
   initialMessage?: string;
   disabled?: boolean;
+  showQuickReplies?: boolean;
 }
 
 const MessageInput: React.FC<MessageInputProps> = ({ 
   onSendMessage, 
   initialMessage = '',
-  disabled = false
+  disabled = false,
+  showQuickReplies = true
 }) => {
   const [newMessage, setNewMessage] = useState(initialMessage);
   const [sending, setSending] = useState(false);
@@ -105,11 +109,26 @@ const MessageInput: React.FC<MessageInputProps> = ({
     }
   };
 
+  const handleQuickReply = (message: string) => {
+    setNewMessage(message);
+    textareaRef.current?.focus();
+  };
+
+  const handleMeetupSpot = (message: string) => {
+    setNewMessage(prev => prev ? `${prev} ${message}` : message);
+    textareaRef.current?.focus();
+  };
+
   const isDisabled = disabled || sending || uploading;
   const canSend = (newMessage.trim() || selectedFiles.length > 0) && !isDisabled;
 
   return (
     <div className="space-y-3">
+      {/* Quick Replies - show when message is empty */}
+      {showQuickReplies && !newMessage.trim() && selectedFiles.length === 0 && (
+        <QuickReplies onSelect={handleQuickReply} disabled={isDisabled} />
+      )}
+
       {/* Image Previews */}
       {previewUrls.length > 0 && (
         <div className="flex gap-2 overflow-x-auto pb-1">
@@ -123,6 +142,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
               <button
                 onClick={() => removeFile(idx)}
                 className="absolute -top-1.5 -right-1.5 bg-destructive text-destructive-foreground rounded-full p-0.5 shadow-md hover:bg-destructive/90 transition-colors"
+                aria-label={`Remove image ${idx + 1}`}
               >
                 <X size={14} />
               </button>
@@ -133,6 +153,9 @@ const MessageInput: React.FC<MessageInputProps> = ({
 
       {/* Input Row */}
       <div className="flex items-end gap-2">
+        {/* Meetup Spot Selector */}
+        <MeetupSpotSelector onSelect={handleMeetupSpot} disabled={isDisabled} />
+
         {/* Image upload button */}
         <input
           ref={fileInputRef}
@@ -141,6 +164,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
           multiple
           onChange={handleFileSelect}
           className="hidden"
+          aria-label="Upload images"
         />
         
         <Button
@@ -150,6 +174,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
           onClick={() => fileInputRef.current?.click()}
           disabled={isDisabled || selectedFiles.length >= 3}
           className="h-10 w-10 flex-shrink-0 rounded-full hover:bg-muted"
+          aria-label="Attach images"
         >
           <ImagePlus size={20} className={selectedFiles.length >= 3 ? 'text-muted-foreground' : 'text-muted-foreground'} />
         </Button>
@@ -165,6 +190,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
             disabled={isDisabled}
             rows={1}
             className="min-h-[44px] max-h-[120px] py-3 px-4 rounded-2xl resize-none text-[15px] bg-muted border-0 focus-visible:ring-1 focus-visible:ring-primary/50 placeholder:text-muted-foreground/70"
+            aria-label="Message input"
           />
         </div>
         
@@ -178,11 +204,12 @@ const MessageInput: React.FC<MessageInputProps> = ({
               ? 'bg-primary hover:bg-primary/90 shadow-md hover:shadow-lg' 
               : 'bg-muted text-muted-foreground'
           }`}
+          aria-label="Send message"
         >
           {uploading || sending ? (
             <Loader2 size={18} className="animate-spin" />
           ) : (
-            <Send size={18} className={canSend ? '' : ''} />
+            <Send size={18} />
           )}
         </Button>
       </div>
