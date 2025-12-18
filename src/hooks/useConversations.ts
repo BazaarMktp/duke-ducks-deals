@@ -1,5 +1,5 @@
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
@@ -69,6 +69,66 @@ export const useConversations = () => {
     }
   }, [user, toast]);
 
+  // Move conversation to top when it receives activity
+  const moveConversationToTop = useCallback((conversationId: string, lastMessagePreview?: string) => {
+    setConversations(prev => {
+      const index = prev.findIndex(c => c.id === conversationId);
+      if (index === -1) return prev;
+      
+      const conversation = prev[index];
+      const updated = {
+        ...conversation,
+        last_message_at: new Date().toISOString(),
+        ...(lastMessagePreview && { last_message_preview: lastMessagePreview })
+      };
+      
+      // Remove from current position and add to top
+      const newList = [updated, ...prev.filter(c => c.id !== conversationId)];
+      return newList;
+    });
+  }, []);
+
+  // Subscribe to real-time updates for conversations
+  useEffect(() => {
+    if (!user) return;
+
+    const channel = supabase
+      .channel('conversations-realtime')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'conversations',
+          filter: `buyer_id=eq.${user.id}`
+        },
+        (payload) => {
+          if (payload.eventType === 'UPDATE' && payload.new) {
+            moveConversationToTop(payload.new.id as string, payload.new.last_message_preview as string);
+          }
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'conversations',
+          filter: `seller_id=eq.${user.id}`
+        },
+        (payload) => {
+          if (payload.eventType === 'UPDATE' && payload.new) {
+            moveConversationToTop(payload.new.id as string, payload.new.last_message_preview as string);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user, moveConversationToTop]);
+
   const archiveConversation = async (conversationId: string) => {
     if (!user) return;
     try {
@@ -117,6 +177,7 @@ export const useConversations = () => {
     archiveConversation,
     deleteConversation,
     toggleShowArchived,
-    setConversations
+    setConversations,
+    moveConversationToTop
   };
 };
