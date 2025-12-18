@@ -1,8 +1,7 @@
-
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Conversation } from './types';
 import ConversationItem from './ConversationItem';
+import { MessageSquare, Archive } from 'lucide-react';
 
 interface ConversationListProps {
   conversations: Conversation[];
@@ -24,32 +23,52 @@ const ConversationList: React.FC<ConversationListProps> = ({
   onDeleteConversation,
 }) => {
   return (
-    <Card className="md:col-span-1 shadow-sm h-full flex flex-col bg-card border rounded-lg">
-      <CardHeader className="pb-3 flex-shrink-0">
-        <CardTitle className="text-xl">
-          {showArchived ? "Archived Conversations" : "Messages"}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="p-0 flex-1 overflow-y-auto min-h-0">
+    <div className="flex flex-col h-full bg-card md:border md:rounded-xl overflow-hidden">
+      {/* Header - Hidden on mobile (shown in parent) */}
+      <div className="hidden md:flex items-center justify-between px-4 py-3 border-b bg-muted/30">
+        <h2 className="font-semibold text-lg flex items-center gap-2">
+          {showArchived ? (
+            <>
+              <Archive size={18} className="text-muted-foreground" />
+              Archived
+            </>
+          ) : (
+            <>
+              <MessageSquare size={18} className="text-primary" />
+              Messages
+            </>
+          )}
+        </h2>
+        {conversations.length > 0 && (
+          <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded-full">
+            {conversations.length}
+          </span>
+        )}
+      </div>
+      
+      {/* Conversation List */}
+      <div className="flex-1 overflow-y-auto">
         {conversations.length === 0 ? (
-          <div className="p-6 text-center">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-muted flex items-center justify-center">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-muted-foreground">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-              </svg>
+          <div className="flex flex-col items-center justify-center h-full p-8 text-center">
+            <div className="w-16 h-16 rounded-full bg-muted/50 flex items-center justify-center mb-4">
+              {showArchived ? (
+                <Archive size={28} className="text-muted-foreground" />
+              ) : (
+                <MessageSquare size={28} className="text-muted-foreground" />
+              )}
             </div>
             <h3 className="font-semibold text-foreground mb-2">
-              {showArchived ? "No archived conversations" : "No messages yet"}
+              {showArchived ? "No archived chats" : "No messages yet"}
             </h3>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground max-w-[200px]">
               {showArchived 
-                ? "Your archived conversations will appear here" 
-                : "Start a conversation by messaging someone about their listing"
+                ? "Archived conversations will appear here" 
+                : "Start chatting by messaging a seller about their listing"
               }
             </p>
           </div>
         ) : (
-          <div className="divide-y">
+          <div>
             {conversations.map((conv) => (
               <ConversationItem
                 key={conv.id}
@@ -64,8 +83,8 @@ const ConversationList: React.FC<ConversationListProps> = ({
             ))}
           </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
 
