@@ -1,7 +1,6 @@
-
 import { useChat } from "@/hooks/useChat";
 import { Button } from "@/components/ui/button";
-import { HeadphonesIcon } from "lucide-react";
+import { HeadphonesIcon, Archive, MessageSquare, Loader2 } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import ConversationList from "./chat/ConversationList";
 import MessagePanelWithInput from "./chat/MessagePanelWithInput";
@@ -29,9 +28,13 @@ const ChatInterface = () => {
 
   if (!user) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center">
-          <p className="text-gray-500">Please sign in to view messages.</p>
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="text-center px-6">
+          <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+            <MessageSquare size={28} className="text-muted-foreground" />
+          </div>
+          <h2 className="text-xl font-semibold mb-2">Sign in to view messages</h2>
+          <p className="text-muted-foreground">You need to be logged in to access your conversations.</p>
         </div>
       </div>
     );
@@ -39,62 +42,78 @@ const ChatInterface = () => {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center">Loading conversations...</div>
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 size={32} className="animate-spin text-primary mx-auto mb-3" />
+          <p className="text-muted-foreground">Loading conversations...</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="flex h-full flex-col overflow-hidden bg-background">
-      {/* Mobile Header */}
-      <div className="md:hidden border-b bg-card/50 backdrop-blur-sm">
-        <div className="px-4 py-3">
-          <div className="flex items-center justify-between">
-            <h1 className="text-xl font-semibold">Messages</h1>
-            <div className="flex gap-1">
+    <div className="flex flex-col h-[100dvh] md:h-auto md:min-h-[calc(100vh-4rem)] bg-background">
+      {/* Mobile Header - Only show when not in a conversation */}
+      {!selectedConversation && (
+        <div className="md:hidden border-b bg-background sticky top-0 z-20">
+          <div className="flex items-center justify-between px-4 py-3">
+            <h1 className="text-xl font-bold flex items-center gap-2">
+              <MessageSquare size={22} className="text-primary" />
+              Messages
+            </h1>
+            <div className="flex items-center gap-1">
               <FeedbackButton />
               <Button
                 variant="ghost"
-                size="sm"
+                size="icon"
                 onClick={contactSupport}
-                className="h-8 w-8 p-0"
+                className="h-9 w-9"
               >
-                <HeadphonesIcon size={14} />
+                <HeadphonesIcon size={18} />
               </Button>
               <Button
                 variant={showArchived ? "default" : "ghost"}
                 size="sm"
                 onClick={toggleShowArchived}
-                className="text-xs px-2 py-1 h-7"
+                className="h-9 px-3"
               >
+                <Archive size={16} className="mr-1.5" />
                 {showArchived ? "Active" : "Archive"}
               </Button>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Desktop Header */}
-      <div className="hidden md:block container mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">Messages</h1>
-          <div className="flex gap-2">
-            <FeedbackButton />
-            <Button
-              variant="outline"
-              onClick={contactSupport}
-              className="flex items-center gap-2"
-            >
-              <HeadphonesIcon size={16} />
-              Contact Support
-            </Button>
-            <Button
-              variant={showArchived ? "default" : "outline"}
-              onClick={toggleShowArchived}
-            >
-              {showArchived ? "Show Active" : "Show Archived"}
-            </Button>
+      <div className="hidden md:block border-b bg-background/95 backdrop-blur-sm sticky top-0 z-20">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex justify-between items-center">
+            <h1 className="text-2xl font-bold flex items-center gap-2">
+              <MessageSquare size={26} className="text-primary" />
+              Messages
+            </h1>
+            <div className="flex items-center gap-2">
+              <FeedbackButton />
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={contactSupport}
+                className="gap-2"
+              >
+                <HeadphonesIcon size={16} />
+                Support
+              </Button>
+              <Button
+                variant={showArchived ? "default" : "outline"}
+                size="sm"
+                onClick={toggleShowArchived}
+                className="gap-2"
+              >
+                <Archive size={16} />
+                {showArchived ? "Show Active" : "Show Archived"}
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -125,27 +144,29 @@ const ChatInterface = () => {
         )}
       </div>
       
-      {/* Desktop: Show both side by side */}
-      <div className="hidden md:flex container mx-auto px-4 pb-6 flex-1 min-h-0">
-        <div className="grid md:grid-cols-3 gap-6 flex-1 min-h-0">
-          <ConversationList
-            conversations={conversations}
-            selectedConversation={selectedConversation}
-            currentUserId={user.id}
-            showArchived={showArchived}
-            onSelectConversation={handleSelectConversation}
-            onArchiveConversation={archiveConversation}
-            onDeleteConversation={deleteConversation}
-          />
-          <MessagePanelWithInput
-            selectedConversation={selectedConversation}
-            messages={messages}
-            currentUserId={user.id}
-            onSendMessage={sendMessage}
-            onLikeUpdate={updateMessageLikes}
-            renderMode="desktop"
-            conversationData={conversations.find(c => c.id === selectedConversation)}
-          />
+      {/* Desktop: Side by side layout */}
+      <div className="hidden md:block flex-1 min-h-0">
+        <div className="container mx-auto px-4 py-4 h-[calc(100vh-8rem)]">
+          <div className="grid md:grid-cols-3 gap-4 h-full">
+            <ConversationList
+              conversations={conversations}
+              selectedConversation={selectedConversation}
+              currentUserId={user.id}
+              showArchived={showArchived}
+              onSelectConversation={handleSelectConversation}
+              onArchiveConversation={archiveConversation}
+              onDeleteConversation={deleteConversation}
+            />
+            <MessagePanelWithInput
+              selectedConversation={selectedConversation}
+              messages={messages}
+              currentUserId={user.id}
+              onSendMessage={sendMessage}
+              onLikeUpdate={updateMessageLikes}
+              renderMode="desktop"
+              conversationData={conversations.find(c => c.id === selectedConversation)}
+            />
+          </div>
         </div>
       </div>
     </div>

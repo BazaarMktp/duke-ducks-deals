@@ -1312,7 +1312,7 @@ export type Database = {
           is_active: boolean | null
           last_scraped: string | null
           name: string
-          scrape_frequency: unknown | null
+          scrape_frequency: unknown
           selector_config: Json | null
           source_type: string
           url: string
@@ -1323,7 +1323,7 @@ export type Database = {
           is_active?: boolean | null
           last_scraped?: string | null
           name: string
-          scrape_frequency?: unknown | null
+          scrape_frequency?: unknown
           selector_config?: Json | null
           source_type: string
           url: string
@@ -1334,7 +1334,7 @@ export type Database = {
           is_active?: boolean | null
           last_scraped?: string | null
           name?: string
-          scrape_frequency?: unknown | null
+          scrape_frequency?: unknown
           selector_config?: Json | null
           source_type?: string
           url?: string
@@ -1689,46 +1689,34 @@ export type Database = {
         }
         Returns: undefined
       }
-      auto_feature_biweekly: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      auto_feature_desirable_listings: {
-        Args: Record<PropertyKey, never>
-        Returns: number
-      }
+      auto_feature_biweekly: { Args: never; Returns: undefined }
+      auto_feature_desirable_listings: { Args: never; Returns: number }
       business_has_approved_ads: {
         Args: { business_id_param: string }
         Returns: boolean
       }
-      calculate_engagement_score: {
-        Args:
-          | {
-              clicks?: number
-              favorites?: number
-              messages?: number
-              views?: number
-            }
-          | {
+      calculate_engagement_score:
+        | {
+            Args: {
               p_clicks?: number
               p_favorites?: number
               p_messages?: number
               p_views?: number
             }
-        Returns: number
-      }
-      calculate_level_from_xp: {
-        Args: { xp: number }
-        Returns: number
-      }
-      get_all_donations_count: {
-        Args: Record<PropertyKey, never>
-        Returns: number
-      }
-      get_current_user_college_id: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
+            Returns: number
+          }
+        | {
+            Args: {
+              clicks?: number
+              favorites?: number
+              messages?: number
+              views?: number
+            }
+            Returns: number
+          }
+      calculate_level_from_xp: { Args: { xp: number }; Returns: number }
+      get_all_donations_count: { Args: never; Returns: number }
+      get_current_user_college_id: { Args: never; Returns: string }
       get_deal_analytics: {
         Args: { deal_id_param?: string }
         Returns: {
@@ -1740,18 +1728,9 @@ export type Database = {
           unique_visitors: number
         }[]
       }
-      get_donation_stats: {
-        Args: Record<PropertyKey, never>
-        Returns: Json
-      }
-      get_donations_count: {
-        Args: Record<PropertyKey, never>
-        Returns: number
-      }
-      get_platform_stats: {
-        Args: Record<PropertyKey, never>
-        Returns: Json
-      }
+      get_donation_stats: { Args: never; Returns: Json }
+      get_donations_count: { Args: never; Returns: number }
+      get_platform_stats: { Args: never; Returns: Json }
       get_public_profile: {
         Args: { profile_id: string }
         Returns: {
@@ -1773,18 +1752,9 @@ export type Database = {
           profile_name: string
         }[]
       }
-      get_total_users_count: {
-        Args: Record<PropertyKey, never>
-        Returns: number
-      }
-      get_unread_message_count: {
-        Args: { _user_id: string }
-        Returns: number
-      }
-      get_user_xp_rank: {
-        Args: { user_id_param: string }
-        Returns: number
-      }
+      get_total_users_count: { Args: never; Returns: number }
+      get_unread_message_count: { Args: { _user_id: string }; Returns: number }
+      get_user_xp_rank: { Args: { user_id_param: string }; Returns: number }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

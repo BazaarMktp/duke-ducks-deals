@@ -1,37 +1,44 @@
-
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Send, Image, X } from "lucide-react";
+import { Send, ImagePlus, X, Loader2 } from "lucide-react";
 import { useMessageAttachments } from "@/hooks/useMessageAttachments";
-import { SmartReplies } from "@/components/ai/SmartReplies";
+import { Textarea } from "@/components/ui/textarea";
 
 interface MessageInputProps {
   onSendMessage: (message: string, attachments?: any[]) => void;
   initialMessage?: string;
-  lastMessage?: string;
-  listingTitle?: string;
+  disabled?: boolean;
 }
 
 const MessageInput: React.FC<MessageInputProps> = ({ 
   onSendMessage, 
-  initialMessage,
-  lastMessage,
-  listingTitle
+  initialMessage = '',
+  disabled = false
 }) => {
-  const [newMessage, setNewMessage] = useState(initialMessage || "");
+  const [newMessage, setNewMessage] = useState(initialMessage);
   const [sending, setSending] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { uploading, uploadAttachments } = useMessageAttachments();
 
   // Update message when initialMessage prop changes
-  React.useEffect(() => {
+  useEffect(() => {
     if (initialMessage) {
       setNewMessage(initialMessage);
+      // Focus the textarea when initial message is set
+      setTimeout(() => textareaRef.current?.focus(), 100);
     }
   }, [initialMessage]);
+
+  // Auto-resize textarea
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = Math.min(textareaRef.current.scrollHeight, 120) + 'px';
+    }
+  }, [newMessage]);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -62,7 +69,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
   };
 
   const handleSend = async () => {
-    if ((!newMessage.trim() && selectedFiles.length === 0) || sending || uploading) return;
+    if ((!newMessage.trim() && selectedFiles.length === 0) || sending || uploading || disabled) return;
     
     setSending(true);
     try {
@@ -81,44 +88,43 @@ const MessageInput: React.FC<MessageInputProps> = ({
       setNewMessage("");
       setSelectedFiles([]);
       setPreviewUrls([]);
+      
+      // Reset textarea height
+      if (textareaRef.current) {
+        textareaRef.current.style.height = 'auto';
+      }
     } finally {
       setSending(false);
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey && !sending) {
       e.preventDefault();
       handleSend();
     }
   };
 
-  return (
-    <div className="space-y-2">
-      {/* AI Smart Replies */}
-      {lastMessage && listingTitle && !newMessage && (
-        <SmartReplies
-          lastMessage={lastMessage}
-          listingTitle={listingTitle}
-          onSelectReply={(reply) => setNewMessage(reply)}
-        />
-      )}
+  const isDisabled = disabled || sending || uploading;
+  const canSend = (newMessage.trim() || selectedFiles.length > 0) && !isDisabled;
 
+  return (
+    <div className="space-y-3">
       {/* Image Previews */}
       {previewUrls.length > 0 && (
-        <div className="flex gap-2 px-2 flex-wrap">
+        <div className="flex gap-2 overflow-x-auto pb-1">
           {previewUrls.map((url, idx) => (
-            <div key={idx} className="relative group">
+            <div key={idx} className="relative group flex-shrink-0">
               <img 
                 src={url} 
                 alt={`Preview ${idx + 1}`}
-                className="h-16 w-16 object-cover rounded-lg border-2 border-muted"
+                className="h-16 w-16 object-cover rounded-xl border-2 border-border"
               />
               <button
                 onClick={() => removeFile(idx)}
-                className="absolute -top-2 -right-2 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                className="absolute -top-1.5 -right-1.5 bg-destructive text-destructive-foreground rounded-full p-0.5 shadow-md hover:bg-destructive/90 transition-colors"
               >
-                <X size={12} />
+                <X size={14} />
               </button>
             </div>
           ))}
@@ -126,7 +132,8 @@ const MessageInput: React.FC<MessageInputProps> = ({
       )}
 
       {/* Input Row */}
-      <div className="flex gap-2 items-center px-2">
+      <div className="flex items-end gap-2">
+        {/* Image upload button */}
         <input
           ref={fileInputRef}
           type="file"
@@ -141,36 +148,49 @@ const MessageInput: React.FC<MessageInputProps> = ({
           variant="ghost"
           size="icon"
           onClick={() => fileInputRef.current?.click()}
-          disabled={sending || uploading || selectedFiles.length >= 3}
-          className="rounded-full h-10 w-10 shrink-0"
+          disabled={isDisabled || selectedFiles.length >= 3}
+          className="h-10 w-10 flex-shrink-0 rounded-full hover:bg-muted"
         >
-          <Image size={20} className={selectedFiles.length >= 3 ? 'text-muted-foreground' : ''} />
+          <ImagePlus size={20} className={selectedFiles.length >= 3 ? 'text-muted-foreground' : 'text-muted-foreground'} />
         </Button>
 
-        <div className="flex-1">
-          <Input
+        {/* Message input */}
+        <div className="flex-1 relative">
+          <Textarea
+            ref={textareaRef}
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
-            placeholder="Type your message..."
-            onKeyPress={handleKeyPress}
-            disabled={sending || uploading}
-            className="rounded-full border-2 px-4 py-3 text-sm resize-none focus:ring-2 focus:ring-primary/20 transition-all"
+            placeholder="Type a message..."
+            onKeyDown={handleKeyDown}
+            disabled={isDisabled}
+            rows={1}
+            className="min-h-[44px] max-h-[120px] py-3 px-4 rounded-2xl resize-none text-[15px] bg-muted border-0 focus-visible:ring-1 focus-visible:ring-primary/50 placeholder:text-muted-foreground/70"
           />
         </div>
         
+        {/* Send button */}
         <Button 
           onClick={handleSend} 
-          disabled={(!newMessage.trim() && selectedFiles.length === 0) || sending || uploading}
+          disabled={!canSend}
           size="icon"
-          className="rounded-full h-10 w-10 shrink-0 shadow-md hover:shadow-lg transition-all"
+          className={`h-10 w-10 flex-shrink-0 rounded-full transition-all ${
+            canSend 
+              ? 'bg-primary hover:bg-primary/90 shadow-md hover:shadow-lg' 
+              : 'bg-muted text-muted-foreground'
+          }`}
         >
-          {uploading ? (
-            <div className="animate-spin h-4 w-4 border-2 border-background border-t-transparent rounded-full" />
+          {uploading || sending ? (
+            <Loader2 size={18} className="animate-spin" />
           ) : (
-            <Send size={18} />
+            <Send size={18} className={canSend ? '' : ''} />
           )}
         </Button>
       </div>
+      
+      {/* Helper text */}
+      <p className="text-[11px] text-muted-foreground text-center">
+        Press Enter to send • Shift+Enter for new line
+      </p>
     </div>
   );
 };
