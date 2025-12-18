@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate, Link } from "react-router-dom";
+import AccessibilitySettings from "@/components/accessibility/AccessibilitySettings";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -67,10 +68,13 @@ const Settings = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 max-w-2xl">
       <h1 className="text-2xl font-bold mb-6">Settings</h1>
       
       <div className="space-y-6">
+        {/* Accessibility & Display Settings */}
+        <AccessibilitySettings />
+
         <Card>
           <CardHeader>
             <CardTitle>Notifications</CardTitle>
@@ -79,24 +83,26 @@ const Settings = () => {
             <div className="flex items-center justify-between">
               <Label htmlFor="email-notifications" className="flex flex-col">
                 <span>Email Notifications</span>
-                <span className="text-sm text-gray-500">Receive email updates about your listings and messages</span>
+                <span className="text-sm text-muted-foreground">Receive email updates about your listings and messages</span>
               </Label>
               <Switch 
                 id="email-notifications" 
                 checked={emailNotifications}
                 onCheckedChange={setEmailNotifications}
+                aria-label="Toggle email notifications"
               />
             </div>
             
             <div className="flex items-center justify-between">
               <Label htmlFor="push-notifications" className="flex flex-col">
                 <span>Push Notifications</span>
-                <span className="text-sm text-gray-500">Receive notifications when using the app</span>
+                <span className="text-sm text-muted-foreground">Receive notifications when using the app</span>
               </Label>
               <Switch 
                 id="push-notifications" 
                 checked={pushNotifications}
                 onCheckedChange={setPushNotifications}
+                aria-label="Toggle push notifications"
               />
             </div>
             
@@ -113,7 +119,7 @@ const Settings = () => {
           <CardContent className="space-y-4">
             <div className="flex flex-col">
               <span className="text-sm font-medium">Email</span>
-              <span>{user?.email}</span>
+              <span className="text-muted-foreground">{user?.email}</span>
             </div>
             
             <div className="pt-2 space-y-4">
@@ -139,7 +145,7 @@ const Settings = () => {
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
                     <AlertDialogAction 
                       onClick={handleDeleteAccount}
-                      className="bg-red-600 hover:bg-red-700"
+                      className="bg-destructive hover:bg-destructive/90"
                       disabled={isDeletingAccount}
                     >
                       {isDeletingAccount ? "Deleting..." : "Delete Account"}

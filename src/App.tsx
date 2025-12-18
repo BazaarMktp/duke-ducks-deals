@@ -3,9 +3,10 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { HashRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route, useLocation } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { useState } from "react";
+import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { AdminProvider } from "@/contexts/AdminContext";
 import { AuthRedirectHandler } from "@/components/auth/AuthRedirectHandler";
@@ -15,6 +16,7 @@ import { PWAInstallPrompt } from "@/components/PWAInstallPrompt";
 import { OfflineIndicator } from "@/components/OfflineIndicator";
 import { CampusChatbot } from "@/components/ai/CampusChatbot";
 import Navbar from "@/components/Navbar";
+import BottomNavBar from "@/components/BottomNavBar";
 import Index from "./pages/Index";
 import Home from "./pages/Home";
 import Auth from "./pages/Auth";
@@ -55,158 +57,175 @@ import Footer from "@/components/Footer";
 
 const queryClient = new QueryClient();
 
-function App() {
+function AppContent() {
   const [isAuthProcessing, setIsAuthProcessing] = useState(false);
+  const location = useLocation();
+  
+  // Hide footer on messages page for mobile
+  const hideFooterOnMobile = location.pathname === '/messages';
 
+  return (
+    <>
+      <AuthRedirectHandler onAuthProcessing={setIsAuthProcessing} />
+      <SharedLinkWrapper>
+        <div className="min-h-screen bg-background flex flex-col">
+          {isAuthProcessing && (
+            <div className="fixed inset-0 bg-background/90 flex items-center justify-center z-50">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+                <p className="text-muted-foreground">Confirming your email...</p>
+              </div>
+            </div>
+          )}
+          <Navbar />
+          <main className="flex-1 pb-16 md:pb-0">
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/verify" element={<Index />} />
+              <Route path="/home" element={<Home />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/reset-password" element={<PasswordReset />} />
+              <Route path="/email-validation" element={<EmailValidation />} />
+              <Route path="/account-deleted" element={<AccountDeleted />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="/privacy" element={<PrivacyPolicy />} />
+              <Route path="/terms" element={<TermsAndConditions />} />
+              <Route path="/marketplace" element={<Marketplace />} />
+              <Route path="/marketplace/:id" element={<MarketplaceItemDetail />} />
+              <Route path="/housing" element={<Housing />} />
+              <Route path="/housing/:id" element={<HousingDetail />} />
+              <Route path="/services" element={<Services />} />
+              <Route path="/services/:id" element={<ServiceDetail />} />
+              <Route path="/devils-deals" element={<DevilsDeals />} />
+              <Route path="/devils-deals/:id" element={<DealDetail />} />
+              <Route path="/campus-life" element={<CampusLife />} />
+              <Route path="/roommate-finder" element={<RoommateFinder />} />
+              <Route path="/native-features" element={<NativeFeatures />} />
+              <Route path="/business-onboarding" element={<BusinessOnboarding />} />
+              <Route path="/business-dashboard" element={<BusinessDashboard />} />
+              <Route
+                path="/messages"
+                element={
+                  <ProtectedRoute>
+                    <Messages />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/settings"
+                element={
+                  <ProtectedRoute>
+                    <Settings />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/my-listings"
+                element={
+                  <ProtectedRoute>
+                    <MyListings />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/create-listing"
+                element={
+                  <ProtectedRoute>
+                    <CreateListing />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/smart-create-listing"
+                element={
+                  <ProtectedRoute>
+                    <SmartCreateListing />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/edit-listing/:id"
+                element={
+                  <ProtectedRoute>
+                    <EditListing />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/favorites"
+                element={
+                  <ProtectedRoute>
+                    <Favorites />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/cart"
+                element={
+                  <ProtectedRoute>
+                    <Cart />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute>
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/shared-links"
+                element={
+                  <ProtectedRoute>
+                    <SharedLinks />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </main>
+          <div className={hideFooterOnMobile ? 'hidden md:block' : ''}>
+            <Footer />
+          </div>
+          <BottomNavBar />
+          <CampusChatbot />
+        </div>
+      </SharedLinkWrapper>
+    </>
+  );
+}
+
+function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <HelmetProvider>
-        <TooltipProvider>
-          <AuthProvider>
-          <AdminProvider>
-            <PerformanceTracker />
-            <PWAInstallPrompt />
-            <OfflineIndicator />
-            <Toaster />
-            <Sonner />
-            <HashRouter>
-              <AuthRedirectHandler onAuthProcessing={setIsAuthProcessing} />
-              <SharedLinkWrapper>
-                <div className="min-h-screen bg-gray-50 flex flex-col">
-                  {isAuthProcessing && (
-                    <div className="fixed inset-0 bg-white bg-opacity-90 flex items-center justify-center z-50">
-                      <div className="text-center">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                        <p className="text-gray-600">Confirming your email...</p>
-                      </div>
-                    </div>
-                  )}
-                  <Navbar />
-                  <main className="flex-1">
-                    <Routes>
-                      <Route path="/" element={<Index />} />
-                      <Route path="/verify" element={<Index />} />
-                      <Route path="/home" element={<Home />} />
-                      <Route path="/auth" element={<Auth />} />
-                      <Route path="/reset-password" element={<PasswordReset />} />
-                      <Route path="/email-validation" element={<EmailValidation />} />
-                      <Route path="/account-deleted" element={<AccountDeleted />} />
-                      <Route path="/about" element={<About />} />
-                      <Route path="/faq" element={<FAQ />} />
-                      <Route path="/privacy" element={<PrivacyPolicy />} />
-                      <Route path="/terms" element={<TermsAndConditions />} />
-                      <Route path="/marketplace" element={<Marketplace />} />
-                      <Route path="/marketplace/:id" element={<MarketplaceItemDetail />} />
-                      <Route path="/housing" element={<Housing />} />
-                      <Route path="/housing/:id" element={<HousingDetail />} />
-                      <Route path="/services" element={<Services />} />
-                      <Route path="/services/:id" element={<ServiceDetail />} />
-                      <Route path="/devils-deals" element={<DevilsDeals />} />
-                      <Route path="/devils-deals/:id" element={<DealDetail />} />
-                      <Route path="/campus-life" element={<CampusLife />} />
-                      <Route path="/roommate-finder" element={<RoommateFinder />} />
-                      <Route path="/native-features" element={<NativeFeatures />} />
-                      <Route path="/business-onboarding" element={<BusinessOnboarding />} />
-                      <Route path="/business-dashboard" element={<BusinessDashboard />} />
-                      <Route
-                        path="/messages"
-                        element={
-                          <ProtectedRoute>
-                            <Messages />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="/profile"
-                        element={
-                          <ProtectedRoute>
-                            <Profile />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="/settings"
-                        element={
-                          <ProtectedRoute>
-                            <Settings />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="/my-listings"
-                        element={
-                          <ProtectedRoute>
-                            <MyListings />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="/create-listing"
-                        element={
-                          <ProtectedRoute>
-                            <CreateListing />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="/smart-create-listing"
-                        element={
-                          <ProtectedRoute>
-                            <SmartCreateListing />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="/edit-listing/:id"
-                        element={
-                          <ProtectedRoute>
-                            <EditListing />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="/favorites"
-                        element={
-                          <ProtectedRoute>
-                            <Favorites />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="/cart"
-                        element={
-                          <ProtectedRoute>
-                            <Cart />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="/admin"
-                        element={
-                          <ProtectedRoute>
-                            <AdminDashboard />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route
-                        path="/shared-links"
-                        element={
-                          <ProtectedRoute>
-                            <SharedLinks />
-                          </ProtectedRoute>
-                        }
-                      />
-                      <Route path="*" element={<NotFound />} />
-                    </Routes>
-                  </main>
-                  <Footer />
-                  <CampusChatbot />
-                </div>
-              </SharedLinkWrapper>
-            </HashRouter>
-          </AdminProvider>
-        </AuthProvider>
-      </TooltipProvider>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <TooltipProvider>
+            <AuthProvider>
+              <AdminProvider>
+                <PerformanceTracker />
+                <PWAInstallPrompt />
+                <OfflineIndicator />
+                <Toaster />
+                <Sonner />
+                <HashRouter>
+                  <AppContent />
+                </HashRouter>
+              </AdminProvider>
+            </AuthProvider>
+          </TooltipProvider>
+        </ThemeProvider>
       </HelmetProvider>
     </QueryClientProvider>
   );
