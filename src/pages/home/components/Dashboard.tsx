@@ -1,4 +1,3 @@
-
 import { WelcomeSection } from "./WelcomeSection";
 import { QuickActions } from "./QuickActions";
 import { FeaturedItems } from "./FeaturedItems";
@@ -8,6 +7,8 @@ import { Stats, Listing } from "../types";
 import ProfilePictureReminder from "@/components/ProfilePictureReminder";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { SemesterCountdown } from "@/components/semester/SemesterCountdown";
+import { EndOfSemesterBanner } from "@/components/semester/EndOfSemesterBanner";
 
 interface DashboardProps {
   user: any;
@@ -25,6 +26,7 @@ export const Dashboard = ({
   stats 
 }: DashboardProps) => {
   const [profileData, setProfileData] = useState<{ avatar_url?: string } | null>(null);
+  const [showEndOfSemesterBanner, setShowEndOfSemesterBanner] = useState(true);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -40,22 +42,46 @@ export const Dashboard = ({
     };
 
     fetchProfile();
+    
+    // Check if user dismissed the banner
+    const bannerDismissed = localStorage.getItem('endOfSemesterBannerDismissed');
+    if (bannerDismissed) {
+      const dismissedDate = new Date(bannerDismissed);
+      const daysSinceDismissed = (Date.now() - dismissedDate.getTime()) / (1000 * 60 * 60 * 24);
+      // Show again after 7 days
+      if (daysSinceDismissed < 7) {
+        setShowEndOfSemesterBanner(false);
+      }
+    }
   }, [user]);
 
   const handleUploadClick = () => {
-    // Navigate to profile page where users can upload their avatar
     window.location.href = '/profile';
   };
 
+  const handleBannerDismiss = () => {
+    localStorage.setItem('endOfSemesterBannerDismissed', new Date().toISOString());
+    setShowEndOfSemesterBanner(false);
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       <WelcomeSection user={user} />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
+      
+      {/* Semester Features */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 space-y-4">
+        <SemesterCountdown />
+        
+        {showEndOfSemesterBanner && (
+          <EndOfSemesterBanner onDismiss={handleBannerDismiss} />
+        )}
+        
         <ProfilePictureReminder
           currentAvatarUrl={profileData?.avatar_url}
           onUploadClick={handleUploadClick}
         />
       </div>
+      
       <QuickActions />
       <div className="text-left">
         <FeaturedItems featuredListings={featuredListings} isLoading={isLoading} />
