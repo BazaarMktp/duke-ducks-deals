@@ -171,7 +171,7 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
 
   if (renderMode === 'mobile') {
     return (
-      <div className="fixed inset-0 flex flex-col bg-background">
+      <div className="h-[100dvh] flex flex-col bg-background overflow-hidden">
         {selectedConversation ? (
           <>
             {/* Mobile Header */}
@@ -203,10 +203,10 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
             {/* Items Panel */}
             <ConversationItemsPanel conversationId={selectedConversation} />
             
-            {/* Messages Area */}
+            {/* Messages Area - scrollable */}
             <div 
               ref={messagesContainerRef}
-              className="flex-1 overflow-y-auto bg-background"
+              className="flex-1 overflow-y-auto overscroll-contain bg-background"
             >
               {renderMessages()}
             </div>
