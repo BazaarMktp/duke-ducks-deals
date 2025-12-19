@@ -11,10 +11,10 @@ interface FeaturedRequestsProps {
 
 export const FeaturedRequests = ({ featuredRequests }: FeaturedRequestsProps) => {
   return (
-    <section className="py-4 bg-white">
+    <section className="py-4 bg-background">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold">Recent Requests</h2>
+          <h2 className="text-xl font-bold text-foreground">Recent Requests</h2>
           <div className="flex gap-2">
             <Link to="/marketplace">
               <Button variant="outline" size="sm">Marketplace</Button>
@@ -25,25 +25,28 @@ export const FeaturedRequests = ({ featuredRequests }: FeaturedRequestsProps) =>
         {featuredRequests.length === 0 ? (
           <Card>
             <CardContent className="py-12 text-center">
-              <p className="text-gray-500">No requests available at the moment.</p>
+              <p className="text-muted-foreground">No requests available at the moment.</p>
             </CardContent>
           </Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
             {featuredRequests.map((request) => (
-              <Card key={request.id} className="hover:shadow-lg transition-shadow border-blue-200 bg-blue-50/50">
+              <Card
+                key={request.id}
+                className="hover:shadow-lg transition-shadow border-border bg-card"
+              >
                 <CardContent className="p-4">
                   <div className="flex items-center gap-2 mb-2">
-                    <Search size={12} className="text-blue-600" />
-                    <span className="text-xs text-blue-600 font-medium">
+                    <Search size={12} className="text-primary" />
+                    <span className="text-xs text-primary font-medium">
                       {request.category.charAt(0).toUpperCase() + request.category.slice(1)} Request
                     </span>
                   </div>
-                  <h3 className="font-semibold mb-2 line-clamp-1">Looking for: {request.title}</h3>
-                  <p className="text-blue-600 font-bold mb-1">
+                  <h3 className="font-semibold mb-2 line-clamp-1 text-foreground">Looking for: {request.title}</h3>
+                  <p className="text-primary font-bold mb-1">
                     {request.price ? `Budget: $${request.price}` : 'Budget: Negotiable'}
                   </p>
-                  <p className="text-sm text-gray-500">by {request.requester || 'Unknown'}</p>
+                  <p className="text-sm text-muted-foreground">by {request.requester || 'Unknown'}</p>
                   <Link to={`/${request.category}/${request.id}`} className="block mt-3">
                     <Button size="sm" className="w-full">I Can Help</Button>
                   </Link>
