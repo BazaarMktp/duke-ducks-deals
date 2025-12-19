@@ -59,11 +59,12 @@ export const CampusChatbot = () => {
     setIsSending(false);
   };
 
+  // Hide on mobile devices
   if (!isOpen) {
     return (
       <Button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-20 right-4 md:bottom-6 md:right-6 h-14 w-14 rounded-full shadow-lg z-40"
+        className="fixed bottom-20 right-4 md:bottom-6 md:right-6 h-14 w-14 rounded-full shadow-lg z-40 hidden md:flex"
         size="icon"
       >
         <MessageCircle className="h-6 w-6" />

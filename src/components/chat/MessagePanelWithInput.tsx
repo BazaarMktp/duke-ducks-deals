@@ -171,11 +171,11 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
 
   if (renderMode === 'mobile') {
     return (
-      <div className="h-full flex flex-col bg-background">
+      <div className="fixed inset-0 flex flex-col bg-background">
         {selectedConversation ? (
           <>
             {/* Mobile Header */}
-            <div className="flex items-center gap-3 px-2 py-3 border-b bg-background/95 backdrop-blur-sm flex-shrink-0 sticky top-0 z-10">
+            <div className="flex items-center gap-3 px-2 py-3 border-b bg-background/95 backdrop-blur-sm flex-shrink-0 z-10">
               <Button
                 variant="ghost"
                 size="icon"
@@ -206,13 +206,13 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
             {/* Messages Area */}
             <div 
               ref={messagesContainerRef}
-              className="flex-1 overflow-y-auto bg-background min-h-0"
+              className="flex-1 overflow-y-auto bg-background"
             >
               {renderMessages()}
             </div>
             
-            {/* Input Area */}
-            <div className="flex-shrink-0 p-3 pb-[max(env(safe-area-inset-bottom),12px)] border-t bg-background">
+            {/* Input Area - fixed at bottom */}
+            <div className="flex-shrink-0 p-3 border-t bg-background safe-area-pb">
               <MessageInput 
                 onSendMessage={handleSendMessage} 
                 initialMessage={initialMessage}
