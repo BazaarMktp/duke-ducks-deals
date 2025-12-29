@@ -7,7 +7,7 @@ export const useChatActions = () => {
   const contactSupport = async () => {
     toast({
       title: "Support",
-      description: "Contact support feature coming soon! Please email admin@bazaar.com for assistance.",
+      description: "Contact support feature coming soon! Please email support@devilsmarketplace.com for assistance.",
     });
   };
 

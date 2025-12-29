@@ -24,10 +24,10 @@ export const HowItWorksSection = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-            How Duke Students Use Bazaar
+            How Duke Students Use Devils Marketplace
           </h2>
           <p className="text-muted-foreground text-lg max-w-3xl mx-auto">
-            Join hundreds of Blue Devils who trust Bazaar for safe, convenient campus trading. Buy and sell textbooks, electronics, and dorm essentials with fellow Duke students.
+            Join hundreds of Blue Devils who trust Devils Marketplace for safe, convenient campus trading. Buy and sell textbooks, electronics, and dorm essentials with fellow Duke students.
           </p>
         </div>
 

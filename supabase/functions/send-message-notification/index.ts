@@ -118,18 +118,15 @@ serve(async (req) => {
     console.log('RESEND_API_KEY format check:', resendApiKey.startsWith('re_') ? 'Valid format' : 'Invalid format - should start with re_');
     
     // Send email notification with better error handling
-    console.log('Sending email with from address: info@thebazaarapp.com');
+    console.log('Sending email with from address: info@devilsmarketplace.com');
     const emailResult = await resend.emails.send({
-      from: 'Bazaar <info@thebazaarapp.com>',
+      from: 'Devils Marketplace <info@devilsmarketplace.com>',
       to: [recipientProfile.email],
       subject: `New message from ${senderProfile.profile_name}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-          <div style="background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; padding: 20px; border-radius: 8px 8px 0 0; text-align: center;">
-            <img src="https://www.thebazaarapp.com/lovable-uploads/010f2159-7ae2-4e7e-a71a-681407407a54.png" 
-                 alt="Bazaar Logo" 
-                 style="height: 40px; width: auto; margin-bottom: 10px;">
-            <h1 style="margin: 0; font-size: 24px;">New Message on Bazaar</h1>
+          <div style="background: linear-gradient(135deg, #003087, #001a4d); color: white; padding: 20px; border-radius: 8px 8px 0 0; text-align: center;">
+            <h1 style="margin: 0; font-size: 24px;">New Message on Devils Marketplace</h1>
           </div>
           
           <div style="background: white; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 8px 8px; padding: 20px;">
@@ -142,8 +139,8 @@ serve(async (req) => {
             </div>
             
             <p style="margin: 16px 0 0 0; text-align: center;">
-              <a href="https://www.thebazaarapp.com/#/messages" 
-                 style="background: #3b82f6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: bold;">
+              <a href="https://devilsmarketplace.lovable.app/#/messages" 
+                 style="background: #003087; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: bold;">
                 Reply to Message
               </a>
             </p>
@@ -151,11 +148,8 @@ serve(async (req) => {
             <hr style="margin: 20px 0; border: none; border-top: 1px solid #e5e7eb;">
             
             <div style="text-align: center;">
-              <img src="https://www.thebazaarapp.com/lovable-uploads/010f2159-7ae2-4e7e-a71a-681407407a54.png" 
-                   alt="Bazaar Logo" 
-                   style="height: 24px; width: auto; margin-bottom: 8px;">
               <p style="margin: 0; font-size: 14px; color: #6b7280;">
-                This email was sent because you have an active conversation on Bazaar. 
+                This email was sent because you have an active conversation on Devils Marketplace. 
                 You can manage your notification preferences in your account settings.
               </p>
             </div>
@@ -171,10 +165,10 @@ serve(async (req) => {
       if (emailResult.error.message?.includes('domain') || emailResult.error.message?.includes('verified')) {
         console.log('Retrying with Resend default domain...');
         const retryResult = await resend.emails.send({
-          from: 'Bazaar <onboarding@resend.dev>',
+          from: 'Devils Marketplace <onboarding@resend.dev>',
           to: [recipientProfile.email],
           subject: `New message from ${senderProfile.profile_name}`,
-          html: emailResult.html || 'You have a new message on Bazaar.',
+          html: emailResult.html || 'You have a new message on Devils Marketplace.',
         });
         
         if (retryResult.error) {

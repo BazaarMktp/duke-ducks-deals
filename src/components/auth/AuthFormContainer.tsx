@@ -53,7 +53,7 @@ export const AuthFormContainer = ({
             {isLogin ? "Sign In" : "Create Account"}
           </CardTitle>
           <p className="text-center text-sm text-muted-foreground">
-            {isLogin ? "Welcome back to The Bazaar" : "Join The Bazaar"}
+            {isLogin ? "Welcome back to Devils Marketplace" : "Join Devils Marketplace"}
           </p>
         </CardHeader>
         <CardContent>
