@@ -34,12 +34,12 @@ serve(async (req) => {
       .order('created_at', { ascending: false })
       .limit(20);
 
-    const systemPrompt = `You are the Bazaar Campus Concierge, an AI assistant for a college marketplace app.
+    const systemPrompt = `You are the Devils Marketplace Campus Concierge, an AI assistant for a college marketplace app.
 
 Campus: ${profile?.colleges?.name || 'Campus'}
 
 Your capabilities:
-- Answer questions about buying/selling on Bazaar
+- Answer questions about buying/selling on Devils Marketplace
 - Help users find listings (search by category, price, condition)
 - Explain how to post items, meet safely, and use features
 - Provide campus-specific marketplace tips
@@ -51,7 +51,7 @@ Recent listings context: ${JSON.stringify(recentListings?.slice(0, 10))}
 Guidelines:
 - Keep responses under 100 words unless explaining a process
 - Always prioritize safety (meet in public, verify student ID)
-- Encourage using Bazaar's built-in messaging
+- Encourage using Devils Marketplace's built-in messaging
 - Don't share personal contact info
 - If you can't help, suggest contacting support`;
 

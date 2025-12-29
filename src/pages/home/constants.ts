@@ -29,7 +29,7 @@ export const FEATURES = [
 
 export const TESTIMONIALS = [
   {
-    quote: "The Bazaar made it so easy to find affordable textbooks and sell my old furniture when I graduated. The campus-only community feels much safer than other platforms.",
+    quote: "Devils Marketplace made it so easy to find affordable textbooks and sell my old furniture when I graduated. The campus-only community feels much safer than other platforms.",
     author: "Sarah Chen",
     role: "Duke University Senior"
   },
@@ -39,7 +39,7 @@ export const TESTIMONIALS = [
     role: "Duke University Sophomore"
   },
   {
-    quote: "As a grad student on a tight budget, The Bazaar has been a lifesaver. I've furnished my entire apartment with great finds from other students.",
+    quote: "As a grad student on a tight budget, Devils Marketplace has been a lifesaver. I've furnished my entire apartment with great finds from other students.",
     author: "Emma Rodriguez",
     role: "Duke University Graduate Student"
   }
@@ -64,7 +64,7 @@ export const FAQ_ITEMS = [
   },
   {
     question: "Are there any fees?",
-    answer: "The Bazaar is completely free to use! No listing fees, no transaction fees, no hidden costs. We're here to help students save money, not spend more."
+    answer: "Devils Marketplace is completely free to use! No listing fees, no transaction fees, no hidden costs. We're here to help students save money, not spend more."
   }
 ];
 

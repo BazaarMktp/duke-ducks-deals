@@ -14,9 +14,9 @@ const Home = () => {
     return (
       <>
         <Helmet>
-          <title>Bazaar — Home</title>
+          <title>Devils Marketplace — Home</title>
           <meta name="description" content="Student marketplace connecting students to buy, sell, and trade on campus." />
-          <link rel="canonical" href="https://bazaar.lovable.app/home" />
+          <link rel="canonical" href="https://devilsmarketplace.lovable.app/home" />
         </Helmet>
         <div className="min-h-screen flex items-center justify-center bg-gray-50">
           <div className="text-center">
@@ -32,9 +32,9 @@ const Home = () => {
     return (
       <>
         <Helmet>
-          <title>Bazaar — Dashboard</title>
+          <title>Devils Marketplace — Dashboard</title>
           <meta name="description" content="Your personalized student marketplace dashboard with featured listings and stats." />
-          <link rel="canonical" href="https://bazaar.lovable.app/home" />
+          <link rel="canonical" href="https://devilsmarketplace.lovable.app/home" />
         </Helmet>
         <Dashboard 
           user={user}
@@ -50,9 +50,9 @@ const Home = () => {
   return (
     <>
         <Helmet>
-          <title>Bazaar — Home</title>
+          <title>Devils Marketplace — Home</title>
           <meta name="description" content="Student marketplace for browsing, buying, and selling with fellow students on campus." />
-          <link rel="canonical" href="https://bazaar.lovable.app/home" />
+          <link rel="canonical" href="https://devilsmarketplace.lovable.app/home" />
         </Helmet>
       <SimpleMarketingPage stats={stats} />
     </>

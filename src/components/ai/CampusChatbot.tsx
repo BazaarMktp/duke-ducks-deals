@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { MessageCircle, X, Send, Sparkles } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/contexts/AuthContext';
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { X, Send, MessageCircle, Sparkles } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface Message {
   role: 'user' | 'assistant';
@@ -15,7 +15,7 @@ interface Message {
 export const CampusChatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', content: 'Hi! I\'m your Bazaar AI assistant. How can I help you today?' }
+    { role: 'assistant', content: 'Hi! I\'m your Devils Marketplace AI assistant. How can I help you today?' }
   ]);
   const [input, setInput] = useState('');
   const [isSending, setIsSending] = useState(false);
@@ -73,47 +73,47 @@ export const CampusChatbot = () => {
   }
 
   return (
-    <Card className="fixed bottom-20 right-4 md:bottom-6 md:right-6 w-[calc(100vw-2rem)] md:w-96 h-[calc(100vh-10rem)] md:h-[500px] max-h-[500px] shadow-2xl z-40 flex flex-col">
+    <Card className="fixed bottom-20 right-4 md:bottom-6 md:right-6 w-[calc(100vw-2rem)] md:w-96 h-[calc(100vh-10rem)] md:h-[500px] max-h-[500px] shadow-2xl z-40 flex flex-col hidden md:flex">
       <div className="flex items-center justify-between p-4 border-b bg-primary text-primary-foreground rounded-t-lg">
         <div className="flex items-center gap-2">
           <Sparkles className="h-5 w-5" />
-          <h3 className="font-semibold">Bazaar AI Assistant</h3>
+          <h3 className="font-semibold">Devils Marketplace AI</h3>
         </div>
-        <Button
-          variant="ghost"
+        <Button 
+          variant="ghost" 
           size="icon"
           onClick={() => setIsOpen(false)}
-          className="h-8 w-8 hover:bg-primary-foreground/20"
+          className="text-primary-foreground hover:bg-primary/80"
         >
           <X className="h-4 w-4" />
         </Button>
       </div>
 
-      <ScrollArea ref={scrollRef} className="flex-1 p-4">
+      <ScrollArea className="flex-1 p-4" ref={scrollRef}>
         <div className="space-y-4">
-          {messages.map((message, i) => (
+          {messages.map((msg, idx) => (
             <div
-              key={i}
-              className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+              key={idx}
+              className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
             >
               <div
                 className={`max-w-[80%] rounded-lg px-4 py-2 ${
-                  message.role === 'user'
+                  msg.role === 'user'
                     ? 'bg-primary text-primary-foreground'
-                    : 'bg-muted'
+                    : 'bg-muted text-foreground'
                 }`}
               >
-                <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
               </div>
             </div>
           ))}
           {isSending && (
             <div className="flex justify-start">
               <div className="bg-muted rounded-lg px-4 py-2">
-                <div className="flex gap-1">
-                  <span className="animate-bounce">●</span>
-                  <span className="animate-bounce delay-100">●</span>
-                  <span className="animate-bounce delay-200">●</span>
+                <div className="flex space-x-1">
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-100" />
+                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-200" />
                 </div>
               </div>
             </div>
@@ -134,6 +134,7 @@ export const CampusChatbot = () => {
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask me anything..."
             disabled={isSending}
+            className="flex-1"
           />
           <Button type="submit" size="icon" disabled={isSending || !input.trim()}>
             <Send className="h-4 w-4" />

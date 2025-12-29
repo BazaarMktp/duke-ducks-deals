@@ -39,9 +39,9 @@ const About = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-blue-600 to-purple-700 text-white py-16">
+      <section className="bg-gradient-to-br from-[#003087] to-[#001a4d] text-white py-16">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">About Bazaar</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-6">About Devils Marketplace</h1>
           <p className="text-xl max-w-3xl mx-auto">
             Connecting students, building community, and making campus life easier through 
             our comprehensive marketplace platform.
@@ -71,8 +71,8 @@ const About = () => {
 
             <Card className="text-center">
               <CardHeader>
-                <div className="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Eye className="text-purple-600" size={32} />
+                <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Eye className="text-blue-600" size={32} />
                 </div>
                 <CardTitle className="text-2xl">Our Vision</CardTitle>
               </CardHeader>
@@ -93,7 +93,7 @@ const About = () => {
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4">What We Do</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Bazaar is your one-stop platform for all campus needs
+              Devils Marketplace is your one-stop platform for all campus needs
             </p>
           </div>
 
@@ -153,7 +153,7 @@ const About = () => {
                     className="w-24 h-24 rounded-full mx-auto mb-4 object-cover"
                   />
                   <CardTitle className="text-lg">{member.name}</CardTitle>
-                  <p className="text-blue-600 font-medium">{member.role}</p>
+                  <p className="text-[#003087] font-medium">{member.role}</p>
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-600 text-sm">{member.bio}</p>
@@ -173,7 +173,7 @@ const About = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
-              <h3 className="text-xl font-bold mb-4 text-blue-600">Community First</h3>
+              <h3 className="text-xl font-bold mb-4 text-[#003087]">Community First</h3>
               <p className="text-gray-600">
                 We prioritize building genuine connections and fostering a supportive environment 
                 where students help each other succeed.
@@ -189,7 +189,7 @@ const About = () => {
             </div>
 
             <div className="text-center">
-              <h3 className="text-xl font-bold mb-4 text-purple-600">Accessibility</h3>
+              <h3 className="text-xl font-bold mb-4 text-[#003087]">Accessibility</h3>
               <p className="text-gray-600">
                 We believe everyone deserves access to affordable resources and opportunities, 
                 regardless of their financial situation.

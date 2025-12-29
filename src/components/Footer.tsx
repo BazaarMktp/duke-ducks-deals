@@ -8,12 +8,13 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Logo and Description */}
           <div className="md:col-span-1">
-            <Link to="/" className="flex items-center mb-4">
+            <Link to="/" className="flex items-center gap-2 mb-4">
               <img 
-                src="/lovable-uploads/0f3d9b8b-0f19-41e8-9175-666175eeaaf1.png" 
-                alt="Bazaar Logo" 
+                src="/devils-marketplace-logo.png" 
+                alt="Devils Marketplace Logo" 
                 className="h-8 w-auto"
               />
+              <span className="font-bold text-lg">Devils Marketplace</span>
             </Link>
             <p className="text-gray-400 text-sm">
               Your campus marketplace for buying and selling. 
@@ -35,7 +36,7 @@ const Footer = () => {
             <ul className="space-y-2 text-sm text-gray-400">
               <li><Link to="/about" className="hover:text-white transition-colors">About Us</Link></li>
               <li><Link to="/faq" className="hover:text-white transition-colors">FAQ</Link></li>
-              <li><a href="mailto:info@thebazaarapp.com" className="hover:text-white transition-colors">Contact</a></li>
+              <li><a href="mailto:info@devilsmarketplace.com" className="hover:text-white transition-colors">Contact</a></li>
             </ul>
           </div>
 
@@ -53,7 +54,7 @@ const Footer = () => {
 
         <div className="flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 text-sm">
-            © 2025 Bazaar. All rights reserved.
+            © 2025 Devils Marketplace. All rights reserved.
           </p>
           <p className="text-gray-400 text-sm mt-2 md:mt-0">
             Made with ❤️ for students

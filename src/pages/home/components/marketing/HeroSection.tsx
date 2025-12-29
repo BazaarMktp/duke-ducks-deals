@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
 import { Stats } from "../../types";
 import { formatUserCount } from "@/utils/numberFormatting";
@@ -47,7 +46,7 @@ export const HeroSection = ({ stats }: HeroSectionProps) => {
   ];
 
   return (
-    <section className="relative bg-gradient-to-br from-amber-50/30 via-white to-orange-50/20 min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative bg-gradient-to-br from-blue-50/30 via-white to-blue-100/20 min-h-screen flex items-center justify-center overflow-hidden">
       {/* Floating Cards */}
       {floatingCards.map((card, index) => (
         <div
@@ -65,7 +64,7 @@ export const HeroSection = ({ stats }: HeroSectionProps) => {
                   />
                 </div>
               )}
-              <div className="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full inline-block mb-2">🔥 Hot deal</div>
+              <div className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full inline-block mb-2">🔥 Hot deal</div>
               <div className="font-semibold text-gray-900">{card.text}</div>
               <div className="text-lg font-bold text-gray-900">{card.price}</div>
             </>
@@ -85,12 +84,12 @@ export const HeroSection = ({ stats }: HeroSectionProps) => {
 
       {/* Main Content */}
       <div className="text-center max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Bazaar Logo */}
+        {/* Devils Marketplace Logo */}
         <div className="mb-8">
           <img 
-            src="/lovable-uploads/010f2159-7ae2-4e7e-a71a-681407407a54.png" 
-            alt="Bazaar Logo" 
-            className="h-16 w-auto mx-auto"
+            src="/devils-marketplace-logo.png" 
+            alt="Devils Marketplace Logo" 
+            className="h-20 w-auto mx-auto"
           />
         </div>
 
@@ -106,7 +105,7 @@ export const HeroSection = ({ stats }: HeroSectionProps) => {
           <Link to="/auth?mode=signup">
             <Button 
               size="lg" 
-              className="w-full h-12 bg-primary hover:bg-primary/90 text-white font-medium"
+              className="w-full h-12 bg-[#003087] hover:bg-[#002266] text-white font-medium"
             >
               Get started
             </Button>
