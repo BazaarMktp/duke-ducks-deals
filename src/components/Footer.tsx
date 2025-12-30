@@ -8,13 +8,8 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Logo and Description */}
           <div className="md:col-span-1">
-            <Link to="/" className="flex items-center gap-2 mb-4">
-              <img 
-                src="/devils-marketplace-logo.png" 
-                alt="Devils Marketplace Logo" 
-                className="h-8 w-auto"
-              />
-              <span className="font-bold text-lg">Devils Marketplace</span>
+            <Link to="/" className="flex items-center mb-4">
+              <span className="font-bold text-xl">Devils Marketplace</span>
             </Link>
             <p className="text-gray-400 text-sm">
               Your campus marketplace for buying and selling. 
