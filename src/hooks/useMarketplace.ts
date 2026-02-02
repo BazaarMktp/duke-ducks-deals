@@ -1,17 +1,45 @@
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { MarketplaceListing } from "@/components/marketplace/types";
 
-export const useMarketplace = (user: any, searchQuery: string, sortBy: string, activeListingType: 'offer' | 'wanted') => {
+const PAGE_SIZE = 20;
+
+interface UseMarketplaceOptions {
+  searchQuery: string;
+  sortBy: string;
+  activeListingType: 'offer' | 'wanted';
+  categoryFilter: string | null;
+  priceRange: { min: number | null; max: number | null };
+}
+
+export const useMarketplace = (
+  user: any, 
+  searchQuery: string, 
+  sortBy: string, 
+  activeListingType: 'offer' | 'wanted',
+  categoryFilter: string | null = null,
+  priceRange: { min: number | null; max: number | null } = { min: null, max: null }
+) => {
   const [listings, setListings] = useState<MarketplaceListing[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
   const [favorites, setFavorites] = useState<string[]>([]);
+  const pageRef = useRef(0);
 
-  const fetchListings = useCallback(async () => {
+  const fetchListings = useCallback(async (reset: boolean = true) => {
     try {
-      setLoading(true);
+      if (reset) {
+        setLoading(true);
+        pageRef.current = 0;
+      } else {
+        setLoadingMore(true);
+      }
+      
+      const from = reset ? 0 : pageRef.current * PAGE_SIZE;
+      const to = from + PAGE_SIZE - 1;
       
       // Fetch active listings
       let activeQuery = supabase
@@ -24,8 +52,25 @@ export const useMarketplace = (user: any, searchQuery: string, sortBy: string, a
         .eq('status', 'active')
         .eq('listing_type', activeListingType);
 
-      // Fetch recent sold listings (last 30 days) to show social proof
-      let soldQuery = supabase
+      // Apply category filter based on item_tag or title
+      if (categoryFilter) {
+        if (categoryFilter === 'free') {
+          activeQuery = activeQuery.or('price.eq.0,price.is.null');
+        } else {
+          activeQuery = activeQuery.or(`item_tag.ilike.%${categoryFilter}%,title.ilike.%${categoryFilter}%`);
+        }
+      }
+
+      // Apply price range filter
+      if (priceRange.min !== null) {
+        activeQuery = activeQuery.gte('price', priceRange.min);
+      }
+      if (priceRange.max !== null) {
+        activeQuery = activeQuery.lte('price', priceRange.max);
+      }
+
+      // Fetch recent sold listings only on first page
+      let soldQuery = reset ? supabase
         .from('listings')
         .select(`
           *,
@@ -35,7 +80,7 @@ export const useMarketplace = (user: any, searchQuery: string, sortBy: string, a
         .eq('status', 'sold')
         .eq('listing_type', activeListingType)
         .gte('sold_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString())
-        .limit(20); // Limit sold items to avoid overwhelming
+        .limit(10) : null;
 
       if (searchQuery) {
         // Check if search query matches a tag keyword - if so, use item_tag for accurate filtering
@@ -45,11 +90,11 @@ export const useMarketplace = (user: any, searchQuery: string, sortBy: string, a
         if (isTagSearch) {
           // For tag searches, prioritize item_tag but also search title as fallback
           activeQuery = activeQuery.or(`item_tag.ilike.%${searchQuery}%,title.ilike.%${searchQuery}%`);
-          soldQuery = soldQuery.or(`item_tag.ilike.%${searchQuery}%,title.ilike.%${searchQuery}%`);
+          if (soldQuery) soldQuery = soldQuery.or(`item_tag.ilike.%${searchQuery}%,title.ilike.%${searchQuery}%`);
         } else {
           // For general searches, search title and description
           activeQuery = activeQuery.or(`title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`);
-          soldQuery = soldQuery.or(`title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`);
+          if (soldQuery) soldQuery = soldQuery.or(`title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`);
         }
       }
 
@@ -69,22 +114,31 @@ export const useMarketplace = (user: any, searchQuery: string, sortBy: string, a
 
       const { column: orderColumn, ascending } = getOrderOptions();
 
-      // Execute both queries
+      // Execute queries
+      // Execute queries in parallel
       const [activeResult, soldResult] = await Promise.all([
         activeQuery
           .order('featured', { ascending: false })
-          .order(orderColumn, { ascending }),
-        soldQuery.order('sold_at', { ascending: false })
+          .order(orderColumn, { ascending })
+          .range(from, to),
+        soldQuery 
+          ? soldQuery.order('sold_at', { ascending: false })
+          : Promise.resolve({ data: [], error: null })
       ]);
 
       if (activeResult.error) throw activeResult.error;
-      if (soldResult.error) throw soldResult.error;
 
       const activeListings = activeResult.data || [];
-      const soldListings = soldResult.data || [];
+      const soldListings = (reset && soldResult?.data) || [];
 
+      // Check if there are more items
+      setHasMore(activeListings.length === PAGE_SIZE);
+      
       // Combine listings
-      const allListings = [...activeListings, ...soldListings];
+      let allListings = [...activeListings];
+      if (reset) {
+        allListings = [...allListings, ...soldListings];
+      }
       
       // Sort: featured first, then new (< 5 days), then apply user sort
       const fiveDaysAgo = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000);
@@ -115,15 +169,31 @@ export const useMarketplace = (user: any, searchQuery: string, sortBy: string, a
         }
       });
 
-      console.log('Marketplace listings data:', { active: activeListings.length, sold: soldListings.length, total: sortedListings.length });
-      setListings(sortedListings);
+      if (reset) {
+        setListings(sortedListings);
+      } else {
+        setListings(prev => [...prev, ...sortedListings]);
+      }
+      
+      pageRef.current += 1;
     } catch (error) {
       console.error('Error fetching listings:', error);
       toast.error("Failed to load marketplace items");
     } finally {
       setLoading(false);
+      setLoadingMore(false);
     }
-  }, [searchQuery, sortBy, activeListingType]);
+  }, [searchQuery, sortBy, activeListingType, categoryFilter, priceRange.min, priceRange.max]);
+
+  const loadMore = useCallback(() => {
+    if (!loadingMore && hasMore) {
+      fetchListings(false);
+    }
+  }, [fetchListings, loadingMore, hasMore]);
+
+  const refresh = useCallback(() => {
+    fetchListings(true);
+  }, [fetchListings]);
 
   const fetchFavorites = useCallback(async () => {
     if (!user) return;
@@ -141,7 +211,7 @@ export const useMarketplace = (user: any, searchQuery: string, sortBy: string, a
   }, [user]);
 
   useEffect(() => {
-    fetchListings();
+    fetchListings(true);
 
     // Subscribe to real-time changes in listings table
     const channel = supabase
@@ -155,7 +225,7 @@ export const useMarketplace = (user: any, searchQuery: string, sortBy: string, a
           filter: `category=eq.marketplace`,
         },
         () => {
-          fetchListings();
+          fetchListings(true);
         }
       )
       .subscribe();
@@ -226,5 +296,14 @@ export const useMarketplace = (user: any, searchQuery: string, sortBy: string, a
     }
   };
 
-  return { listings, loading, favorites, toggleFavorite };
+  return { 
+    listings, 
+    loading, 
+    loadingMore,
+    hasMore,
+    favorites, 
+    toggleFavorite,
+    loadMore,
+    refresh
+  };
 };
