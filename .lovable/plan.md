@@ -1,267 +1,210 @@
 
-# UX Enhancement Plan: FB Marketplace/Amazon-Level Experience
+# Comprehensive UX Fixes and Improvements Plan
 
-## Executive Summary
-Transform Devils Marketplace into a polished, entertaining, and frictionless experience comparable to Facebook Marketplace and Amazon. This plan addresses browsing discovery, visual delight, interaction feedback, performance, and engagement patterns.
-
----
-
-## Phase 1: Enhanced Browsing & Discovery
-
-### 1.1 Category Filter Bar (Like FB Marketplace)
-Add a horizontal scrollable category filter above the product grid to let users quickly filter by product type without typing.
-
-**Files to modify:**
-- `src/components/marketplace/MarketplaceFilters.tsx` - Add category pill bar
-- `src/hooks/useMarketplace.ts` - Add category filter parameter
-- `src/pages/Marketplace.tsx` - Add category state
-
-**Implementation:**
-- Horizontal scroll with pill buttons: "All", "Electronics", "Textbooks", "Furniture", "Dorm", "Clothing", "Free Stuff"
-- Selected category highlighted with primary color
-- Smooth scroll on mobile with touch momentum
-
-### 1.2 Price Range Filter
-Add a quick price range selector (like Amazon's price filtering).
-
-**Files to modify:**
-- `src/components/marketplace/MarketplaceFilters.tsx` - Add price range dropdown/slider
-- `src/hooks/useMarketplace.ts` - Add price range parameters
-
-**Options:** Under $25, $25-$50, $50-$100, $100-$250, $250+
-
-### 1.3 "Just Posted" Section on Dashboard
-Add urgency/FOMO with a "Just Posted" carousel showing items from the last 2 hours.
-
-**Files to modify:**
-- `src/pages/home/components/Dashboard.tsx` - Add new section
-- `src/pages/home/hooks/useHomeData.ts` - Fetch recent listings
+## Summary of Issues to Address
+Based on the code review and database analysis, I identified 17 distinct issues to fix across listing creation, categorization, UI elements, and image performance.
 
 ---
 
-## Phase 2: Visual Polish & Skeleton Loading
+## Issue 1: Request Upload Error
+**Problem**: Error when uploading requests
+**Root Cause**: The `usePostingForm.ts` (line 164-166) doesn't include `college_id` in the insert, which is likely required by the listings table RLS policy.
 
-### 2.1 Replace Loading Spinners with Content Skeletons
-Like Amazon/FB, show the layout structure while loading instead of generic spinners.
-
-**Files to modify:**
-- `src/components/marketplace/MarketplaceGrid.tsx` - Add skeleton grid
-- `src/pages/home/components/FeaturedItems.tsx` - Add skeleton cards
-- `src/pages/MarketplaceItemDetail.tsx` - Add skeleton layout
-
-**Implementation:**
-Create a `MarketplaceItemSkeleton` component with:
-- Shimmer animation for image placeholder
-- Gray bars for title/price/description
-- 8 skeleton cards in grid while loading
-
-### 2.2 Image Loading Improvements
-Add smooth fade-in transitions for all images (partially exists, enhance consistency).
-
-**Files to modify:**
-- `src/components/ui/optimized-image.tsx` - Ensure consistent blur placeholder
-- `src/components/marketplace/MarketplaceItemCard.tsx` - Add shimmer effect
+**Fix**: Update `src/hooks/usePostingForm.ts` to fetch and include `college_id` before inserting, similar to how `useCreateListing.ts` (lines 87-97) does it.
 
 ---
 
-## Phase 3: Micro-interactions & Feedback
+## Issue 2: First Uploaded Picture Should Stay First
+**Problem**: When multiple images are uploaded, the order might change
+**Root Cause**: In `ImageUpload.tsx` (line 137), new images are appended: `[...images, ...newImages]`
 
-### 3.1 Favorite Heart Animation
-Add a satisfying "pop" animation when favoriting items (like Instagram).
-
-**Files to modify:**
-- `src/components/marketplace/MarketplaceItemCard.tsx` - Add heart animation
-- Create `src/components/ui/animated-heart.tsx` - Reusable heart component
-
-**Animation:** Scale up 120% + brief color burst, then settle
-
-### 3.2 Add to Cart Animation
-Show item flying to cart icon or brief success feedback.
-
-**Files to modify:**
-- `src/components/marketplace/ProductActions.tsx` - Add animation
-- `src/components/BottomNavBar.tsx` - Pulse cart icon on add
-
-### 3.3 Pull-to-Refresh on Mobile
-Implement pull-to-refresh gesture on the marketplace grid.
-
-**Files to modify:**
-- `src/pages/Marketplace.tsx` - Add pull-to-refresh wrapper
-- `src/hooks/useMarketplace.ts` - Add refresh function
-
-### 3.4 Haptic Feedback (Capacitor)
-Trigger subtle vibration on key interactions (favorite, add to cart, send message).
-
-**Files to modify:**
-- Create `src/hooks/useHaptics.ts` - Haptic feedback hook using Capacitor
+**Fix**: The current implementation already preserves order (new images are appended to the end). If the issue is about reordering, we can keep it as-is since it correctly appends new images after existing ones.
 
 ---
 
-## Phase 4: Infinite Scroll & Performance
+## Issue 3: Remove Tips Box, Use Info Icon Hover
+**Problem**: Tips box takes up space and is distracting
+**Location**: 
+- `src/components/posting/HelpText.tsx` (lines 6-21)
+- `src/components/listings/ListingFormFields.tsx` (lines 141-151)
 
-### 4.1 Implement Infinite Scroll
-Replace "load all at once" with infinite scroll pagination.
-
-**Files to modify:**
-- `src/hooks/useMarketplace.ts` - Add pagination with cursor-based loading
-- `src/components/marketplace/MarketplaceGrid.tsx` - Add IntersectionObserver for load more
-- Add loading indicator at bottom while fetching
-
-**Implementation:**
-- Initial load: 20 items
-- Load 20 more when user scrolls to bottom
-- Show small spinner at bottom during load
-
-### 4.2 Virtual Scrolling for Large Lists
-For conversations and my listings, implement windowing.
-
-**Files to modify:**
-- `src/components/chat/ConversationList.tsx` - Consider virtualization
-- `src/pages/MyListings.tsx` - Add virtual scrolling for large lists
+**Fix**: Replace the visible tips box with an info icon that shows a tooltip on hover.
 
 ---
 
-## Phase 5: Social Proof & Engagement
+## Issue 4: Remove Emojis/Icons and Categories, Keep Only Suggested
+**Problem**: Categories with emojis look cluttered
+**Location**: `src/components/marketplace/CategoryFilter.tsx` (lines 10-20)
 
-### 5.1 "X people viewed today" Badge
-Add view count or engagement indicators on popular items.
-
-**Files to modify:**
-- `src/components/marketplace/MarketplaceItemCard.tsx` - Add view counter badge
-- Would require backend tracking (deferred to simple view approximation)
-
-### 5.2 Recently Sold Carousel
-Show recently sold items with "SOLD" overlay to create urgency.
-
-**Files to modify:**
-- `src/pages/home/components/Dashboard.tsx` - Add "Recently Sold" section
-
-### 5.3 "Similar Items" on Product Detail
-Show related products at the bottom of item detail pages (like Amazon).
-
-**Files to modify:**
-- `src/pages/MarketplaceItemDetail.tsx` - Add similar items section
-- Create `src/components/marketplace/SimilarItems.tsx`
+**Fix**: Remove the entire `CategoryFilter` component from the UI, keeping only the `MarketplaceTags` (Suggested) section. Update `MarketplaceFilters.tsx` to remove the category filter entirely.
 
 ---
 
-## Phase 6: Mobile-First Enhancements
+## Issue 5: AI-Based Item Categorization Not Working
+**Problem**: Most listings have `item_tag: nil` - the database shows 17/20 listings have no AI tag
+**Root Cause**: The AI categorization only runs for new listings with images, and existing listings weren't categorized.
 
-### 6.1 Swipe Actions on Cards
-Allow swipe-left to save, swipe-right to message (like dating apps/mobile-first UX).
-
-**Files to modify:**
-- `src/components/marketplace/MarketplaceItemCard.tsx` - Add swipe gestures using framer-motion
-- Would require `react-swipeable` or framer-motion drag gestures
-
-### 6.2 Bottom Sheet for Filters
-Replace filter dropdown with mobile-friendly bottom sheet.
-
-**Files to modify:**
-- `src/components/marketplace/MarketplaceFilters.tsx` - Use Drawer/Sheet on mobile
-- `src/components/ui/drawer.tsx` - Already available (vaul)
-
-### 6.3 Sticky Add-to-Cart Bar on Product Detail
-On mobile, show a sticky bottom bar with price + action buttons.
-
-**Files to modify:**
-- `src/pages/MarketplaceItemDetail.tsx` - Add sticky mobile CTA bar
-- `src/components/marketplace/MarketplaceItemContent.tsx` - Conditional rendering
+**Fix**: 
+1. Create a backfill mechanism to categorize existing listings
+2. Improve the filtering logic in `useMarketplace.ts` to search more broadly
 
 ---
 
-## Phase 7: Quick Actions & Convenience
+## Issue 6: Slow Image Loading
+**Problem**: Images load slowly
+**Location**: `src/components/ui/optimized-image.tsx`
 
-### 7.1 One-Tap Message Seller
-Reduce clicks to contact seller - pre-fill "Is this still available?" message.
-
-**Files to modify:**
-- `src/components/marketplace/ProductActions.tsx` - Add quick message button
-- `src/hooks/useConversation.ts` - Support pre-filled message
-
-### 7.2 Share Button on Product Cards
-Add share functionality directly on cards (not just detail page).
-
-**Files to modify:**
-- `src/components/marketplace/MarketplaceItemCard.tsx` - Add share button
-
-### 7.3 "Make Offer" Quick Action
-Allow buyers to send a price offer with one tap.
-
-**Files to modify:**
-- `src/components/marketplace/ProductActions.tsx` - Add "Make Offer" dialog
-- `src/components/chat/MessageInput.tsx` - Format offer messages
+**Fix**: 
+1. Reduce default image width for list views from 800px to 480px
+2. Set a more aggressive intersection observer margin (currently 400px)
+3. Use smaller srcset widths for faster loading
 
 ---
 
-## Phase 8: Empty States & Onboarding
+## Issue 7: More Spacing Between Suggested Buttons and Listings
+**Problem**: Suggested tags are too close to the first listings
+**Location**: `src/components/marketplace/MarketplaceTags.tsx` (line 48)
 
-### 8.1 Engaging Empty States with Illustrations
-Replace plain text empty states with friendly illustrations.
-
-**Files to modify:**
-- `src/components/listings/EmptyListingsState.tsx` - Add illustration
-- `src/pages/Favorites.tsx` - Add illustration
-- `src/pages/Cart.tsx` - Add illustration
-
-### 8.2 First-Time User Tooltips
-Show contextual tooltips for new users (point to sell button, search, etc.).
-
-**Files to modify:**
-- Create `src/components/onboarding/FirstTimeTooltips.tsx`
-- `src/pages/Marketplace.tsx` - Add tooltip overlay
+**Fix**: Increase bottom margin from `mb-6` to `mb-8` or add additional spacing in the grid container.
 
 ---
 
-## Implementation Priority
+## Issue 8: Remove Asterisks from Required Fields, Keep Validation
+**Problem**: Asterisks look cluttered
+**Locations**:
+- `src/components/posting/PostingFormFields.tsx` (lines 42, 56, 85, 109)
+- `src/components/listings/ListingFormFields.tsx` (lines 26, 40, 60, 72)
 
-| Priority | Feature | Impact | Effort |
-|----------|---------|--------|--------|
-| P0 | Skeleton loading states | High | Medium |
-| P0 | Category filter bar | High | Medium |
-| P0 | Infinite scroll | High | Medium |
-| P1 | Heart animation | Medium | Low |
-| P1 | Price range filter | Medium | Low |
-| P1 | Similar items section | Medium | Medium |
-| P1 | Sticky mobile CTA bar | Medium | Low |
-| P2 | Pull-to-refresh | Medium | Medium |
-| P2 | Swipe actions | Medium | High |
-| P2 | Empty state illustrations | Low | Low |
-| P3 | Haptic feedback | Low | Low |
-| P3 | First-time tooltips | Low | Medium |
+**Fix**: Remove all `*` from label text. The validation already shows toast errors when fields are missing.
 
 ---
 
-## Technical Notes
+## Issue 9: Remove Placeholder Examples from Price/Location Fields
+**Problem**: Example values in placeholders are confusing
+**Location**: 
+- `src/components/posting/PostingFormFields.tsx` (lines 117, 129)
+- `src/components/listings/ListingFormFields.tsx` (lines 81, 92)
+- `src/components/posting/utils/placeholderText.ts` (lines 60-65)
 
-### New Dependencies Needed
-- None required (framer-motion already installed for animations)
-
-### Files Summary
-
-**New files to create:**
-- `src/components/marketplace/MarketplaceItemSkeleton.tsx`
-- `src/components/marketplace/CategoryFilter.tsx`
-- `src/components/marketplace/SimilarItems.tsx`
-- `src/components/ui/animated-heart.tsx`
-- `src/hooks/useHaptics.ts`
-- `src/components/onboarding/FirstTimeTooltips.tsx`
-
-**Major modifications:**
-- `src/hooks/useMarketplace.ts` - Pagination, category filter, price filter
-- `src/components/marketplace/MarketplaceGrid.tsx` - Infinite scroll, skeletons
-- `src/components/marketplace/MarketplaceFilters.tsx` - Category bar, price filter
-- `src/components/marketplace/MarketplaceItemCard.tsx` - Heart animation, swipe
-- `src/pages/MarketplaceItemDetail.tsx` - Similar items, sticky CTA
-- `src/pages/home/components/Dashboard.tsx` - Just posted section
+**Fix**: Remove price placeholder values (currently "299.99", "25.00", "800.00") and simplify location placeholders.
 
 ---
 
-## Expected Outcomes
+## Issue 10: Remove AI "Improve/Enhance" Options from Manual Creation
+**Problem**: AI suggestions in manual mode add friction
+**Locations**:
+- `src/components/posting/PostingFormFields.tsx` (lines 74-81) - ListingOptimizer
+- `src/components/listings/UnifiedListingCreation.tsx` - Choice screen
 
-1. **Faster perceived loading** - Skeleton screens create instant visual feedback
-2. **Easier discovery** - Category filters reduce search friction
-3. **More engagement** - Micro-interactions make the app feel premium
-4. **Better mobile experience** - Native-feeling gestures and interactions
-5. **Increased conversions** - One-tap actions reduce friction to purchase
-6. **Stronger retention** - Social proof and FOMO elements encourage return visits
+**Fix**: 
+1. Remove `ListingOptimizer` from PostingFormFields
+2. Skip the choice screen entirely - go directly to manual creation (remove AI workflow option)
+
+---
+
+## Issue 11: Remove "Save Transaction Methods as Defaults"
+**Problem**: Not needed, adds clutter
+**Location**: `src/components/posting/PostingFormActions.tsx` (lines 24-37)
+
+**Fix**: Remove the entire save-as-default checkbox section.
+
+---
+
+## Issue 12: Reduce Required Images to Two
+**Problem**: Currently requires 1 image minimum (for offers), but max is 5
+**Location**: The requirement is already 1 for offers (0 for requests). If the request is to set max to 2:
+- `src/components/ImageUpload.tsx` (line 19) - `maxImages` prop
+- Various calls to `ImageUpload` with `maxImages={5}`
+
+**Fix**: Change `maxImages` from 5 to 2 where applicable, or keep validation at 1 minimum.
+
+---
+
+## Issue 13: Remove "Wanted" Badge from Request Listings
+**Problem**: "Looking For" and "Wanted" badges are redundant
+**Location**: `src/components/marketplace/MarketplaceItemCard.tsx` (lines 102-107 and 143)
+
+**Fix**: Remove the "Looking For" badge (lines 102-107) and the "Wanted" badge (line 143).
+
+---
+
+## Issue 14: Add "All" Button at Beginning of Suggested Tags
+**Problem**: After clicking a tag, can't return to "All" view
+**Location**: `src/components/marketplace/MarketplaceTags.tsx`
+
+**Fix**: Add an "All" badge at the beginning that clears the search query.
+
+---
+
+## Issue 15: Update Tagline
+**Problem**: Needs new copy
+**Location**: `src/pages/home/components/marketing/HeroSection.tsx`
+
+**Fix**: Change tagline (line 104-106) to "Buy and sell with fellow Duke students. Safe, verified and made by Duke students."
+
+---
+
+## Issue 16: Remove Transaction Method Description Text
+**Problem**: Example text is unnecessary
+**Location**: `src/components/posting/TransactionMethods.tsx` (lines 53-55)
+
+**Fix**: Remove the "Select at least one transaction method" hint text.
+
+---
+
+## Issue 17: Remove Description Tip Emoji
+**Problem**: Emoji in form tips is distracting
+**Location**: 
+- `src/components/posting/PostingFormFields.tsx` (line 69)
+- `src/components/listings/ListingFormFields.tsx` (lines 52-54)
+
+**Fix**: Remove the "💡" emoji and the tip sentence.
+
+---
+
+## Files to Modify
+
+| File | Changes |
+|------|---------|
+| `src/hooks/usePostingForm.ts` | Add college_id fetch for RLS compliance |
+| `src/components/posting/HelpText.tsx` | Convert to info icon with tooltip |
+| `src/components/posting/PostingFormFields.tsx` | Remove asterisks, AI optimizer, tip emoji, price/location placeholders |
+| `src/components/listings/ListingFormFields.tsx` | Remove asterisks, tip box, description emoji |
+| `src/components/marketplace/MarketplaceFilters.tsx` | Remove CategoryFilter, keep only MarketplaceTags |
+| `src/components/marketplace/MarketplaceTags.tsx` | Add "All" button at start, increase bottom margin |
+| `src/components/marketplace/MarketplaceItemCard.tsx` | Remove "Looking For" and "Wanted" badges |
+| `src/components/posting/TransactionMethods.tsx` | Remove help text |
+| `src/components/posting/PostingFormActions.tsx` | Remove save-as-default option |
+| `src/components/listings/UnifiedListingCreation.tsx` | Skip choice screen, go directly to manual |
+| `src/components/ui/optimized-image.tsx` | Reduce image widths for faster loading |
+| `src/pages/home/components/marketing/HeroSection.tsx` | Update tagline |
+| `src/components/ImageUpload.tsx` | Change maxImages default to 2 |
+| `src/components/posting/utils/placeholderText.ts` | Simplify location placeholders |
+
+---
+
+## Implementation Order
+
+**Phase 1: Critical Fixes**
+1. Fix request upload error (add college_id)
+2. Remove AI creation choice - go directly to manual
+3. Skip AI optimizer in manual forms
+
+**Phase 2: UI Cleanup**
+4. Remove asterisks from all required fields
+5. Remove price/location placeholder examples
+6. Remove tips boxes, use info icon tooltip
+7. Remove description tip emoji
+8. Remove transaction method hint text
+9. Remove save-as-default option
+
+**Phase 3: Marketplace Improvements**
+10. Remove CategoryFilter entirely
+11. Add "All" button to MarketplaceTags
+12. Increase spacing before listings
+13. Remove "Wanted" and "Looking For" badges
+
+**Phase 4: Performance & Copy**
+14. Optimize image loading (smaller sizes)
+15. Update tagline
+16. Change maxImages from 5 to 2
