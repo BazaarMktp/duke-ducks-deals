@@ -97,7 +97,7 @@ const MarketplaceFilters = ({
             placeholder={activeListingType === 'offer' ? "Search marketplace items..." : "Search wanted items..."}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 pr-10"
+            className="pl-10 pr-10 border-2 border-border"
           />
           {searchQuery && (
             <button
