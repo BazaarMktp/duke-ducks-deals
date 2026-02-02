@@ -47,7 +47,7 @@ const MarketplaceTags = ({ listings, onTagClick, currentQuery = '' }: Marketplac
   const dynamicTags = generateDynamicTags();
   
   return (
-    <div className="mb-8 flex items-center flex-wrap gap-2">
+    <div className="mb-12 flex items-center flex-wrap gap-2">
       <p className="text-sm text-muted-foreground">Suggested:</p>
       
       {/* All button */}
