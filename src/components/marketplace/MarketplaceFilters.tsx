@@ -1,10 +1,8 @@
-
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search, X, SlidersHorizontal } from "lucide-react";
 import MarketplaceTags from "./MarketplaceTags";
-import CategoryFilter from "./CategoryFilter";
 import { MarketplaceListing } from "./types";
 import { Button } from "@/components/ui/button";
 import {
@@ -56,7 +54,11 @@ const MarketplaceFilters = ({
   const [showPriceSheet, setShowPriceSheet] = useState(false);
 
   const handleTagClick = (tag: string) => {
-    setSearchQuery(tag);
+    if (tag === '') {
+      setSearchQuery('');
+    } else {
+      setSearchQuery(tag);
+    }
   };
 
   const handleClearSearch = () => {
@@ -83,16 +85,10 @@ const MarketplaceFilters = ({
     return `$${priceRange.min} - $${priceRange.max}`;
   };
 
-  const hasActiveFilters = priceRange.min !== null || priceRange.max !== null || categoryFilter !== null;
+  const hasActiveFilters = priceRange.min !== null || priceRange.max !== null;
 
   return (
     <div className="space-y-4">
-      {/* Category Pills */}
-      <CategoryFilter 
-        selectedCategory={categoryFilter} 
-        onCategoryChange={setCategoryFilter} 
-      />
-
       {/* Search and Sort Row */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
@@ -212,9 +208,13 @@ const MarketplaceFilters = ({
         </div>
       )}
       
-      {/* Tags - only show when no category selected */}
-      {activeListingType === 'offer' && !categoryFilter && (
-        <MarketplaceTags listings={listings} onTagClick={handleTagClick} />
+      {/* Tags - show for offers */}
+      {activeListingType === 'offer' && (
+        <MarketplaceTags 
+          listings={listings} 
+          onTagClick={handleTagClick} 
+          currentQuery={searchQuery}
+        />
       )}
     </div>
   );

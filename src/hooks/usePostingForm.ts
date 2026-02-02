@@ -139,8 +139,20 @@ export const usePostingForm = ({ category, listingType, onSuccess, onClose }: Us
 
     setLoading(true);
     try {
+      // Fetch user's college_id for RLS compliance
+      const { data: profileData, error: profileError } = await supabase
+        .from('profiles')
+        .select('college_id')
+        .eq('id', user.id)
+        .single();
+
+      if (profileError || !profileData?.college_id) {
+        throw new Error('Could not fetch user profile');
+      }
+
       const insertData: any = {
         user_id: user.id,
+        college_id: profileData.college_id,
         title: formData.title,
         description: formData.description,
         price: formData.price ? parseFloat(formData.price) : null,
@@ -166,16 +178,6 @@ export const usePostingForm = ({ category, listingType, onSuccess, onClose }: Us
         .insert(insertData);
 
       if (error) throw error;
-
-      // Save preferences if user checked "Save as default"
-      if (saveAsDefault) {
-        await savePreferences({
-          default_allow_pickup: formData.allowPickup,
-          default_allow_meet_on_campus: formData.allowMeetOnCampus,
-          default_allow_drop_off: formData.allowDropOff,
-          default_location: formData.location
-        });
-      }
 
       const actionText = listingType === 'wanted' ? 'request' : 'listing';
       toast({
@@ -206,9 +208,9 @@ export const usePostingForm = ({ category, listingType, onSuccess, onClose }: Us
 
   const getPricePlaceholder = () => {
     if (listingType === 'wanted') {
-      return category === 'services' ? 'Budget per hour *' : category === 'housing' ? 'Budget per month *' : 'Budget *';
+      return category === 'services' ? 'Budget per hour' : category === 'housing' ? 'Budget per month' : 'Budget';
     }
-    return category === 'services' ? 'Price per hour *' : category === 'housing' ? 'Price per month *' : 'Price *';
+    return category === 'services' ? 'Price per hour' : category === 'housing' ? 'Price per month' : 'Price';
   };
 
   return {

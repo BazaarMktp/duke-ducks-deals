@@ -1,10 +1,15 @@
-
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
 import ImageUpload from "@/components/ImageUpload";
+import { Info } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { getTitlePlaceholder, getDescriptionPlaceholder, getLocationPlaceholder } from "../posting/utils/placeholderText";
 import type { ListingFormData } from '@/hooks/useCreateListing';
 
@@ -23,7 +28,7 @@ const ListingFormFields: React.FC<ListingFormFieldsProps> = ({
     <>
       <div>
         <Label htmlFor="title" className="text-base font-medium">
-          {formData.listingType === 'wanted' ? 'What are you looking for?' : 'Title'} *
+          {formData.listingType === 'wanted' ? 'What are you looking for?' : 'Title'}
         </Label>
         <Input
           id="title"
@@ -37,7 +42,7 @@ const ListingFormFields: React.FC<ListingFormFieldsProps> = ({
 
       <div>
         <Label htmlFor="description" className="text-base font-medium">
-          {formData.listingType === 'wanted' ? 'Detailed description of your needs' : 'Description'} *
+          {formData.listingType === 'wanted' ? 'Detailed description of your needs' : 'Description'}
         </Label>
         <Textarea
           id="description"
@@ -48,20 +53,15 @@ const ListingFormFields: React.FC<ListingFormFieldsProps> = ({
           placeholder={getDescriptionPlaceholder(formData.listingType, formData.category)}
           className={formData.listingType === 'wanted' ? "text-base leading-relaxed" : ""}
         />
-        {formData.listingType === 'wanted' && (
-          <p className="text-sm text-muted-foreground mt-2">
-            💡 The more details you provide, the better responses you'll get from potential sellers!
-          </p>
-        )}
       </div>
 
       {formData.listingType === 'offer' && (
         <div>
-          <Label className="text-base font-medium">Images *</Label>
+          <Label className="text-base font-medium">Images</Label>
           <ImageUpload
             images={formData.images}
             onImagesChange={handleImagesChange}
-            maxImages={5}
+            maxImages={2}
           />
         </div>
       )}
@@ -69,7 +69,7 @@ const ListingFormFields: React.FC<ListingFormFieldsProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <Label htmlFor="price" className="text-base font-medium">
-            {formData.listingType === 'wanted' ? 'Budget' : 'Price'} {formData.category === 'services' ? '(per hour)' : formData.category === 'housing' ? '(per month)' : ''} *
+            {formData.listingType === 'wanted' ? 'Budget' : 'Price'} {formData.category === 'services' ? '(per hour)' : formData.category === 'housing' ? '(per month)' : ''}
           </Label>
           <Input
             id="price"
@@ -78,7 +78,6 @@ const ListingFormFields: React.FC<ListingFormFieldsProps> = ({
             value={formData.price}
             onChange={(e) => handleInputChange("price", e.target.value)}
             required
-            placeholder={formData.category === 'services' ? '25.00' : formData.category === 'housing' ? '800.00' : '299.99'}
             className={formData.listingType === 'wanted' ? "text-lg" : ""}
           />
         </div>
@@ -89,7 +88,6 @@ const ListingFormFields: React.FC<ListingFormFieldsProps> = ({
             id="location"
             value={formData.location}
             onChange={(e) => handleInputChange("location", e.target.value)}
-            placeholder={getLocationPlaceholder(formData.listingType)}
             className={formData.listingType === 'wanted' ? "text-lg" : ""}
           />
         </div>
@@ -132,22 +130,28 @@ const ListingFormFields: React.FC<ListingFormFieldsProps> = ({
               </Label>
             </div>
           </div>
-          <p className="text-xs text-muted-foreground">
-            Select at least one transaction method for your listing
-          </p>
         </div>
       )}
 
       {formData.listingType === 'wanted' && (
-        <div className="bg-primary/10 dark:bg-primary/20 border border-primary/20 rounded-lg p-4">
-          <h4 className="font-medium text-foreground mb-2">Tips for better responses:</h4>
-          <ul className="text-sm text-muted-foreground space-y-1">
-            <li>• Be specific about what you're looking for</li>
-            <li>• Include your preferred condition (new, used, etc.)</li>
-            <li>• Mention your timeline or urgency</li>
-            <li>• Add any size, color, or model preferences</li>
-          </ul>
-        </div>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button type="button" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <Info className="h-4 w-4" />
+                <span>Tips for better responses</span>
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="top" className="max-w-xs">
+              <ul className="text-sm space-y-1">
+                <li>• Be specific about what you're looking for</li>
+                <li>• Include your preferred condition (new, used, etc.)</li>
+                <li>• Mention your timeline or urgency</li>
+                <li>• Add any size, color, or model preferences</li>
+              </ul>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       )}
     </>
   );

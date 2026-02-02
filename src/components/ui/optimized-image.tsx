@@ -35,21 +35,21 @@ export const OptimizedImage = ({
     if (originalSrc.includes('supabase.co/storage/v1/object/public/')) {
       // Add width parameter to resize images on the server side
       const url = new URL(originalSrc);
-      // For list views, use smaller images
+      // For list views, use smaller images (reduced from 800 to 480)
       if (!priority && lazy) {
-        url.searchParams.set('width', '800');
-        url.searchParams.set('quality', '80');
+        url.searchParams.set('width', '480');
+        url.searchParams.set('quality', '75');
       }
       return url.toString();
     }
     return originalSrc;
   };
 
-  // Generate responsive srcset for Supabase images
+  // Generate responsive srcset for Supabase images (smaller widths for faster loading)
   const getSrcSet = (originalSrc: string): string | undefined => {
     if (!originalSrc.includes('supabase.co/storage/v1/object/public/')) return undefined;
-    const widths = [320, 480, 640, 800, 1024, 1280, 1600];
-    const quality = priority ? '85' : '75';
+    const widths = [240, 320, 480, 640, 800];
+    const quality = priority ? '80' : '70';
     return widths
       .map((w) => {
         const url = new URL(originalSrc);
@@ -71,7 +71,7 @@ export const OptimizedImage = ({
           observer.disconnect();
         }
       },
-      { rootMargin: '400px 0px' }
+      { rootMargin: '200px 0px' } // Reduced from 400px for faster perceived loading
     );
 
     if (imgRef.current) {
@@ -135,7 +135,7 @@ export const OptimizedImage = ({
         fetchPriority={priority ? "high" : "auto"}
         onLoad={handleLoad}
         onError={handleError}
-        sizes={sizes || "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"}
+        sizes={sizes || "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"}
         srcSet={inView && !error ? getSrcSet(src) : undefined}
         className={cn(
           "w-full h-full object-cover transition-all duration-300",

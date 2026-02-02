@@ -1,4 +1,3 @@
-
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 
@@ -50,9 +49,6 @@ const TransactionMethods: React.FC<TransactionMethodsProps> = ({
           </Label>
         </div>
       </div>
-      <p className="text-xs text-muted-foreground">
-        Select at least one transaction method for your listing
-      </p>
     </div>
   );
 };
