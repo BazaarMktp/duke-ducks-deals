@@ -1,4 +1,3 @@
-
 export const getTitlePlaceholder = (
   listingType: 'offer' | 'wanted',
   category: 'marketplace' | 'housing' | 'services'
@@ -58,8 +57,5 @@ export const getDescriptionPlaceholder = (
 };
 
 export const getLocationPlaceholder = (listingType: 'offer' | 'wanted') => {
-  if (listingType === 'wanted') {
-    return 'Campus library, dorms, or anywhere on campus';
-  }
-  return 'North Campus, Student Union, Main Library area';
+  return '';
 };

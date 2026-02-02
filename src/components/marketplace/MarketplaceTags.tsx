@@ -4,9 +4,10 @@ import { MarketplaceListing } from "./types";
 interface MarketplaceTagsProps {
   listings: MarketplaceListing[];
   onTagClick: (tag: string) => void;
+  currentQuery?: string;
 }
 
-const MarketplaceTags = ({ listings, onTagClick }: MarketplaceTagsProps) => {
+const MarketplaceTags = ({ listings, onTagClick, currentQuery = '' }: MarketplaceTagsProps) => {
   // Fixed tags that always appear
   const fixedTags = ["microwave", "fridge", "furniture"];
   
@@ -46,12 +47,29 @@ const MarketplaceTags = ({ listings, onTagClick }: MarketplaceTagsProps) => {
   const dynamicTags = generateDynamicTags();
   
   return (
-    <div className="mb-6 flex items-center flex-wrap gap-2">
+    <div className="mb-8 flex items-center flex-wrap gap-2">
       <p className="text-sm text-muted-foreground">Suggested:</p>
+      
+      {/* All button */}
+      <Badge
+        className={`cursor-pointer transition-all px-3 py-1.5 ${
+          currentQuery === '' 
+            ? 'bg-primary text-primary-foreground' 
+            : 'hover:bg-primary/10 bg-muted text-foreground'
+        }`}
+        onClick={() => onTagClick('')}
+      >
+        All
+      </Badge>
+      
       {fixedTags.map(tag => (
         <Badge
           key={tag}
-          className="cursor-pointer hover:bg-primary/10 bg-blue-50 text-foreground capitalize px-3 py-1.5 transition-all"
+          className={`cursor-pointer transition-all capitalize px-3 py-1.5 ${
+            currentQuery.toLowerCase() === tag.toLowerCase()
+              ? 'bg-primary text-primary-foreground'
+              : 'hover:bg-primary/10 bg-muted text-foreground'
+          }`}
           onClick={() => onTagClick(tag)}
         >
           {tag}
@@ -61,7 +79,11 @@ const MarketplaceTags = ({ listings, onTagClick }: MarketplaceTagsProps) => {
         <Badge
           key={tag}
           variant="outline"
-          className="cursor-pointer hover:bg-primary/10 text-muted-foreground capitalize px-3 py-1.5 transition-all"
+          className={`cursor-pointer transition-all capitalize px-3 py-1.5 ${
+            currentQuery.toLowerCase() === tag.toLowerCase()
+              ? 'bg-primary text-primary-foreground border-primary'
+              : 'hover:bg-primary/10 text-muted-foreground'
+          }`}
           onClick={() => onTagClick(tag)}
         >
           {tag}

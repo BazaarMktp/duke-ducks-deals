@@ -1,11 +1,9 @@
-
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import ImageUpload from "@/components/ImageUpload";
 import TransactionMethods from "./TransactionMethods";
 import HelpText from "./HelpText";
-import { ListingOptimizer } from "@/components/ai/ListingOptimizer";
 import { getTitlePlaceholder, getDescriptionPlaceholder, getLocationPlaceholder } from "./utils/placeholderText";
 
 interface PostingFormFieldsProps {
@@ -39,7 +37,7 @@ const PostingFormFields: React.FC<PostingFormFieldsProps> = ({
     <>
       <div>
         <Label htmlFor="title" className="text-base font-medium">
-          {listingType === 'wanted' ? 'What are you looking for?' : 'Title'} *
+          {listingType === 'wanted' ? 'What are you looking for?' : 'Title'}
         </Label>
         <Input
           id="title"
@@ -53,7 +51,7 @@ const PostingFormFields: React.FC<PostingFormFieldsProps> = ({
 
       <div>
         <Label htmlFor="description" className="text-base font-medium">
-          {listingType === 'wanted' ? 'Detailed description of your needs' : 'Description'} *
+          {listingType === 'wanted' ? 'Detailed description of your needs' : 'Description'}
         </Label>
         <Textarea
           id="description"
@@ -64,29 +62,15 @@ const PostingFormFields: React.FC<PostingFormFieldsProps> = ({
           placeholder={getDescriptionPlaceholder(listingType, category)}
           className={listingType === 'wanted' ? "text-base leading-relaxed" : ""}
         />
-        {listingType === 'wanted' && (
-          <p className="text-sm text-muted-foreground mt-2">
-            💡 The more details you provide, the better responses you'll get from potential sellers!
-          </p>
-        )}
       </div>
-
-      {/* AI Optimization - Optional Suggestions */}
-      <ListingOptimizer
-        title={formData.title}
-        description={formData.description}
-        category={category}
-        onTitleSuggestion={(newTitle) => onInputChange("title", newTitle)}
-        onDescriptionSuggestion={(newDesc) => onInputChange("description", newDesc)}
-      />
 
       {listingType === 'offer' ? (
         <div>
-          <Label className="text-base font-medium">Images *</Label>
+          <Label className="text-base font-medium">Images</Label>
           <ImageUpload
             images={formData.images}
             onImagesChange={onImagesChange}
-            maxImages={5}
+            maxImages={2}
           />
         </div>
       ) : (
@@ -95,18 +79,15 @@ const PostingFormFields: React.FC<PostingFormFieldsProps> = ({
           <ImageUpload
             images={formData.images}
             onImagesChange={onImagesChange}
-            maxImages={5}
+            maxImages={2}
           />
-          <p className="text-sm text-muted-foreground mt-2">
-            Adding a reference image can help sellers understand exactly what you're looking for.
-          </p>
         </div>
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <Label htmlFor="price" className="text-base font-medium">
-            {getPricePlaceholder()} *
+            {getPricePlaceholder()}
           </Label>
           <Input
             id="price"
@@ -115,7 +96,6 @@ const PostingFormFields: React.FC<PostingFormFieldsProps> = ({
             value={formData.price}
             onChange={(e) => onInputChange("price", e.target.value)}
             required
-            placeholder={category === 'services' ? '25.00' : category === 'housing' ? '800.00' : '299.99'}
             className={listingType === 'wanted' ? "text-lg" : ""}
           />
         </div>
@@ -126,7 +106,6 @@ const PostingFormFields: React.FC<PostingFormFieldsProps> = ({
             id="location"
             value={formData.location}
             onChange={(e) => onInputChange("location", e.target.value)}
-            placeholder={getLocationPlaceholder(listingType)}
             className={listingType === 'wanted' ? "text-lg" : ""}
           />
         </div>

@@ -1,9 +1,8 @@
-
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { MessageCircle, Search, BadgeCheck } from "lucide-react";
+import { MessageCircle, BadgeCheck } from "lucide-react";
 import { MarketplaceListing } from "./types";
 import { OptimizedImage } from "@/components/ui/optimized-image";
 import { generateBlurDataURL } from "@/utils/imageUtils";
@@ -99,12 +98,6 @@ const MarketplaceItemCard = ({
                 {!listing.featured && isNew && (
                   <Badge className="bg-blue-500 text-white font-bold text-xs">NEW</Badge>
                 )}
-                {listing.listing_type === 'wanted' && (
-                  <Badge variant="outline" className="text-blue-600 border-blue-300 text-xs">
-                    <Search size={10} className="mr-1" />
-                    Looking For
-                  </Badge>
-                )}
                 {isMicrowave && listing.listing_type === 'offer' && (
                   <Badge className="bg-blue-600 text-white font-bold text-xs">
                     Unboxed
@@ -140,7 +133,6 @@ const MarketplaceItemCard = ({
                 <p className="text-sm sm:text-lg font-medium text-blue-600">
                   {listing.price ? `Budget: $${listing.price}` : 'Budget: Negotiable'}
                 </p>
-                <Badge variant="outline" className="text-blue-600 border-blue-300 text-xs">Wanted</Badge>
               </>
             )}
           </div>
