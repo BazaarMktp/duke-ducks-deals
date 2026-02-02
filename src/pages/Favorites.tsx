@@ -179,8 +179,12 @@ const Favorites = () => {
 
       {favorites.length === 0 ? (
         <div className="text-center py-12">
-          <Heart size={64} className="mx-auto text-gray-300 mb-4" />
-          <p className="text-gray-500">No favorites yet. Start browsing to add items!</p>
+          <Heart size={64} className="mx-auto text-muted-foreground/30 mb-4" />
+          <h3 className="text-lg font-medium text-foreground mb-2">No favorites yet</h3>
+          <p className="text-muted-foreground mb-6">Start browsing to save items you love!</p>
+          <Button onClick={() => navigate('/marketplace')}>
+            Browse Marketplace
+          </Button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
