@@ -3,10 +3,11 @@ import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Heart, MessageCircle, Search, BadgeCheck } from "lucide-react";
+import { MessageCircle, Search, BadgeCheck } from "lucide-react";
 import { MarketplaceListing } from "./types";
 import { OptimizedImage } from "@/components/ui/optimized-image";
 import { generateBlurDataURL } from "@/utils/imageUtils";
+import AnimatedHeart from "@/components/ui/animated-heart";
 
 interface MarketplaceItemCardProps {
   listing: MarketplaceListing;
@@ -149,10 +150,16 @@ const MarketplaceItemCard = ({
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => onToggleFavorite(listing.id)}
-                className={`flex-shrink-0 p-1 sm:p-2 ${favorites.includes(listing.id) ? "text-red-500" : ""}`}
+                className="flex-shrink-0 p-1 sm:p-2"
+                asChild
               >
-                <Heart size={14} className={favorites.includes(listing.id) ? "fill-current" : ""} />
+                <div>
+                  <AnimatedHeart
+                    isFavorite={favorites.includes(listing.id)}
+                    onClick={() => onToggleFavorite(listing.id)}
+                    size={14}
+                  />
+                </div>
               </Button>
             )}
             <Link to={`/marketplace/${listing.id}`} className="flex-1 min-w-0">

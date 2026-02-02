@@ -15,27 +15,42 @@ const Marketplace = () => {
   const [sortBy, setSortBy] = useState("newest");
   const [activeListingType, setActiveListingType] = useState<'offer' | 'wanted'>('offer');
   const [showPostingForm, setShowPostingForm] = useState(false);
+  const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
+  const [priceRange, setPriceRange] = useState<{ min: number | null; max: number | null }>({ 
+    min: null, 
+    max: null 
+  });
 
-  const { listings, loading, favorites, toggleFavorite } = useMarketplace(
+  const { 
+    listings, 
+    loading, 
+    loadingMore,
+    hasMore,
+    favorites, 
+    toggleFavorite,
+    loadMore
+  } = useMarketplace(
     user,
     searchQuery,
     sortBy,
-    activeListingType
+    activeListingType,
+    categoryFilter,
+    priceRange
   );
 
   return (
-      <div className="container mx-auto px-4 py-8">
-        <Helmet>
-          <title>Devils Marketplace | Buy & Sell on Campus</title>
-          <meta name="description" content="Student marketplace for buying and selling textbooks, electronics, furniture and more. Connect with fellow students safely." />
-          <link rel="canonical" href="https://devilsmarketplace.lovable.app/marketplace" />
-        </Helmet>
-        <h1 className="sr-only">Devils Marketplace - Buy and Sell on Campus</h1>
-        <MarketplaceHeader 
-          user={user} 
-          activeListingType={activeListingType}
-          onCreateListing={() => setShowPostingForm(true)}
-        />
+    <div className="container mx-auto px-4 py-8">
+      <Helmet>
+        <title>Devils Marketplace | Buy & Sell on Campus</title>
+        <meta name="description" content="Student marketplace for buying and selling textbooks, electronics, furniture and more. Connect with fellow students safely." />
+        <link rel="canonical" href="https://devilsmarketplace.lovable.app/marketplace" />
+      </Helmet>
+      <h1 className="sr-only">Devils Marketplace - Buy and Sell on Campus</h1>
+      <MarketplaceHeader 
+        user={user} 
+        activeListingType={activeListingType}
+        onCreateListing={() => setShowPostingForm(true)}
+      />
 
       <ListingTypeToggle 
         activeType={activeListingType}
@@ -50,11 +65,18 @@ const Marketplace = () => {
         setSortBy={setSortBy}
         activeListingType={activeListingType}
         listings={listings}
+        categoryFilter={categoryFilter}
+        setCategoryFilter={setCategoryFilter}
+        priceRange={priceRange}
+        setPriceRange={setPriceRange}
       />
 
       <MarketplaceGrid
         listings={listings}
         loading={loading}
+        loadingMore={loadingMore}
+        hasMore={hasMore}
+        onLoadMore={loadMore}
         user={user}
         favorites={favorites}
         onToggleFavorite={toggleFavorite}

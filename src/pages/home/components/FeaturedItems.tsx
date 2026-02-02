@@ -2,13 +2,27 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Loader2 } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Listing } from "../types";
 
 interface FeaturedItemsProps {
   featuredListings: (Listing & { seller?: string })[];
   isLoading: boolean;
 }
+
+const FeaturedItemSkeleton = () => (
+  <Card className="overflow-hidden">
+    <div className="h-48 relative overflow-hidden bg-muted">
+      <Skeleton className="w-full h-full absolute inset-0" />
+      <div className="absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-muted-foreground/10 to-transparent" />
+    </div>
+    <CardContent className="p-4">
+      <Skeleton className="h-5 w-3/4 mb-2" />
+      <Skeleton className="h-6 w-20 mb-1" />
+      <Skeleton className="h-4 w-1/2" />
+    </CardContent>
+  </Card>
+);
 
 export const FeaturedItems = ({ featuredListings, isLoading }: FeaturedItemsProps) => {
   return (
@@ -22,8 +36,10 @@ export const FeaturedItems = ({ featuredListings, isLoading }: FeaturedItemsProp
         </div>
         
         {isLoading ? (
-          <div className="flex justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <FeaturedItemSkeleton key={i} />
+            ))}
           </div>
         ) : featuredListings.length === 0 ? (
           <Card>
@@ -35,13 +51,13 @@ export const FeaturedItems = ({ featuredListings, isLoading }: FeaturedItemsProp
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
             {featuredListings.map((item) => (
               <Link key={item.id} to={`/marketplace/${item.id}`}>
-                <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                <Card className="hover:shadow-lg transition-shadow cursor-pointer group">
                   <div className="h-48 bg-muted overflow-hidden rounded-t-lg relative">
                     {item.images && item.images.length > 0 ? (
                       <img 
                         src={item.images[0]} 
                         alt={item.title}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                         loading="lazy"
                         decoding="async"
                       />
