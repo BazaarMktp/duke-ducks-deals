@@ -80,14 +80,28 @@ const PostingFormFields: React.FC<PostingFormFieldsProps> = ({
         onDescriptionSuggestion={(newDesc) => onInputChange("description", newDesc)}
       />
 
-      <div>
-        <Label className="text-base font-medium">Images *</Label>
-        <ImageUpload
-          images={formData.images}
-          onImagesChange={onImagesChange}
-          maxImages={5}
-        />
-      </div>
+      {listingType === 'offer' ? (
+        <div>
+          <Label className="text-base font-medium">Images *</Label>
+          <ImageUpload
+            images={formData.images}
+            onImagesChange={onImagesChange}
+            maxImages={5}
+          />
+        </div>
+      ) : (
+        <div>
+          <Label className="text-base font-medium">Images (optional)</Label>
+          <ImageUpload
+            images={formData.images}
+            onImagesChange={onImagesChange}
+            maxImages={5}
+          />
+          <p className="text-sm text-muted-foreground mt-2">
+            Adding a reference image can help sellers understand exactly what you're looking for.
+          </p>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>

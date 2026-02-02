@@ -227,8 +227,12 @@ const Cart = () => {
 
       {cartItems.length === 0 ? (
         <div className="text-center py-12">
-          <ShoppingCart size={64} className="mx-auto text-gray-300 mb-4" />
-          <p className="text-gray-500">Your cart is empty. Start shopping to add items!</p>
+          <ShoppingCart size={64} className="mx-auto text-muted-foreground/30 mb-4" />
+          <h3 className="text-lg font-medium text-foreground mb-2">Your cart is empty</h3>
+          <p className="text-muted-foreground mb-6">Browse the marketplace to find items you want!</p>
+          <Button onClick={() => window.location.href = '/marketplace'}>
+            Browse Marketplace
+          </Button>
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

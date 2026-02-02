@@ -51,7 +51,7 @@ const ProfilePictureReminder: React.FC<ProfilePictureReminderProps> = ({
             const createdDate = new Date(profile.created_at);
             const daysSinceCreated = Math.floor((now.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24));
             
-            if (daysSinceCreated >= 1) {
+            if (daysSinceCreated >= 3) {
               setShowReminder(true);
             }
           }
@@ -84,8 +84,8 @@ const ProfilePictureReminder: React.FC<ProfilePictureReminderProps> = ({
   }
 
   return (
-    <Alert className="mb-4 bg-blue-50 border-blue-200">
-      <Camera className="h-4 w-4 text-blue-600" />
+    <Alert className="mb-4 bg-primary/10 dark:bg-primary/20 border-primary/20">
+      <Camera className="h-4 w-4 text-primary" />
       <AlertDescription className="flex items-center justify-between">
         <div className="flex-1 mr-4">
           <strong>Complete your profile!</strong> Adding a profile picture helps build trust with other users and makes you eligible for verification.
@@ -94,7 +94,6 @@ const ProfilePictureReminder: React.FC<ProfilePictureReminderProps> = ({
           <Button
             size="sm"
             onClick={handleUploadClick}
-            className="bg-blue-600 hover:bg-blue-700"
           >
             Add Photo
           </Button>

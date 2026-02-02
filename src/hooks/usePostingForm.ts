@@ -109,7 +109,7 @@ export const usePostingForm = ({ category, listingType, onSuccess, onClose }: Us
       return;
     }
 
-    if (formData.images.length === 0) {
+    if (listingType === 'offer' && formData.images.length === 0) {
       toast({
         title: "Error",
         description: "At least one image is required.",
