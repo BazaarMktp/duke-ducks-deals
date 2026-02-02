@@ -87,7 +87,7 @@ const PostingFormFields: React.FC<PostingFormFieldsProps> = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <Label htmlFor="price" className="text-base font-medium">
-            {getPricePlaceholder()}
+            {listingType === 'wanted' ? 'Budget' : getPricePlaceholder()}
           </Label>
           <Input
             id="price"

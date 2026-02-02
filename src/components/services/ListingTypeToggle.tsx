@@ -57,7 +57,7 @@ const ListingTypeToggle = ({ activeType, onTypeChange, category = 'services' }: 
   const WantedIcon = icons.wanted;
 
   return (
-    <div className="flex bg-gray-100 p-1 rounded-lg w-fit mx-auto mb-6">
+    <div className="flex bg-gray-100 p-1 rounded-lg w-fit mx-auto my-8">
       <Button
         variant={activeType === 'offer' ? 'default' : 'ghost'}
         size="sm"
