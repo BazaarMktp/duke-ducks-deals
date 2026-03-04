@@ -6,6 +6,7 @@ import ProductActions from "@/components/marketplace/ProductActions";
 import SellerRatingDisplay from "@/components/marketplace/SellerRatingDisplay";
 import SellerRatingForm from "@/components/marketplace/SellerRatingForm";
 import SellerReviews from "@/components/marketplace/SellerReviews";
+import OffersPanel from "@/components/marketplace/OffersPanel";
 import { Product } from "@/types/marketplace";
 
 interface MarketplaceItemContentProps {
@@ -116,8 +117,18 @@ const MarketplaceItemContent = ({
             productTitle={product.title}
             productPrice={product.price || 0}
             isUnboxed={isMicrowave}
+            listingId={product.id}
+            sellerId={product.user_id}
+            openToNegotiation={product.open_to_negotiation}
           />
         </div>
+
+        {/* Offers Panel */}
+        {product.open_to_negotiation && (
+          <div className="mb-6">
+            <OffersPanel listingId={product.id} sellerId={product.user_id} />
+          </div>
+        )}
 
         <SellerInfo
           profileName={product.profiles.profile_name}

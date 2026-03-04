@@ -7,6 +7,7 @@ import MarketplaceHeader from "@/components/marketplace/MarketplaceHeader";
 import MarketplaceFilters from "@/components/marketplace/MarketplaceFilters";
 import MarketplaceGrid from "@/components/marketplace/MarketplaceGrid";
 import { UnifiedListingCreation } from "@/components/listings/UnifiedListingCreation";
+import { ListingTemplate } from "@/components/listings/QuickSellTemplates";
 import { Helmet } from "react-helmet-async";
 
 const Marketplace = () => {
@@ -15,6 +16,7 @@ const Marketplace = () => {
   const [sortBy, setSortBy] = useState("newest");
   const [activeListingType, setActiveListingType] = useState<'offer' | 'wanted'>('offer');
   const [showPostingForm, setShowPostingForm] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState<ListingTemplate | null>(null);
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
   const [priceRange, setPriceRange] = useState<{ min: number | null; max: number | null }>({ 
     min: null, 
@@ -38,6 +40,11 @@ const Marketplace = () => {
     priceRange
   );
 
+  const handleSelectTemplate = (template: ListingTemplate) => {
+    setSelectedTemplate(template);
+    setShowPostingForm(true);
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <Helmet>
@@ -50,6 +57,7 @@ const Marketplace = () => {
         user={user} 
         activeListingType={activeListingType}
         onCreateListing={() => setShowPostingForm(true)}
+        onSelectTemplate={handleSelectTemplate}
       />
 
       <ListingTypeToggle 
@@ -87,10 +95,13 @@ const Marketplace = () => {
         <UnifiedListingCreation
           category="marketplace"
           listingType={activeListingType}
-          onClose={() => setShowPostingForm(false)}
+          onClose={() => {
+            setShowPostingForm(false);
+            setSelectedTemplate(null);
+          }}
           onSuccess={() => {
             setShowPostingForm(false);
-            // The listings will auto-refresh due to the query dependency
+            setSelectedTemplate(null);
           }}
         />
       )}

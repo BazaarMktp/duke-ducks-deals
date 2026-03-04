@@ -5,6 +5,7 @@ import { Search, X, SlidersHorizontal } from "lucide-react";
 import MarketplaceTags from "./MarketplaceTags";
 import { MarketplaceListing } from "./types";
 import { Button } from "@/components/ui/button";
+import SaveSearchDialog from "./SaveSearchDialog";
 import {
   Sheet,
   SheetContent,
@@ -223,6 +224,14 @@ const MarketplaceFilters = ({
             )}
           </SelectContent>
         </Select>
+
+        <SaveSearchDialog
+          searchQuery={searchQuery}
+          categoryFilter={categoryFilter}
+          priceRange={priceRange}
+          listingType={activeListingType}
+          onApplySearch={setSearchQuery}
+        />
       </div>
 
       {/* Clear Filters */}

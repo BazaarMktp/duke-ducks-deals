@@ -1,14 +1,16 @@
 
 import { Button } from "@/components/ui/button";
 import { Plus, Search } from "lucide-react";
+import QuickSellTemplates, { ListingTemplate } from "@/components/listings/QuickSellTemplates";
 
 interface MarketplaceHeaderProps {
   user: any;
   activeListingType: 'offer' | 'wanted';
   onCreateListing?: () => void;
+  onSelectTemplate?: (template: ListingTemplate) => void;
 }
 
-const MarketplaceHeader = ({ user, activeListingType, onCreateListing }: MarketplaceHeaderProps) => {
+const MarketplaceHeader = ({ user, activeListingType, onCreateListing, onSelectTemplate }: MarketplaceHeaderProps) => {
   return (
     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
       <div>
@@ -23,23 +25,30 @@ const MarketplaceHeader = ({ user, activeListingType, onCreateListing }: Marketp
         </p>
       </div>
       
-      {user && onCreateListing && (
-        <Button 
-          className="flex items-center gap-2"
-          onClick={onCreateListing}
-        >
-          {activeListingType === 'offer' ? (
-            <>
-              <Plus size={16} />
-              Create Listing
-            </>
-          ) : (
-            <>
-              <Search size={16} />
-              Create Request
-            </>
+      {user && (
+        <div className="flex items-center gap-2">
+          {activeListingType === 'offer' && onSelectTemplate && (
+            <QuickSellTemplates onSelectTemplate={onSelectTemplate} />
           )}
-        </Button>
+          {onCreateListing && (
+            <Button 
+              className="flex items-center gap-2"
+              onClick={onCreateListing}
+            >
+              {activeListingType === 'offer' ? (
+                <>
+                  <Plus size={16} />
+                  Create Listing
+                </>
+              ) : (
+                <>
+                  <Search size={16} />
+                  Create Request
+                </>
+              )}
+            </Button>
+          )}
+        </div>
       )}
     </div>
   );
