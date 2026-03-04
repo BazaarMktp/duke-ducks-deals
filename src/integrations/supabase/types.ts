@@ -860,6 +860,70 @@ export type Database = {
         }
         Relationships: []
       }
+      listing_offers: {
+        Row: {
+          amount: number
+          buyer_id: string
+          counter_amount: number | null
+          created_at: string
+          expires_at: string | null
+          id: string
+          listing_id: string
+          message: string | null
+          seller_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          buyer_id: string
+          counter_amount?: number | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          listing_id: string
+          message?: string | null
+          seller_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          buyer_id?: string
+          counter_amount?: number | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          listing_id?: string
+          message?: string | null
+          seller_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "listing_offers_buyer_id_fkey"
+            columns: ["buyer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "listing_offers_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "listing_offers_seller_id_fkey"
+            columns: ["seller_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       listing_preferences: {
         Row: {
           created_at: string
@@ -1387,6 +1451,56 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      saved_searches: {
+        Row: {
+          category: string | null
+          created_at: string
+          id: string
+          last_notified_at: string | null
+          listing_type: string | null
+          max_price: number | null
+          min_price: number | null
+          name: string
+          notify_enabled: boolean
+          search_query: string | null
+          user_id: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          id?: string
+          last_notified_at?: string | null
+          listing_type?: string | null
+          max_price?: number | null
+          min_price?: number | null
+          name: string
+          notify_enabled?: boolean
+          search_query?: string | null
+          user_id: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          id?: string
+          last_notified_at?: string | null
+          listing_type?: string | null
+          max_price?: number | null
+          min_price?: number | null
+          name?: string
+          notify_enabled?: boolean
+          search_query?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saved_searches_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       scraped_sources: {
         Row: {

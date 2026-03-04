@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Heart, MessageSquare } from "lucide-react";
 import FeedbackButton from "@/components/feedback/FeedbackButton";
 import UnboxedCheckoutDialog from "./UnboxedCheckoutDialog";
+import MakeOfferDialog from "./MakeOfferDialog";
 
 interface ProductActionsProps {
   user: any;
@@ -17,6 +18,9 @@ interface ProductActionsProps {
   productTitle?: string;
   productPrice?: number;
   isUnboxed?: boolean;
+  listingId?: string;
+  sellerId?: string;
+  openToNegotiation?: boolean;
 }
 
 const ProductActions = ({ 
@@ -28,7 +32,10 @@ const ProductActions = ({
   listingType = 'offer',
   productTitle = '',
   productPrice = 0,
-  isUnboxed = false
+  isUnboxed = false,
+  listingId,
+  sellerId,
+  openToNegotiation = false
 }: ProductActionsProps) => {
   const [showUnboxedDialog, setShowUnboxedDialog] = useState(false);
   if (!user) {
@@ -90,6 +97,15 @@ const ProductActions = ({
                 : (isFavorite ? 'Remove from Favorites' : 'Add to Favorites')
               }
             </Button>
+
+            {openToNegotiation && listingId && sellerId && listingType === 'offer' && (
+              <MakeOfferDialog
+                listingId={listingId}
+                sellerId={sellerId}
+                listingPrice={productPrice}
+                listingTitle={productTitle}
+              />
+            )}
 
             <FeedbackButton variant="ghost" className="w-full" />
           </div>
