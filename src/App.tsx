@@ -44,8 +44,6 @@ import AdminDashboard from "./pages/AdminDashboard";
 import SharedLinks from "./pages/SharedLinks";
 import DevilsDeals from "./pages/DevilsDeals";
 import DealDetail from "./pages/DealDetail";
-import BusinessOnboarding from "./pages/BusinessOnboarding";
-import BusinessDashboard from "./pages/BusinessDashboard";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Footer from "@/components/Footer";
@@ -94,8 +92,6 @@ function AppContent() {
               <Route path="/services/:id" element={<ServiceDetail />} />
               <Route path="/devils-deals" element={<DevilsDeals />} />
               <Route path="/devils-deals/:id" element={<DealDetail />} />
-              <Route path="/business-onboarding" element={<BusinessOnboarding />} />
-              <Route path="/business-dashboard" element={<BusinessDashboard />} />
               <Route
                 path="/messages"
                 element={
