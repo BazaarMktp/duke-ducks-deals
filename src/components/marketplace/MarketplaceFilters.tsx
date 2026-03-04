@@ -108,13 +108,14 @@ const MarketplaceFilters = ({
               key={cat.value}
               onClick={() => {
                 if (cat.value === '') {
+                  setCategoryFilter(null);
                   setSearchQuery('');
                 } else {
-                  setSearchQuery(cat.value);
+                  setCategoryFilter(cat.value);
                 }
               }}
               className={`px-3 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
-                (cat.value === '' && !searchQuery) || searchQuery.toLowerCase() === cat.value
+                (cat.value === '' && !categoryFilter) || categoryFilter === cat.value
                   ? 'bg-primary text-primary-foreground'
                   : 'bg-muted text-muted-foreground hover:bg-muted/80'
               }`}

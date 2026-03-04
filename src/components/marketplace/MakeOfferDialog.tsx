@@ -42,7 +42,7 @@ const MakeOfferDialog = ({ listingId, sellerId, listingPrice, listingTitle }: Ma
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="gap-2">
+        <Button variant="outline" className="w-full gap-2">
           <DollarSign size={16} />
           Make Offer
         </Button>

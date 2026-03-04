@@ -39,6 +39,7 @@ const MarketplaceTags = ({ listings, onTagClick, currentQuery = '' }: Marketplac
     
     // Get top 5 dynamic tags
     return Object.entries(tagCount)
+      .filter(([tag]) => !fixedTags.includes(tag))
       .sort(([, a], [, b]) => b - a)
       .slice(0, 5)
       .map(([tag]) => tag);
