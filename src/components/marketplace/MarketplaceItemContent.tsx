@@ -3,6 +3,9 @@ import ProductImageGallery from "@/components/marketplace/ProductImageGallery";
 import ProductInfo from "@/components/marketplace/ProductInfo";
 import SellerInfo from "@/components/marketplace/SellerInfo";
 import ProductActions from "@/components/marketplace/ProductActions";
+import SellerRatingDisplay from "@/components/marketplace/SellerRatingDisplay";
+import SellerRatingForm from "@/components/marketplace/SellerRatingForm";
+import SellerReviews from "@/components/marketplace/SellerReviews";
 import { Product } from "@/types/marketplace";
 
 interface MarketplaceItemContentProps {
@@ -129,6 +132,20 @@ const MarketplaceItemContent = ({
           listingType={product.listing_type}
           isOwnListing={product.user_id === user?.id}
         />
+
+        {/* Seller Rating */}
+        <div className="mb-4 flex items-center gap-3">
+          <SellerRatingDisplay sellerId={product.user_id} />
+          {user && product.user_id !== user.id && (
+            <SellerRatingForm 
+              sellerId={product.user_id} 
+              listingId={product.id}
+              sellerName={product.profiles.profile_name}
+            />
+          )}
+        </div>
+
+        <SellerReviews sellerId={product.user_id} />
       </div>
     </div>
   );

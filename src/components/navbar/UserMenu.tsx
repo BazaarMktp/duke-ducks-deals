@@ -2,6 +2,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import NotificationCenter from "@/components/notifications/NotificationCenter";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -54,6 +55,7 @@ const UserMenu = ({ user, onSignOut, unreadMessages }: UserMenuProps) => {
 
   return (
     <div className="hidden md:flex items-center space-x-1">
+      {user && <NotificationCenter />}
       {user && (
         <Link to="/messages" className="relative">
           <Button variant="ghost" size="sm" className="p-2">
