@@ -21,8 +21,6 @@ export type Profile = {
 export type Stats = {
   activeListings: number;
   totalUsers: number;
-  totalDonations: number;
-  totalColleges: number;
 };
 
 export type Category = {

@@ -126,8 +126,8 @@ const About = () => {
               <div className="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Heart className="text-red-600" size={32} />
               </div>
-              <h3 className="text-xl font-bold mb-2">Donations</h3>
-              <p className="text-gray-600">Give back to the community through charitable donations</p>
+              <h3 className="text-xl font-bold mb-2">Devil's Deals</h3>
+              <p className="text-gray-600">Exclusive discounts from local businesses for students</p>
             </div>
           </div>
         </div>

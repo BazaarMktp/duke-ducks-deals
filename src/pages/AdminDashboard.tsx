@@ -1,13 +1,11 @@
 import { useAdmin } from "@/contexts/AdminContext";
 import { useAuth } from "@/contexts/AuthContext";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Navigate } from "react-router-dom";
 import UserManagement from "@/components/admin/UserManagement";
 import ListingManagement from "@/components/admin/ListingManagement";
 import SupportTickets from "@/components/admin/SupportTickets";
 import AdminStats from "@/components/admin/AdminStats";
-import DonationManagement from "@/components/admin/DonationManagement";
 import ReportManagement from "@/components/admin/ReportManagement";
 import FeedbackManagement from "@/components/admin/FeedbackManagement";
 import { PerformanceAnalytics } from "@/components/admin/PerformanceAnalytics";
@@ -35,7 +33,7 @@ const AdminDashboard = () => {
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Admin Dashboard</h1>
-        <p className="text-gray-600">Monitor and manage your platform's performance</p>
+        <p className="text-muted-foreground">Monitor and manage your platform's performance</p>
       </div>
       
       <Tabs defaultValue="analytics" className="space-y-6">
@@ -44,7 +42,6 @@ const AdminDashboard = () => {
           <TabsTrigger value="users" className="whitespace-nowrap">Users</TabsTrigger>
           <TabsTrigger value="listings" className="whitespace-nowrap">Listings</TabsTrigger>
           <TabsTrigger value="reports" className="whitespace-nowrap">Reports</TabsTrigger>
-          <TabsTrigger value="donations" className="whitespace-nowrap">Donations</TabsTrigger>
           <TabsTrigger value="feedback" className="whitespace-nowrap">Feedback</TabsTrigger>
           <TabsTrigger value="performance" className="whitespace-nowrap">Performance</TabsTrigger>
           <TabsTrigger value="deals" className="whitespace-nowrap">Devils Deals</TabsTrigger>
@@ -69,25 +66,21 @@ const AdminDashboard = () => {
           <ReportManagement />
         </TabsContent>
 
-        <TabsContent value="donations">
-          <DonationManagement />
-        </TabsContent>
-
         <TabsContent value="feedback">
           <FeedbackManagement />
         </TabsContent>
 
-            <TabsContent value="performance">
-              <PerformanceAnalytics />
-            </TabsContent>
-            
-            <TabsContent value="deals">
-              <DealsAnalytics />
-            </TabsContent>
+        <TabsContent value="performance">
+          <PerformanceAnalytics />
+        </TabsContent>
+        
+        <TabsContent value="deals">
+          <DealsAnalytics />
+        </TabsContent>
 
-            <TabsContent value="ads">
-              <BusinessAdsManagement />
-            </TabsContent>
+        <TabsContent value="ads">
+          <BusinessAdsManagement />
+        </TabsContent>
 
         <TabsContent value="featuring">
           <AutoFeatureControl />

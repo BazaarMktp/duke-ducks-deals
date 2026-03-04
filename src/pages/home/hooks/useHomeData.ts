@@ -9,18 +9,12 @@ const fetchStats = async (): Promise<Stats> => {
       .select('*', { count: 'exact', head: true })
       .eq('status', 'active');
 
-    // Use the RPC function to get user count (accessible even when not logged in)
     const { data: usersCount } = await supabase
       .rpc('get_total_users_count');
-
-    const { data: donationsCount } = await supabase
-      .rpc('get_donations_count');
 
     return {
       activeListings: listingsCount || 0,
       totalUsers: usersCount || 0,
-      totalDonations: donationsCount || 0,
-      totalColleges: 0,
     };
   } catch (error) {
     console.error('Error fetching stats:', error);
@@ -90,7 +84,7 @@ const fetchProfiles = async (userIds: string[]): Promise<Record<string, Profile>
 };
 
 export const useHomeData = (user: any) => {
-  const [stats, setStats] = useState<Stats>({ activeListings: 0, totalUsers: 0, totalDonations: 0, totalColleges: 0 });
+  const [stats, setStats] = useState<Stats>({ activeListings: 0, totalUsers: 0 });
   const [rawFeaturedListings, setRawFeaturedListings] = useState<Listing[]>([]);
   const [rawFeaturedRequests, setRawFeaturedRequests] = useState<Listing[]>([]);
   const [profiles, setProfiles] = useState<Record<string, Profile>>({});
