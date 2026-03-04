@@ -88,44 +88,9 @@ const MarketplaceFilters = ({
 
   const hasActiveFilters = priceRange.min !== null || priceRange.max !== null;
 
-  const CATEGORY_CHIPS = [
-    { label: "All", value: "" },
-    { label: "📚 Textbooks", value: "textbooks" },
-    { label: "💻 Electronics", value: "electronics" },
-    { label: "🪑 Furniture", value: "furniture" },
-    { label: "👕 Clothing", value: "clothing" },
-    { label: "🎮 Gaming", value: "gaming" },
-    { label: "🏠 Dorm", value: "dorm" },
-  ];
 
   return (
     <div className="space-y-4">
-      {/* Category Chips */}
-      {activeListingType === 'offer' && (
-        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
-          {CATEGORY_CHIPS.map(cat => (
-            <button
-              key={cat.value}
-              onClick={() => {
-                if (cat.value === '') {
-                  setCategoryFilter(null);
-                  setSearchQuery('');
-                } else {
-                  setCategoryFilter(cat.value);
-                }
-              }}
-              className={`px-3 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
-                (cat.value === '' && !categoryFilter) || categoryFilter === cat.value
-                  ? 'bg-primary text-primary-foreground'
-                  : 'bg-muted text-muted-foreground hover:bg-muted/80'
-              }`}
-            >
-              {cat.label}
-            </button>
-          ))}
-        </div>
-      )}
-
       {/* Search and Sort Row */}
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
