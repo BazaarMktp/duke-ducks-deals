@@ -14,6 +14,15 @@ interface MessageNotificationRequest {
   message: string;
 }
 
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -168,7 +177,7 @@ serve(async (req) => {
             <p style="margin: 0 0 16px 0;">You have a new message from <strong>${senderProfile.profile_name}</strong>:</p>
             
             <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 16px; margin: 16px 0;">
-              <p style="margin: 0; font-style: italic; color: #475569;">"${message}"</p>
+              <p style="margin: 0; font-style: italic; color: #475569;">"${escapeHtml(message)}"</p>
             </div>
             
             <p style="margin: 16px 0 0 0; text-align: center;">
