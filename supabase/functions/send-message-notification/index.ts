@@ -20,11 +20,44 @@ serve(async (req) => {
   }
 
   try {
-    const { conversationId, senderId, message }: MessageNotificationRequest = await req.json();
-    
-    // Initialize Supabase client
+    // Validate JWT - require authenticated user
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader?.startsWith('Bearer ')) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+
+    // Verify the caller's identity using their JWT
+    const authClient = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } },
+    });
+    const token = authHeader.replace('Bearer ', '');
+    const { data: claimsData, error: claimsError } = await authClient.auth.getClaims(token);
+    if (claimsError || !claimsData?.claims) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+    const authenticatedUserId = claimsData.claims.sub;
+
+    const { conversationId, senderId, message }: MessageNotificationRequest = await req.json();
+
+    // Ensure the authenticated user matches the claimed senderId
+    if (authenticatedUserId !== senderId) {
+      return new Response(JSON.stringify({ error: 'Forbidden: sender mismatch' }), {
+        status: 403,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+    
+    // Use service role client for data lookups
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     // Get all required data in parallel for better performance
@@ -203,8 +236,7 @@ serve(async (req) => {
   } catch (error) {
     console.error('Error in send-message-notification function:', error);
     return new Response(JSON.stringify({ 
-      error: error.message,
-      details: error.stack 
+      error: 'Internal server error'
     }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
