@@ -14,7 +14,6 @@ import { SharedLinkWrapper } from "@/components/shared/SharedLinkWrapper";
 import { PerformanceTracker } from "@/components/PerformanceTracker";
 import { PWAInstallPrompt } from "@/components/PWAInstallPrompt";
 import { OfflineIndicator } from "@/components/OfflineIndicator";
-import { CampusChatbot } from "@/components/ai/CampusChatbot";
 import Navbar from "@/components/Navbar";
 import BottomNavBar from "@/components/BottomNavBar";
 import Index from "./pages/Index";
@@ -41,14 +40,10 @@ import CreateListing from "./pages/CreateListing";
 import SmartCreateListing from "./pages/SmartCreateListing";
 import EditListing from "./pages/EditListing";
 import Favorites from "./pages/Favorites";
-import Cart from "./pages/Cart";
 import AdminDashboard from "./pages/AdminDashboard";
 import SharedLinks from "./pages/SharedLinks";
 import DevilsDeals from "./pages/DevilsDeals";
 import DealDetail from "./pages/DealDetail";
-import NativeFeatures from "./pages/NativeFeatures";
-import CampusLife from "./pages/CampusLife";
-import RoommateFinder from "./pages/RoommateFinder";
 import BusinessOnboarding from "./pages/BusinessOnboarding";
 import BusinessDashboard from "./pages/BusinessDashboard";
 import NotFound from "./pages/NotFound";
@@ -99,9 +94,6 @@ function AppContent() {
               <Route path="/services/:id" element={<ServiceDetail />} />
               <Route path="/devils-deals" element={<DevilsDeals />} />
               <Route path="/devils-deals/:id" element={<DealDetail />} />
-              <Route path="/campus-life" element={<CampusLife />} />
-              <Route path="/roommate-finder" element={<RoommateFinder />} />
-              <Route path="/native-features" element={<NativeFeatures />} />
               <Route path="/business-onboarding" element={<BusinessOnboarding />} />
               <Route path="/business-dashboard" element={<BusinessDashboard />} />
               <Route
@@ -169,14 +161,6 @@ function AppContent() {
                 }
               />
               <Route
-                path="/cart"
-                element={
-                  <ProtectedRoute>
-                    <Cart />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
                 path="/admin"
                 element={
                   <ProtectedRoute>
@@ -199,7 +183,6 @@ function AppContent() {
             <Footer />
           </div>
           <BottomNavBar />
-          <CampusChatbot />
         </div>
       </SharedLinkWrapper>
     </>

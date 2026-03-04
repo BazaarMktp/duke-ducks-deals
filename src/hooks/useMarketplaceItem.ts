@@ -4,7 +4,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { useFavorites } from "@/hooks/useFavorites";
-import { useCartItem } from "@/hooks/useCartItem";
 import { useConversation } from "@/hooks/useConversation";
 import { Product } from "@/types/marketplace";
 
@@ -16,7 +15,6 @@ export const useMarketplaceItem = (id: string | undefined) => {
   const { toast } = useToast();
 
   const { isFavorite, checkFavoriteStatus, toggleFavorite } = useFavorites(id);
-  const { isInCart, checkCartStatus, addToCart } = useCartItem(id);
   const { startConversation: startConv } = useConversation();
 
   useEffect(() => {
@@ -24,10 +22,9 @@ export const useMarketplaceItem = (id: string | undefined) => {
       fetchProduct();
       if (user) {
         checkFavoriteStatus();
-        checkCartStatus();
       }
     }
-  }, [id, user, checkFavoriteStatus, checkCartStatus]);
+  }, [id, user, checkFavoriteStatus]);
 
   const fetchProduct = async () => {
     try {
@@ -95,10 +92,8 @@ export const useMarketplaceItem = (id: string | undefined) => {
     currentImageIndex,
     setCurrentImageIndex,
     isFavorite,
-    isInCart,
     user,
     toggleFavorite,
-    addToCart,
     startConversation
   };
 };

@@ -1,4 +1,4 @@
-import { Search, ShoppingCart, Truck } from "lucide-react";
+import { Search, MessageSquare, Truck } from "lucide-react";
 
 export const HowItWorksSection = () => {
   const steps = [
@@ -8,8 +8,8 @@ export const HowItWorksSection = () => {
       description: "Find textbooks, electronics, supplies, and more by searching our vast student marketplace."
     },
     {
-      icon: ShoppingCart,
-      title: "Add to Cart",
+      icon: MessageSquare,
+      title: "Message the Seller",
       description: "Connect directly with student sellers and arrange deals for the best price on campus."
     },
     {

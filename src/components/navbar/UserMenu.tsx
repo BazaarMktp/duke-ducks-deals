@@ -9,7 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { User, Settings, ListFilter, LogOut, Shield, Heart, ShoppingCart, MessageCircle } from "lucide-react";
+import { User, Settings, ListFilter, LogOut, Shield, Heart, MessageCircle } from "lucide-react";
 import { useAdmin } from "@/contexts/AdminContext";
 
 interface UserMenuProps {
@@ -22,15 +22,12 @@ const UserMenu = ({ user, onSignOut, unreadMessages }: UserMenuProps) => {
   const { isAdmin } = useAdmin();
 
   const getUserDisplayName = () => {
-    // First try to get first name from full_name
     if (user?.user_metadata?.full_name) {
       return user.user_metadata.full_name.split(' ')[0];
     }
-    // Fallback to profile_name
     if (user?.user_metadata?.profile_name) {
       return user.user_metadata.profile_name;
     }
-    // Final fallback to email prefix
     if (user?.email) {
       return user.email.split('@')[0];
     }
@@ -62,7 +59,7 @@ const UserMenu = ({ user, onSignOut, unreadMessages }: UserMenuProps) => {
           <Button variant="ghost" size="sm" className="p-2">
             <MessageCircle size={20} />
             {unreadMessages > 0 && (
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 bg-destructive text-destructive-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center">
                 {unreadMessages}
               </span>
             )}
@@ -97,7 +94,7 @@ const UserMenu = ({ user, onSignOut, unreadMessages }: UserMenuProps) => {
               <MessageCircle size={16} />
               <span className="flex-grow">Messages</span>
               {unreadMessages > 0 && (
-                <span className="bg-red-500 text-white text-xs font-semibold rounded-full h-5 w-5 flex items-center justify-center">
+                <span className="bg-destructive text-destructive-foreground text-xs font-semibold rounded-full h-5 w-5 flex items-center justify-center">
                   {unreadMessages}
                 </span>
               )}
@@ -108,12 +105,6 @@ const UserMenu = ({ user, onSignOut, unreadMessages }: UserMenuProps) => {
             <Link to="/favorites" className="flex items-center space-x-2">
               <Heart size={16} />
               <span>Favorites</span>
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link to="/cart" className="flex items-center space-x-2">
-              <ShoppingCart size={16} />
-              <span>Cart</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />

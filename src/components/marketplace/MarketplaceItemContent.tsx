@@ -11,9 +11,7 @@ interface MarketplaceItemContentProps {
   onImageChange: (index: number) => void;
   user: any;
   isFavorite: boolean;
-  isInCart: boolean;
   onToggleFavorite: () => void;
-  onAddToCart: () => void;
   onStartConversation: () => void;
 }
 
@@ -23,15 +21,11 @@ const MarketplaceItemContent = ({
   onImageChange,
   user,
   isFavorite,
-  isInCart,
   onToggleFavorite,
-  onAddToCart,
   onStartConversation
 }: MarketplaceItemContentProps) => {
-  // Check if this is a microwave listing for Unboxed service
   const isMicrowave = product.title.toLowerCase().includes('microwave');
 
-  // For requests (wanted), we don't show images and use a single column layout
   if (product.listing_type === 'wanted') {
     return (
       <div className="max-w-4xl mx-auto">
@@ -46,8 +40,8 @@ const MarketplaceItemContent = ({
           openToNegotiation={product.open_to_negotiation}
           userId={user?.id}
           listingOwnerId={product.user_id}
-          isInConversation={false} // TODO: Add conversation detection
-          isAdmin={false} // TODO: Add admin detection
+          isInConversation={false}
+          isAdmin={false}
           isUnboxed={isMicrowave}
         />
 
@@ -55,10 +49,8 @@ const MarketplaceItemContent = ({
           <ProductActions
             user={user}
             isFavorite={isFavorite}
-            isInCart={isInCart}
             isOwnProduct={product.user_id === user?.id}
             onToggleFavorite={onToggleFavorite}
-            onAddToCart={onAddToCart}
             onStartConversation={onStartConversation}
             listingType={product.listing_type}
             productTitle={product.title}
@@ -84,7 +76,6 @@ const MarketplaceItemContent = ({
     );
   }
 
-  // For offers, use the two-column layout with images
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       <ProductImageGallery
@@ -106,8 +97,8 @@ const MarketplaceItemContent = ({
           openToNegotiation={product.open_to_negotiation}
           userId={user?.id}
           listingOwnerId={product.user_id}
-          isInConversation={false} // TODO: Add conversation detection
-          isAdmin={false} // TODO: Add admin detection
+          isInConversation={false}
+          isAdmin={false}
           isUnboxed={isMicrowave}
         />
 
@@ -115,10 +106,8 @@ const MarketplaceItemContent = ({
           <ProductActions
             user={user}
             isFavorite={isFavorite}
-            isInCart={isInCart}
             isOwnProduct={product.user_id === user?.id}
             onToggleFavorite={onToggleFavorite}
-            onAddToCart={onAddToCart}
             onStartConversation={onStartConversation}
             listingType={product.listing_type}
             productTitle={product.title}

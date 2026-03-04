@@ -10,14 +10,12 @@ import { Card, CardContent } from "@/components/ui/card";
 
 const MarketplaceItemDetailSkeleton = () => (
   <div className="container mx-auto px-4 py-8">
-    {/* Header skeleton */}
     <div className="flex items-center gap-2 mb-6">
       <Skeleton className="h-9 w-9" />
       <Skeleton className="h-6 w-32" />
     </div>
     
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      {/* Image gallery skeleton */}
       <div>
         <Skeleton className="w-full aspect-square rounded-lg mb-4" />
         <div className="flex gap-2">
@@ -27,7 +25,6 @@ const MarketplaceItemDetailSkeleton = () => (
         </div>
       </div>
       
-      {/* Product info skeleton */}
       <div>
         <Skeleton className="h-8 w-3/4 mb-4" />
         <Skeleton className="h-10 w-32 mb-6" />
@@ -39,7 +36,6 @@ const MarketplaceItemDetailSkeleton = () => (
         <Card>
           <CardContent className="p-6">
             <div className="space-y-3">
-              <Skeleton className="h-10 w-full" />
               <Skeleton className="h-10 w-full" />
               <Skeleton className="h-10 w-full" />
             </div>
@@ -58,10 +54,8 @@ const MarketplaceItemDetail = () => {
     currentImageIndex,
     setCurrentImageIndex,
     isFavorite,
-    isInCart,
     user,
     toggleFavorite,
-    addToCart,
     startConversation
   } = useMarketplaceItem(id);
 
@@ -91,13 +85,10 @@ const MarketplaceItemDetail = () => {
         onImageChange={setCurrentImageIndex}
         user={user}
         isFavorite={isFavorite}
-        isInCart={isInCart}
         onToggleFavorite={toggleFavorite}
-        onAddToCart={addToCart}
         onStartConversation={startConversation}
       />
       
-      {/* Similar Items Section */}
       {product.listing_type === 'offer' && (
         <SimilarItems 
           currentProductId={product.id}
@@ -105,7 +96,6 @@ const MarketplaceItemDetail = () => {
         />
       )}
       
-      {/* Sticky Mobile CTA */}
       {user && product.user_id !== user.id && product.listing_type === 'offer' && (
         <div className="fixed bottom-0 left-0 right-0 p-4 bg-background/95 backdrop-blur border-t md:hidden z-50">
           <div className="flex items-center gap-3 max-w-lg mx-auto">
