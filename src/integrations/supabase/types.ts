@@ -1351,7 +1351,7 @@ export type Database = {
           is_active: boolean | null
           last_scraped: string | null
           name: string
-          scrape_frequency: unknown
+          scrape_frequency: string | null
           selector_config: Json | null
           source_type: string
           url: string
@@ -1362,7 +1362,7 @@ export type Database = {
           is_active?: boolean | null
           last_scraped?: string | null
           name: string
-          scrape_frequency?: unknown
+          scrape_frequency?: string | null
           selector_config?: Json | null
           source_type: string
           url: string
@@ -1373,7 +1373,7 @@ export type Database = {
           is_active?: boolean | null
           last_scraped?: string | null
           name?: string
-          scrape_frequency?: unknown
+          scrape_frequency?: string | null
           selector_config?: Json | null
           source_type?: string
           url?: string
