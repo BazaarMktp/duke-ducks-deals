@@ -18,13 +18,13 @@ export const useMessageAttachments = () => {
   const { toast } = useToast();
 
   const validateFile = (file: File): boolean => {
-    const maxSize = 5 * 1024 * 1024; // 5MB
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    const maxSize = 10 * 1024 * 1024; // 10MB (will be compressed before upload)
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/heic', 'image/heif'];
 
-    if (!allowedTypes.includes(file.type)) {
+    if (!allowedTypes.includes(file.type) && !file.type.startsWith('image/')) {
       toast({
         title: "Invalid file type",
-        description: "Only JPG, PNG, and WebP images are allowed.",
+        description: "Only image files are allowed.",
         variant: "destructive",
       });
       return false;
