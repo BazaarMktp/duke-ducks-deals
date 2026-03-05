@@ -94,11 +94,14 @@ export const useMessages = (selectedConversation: string | null) => {
 
     setSendingMessage(true);
     
+    // Use placeholder text for image-only messages
+    const messageText = newMessage.trim() || (attachments?.length ? '📷 Image' : '');
+    
     // Create optimistic message
     const tempId = `temp_${Date.now()}`;
     const optimisticMessage: Message = {
       id: tempId,
-      message: newMessage.trim(),
+      message: messageText,
       sender_id: user.id,
       created_at: new Date().toISOString(),
       is_read: true,
@@ -120,7 +123,7 @@ export const useMessages = (selectedConversation: string | null) => {
         .insert({
           conversation_id: selectedConversation,
           sender_id: user.id,
-          message: newMessage.trim(),
+          message: messageText,
           attachments: attachments || []
         })
         .select(`

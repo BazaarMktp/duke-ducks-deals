@@ -18,13 +18,13 @@ export const useMessageAttachments = () => {
   const { toast } = useToast();
 
   const validateFile = (file: File): boolean => {
-    const maxSize = 5 * 1024 * 1024; // 5MB
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    const maxSize = 10 * 1024 * 1024; // 10MB (will be compressed before upload)
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/heic', 'image/heif'];
 
-    if (!allowedTypes.includes(file.type)) {
+    if (!allowedTypes.includes(file.type) && !file.type.startsWith('image/')) {
       toast({
         title: "Invalid file type",
-        description: "Only JPG, PNG, and WebP images are allowed.",
+        description: "Only image files are allowed.",
         variant: "destructive",
       });
       return false;
@@ -70,8 +70,15 @@ export const useMessageAttachments = () => {
 
         setUploadProgress(prev => ({ ...prev, [file.name]: 10 }));
 
-        // Compress image for faster upload and loading
-        const compressedBlob = await compressImage(file, 0.8, 1920, 1920);
+        let compressedBlob: Blob;
+        try {
+          // Compress image for faster upload and loading
+          compressedBlob = await compressImage(file, 0.8, 1920, 1920);
+        } catch (compressError) {
+          console.error('Image compression failed:', compressError);
+          // Fall back to original file if compression fails
+          compressedBlob = file;
+        }
         
         setUploadProgress(prev => ({ ...prev, [file.name]: 40 }));
 
@@ -87,10 +94,10 @@ export const useMessageAttachments = () => {
           });
 
         if (error) {
-          console.error('Upload error:', error);
+          console.error('Storage upload error:', error.message, error);
           toast({
             title: "Upload failed",
-            description: `Failed to upload ${file.name}`,
+            description: `Failed to upload ${file.name}. ${error.message || 'Please try again.'}`,
             variant: "destructive",
           });
           continue;
