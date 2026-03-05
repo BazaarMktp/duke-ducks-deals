@@ -75,6 +75,9 @@ export const compressImage = async (
         ctx.imageSmoothingQuality = 'high';
         ctx.drawImage(img, 0, 0, width, height);
         
+        // Revoke the object URL to free memory
+        URL.revokeObjectURL(img.src);
+        
         canvas.toBlob(
           (blob) => {
             if (blob) {
@@ -87,12 +90,17 @@ export const compressImage = async (
           quality
         );
       } else {
+        URL.revokeObjectURL(img.src);
         reject(new Error('Failed to get canvas context'));
       }
     };
     
-    img.onerror = () => reject(new Error('Failed to load image'));
-    img.src = URL.createObjectURL(file);
+    img.onerror = () => {
+      URL.revokeObjectURL(img.src);
+      reject(new Error('Failed to load image'));
+    };
+    const objectUrl = URL.createObjectURL(file);
+    img.src = objectUrl;
   });
 };
 
