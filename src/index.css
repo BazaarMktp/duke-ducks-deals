@@ -42,7 +42,9 @@
     --brand-blue: 225 83% 28%; /* Deep navy blue to match logo */
     --hot-deal: 25 56% 69%; /* Buff for deal badges */
     --success: 81 40% 59%; /* Pistachio for positive actions */
+    --success-foreground: 0 0% 100%;
     --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
 
     --radius: 0.75rem;
 
