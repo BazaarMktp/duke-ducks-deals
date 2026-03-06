@@ -159,7 +159,7 @@ const Favorites = () => {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-center">
-          <p className="text-gray-500">Please sign in to view your favorites.</p>
+          <p className="text-muted-foreground">Please sign in to view your favorites.</p>
         </div>
       </div>
     );
