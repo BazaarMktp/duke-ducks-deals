@@ -30,7 +30,6 @@ const MarketplaceGrid = ({
 }: MarketplaceGridProps) => {
   const { startConversation } = useConversation();
   const observerRef = useRef<IntersectionObserver | null>(null);
-  const loadMoreRef = useRef<HTMLDivElement | null>(null);
   
   // Use refs to avoid stale closures in IntersectionObserver callback
   const hasMoreRef = useRef(hasMore);
@@ -59,23 +58,28 @@ const MarketplaceGrid = ({
     } as any);
   };
 
-  const handleObserver = useCallback((entries: IntersectionObserverEntry[]) => {
-    const [entry] = entries;
-    if (entry.isIntersecting && hasMoreRef.current && !loadingMoreRef.current && onLoadMoreRef.current) {
-      onLoadMoreRef.current();
-    }
+  // Clean up observer on unmount
+  useEffect(() => {
+    return () => { observerRef.current?.disconnect(); };
   }, []);
 
-  useEffect(() => {
+  // Callback ref: attaches/detaches the IntersectionObserver when the sentinel mounts/unmounts
+  const loadMoreCallbackRef = useCallback((node: HTMLDivElement | null) => {
     if (observerRef.current) observerRef.current.disconnect();
-    observerRef.current = new IntersectionObserver(handleObserver, {
-      root: null,
-      rootMargin: '200px',
-      threshold: 0.1
-    });
-    if (loadMoreRef.current) observerRef.current.observe(loadMoreRef.current);
-    return () => { observerRef.current?.disconnect(); };
-  }, [handleObserver]);
+
+    if (!node) return;
+
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting && hasMoreRef.current && !loadingMoreRef.current && onLoadMoreRef.current) {
+          onLoadMoreRef.current();
+        }
+      },
+      { root: null, rootMargin: '200px', threshold: 0.1 }
+    );
+    observerRef.current.observe(node);
+  }, []);
 
   if (loading) {
     return <MarketplaceItemSkeleton count={8} />;
@@ -111,7 +115,7 @@ const MarketplaceGrid = ({
         ))}
       </div>
       
-      <div ref={loadMoreRef} className="w-full py-8 flex justify-center">
+      <div ref={loadMoreCallbackRef} className="w-full py-8 flex justify-center">
         {loadingMore && (
           <div className="flex items-center gap-2 text-muted-foreground">
             <Loader2 className="h-5 w-5 animate-spin" />
