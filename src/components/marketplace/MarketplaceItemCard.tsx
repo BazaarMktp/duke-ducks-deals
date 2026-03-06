@@ -56,7 +56,7 @@ const MarketplaceItemCard = ({
               />
             </div>
           )}
-          <Badge className="bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 mb-2 text-xs font-medium">
+          <Badge className="bg-primary/10 text-primary mb-2 text-xs font-medium">
             Wanted
           </Badge>
           <h3 className="font-semibold text-sm line-clamp-2 text-foreground mb-1">
@@ -64,7 +64,7 @@ const MarketplaceItemCard = ({
           </h3>
           <p className="text-xs text-muted-foreground line-clamp-2 mb-3">{listing.description}</p>
           <div className="flex items-center justify-between">
-            <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">
+            <span className="text-sm font-semibold text-primary">
               {listing.price ? `Budget: $${listing.price}` : 'Negotiable'}
             </span>
             <span className="text-xs text-muted-foreground">{timeAgo()}</span>
@@ -114,7 +114,7 @@ const MarketplaceItemCard = ({
           {/* Status badges */}
           <div className="absolute top-2.5 left-2.5 flex flex-col gap-1">
             {listing.featured && (
-              <span className="bg-yellow-400 text-yellow-900 text-[10px] font-bold px-2 py-0.5 rounded-full">
+              <span className="bg-accent text-accent-foreground text-[10px] font-bold px-2 py-0.5 rounded-full">
                 Featured
               </span>
             )}
