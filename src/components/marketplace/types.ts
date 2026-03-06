@@ -23,4 +23,5 @@ export interface MarketplaceListing {
   sold_at?: string;
   sold_on_bazaar?: boolean;
   item_tag?: string | null;
+  open_to_negotiation?: boolean;
 }

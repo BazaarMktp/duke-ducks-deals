@@ -1,10 +1,9 @@
-
 import { useEffect, useRef, useCallback } from "react";
 import MarketplaceItemCard from "./MarketplaceItemCard";
 import MarketplaceItemSkeleton from "./MarketplaceItemSkeleton";
 import { MarketplaceListing } from "./types";
 import { useConversation } from "@/hooks/useConversation";
-import { Loader2 } from "lucide-react";
+import { Loader2, PackageOpen } from "lucide-react";
 
 interface MarketplaceGridProps {
   listings: MarketplaceListing[];
@@ -34,7 +33,6 @@ const MarketplaceGrid = ({
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
   const handleStartConversation = (listing: MarketplaceListing) => {
-    // Map listing to the minimal Product shape required by startConversation
     startConversation({
       id: listing.id,
       title: listing.title,
@@ -52,7 +50,6 @@ const MarketplaceGrid = ({
     } as any);
   };
 
-  // Infinite scroll with IntersectionObserver
   const handleObserver = useCallback((entries: IntersectionObserverEntry[]) => {
     const [entry] = entries;
     if (entry.isIntersecting && hasMore && !loadingMore && onLoadMore) {
@@ -61,48 +58,38 @@ const MarketplaceGrid = ({
   }, [hasMore, loadingMore, onLoadMore]);
 
   useEffect(() => {
-    if (observerRef.current) {
-      observerRef.current.disconnect();
-    }
-
+    if (observerRef.current) observerRef.current.disconnect();
     observerRef.current = new IntersectionObserver(handleObserver, {
       root: null,
       rootMargin: '100px',
       threshold: 0.1
     });
-
-    if (loadMoreRef.current) {
-      observerRef.current.observe(loadMoreRef.current);
-    }
-
-    return () => {
-      if (observerRef.current) {
-        observerRef.current.disconnect();
-      }
-    };
+    if (loadMoreRef.current) observerRef.current.observe(loadMoreRef.current);
+    return () => { observerRef.current?.disconnect(); };
   }, [handleObserver]);
 
-  // Show skeleton while initial loading
   if (loading) {
     return <MarketplaceItemSkeleton count={8} />;
   }
 
   if (listings.length === 0) {
     return (
-      <div className="text-center py-12">
-        <p className="text-muted-foreground">
+      <div className="text-center py-16">
+        <PackageOpen className="h-12 w-12 text-muted-foreground/40 mx-auto mb-3" />
+        <p className="text-muted-foreground font-medium">
           {activeListingType === 'offer' 
-            ? "No marketplace items found matching your criteria."
-            : "No wanted items found matching your criteria."
+            ? "No items found"
+            : "No requests found"
           }
         </p>
+        <p className="text-sm text-muted-foreground/60 mt-1">Try adjusting your filters</p>
       </div>
     );
   }
 
   return (
     <>
-      <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-8">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
         {listings.map((listing) => (
           <MarketplaceItemCard 
             key={listing.id}
@@ -115,16 +102,15 @@ const MarketplaceGrid = ({
         ))}
       </div>
       
-      {/* Infinite scroll trigger */}
       <div ref={loadMoreRef} className="w-full py-8 flex justify-center">
         {loadingMore && (
           <div className="flex items-center gap-2 text-muted-foreground">
             <Loader2 className="h-5 w-5 animate-spin" />
-            <span>Loading more...</span>
+            <span className="text-sm">Loading more...</span>
           </div>
         )}
         {!hasMore && listings.length > 0 && (
-          <p className="text-sm text-muted-foreground">You've seen all items</p>
+          <p className="text-xs text-muted-foreground/50">You've seen all items</p>
         )}
       </div>
     </>

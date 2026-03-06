@@ -1,12 +1,10 @@
 import { Link } from "react-router-dom";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { MessageCircle, BadgeCheck } from "lucide-react";
+import { BadgeCheck } from "lucide-react";
 import { MarketplaceListing } from "./types";
 import { OptimizedImage } from "@/components/ui/optimized-image";
 import { generateBlurDataURL } from "@/utils/imageUtils";
 import AnimatedHeart from "@/components/ui/animated-heart";
+import { Badge } from "@/components/ui/badge";
 
 interface MarketplaceItemCardProps {
   listing: MarketplaceListing;
@@ -21,158 +19,139 @@ const MarketplaceItemCard = ({
   user, 
   favorites, 
   onToggleFavorite, 
-  onStartConversation 
 }: MarketplaceItemCardProps) => {
-  // Extract display name from profile based on user login status
   const getDisplayName = () => {
-    // If user is not logged in, show generic "Bazaar Member"
-    if (!user) {
-      return "Bazaar Member";
-    }
-    
-    // If user is logged in but no profile data, show Anonymous
+    if (!user) return "Bazaar Member";
     if (!listing.profiles) return "Anonymous";
-    
     const fullName = listing.profiles.full_name;
-    const profileName = listing.profiles.profile_name;
-    
-    // For logged-in users, show first name only
-    if (fullName) {
-      return fullName.split(" ")[0];
-    }
-    
-    // Fallback to profile name
-    if (profileName) {
-      return profileName;
-    }
-    
-    return "Anonymous";
+    if (fullName) return fullName.split(" ")[0];
+    return listing.profiles.profile_name || "Anonymous";
   };
 
   const isSold = listing.status === 'sold' || listing.sold_at;
   const isNew = new Date(listing.created_at) > new Date(Date.now() - 5 * 24 * 60 * 60 * 1000);
-  
-  // Check if this is a microwave listing for Unboxed service
-  const isMicrowave = listing.title.toLowerCase().includes('microwave') || 
-                     listing.category?.toLowerCase().includes('microwave');
+  const isFavorite = favorites.includes(listing.id);
 
-  return (
-    <Card 
-      className={`group hover:shadow-lg transition-all duration-300 cursor-pointer border-border/50 hover:border-primary/20 overflow-hidden relative ${
-        listing.listing_type === 'wanted' ? 'border-blue-200 bg-blue-50/50' : ''
-      } ${listing.featured ? 'border-yellow-400 border-2' : ''} ${isSold ? 'opacity-75' : ''}`}
-    >
-      <CardContent className="p-0 h-full flex flex-col">
-        {/* Sold Badge - Position absolutely on top */}
-        {isSold && (
-          <div className="absolute top-2 right-2 z-10">
-            <Badge className="bg-red-600 text-white font-bold text-xs shadow-lg">
-              SOLD
-            </Badge>
-          </div>
-        )}
-        
-        {/* Only show image for offers, not for requests */}
-        {listing.listing_type === 'offer' && (
-          <Link to={`/marketplace/${listing.id}`}>
-            <div className="h-40 sm:h-56 overflow-hidden rounded-t-lg bg-gray-50 relative flex-shrink-0 cursor-pointer hover:opacity-90 transition-opacity">
-              <OptimizedImage
-                src={listing.images?.[0] || "/placeholder.svg"}
-                alt={listing.title}
-                className="w-full h-full object-cover hover:scale-105 transition-transform"
-                lazy={true}
-                blurDataURL={generateBlurDataURL()}
-                aspectRatio="video"
+  const timeAgo = () => {
+    const diff = Date.now() - new Date(listing.created_at).getTime();
+    const mins = Math.floor(diff / 60000);
+    if (mins < 60) return `${mins}m ago`;
+    const hours = Math.floor(mins / 60);
+    if (hours < 24) return `${hours}h ago`;
+    const days = Math.floor(hours / 24);
+    if (days < 7) return `${days}d ago`;
+    return `${Math.floor(days / 7)}w ago`;
+  };
+
+  if (listing.listing_type === 'wanted') {
+    return (
+      <Link to={`/marketplace/${listing.id}`} className="block group">
+        <div className="bg-card rounded-xl border border-border/60 p-4 hover:shadow-md transition-all duration-200 hover:border-primary/20 relative">
+          {user && (
+            <div className="absolute top-3 right-3 z-10" onClick={(e) => e.preventDefault()}>
+              <AnimatedHeart
+                isFavorite={isFavorite}
+                onClick={() => onToggleFavorite(listing.id)}
+                size={18}
               />
             </div>
-          </Link>
-        )}
-        
-        <div className={`p-2 sm:p-4 flex-1 flex flex-col ${listing.listing_type === 'wanted' ? 'pt-3 sm:pt-6' : ''}`}>
-          <div className="flex justify-between items-start mb-2 sm:mb-3">
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-1 sm:gap-2 mb-1 flex-wrap">
-                {listing.featured && (
-                  <Badge className="bg-yellow-400 text-yellow-900 font-bold text-xs">Featured</Badge>
-                )}
-                {!listing.featured && isNew && (
-                  <Badge className="bg-blue-500 text-white font-bold text-xs">NEW</Badge>
-                )}
-                {isMicrowave && listing.listing_type === 'offer' && (
-                  <Badge className="bg-blue-600 text-white font-bold text-xs">
-                    Unboxed
-                  </Badge>
-                )}
-              </div>
-              <Link to={`/marketplace/${listing.id}`}>
-                <h3 className="font-semibold text-sm sm:text-lg hover:text-blue-600 transition-colors mb-1 line-clamp-2">
-                  {listing.listing_type === 'wanted' ? `Looking for: ${listing.title}` : listing.title}
-                </h3>
-              </Link>
-              <p className="text-xs sm:text-sm text-muted-foreground mb-1 sm:mb-2 truncate flex items-center gap-1">
-                <span>by {getDisplayName()}</span>
-                {listing.profiles?.is_verified && (
-                  <BadgeCheck size={14} className="text-blue-600" />
-                )}
-              </p>
+          )}
+          <Badge className="bg-primary/10 text-primary mb-2 text-xs font-medium">
+            Wanted
+          </Badge>
+          <h3 className="font-semibold text-sm line-clamp-2 text-foreground mb-1">
+            {listing.title}
+          </h3>
+          <p className="text-xs text-muted-foreground line-clamp-2 mb-3">{listing.description}</p>
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-semibold text-primary">
+              {listing.price ? `Budget: $${listing.price}` : 'Negotiable'}
+            </span>
+            <span className="text-xs text-muted-foreground">{timeAgo()}</span>
+          </div>
+        </div>
+      </Link>
+    );
+  }
+
+  return (
+    <Link to={`/marketplace/${listing.id}`} className="block group">
+      <div className="bg-card rounded-xl overflow-hidden hover:shadow-lg transition-all duration-200 border border-border/40 hover:border-border relative">
+        {/* Image */}
+        <div className="aspect-square overflow-hidden bg-muted relative">
+          <OptimizedImage
+            src={listing.images?.[0] || "/placeholder.svg"}
+            alt={listing.title}
+            className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300"
+            lazy={true}
+            blurDataURL={generateBlurDataURL()}
+            aspectRatio="square"
+          />
+
+          {/* Overlay badges */}
+          {isSold && (
+            <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+              <span className="bg-destructive text-destructive-foreground font-bold text-sm px-4 py-1.5 rounded-full">
+                SOLD
+              </span>
             </div>
-          </div>
-          
-          <p className="text-xs sm:text-sm text-gray-600 mb-2 sm:mb-3 line-clamp-2 flex-1">{listing.description}</p>
-          
-          <div className="flex justify-between items-center mb-2 sm:mb-3 flex-wrap gap-1">
-            {listing.listing_type === 'offer' ? (
-              <>
-                <p className="text-lg sm:text-xl font-medium text-foreground">
-                  {listing.price ? `$${listing.price}` : 'Free'}
-                </p>
-                <Badge variant="outline" className="text-xs">Available</Badge>
-              </>
-            ) : (
-              <>
-                <p className="text-sm sm:text-lg font-medium text-blue-600">
-                  {listing.price ? `Budget: $${listing.price}` : 'Budget: Negotiable'}
-                </p>
-              </>
+          )}
+
+          {/* Favorite button */}
+          {user && !isSold && (
+            <div
+              className="absolute top-2.5 right-2.5 z-10 bg-background/80 backdrop-blur-sm rounded-full p-1.5 shadow-sm"
+              onClick={(e) => e.preventDefault()}
+            >
+              <AnimatedHeart
+                isFavorite={isFavorite}
+                onClick={() => onToggleFavorite(listing.id)}
+                size={18}
+              />
+            </div>
+          )}
+
+          {/* Status badges */}
+          <div className="absolute top-2.5 left-2.5 flex flex-col gap-1">
+            {listing.featured && (
+              <span className="bg-accent text-accent-foreground text-[10px] font-bold px-2 py-0.5 rounded-full">
+                Featured
+              </span>
             )}
-          </div>
-          
-          <div className="flex gap-1 sm:gap-2 mt-auto">
-            {user && (
-              <Button
-                variant="outline"
-                size="sm"
-                className="flex-shrink-0 p-1 sm:p-2"
-                asChild
-              >
-                <div>
-                  <AnimatedHeart
-                    isFavorite={favorites.includes(listing.id)}
-                    onClick={() => onToggleFavorite(listing.id)}
-                    size={14}
-                  />
-                </div>
-              </Button>
-            )}
-            <Link to={`/marketplace/${listing.id}`} className="flex-1 min-w-0">
-              <Button size="sm" className="w-full text-xs sm:text-sm px-1 sm:px-3 opacity-[98%] hover:opacity-100 transition-opacity">
-                {listing.listing_type === 'wanted' ? 'I Can Help' : 'View Details'}
-              </Button>
-            </Link>
-            {user && listing.user_id !== user.id && (
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => onStartConversation(listing)}
-                className="flex-shrink-0 p-1 sm:p-2"
-              >
-                <MessageCircle size={14} />
-              </Button>
+            {!listing.featured && isNew && !isSold && (
+              <span className="bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 rounded-full">
+                New
+              </span>
             )}
           </div>
         </div>
-      </CardContent>
-    </Card>
+
+        {/* Info */}
+        <div className="p-3">
+          <div className="flex items-baseline justify-between gap-2 mb-0.5">
+            <span className="text-base font-bold text-foreground">
+              {listing.price ? `$${listing.price}` : 'Free'}
+            </span>
+            {listing.open_to_negotiation && (
+              <span className="text-[10px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded-full whitespace-nowrap">
+                OBO
+              </span>
+            )}
+          </div>
+          <h3 className="text-sm text-foreground line-clamp-1 mb-1">
+            {listing.title}
+          </h3>
+          <div className="flex items-center gap-1 text-xs text-muted-foreground">
+            <span>{getDisplayName()}</span>
+            {listing.profiles?.is_verified && (
+              <BadgeCheck size={12} className="text-primary" />
+            )}
+            <span className="mx-0.5">·</span>
+            <span>{timeAgo()}</span>
+          </div>
+        </div>
+      </div>
+    </Link>
   );
 };
 

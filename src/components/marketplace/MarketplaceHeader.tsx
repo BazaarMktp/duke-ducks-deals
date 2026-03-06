@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Plus, Search } from "lucide-react";
 import QuickSellTemplates, { ListingTemplate } from "@/components/listings/QuickSellTemplates";
@@ -12,18 +11,10 @@ interface MarketplaceHeaderProps {
 
 const MarketplaceHeader = ({ user, activeListingType, onCreateListing, onSelectTemplate }: MarketplaceHeaderProps) => {
   return (
-    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
-      <div>
-        <h1 className="text-3xl font-bold text-primary">
-          {activeListingType === 'offer' ? 'Marketplace' : 'Wanted Items'}
-        </h1>
-        <p className="text-primary/70 mt-2">
-          {activeListingType === 'offer' 
-            ? 'Buy and sell with fellow Duke students — safe, verified, and made by Duke students.'
-            : 'See what items Duke students are looking for'
-          }
-        </p>
-      </div>
+    <div className="flex items-center justify-between gap-4 mb-2">
+      <h1 className="text-2xl font-bold text-foreground">
+        {activeListingType === 'offer' ? 'Marketplace' : 'Wanted'}
+      </h1>
       
       {user && (
         <div className="flex items-center gap-2">
@@ -32,19 +23,14 @@ const MarketplaceHeader = ({ user, activeListingType, onCreateListing, onSelectT
           )}
           {onCreateListing && (
             <Button 
-              className="flex items-center gap-2"
+              size="sm"
+              className="flex items-center gap-1.5 rounded-full px-4"
               onClick={onCreateListing}
             >
               {activeListingType === 'offer' ? (
-                <>
-                  <Plus size={16} />
-                  Create Listing
-                </>
+                <><Plus size={16} /> Sell</>
               ) : (
-                <>
-                  <Search size={16} />
-                  Create Request
-                </>
+                <><Search size={16} /> Request</>
               )}
             </Button>
           )}

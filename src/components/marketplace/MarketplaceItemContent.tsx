@@ -1,4 +1,3 @@
-
 import ProductImageGallery from "@/components/marketplace/ProductImageGallery";
 import ProductInfo from "@/components/marketplace/ProductInfo";
 import SellerInfo from "@/components/marketplace/SellerInfo";
@@ -20,60 +19,34 @@ interface MarketplaceItemContentProps {
 }
 
 const MarketplaceItemContent = ({
-  product,
-  currentImageIndex,
-  onImageChange,
-  user,
-  isFavorite,
-  onToggleFavorite,
-  onStartConversation
+  product, currentImageIndex, onImageChange, user,
+  isFavorite, onToggleFavorite, onStartConversation
 }: MarketplaceItemContentProps) => {
   const isMicrowave = product.title.toLowerCase().includes('microwave');
 
   if (product.listing_type === 'wanted') {
     return (
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-2xl mx-auto space-y-6">
         <ProductInfo
-          title={product.title}
-          price={product.price}
-          description={product.description}
-          location={product.location}
-          allowPickup={product.allow_pickup}
-          allowMeetOnCampus={product.allow_meet_on_campus}
-          listingType={product.listing_type}
-          openToNegotiation={product.open_to_negotiation}
-          userId={user?.id}
-          listingOwnerId={product.user_id}
-          isInConversation={false}
-          isAdmin={false}
+          title={product.title} price={product.price} description={product.description}
+          location={product.location} allowPickup={product.allow_pickup}
+          allowMeetOnCampus={product.allow_meet_on_campus} listingType={product.listing_type}
+          openToNegotiation={product.open_to_negotiation} userId={user?.id}
+          listingOwnerId={product.user_id} isInConversation={false} isAdmin={false}
           isUnboxed={isMicrowave}
         />
-
-        <div className="mb-6">
-          <ProductActions
-            user={user}
-            isFavorite={isFavorite}
-            isOwnProduct={product.user_id === user?.id}
-            onToggleFavorite={onToggleFavorite}
-            onStartConversation={onStartConversation}
-            listingType={product.listing_type}
-            productTitle={product.title}
-            productPrice={product.price || 0}
-            isUnboxed={isMicrowave}
-          />
-        </div>
-
+        <ProductActions
+          user={user} isFavorite={isFavorite} isOwnProduct={product.user_id === user?.id}
+          onToggleFavorite={onToggleFavorite} onStartConversation={onStartConversation}
+          listingType={product.listing_type} productTitle={product.title}
+          productPrice={product.price || 0} isUnboxed={isMicrowave}
+        />
         <SellerInfo
-          profileName={product.profiles.profile_name}
-          email={product.profiles.email}
-          phoneNumber={product.profiles.phone_number}
-          createdAt={product.profiles.created_at}
-          avatarUrl={product.profiles.avatar_url}
-          fullName={product.profiles.full_name}
-          isAuthenticated={!!user}
-          userId={product.user_id}
-          listingCreatedAt={product.created_at}
-          listingType={product.listing_type}
+          profileName={product.profiles.profile_name} email={product.profiles.email}
+          phoneNumber={product.profiles.phone_number} createdAt={product.profiles.created_at}
+          avatarUrl={product.profiles.avatar_url} fullName={product.profiles.full_name}
+          isAuthenticated={!!user} userId={product.user_id}
+          listingCreatedAt={product.created_at} listingType={product.listing_type}
           isOwnListing={product.user_id === user?.id}
         />
       </div>
@@ -81,71 +54,50 @@ const MarketplaceItemContent = ({
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      <ProductImageGallery
-        images={product.images}
-        title={product.title}
-        currentImageIndex={currentImageIndex}
-        onImageChange={onImageChange}
-      />
+    <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-8">
+      {/* Left: Images (3/5 width on desktop) */}
+      <div className="lg:col-span-3">
+        <ProductImageGallery
+          images={product.images} title={product.title}
+          currentImageIndex={currentImageIndex} onImageChange={onImageChange}
+        />
+      </div>
 
-      <div>
+      {/* Right: Info + Actions (2/5 width on desktop) */}
+      <div className="lg:col-span-2 space-y-5">
         <ProductInfo
-          title={product.title}
-          price={product.price}
-          description={product.description}
-          location={product.location}
-          allowPickup={product.allow_pickup}
-          allowMeetOnCampus={product.allow_meet_on_campus}
-          listingType={product.listing_type}
-          openToNegotiation={product.open_to_negotiation}
-          userId={user?.id}
-          listingOwnerId={product.user_id}
-          isInConversation={false}
-          isAdmin={false}
+          title={product.title} price={product.price} description={product.description}
+          location={product.location} allowPickup={product.allow_pickup}
+          allowMeetOnCampus={product.allow_meet_on_campus} listingType={product.listing_type}
+          openToNegotiation={product.open_to_negotiation} userId={user?.id}
+          listingOwnerId={product.user_id} isInConversation={false} isAdmin={false}
           isUnboxed={isMicrowave}
         />
 
-        <div className="mb-6">
-          <ProductActions
-            user={user}
-            isFavorite={isFavorite}
-            isOwnProduct={product.user_id === user?.id}
-            onToggleFavorite={onToggleFavorite}
-            onStartConversation={onStartConversation}
-            listingType={product.listing_type}
-            productTitle={product.title}
-            productPrice={product.price || 0}
-            isUnboxed={isMicrowave}
-            listingId={product.id}
-            sellerId={product.user_id}
-            openToNegotiation={product.open_to_negotiation}
-          />
-        </div>
+        <ProductActions
+          user={user} isFavorite={isFavorite} isOwnProduct={product.user_id === user?.id}
+          onToggleFavorite={onToggleFavorite} onStartConversation={onStartConversation}
+          listingType={product.listing_type} productTitle={product.title}
+          productPrice={product.price || 0} isUnboxed={isMicrowave}
+          listingId={product.id} sellerId={product.user_id}
+          openToNegotiation={product.open_to_negotiation}
+        />
 
-        {/* Offers Panel */}
         {product.open_to_negotiation && (
-          <div className="mb-6">
-            <OffersPanel listingId={product.id} sellerId={product.user_id} />
-          </div>
+          <OffersPanel listingId={product.id} sellerId={product.user_id} />
         )}
 
         <SellerInfo
-          profileName={product.profiles.profile_name}
-          email={product.profiles.email}
-          phoneNumber={product.profiles.phone_number}
-          createdAt={product.profiles.created_at}
-          avatarUrl={product.profiles.avatar_url}
-          fullName={product.profiles.full_name}
-          isAuthenticated={!!user}
-          userId={product.user_id}
-          listingCreatedAt={product.created_at}
-          listingType={product.listing_type}
+          profileName={product.profiles.profile_name} email={product.profiles.email}
+          phoneNumber={product.profiles.phone_number} createdAt={product.profiles.created_at}
+          avatarUrl={product.profiles.avatar_url} fullName={product.profiles.full_name}
+          isAuthenticated={!!user} userId={product.user_id}
+          listingCreatedAt={product.created_at} listingType={product.listing_type}
           isOwnListing={product.user_id === user?.id}
         />
 
-        {/* Seller Rating */}
-        <div className="mb-4 flex items-center gap-3">
+        {/* Ratings */}
+        <div className="flex items-center gap-3">
           <SellerRatingDisplay sellerId={product.user_id} />
           {user && product.user_id !== user.id && (
             <SellerRatingForm 
@@ -155,7 +107,6 @@ const MarketplaceItemContent = ({
             />
           )}
         </div>
-
         <SellerReviews sellerId={product.user_id} />
       </div>
     </div>
