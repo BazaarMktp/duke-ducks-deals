@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import ListingTypeToggle from "@/components/services/ListingTypeToggle";
@@ -19,26 +18,12 @@ const Marketplace = () => {
   const [selectedTemplate, setSelectedTemplate] = useState<ListingTemplate | null>(null);
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
   const [priceRange, setPriceRange] = useState<{ min: number | null; max: number | null }>({ 
-    min: null, 
-    max: null 
+    min: null, max: null 
   });
 
   const { 
-    listings, 
-    loading, 
-    loadingMore,
-    hasMore,
-    favorites, 
-    toggleFavorite,
-    loadMore
-  } = useMarketplace(
-    user,
-    searchQuery,
-    sortBy,
-    activeListingType,
-    categoryFilter,
-    priceRange
-  );
+    listings, loading, loadingMore, hasMore, favorites, toggleFavorite, loadMore
+  } = useMarketplace(user, searchQuery, sortBy, activeListingType, categoryFilter, priceRange);
 
   const handleSelectTemplate = (template: ListingTemplate) => {
     setSelectedTemplate(template);
@@ -46,13 +31,14 @@ const Marketplace = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 max-w-6xl">
       <Helmet>
         <title>Devils Marketplace | Buy & Sell on Campus</title>
-        <meta name="description" content="Student marketplace for buying and selling textbooks, electronics, furniture and more. Connect with fellow students safely." />
+        <meta name="description" content="Student marketplace for buying and selling textbooks, electronics, furniture and more." />
         <link rel="canonical" href="https://devilsmarketplace.lovable.app/marketplace" />
       </Helmet>
       <h1 className="sr-only">Devils Marketplace - Buy and Sell on Campus</h1>
+      
       <MarketplaceHeader 
         user={user} 
         activeListingType={activeListingType}
@@ -79,30 +65,26 @@ const Marketplace = () => {
         setPriceRange={setPriceRange}
       />
 
-      <MarketplaceGrid
-        listings={listings}
-        loading={loading}
-        loadingMore={loadingMore}
-        hasMore={hasMore}
-        onLoadMore={loadMore}
-        user={user}
-        favorites={favorites}
-        onToggleFavorite={toggleFavorite}
-        activeListingType={activeListingType}
-      />
+      <div className="mt-4">
+        <MarketplaceGrid
+          listings={listings}
+          loading={loading}
+          loadingMore={loadingMore}
+          hasMore={hasMore}
+          onLoadMore={loadMore}
+          user={user}
+          favorites={favorites}
+          onToggleFavorite={toggleFavorite}
+          activeListingType={activeListingType}
+        />
+      </div>
 
       {showPostingForm && (
         <UnifiedListingCreation
           category="marketplace"
           listingType={activeListingType}
-          onClose={() => {
-            setShowPostingForm(false);
-            setSelectedTemplate(null);
-          }}
-          onSuccess={() => {
-            setShowPostingForm(false);
-            setSelectedTemplate(null);
-          }}
+          onClose={() => { setShowPostingForm(false); setSelectedTemplate(null); }}
+          onSuccess={() => { setShowPostingForm(false); setSelectedTemplate(null); }}
         />
       )}
     </div>
