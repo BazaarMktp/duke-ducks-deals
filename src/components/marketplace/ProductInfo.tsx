@@ -1,4 +1,3 @@
-
 import { Badge } from "@/components/ui/badge";
 import { Package, Users, MapPin, Search, HandCoins, Lock } from "lucide-react";
 import { getPrivacyAwareLocation } from "@/utils/locationPrivacy";
@@ -20,122 +19,93 @@ interface ProductInfoProps {
 }
 
 const ProductInfo = ({ 
-  title, 
-  price, 
-  description, 
-  allowPickup, 
-  allowMeetOnCampus,
-  location,
-  listingType = 'offer',
-  openToNegotiation = false,
-  userId,
-  listingOwnerId,
-  isInConversation = false,
-  isAdmin = false,
-  isUnboxed = false
+  title, price, description, allowPickup, allowMeetOnCampus, location,
+  listingType = 'offer', openToNegotiation = false, userId, listingOwnerId,
+  isInConversation = false, isAdmin = false, isUnboxed = false
 }: ProductInfoProps) => {
-  const getTransactionMethods = () => {
-    const methods = [];
-    if (allowPickup) methods.push("Pickup");
-    if (allowMeetOnCampus) methods.push("Meet on Campus");
-    return methods;
-  };
-
-  const transactionMethods = getTransactionMethods();
+  const transactionMethods = [
+    ...(allowPickup ? ["Pickup"] : []),
+    ...(allowMeetOnCampus ? ["Meet on Campus"] : []),
+  ];
   
   const displayLocation = getPrivacyAwareLocation(
-    location,
-    userId,
-    listingOwnerId || '',
-    isInConversation,
-    isAdmin
+    location, userId, listingOwnerId || '', isInConversation, isAdmin
   );
-  
   const isLocationMasked = location && displayLocation !== location;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
+      {/* Badges */}
+      <div className="flex items-center gap-2 flex-wrap">
+        {listingType === 'wanted' && (
+          <Badge variant="secondary" className="gap-1">
+            <Search size={12} /> Request
+          </Badge>
+        )}
+        {isUnboxed && listingType === 'offer' && (
+          <Badge className="bg-primary text-primary-foreground">Unboxed</Badge>
+        )}
+        {openToNegotiation && listingType === 'offer' && (
+          <Badge variant="outline" className="gap-1 text-muted-foreground">
+            <HandCoins size={12} /> Negotiable
+          </Badge>
+        )}
+      </div>
+
+      {/* Title & Price */}
       <div>
-        <div className="flex items-center gap-2 mb-3">
-          {listingType === 'wanted' && (
-            <Badge className="bg-blue-100 text-blue-600">
-              <Search size={12} className="mr-1" />
-              Request
-            </Badge>
-          )}
-          {isUnboxed && listingType === 'offer' && (
-            <Badge className="bg-blue-600 text-white hover:bg-blue-700">
-              Unboxed
-            </Badge>
-          )}
-        </div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+        <h1 className="text-2xl font-bold text-foreground mb-2">
           {listingType === 'wanted' ? `Looking for: ${title}` : title}
         </h1>
-        <div className="flex items-center gap-3">
-          <p className="text-2xl font-medium text-foreground">
-            {listingType === 'wanted' 
-              ? (price ? `Budget: $${price}` : 'Budget: Negotiable')
-              : (price ? `$${price}` : 'Free')
-            }
-          </p>
-          {listingType === 'offer' && openToNegotiation && (
-            <Badge className="bg-orange-100 text-orange-600">
-              <HandCoins size={12} className="mr-1" />
-              Open to negotiation
-            </Badge>
+        <p className="text-2xl font-bold text-foreground">
+          {listingType === 'wanted' 
+            ? (price ? `Budget: $${price}` : 'Budget: Negotiable')
+            : (price ? `$${price}` : 'Free')
+          }
+        </p>
+      </div>
+
+      {/* Location */}
+      {displayLocation && (
+        <div className="flex items-center gap-2 text-muted-foreground">
+          <MapPin size={15} />
+          <span className="text-sm">
+            {listingType === 'wanted' ? `Preferred: ${displayLocation}` : displayLocation}
+          </span>
+          {isLocationMasked && (
+            <span className="flex items-center gap-1 text-xs">
+              <Lock size={11} /> Message for full address
+            </span>
           )}
         </div>
-      </div>
+      )}
 
-      <div className="space-y-4">
-        {displayLocation && (
-          <div className="flex items-center gap-2 text-gray-600">
-            <MapPin size={16} />
-            <span className="text-sm">
-              {listingType === 'wanted' ? `Preferred location: ${displayLocation}` : displayLocation}
-            </span>
-            {isLocationMasked && (
-              <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                <Lock size={12} />
-                <span>Start a conversation to see full address</span>
-              </div>
-            )}
-          </div>
-        )}
+      {/* Transaction Methods */}
+      {listingType === 'offer' && transactionMethods.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {transactionMethods.map((method) => (
+            <Badge key={method} variant="secondary" className="gap-1 font-normal">
+              {method === "Pickup" ? <Package size={12} /> : <Users size={12} />}
+              {method}
+            </Badge>
+          ))}
+        </div>
+      )}
 
-        {/* Only show transaction methods for offers */}
-        {listingType === 'offer' && transactionMethods.length > 0 && (
-          <div>
-            <h3 className="font-medium text-gray-900 mb-2">Available Transaction Methods:</h3>
-            <div className="flex flex-wrap gap-2">
-              {transactionMethods.map((method) => (
-                <Badge key={method} variant="secondary" className="flex items-center gap-1">
-                  {method === "Pickup" ? (
-                    <><Package size={12} />{method}</>
-                  ) : (
-                    <><Users size={12} />{method}</>
-                  )}
-                </Badge>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-
-      <div className="pb-6 border-b border-gray-200">
-        <h3 className="font-medium text-gray-900 mb-3">
-          {listingType === 'wanted' ? 'What I\'m looking for' : 'Description'}
+      {/* Description */}
+      <div className="pt-4 border-t border-border">
+        <h3 className="text-sm font-medium text-foreground mb-2">
+          {listingType === 'wanted' ? "What I'm looking for" : 'Description'}
         </h3>
-        <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">{description}</p>
+        <p className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">{description}</p>
       </div>
 
       {listingType === 'wanted' && (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <h4 className="font-medium text-blue-900 mb-2">💡 Responding to this request:</h4>
-          <ul className="text-sm text-blue-800 space-y-1">
+        <div className="bg-primary/5 border border-primary/10 rounded-xl p-4">
+          <h4 className="font-medium text-foreground mb-2 text-sm">💡 Responding to this request</h4>
+          <ul className="text-sm text-muted-foreground space-y-1">
             <li>• Contact the requester if you have what they're looking for</li>
-            <li>• Be clear about the condition and availability of your item</li>
+            <li>• Be clear about condition and availability</li>
             <li>• Discuss pricing and meeting arrangements</li>
           </ul>
         </div>

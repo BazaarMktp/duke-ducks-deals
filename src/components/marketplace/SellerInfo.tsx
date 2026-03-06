@@ -1,12 +1,10 @@
-
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import VerifiedBadge from "@/components/common/VerifiedBadge";
 import { Calendar, Clock, Phone } from "lucide-react";
 
 interface SellerInfoProps {
   profileName: string;
-  email?: string; // Optional - only available for own listings or admin
+  email?: string;
   phoneNumber?: string;
   createdAt: string;
   avatarUrl?: string;
@@ -15,91 +13,54 @@ interface SellerInfoProps {
   userId: string;
   listingCreatedAt: string;
   listingType?: string;
-  isOwnListing?: boolean; // New prop to determine if this is user's own listing
+  isOwnListing?: boolean;
 }
 
 const SellerInfo = ({ 
-  profileName, 
-  email, 
-  phoneNumber, 
-  createdAt, 
-  avatarUrl, 
-  fullName, 
-  isAuthenticated, 
-  userId, 
-  listingCreatedAt,
-  listingType = 'offer',
-  isOwnListing = false
+  profileName, email, phoneNumber, createdAt, avatarUrl, fullName,
+  isAuthenticated, userId, listingCreatedAt, listingType = 'offer', isOwnListing = false
 }: SellerInfoProps) => {
-  const getDisplayName = () => {
-    // Show full name only for own listings or if user is authenticated and has access to sensitive data
-    if (isAuthenticated && (isOwnListing || email)) {
-      return fullName || profileName;
-    } else {
-      // For other users, show only profile name (which is safe to share)
-      return profileName;
-    }
-  };
-
-  const displayName = getDisplayName();
+  const displayName = isAuthenticated && (isOwnListing || email) 
+    ? fullName || profileName 
+    : profileName;
+    
   const memberSince = createdAt
-    ? new Date(createdAt).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long'
-      })
+    ? new Date(createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })
     : '—';
   
   const listingDate = listingCreatedAt
-    ? new Date(listingCreatedAt).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      })
+    ? new Date(listingCreatedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
     : '—';
 
   return (
-    <Card className="mb-6">
-      <CardHeader className="pb-4">
-        <CardTitle className="text-lg">
-          {listingType === 'wanted' ? 'Requester Information' : 'Seller Information'}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="flex items-start space-x-4">
-          <Avatar className="h-12 w-12">
-            <AvatarImage src={avatarUrl} />
-            <AvatarFallback>
-              {displayName?.charAt(0)?.toUpperCase() || 'U'}
-            </AvatarFallback>
-          </Avatar>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-1">
-              <h4 className="font-semibold text-gray-900">{displayName}</h4>
-              <VerifiedBadge isVerified={true} />
-            </div>
-            {isAuthenticated && email && (
-              <p className="text-sm text-gray-600 mb-2">{email}</p>
-            )}
-            <div className="space-y-1">
-              <p className="text-sm text-gray-500">
-                <Calendar size={14} className="inline mr-2" />
-                Member since {memberSince}
-              </p>
-              <p className="text-sm text-gray-500">
-                <Clock size={14} className="inline mr-2" />
-                {listingType === 'wanted' ? 'Request' : 'Listing'} posted on {listingDate}
-              </p>
-              {isAuthenticated && phoneNumber && (
-                <p className="text-sm text-gray-500">
-                  <Phone size={14} className="inline mr-2" />
-                  {phoneNumber}
-                </p>
-              )}
-            </div>
+    <div className="rounded-xl border border-border bg-card p-4 mb-4">
+      <div className="flex items-center gap-3">
+        <Avatar className="h-11 w-11">
+          <AvatarImage src={avatarUrl} />
+          <AvatarFallback className="bg-primary/10 text-primary font-semibold">
+            {displayName?.charAt(0)?.toUpperCase() || 'U'}
+          </AvatarFallback>
+        </Avatar>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-1.5 mb-0.5">
+            <h4 className="font-semibold text-foreground text-sm">{displayName}</h4>
+            <VerifiedBadge isVerified={true} />
           </div>
+          <p className="text-xs text-muted-foreground">
+            <Calendar size={11} className="inline mr-1" />
+            Member since {memberSince}
+          </p>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+      
+      <div className="mt-3 pt-3 border-t border-border space-y-1.5 text-xs text-muted-foreground">
+        <p><Clock size={11} className="inline mr-1.5" /> Posted {listingDate}</p>
+        {isAuthenticated && email && <p className="truncate">{email}</p>}
+        {isAuthenticated && phoneNumber && (
+          <p><Phone size={11} className="inline mr-1.5" />{phoneNumber}</p>
+        )}
+      </div>
+    </div>
   );
 };
 

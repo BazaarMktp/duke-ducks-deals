@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
@@ -18,27 +17,27 @@ const ProductImageGallery = ({ images, title, currentImageIndex, onImageChange }
 
   return (
     <div>
-      <div className="mb-4 relative">
+      {/* Main image */}
+      <div className="relative rounded-xl overflow-hidden bg-muted">
         <OptimizedImage
           src={images?.[currentImageIndex] || "/placeholder.svg"}
           alt={title}
-          className="w-full h-96 object-cover rounded-lg"
+          className="w-full aspect-square sm:aspect-[4/3] object-cover"
           priority={currentImageIndex === 0}
-          aspectRatio="video"
         />
         {images && images.length > 0 && (
           <Dialog>
             <DialogTrigger asChild>
               <Button
                 variant="outline"
-                size="sm"
-                className="absolute top-2 right-2 bg-white/80 hover:bg-white"
+                size="icon"
+                className="absolute top-3 right-3 h-9 w-9 bg-background/80 backdrop-blur-sm border-0 shadow-sm hover:bg-background"
                 onClick={() => setExpandedImageIndex(currentImageIndex)}
               >
                 <Expand size={16} />
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-4xl w-full">
+            <DialogContent className="max-w-4xl w-full p-2">
               <div className="flex flex-col items-center">
                 {images.length > 1 ? (
                   <Carousel className="w-full max-w-3xl">
@@ -48,7 +47,7 @@ const ProductImageGallery = ({ images, title, currentImageIndex, onImageChange }
                           <OptimizedImage
                             src={image}
                             alt={`${title} ${index + 1}`}
-                            className="w-full max-h-[70vh] object-contain mx-auto"
+                            className="w-full max-h-[75vh] object-contain mx-auto rounded-lg"
                             lazy={false}
                           />
                         </CarouselItem>
@@ -61,43 +60,33 @@ const ProductImageGallery = ({ images, title, currentImageIndex, onImageChange }
                   <OptimizedImage
                     src={images[0]}
                     alt={`${title} 1`}
-                    className="max-w-full max-h-[80vh] object-contain"
+                    className="max-w-full max-h-[80vh] object-contain rounded-lg"
                     lazy={false}
                   />
-                )}
-                {images.length > 1 && (
-                  <div className="flex gap-2 mt-4">
-                    {images.map((image, index) => (
-                      <button
-                        key={index}
-                        onClick={() => setExpandedImageIndex(index)}
-                        className={`w-16 h-16 rounded-md overflow-hidden ${
-                          index === expandedImageIndex ? 'ring-2 ring-blue-500' : ''
-                        }`}
-                      >
-                        <OptimizedImage
-                          src={image}
-                          alt={`${title} ${index + 1}`}
-                          className="w-full h-full object-cover"
-                          aspectRatio="square"
-                        />
-                      </button>
-                    ))}
-                  </div>
                 )}
               </div>
             </DialogContent>
           </Dialog>
         )}
+        {/* Image counter */}
+        {images && images.length > 1 && (
+          <div className="absolute bottom-3 right-3 bg-black/60 text-white text-xs px-2.5 py-1 rounded-full backdrop-blur-sm">
+            {currentImageIndex + 1} / {images.length}
+          </div>
+        )}
       </div>
+
+      {/* Thumbnails */}
       {images && images.length > 1 && (
-        <div className="flex gap-2">
+        <div className="flex gap-2 mt-3">
           {images.map((image, index) => (
             <button
               key={index}
               onClick={() => onImageChange(index)}
-              className={`w-20 h-20 rounded-md overflow-hidden ${
-                index === currentImageIndex ? 'ring-2 ring-blue-500' : ''
+              className={`w-16 h-16 rounded-lg overflow-hidden transition-all ${
+                index === currentImageIndex 
+                  ? 'ring-2 ring-primary ring-offset-2' 
+                  : 'opacity-60 hover:opacity-100'
               }`}
             >
               <OptimizedImage

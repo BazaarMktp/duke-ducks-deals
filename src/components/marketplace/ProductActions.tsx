@@ -1,8 +1,6 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Heart, MessageSquare } from "lucide-react";
 import FeedbackButton from "@/components/feedback/FeedbackButton";
 import UnboxedCheckoutDialog from "./UnboxedCheckoutDialog";
@@ -24,93 +22,70 @@ interface ProductActionsProps {
 }
 
 const ProductActions = ({ 
-  user, 
-  isFavorite, 
-  isOwnProduct, 
-  onToggleFavorite, 
-  onStartConversation,
-  listingType = 'offer',
-  productTitle = '',
-  productPrice = 0,
-  isUnboxed = false,
-  listingId,
-  sellerId,
-  openToNegotiation = false
+  user, isFavorite, isOwnProduct, onToggleFavorite, onStartConversation,
+  listingType = 'offer', productTitle = '', productPrice = 0,
+  isUnboxed = false, listingId, sellerId, openToNegotiation = false
 }: ProductActionsProps) => {
   const [showUnboxedDialog, setShowUnboxedDialog] = useState(false);
+
   if (!user) {
     return (
-      <Card>
-        <CardContent className="p-6 text-center">
-          <p className="text-muted-foreground mb-4">
-            {listingType === 'wanted' ? 'Sign in to respond to this request' : 'Sign in to contact the seller'}
-          </p>
-          <Button asChild className="w-full mb-3">
-            <Link to="/auth">Sign In</Link>
-          </Button>
-          <FeedbackButton variant="ghost" className="w-full" />
-        </CardContent>
-      </Card>
+      <div className="space-y-3">
+        <Button asChild className="w-full h-12 rounded-xl text-base font-semibold">
+          <Link to="/auth">Sign in to contact</Link>
+        </Button>
+        <FeedbackButton variant="ghost" className="w-full" />
+      </div>
     );
   }
 
   if (isOwnProduct) {
     return (
-      <Card>
-        <CardContent className="p-6 text-center">
-          <p className="text-muted-foreground mb-4">
-            This is your {listingType === 'wanted' ? 'request' : 'listing'}
-          </p>
-          <Button variant="outline" asChild className="w-full mb-3">
-            <Link to="/my-listings">Manage {listingType === 'wanted' ? 'Requests' : 'Listings'}</Link>
-          </Button>
-          <FeedbackButton variant="ghost" className="w-full" />
-        </CardContent>
-      </Card>
+      <div className="space-y-3">
+        <Button variant="outline" asChild className="w-full h-11 rounded-xl">
+          <Link to="/my-listings">Manage {listingType === 'wanted' ? 'Requests' : 'Listings'}</Link>
+        </Button>
+        <FeedbackButton variant="ghost" className="w-full" />
+      </div>
     );
   }
 
   return (
     <>
-      <Card>
-        <CardContent className="p-6">
-          <div className="space-y-3">
-            {isUnboxed && listingType === 'offer' ? (
-              <Button onClick={() => setShowUnboxedDialog(true)} className="w-full bg-primary hover:bg-primary/90">
-                Buy through Unboxed
-              </Button>
-            ) : (
-              <Button onClick={onStartConversation} className="w-full">
-                <MessageSquare size={16} className="mr-2" />
-                {listingType === 'wanted' ? 'I Can Help!' : 'Message Seller'}
-              </Button>
-            )}
+      <div className="space-y-3">
+        {isUnboxed && listingType === 'offer' ? (
+          <Button onClick={() => setShowUnboxedDialog(true)} className="w-full h-12 rounded-xl text-base font-semibold">
+            Buy through Unboxed
+          </Button>
+        ) : (
+          <Button onClick={onStartConversation} className="w-full h-12 rounded-xl text-base font-semibold gap-2">
+            <MessageSquare size={18} />
+            {listingType === 'wanted' ? 'I Can Help!' : 'Message Seller'}
+          </Button>
+        )}
 
-            <Button
-              onClick={onToggleFavorite}
-              variant="outline"
-              className={`w-full ${isFavorite ? 'text-destructive' : ''}`}
-            >
-              <Heart size={16} className={`mr-2 ${isFavorite ? 'fill-current' : ''}`} />
-              {listingType === 'wanted' 
-                ? (isFavorite ? 'Remove from Saved' : 'Save Request')
-                : (isFavorite ? 'Remove from Favorites' : 'Add to Favorites')
-              }
-            </Button>
+        <div className="flex gap-2">
+          <Button
+            onClick={onToggleFavorite}
+            variant="outline"
+            className={`flex-1 h-11 rounded-xl gap-2 ${isFavorite ? 'text-destructive border-destructive/30' : ''}`}
+          >
+            <Heart size={16} className={isFavorite ? 'fill-current' : ''} />
+            {isFavorite ? 'Saved' : 'Save'}
+          </Button>
 
-            {openToNegotiation && listingId && sellerId && listingType === 'offer' && (
-              <MakeOfferDialog
-                listingId={listingId}
-                sellerId={sellerId}
-                listingPrice={productPrice}
-                listingTitle={productTitle}
-              />
-            )}
+          {openToNegotiation && listingId && sellerId && listingType === 'offer' && (
+            <MakeOfferDialog
+              listingId={listingId}
+              sellerId={sellerId}
+              listingPrice={productPrice}
+              listingTitle={productTitle}
+            />
+          )}
+        </div>
 
-            <FeedbackButton variant="ghost" className="w-full" />
-          </div>
-        </CardContent>
-      </Card>
+        <FeedbackButton variant="ghost" className="w-full text-xs" />
+      </div>
 
       <UnboxedCheckoutDialog
         open={showUnboxedDialog}
