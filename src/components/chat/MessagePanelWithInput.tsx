@@ -25,7 +25,7 @@ interface MessagePanelWithInputProps {
     seller_id: string;
     buyer_profile?: { profile_name?: string; avatar_url?: string };
     seller_profile?: { profile_name?: string; avatar_url?: string };
-    listings?: { title?: string } | null;
+    listings?: { title?: string; price?: number; images?: string[] } | null;
   } | null;
 }
 
