@@ -56,8 +56,14 @@ export default {
 					blue: 'hsl(var(--brand-blue))', // Royal Blue
 				},
 				'hot-deal': 'hsl(var(--hot-deal))', // Buff for deal badges
-				success: 'hsl(var(--success))', // Pistachio
-				warning: 'hsl(var(--warning))',
+				success: {
+					DEFAULT: 'hsl(var(--success))',
+					foreground: 'hsl(var(--success-foreground))',
+				},
+				warning: {
+					DEFAULT: 'hsl(var(--warning))',
+					foreground: 'hsl(var(--warning-foreground))',
+				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
