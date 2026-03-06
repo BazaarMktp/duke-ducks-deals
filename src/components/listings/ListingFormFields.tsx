@@ -61,7 +61,7 @@ const ListingFormFields: React.FC<ListingFormFieldsProps> = ({
           <ImageUpload
             images={formData.images}
             onImagesChange={handleImagesChange}
-            maxImages={2}
+            maxImages={5}
           />
         </div>
       )}
