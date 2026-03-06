@@ -51,6 +51,8 @@ export interface Conversation {
   item_count?: number;
   listings: {
     title: string;
+    price?: number | null;
+    images?: string[] | null;
   } | null;
   buyer_profile: {
     profile_name: string;

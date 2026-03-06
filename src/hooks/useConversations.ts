@@ -29,7 +29,7 @@ export const useConversations = () => {
           deleted_by_seller,
           last_message_preview,
           last_message_at,
-          listings!left(title),
+          listings!left(title, price, images),
           buyer_profile:profiles!conversations_buyer_id_fkey(profile_name, avatar_url),
           seller_profile:profiles!conversations_seller_id_fkey(profile_name, avatar_url)
         `)
