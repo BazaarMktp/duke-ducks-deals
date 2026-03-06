@@ -31,6 +31,15 @@ const MarketplaceGrid = ({
   const { startConversation } = useConversation();
   const observerRef = useRef<IntersectionObserver | null>(null);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
+  
+  // Use refs to avoid stale closures in IntersectionObserver callback
+  const hasMoreRef = useRef(hasMore);
+  const loadingMoreRef = useRef(loadingMore);
+  const onLoadMoreRef = useRef(onLoadMore);
+  
+  hasMoreRef.current = hasMore;
+  loadingMoreRef.current = loadingMore;
+  onLoadMoreRef.current = onLoadMore;
 
   const handleStartConversation = (listing: MarketplaceListing) => {
     startConversation({
@@ -52,16 +61,16 @@ const MarketplaceGrid = ({
 
   const handleObserver = useCallback((entries: IntersectionObserverEntry[]) => {
     const [entry] = entries;
-    if (entry.isIntersecting && hasMore && !loadingMore && onLoadMore) {
-      onLoadMore();
+    if (entry.isIntersecting && hasMoreRef.current && !loadingMoreRef.current && onLoadMoreRef.current) {
+      onLoadMoreRef.current();
     }
-  }, [hasMore, loadingMore, onLoadMore]);
+  }, []);
 
   useEffect(() => {
     if (observerRef.current) observerRef.current.disconnect();
     observerRef.current = new IntersectionObserver(handleObserver, {
       root: null,
-      rootMargin: '100px',
+      rootMargin: '200px',
       threshold: 0.1
     });
     if (loadMoreRef.current) observerRef.current.observe(loadMoreRef.current);
