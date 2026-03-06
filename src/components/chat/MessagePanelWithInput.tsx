@@ -5,6 +5,7 @@ import MessageInput from './MessageInput';
 import DateSeparator from './DateSeparator';
 import NewMessageIndicator from './NewMessageIndicator';
 import ConversationItemsPanel from './ConversationItemsPanel';
+import SafetyBanner from './SafetyBanner';
 import { useLocation } from 'react-router-dom';
 import { shouldShowDateSeparator } from '@/utils/timeUtils';
 import { ArrowLeft, MessageCircle, MoreVertical } from 'lucide-react';
