@@ -47,7 +47,7 @@ const MyListings = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8 max-w-6xl">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
         <MyListingsHeader />
         <Button 
@@ -63,7 +63,7 @@ const MyListings = () => {
       {listings.length === 0 ? (
         <EmptyListingsState />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {listings.map((listing) => (
             <ListingCard
               key={listing.id}
