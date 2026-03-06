@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Package, Search, Home, Users } from "lucide-react";
 
@@ -11,43 +10,17 @@ interface ListingTypeToggleProps {
 const ListingTypeToggle = ({ activeType, onTypeChange, category = 'services' }: ListingTypeToggleProps) => {
   const getLabels = () => {
     switch (category) {
-      case 'marketplace':
-        return {
-          offer: 'Browse Items',
-          wanted: 'Browse Requests'
-        };
-      case 'housing':
-        return {
-          offer: 'Browse Housing',
-          wanted: 'Browse Requests'
-        };
-      case 'services':
-      default:
-        return {
-          offer: 'Browse Services',
-          wanted: 'Browse Requests'
-        };
+      case 'marketplace': return { offer: 'Items', wanted: 'Requests' };
+      case 'housing': return { offer: 'Housing', wanted: 'Requests' };
+      default: return { offer: 'Services', wanted: 'Requests' };
     }
   };
 
   const getIcons = () => {
     switch (category) {
-      case 'marketplace':
-        return {
-          offer: Package,
-          wanted: Search
-        };
-      case 'housing':
-        return {
-          offer: Home,
-          wanted: Search
-        };
-      case 'services':
-      default:
-        return {
-          offer: Users,
-          wanted: Search
-        };
+      case 'marketplace': return { offer: Package, wanted: Search };
+      case 'housing': return { offer: Home, wanted: Search };
+      default: return { offer: Users, wanted: Search };
     }
   };
 
@@ -57,25 +30,29 @@ const ListingTypeToggle = ({ activeType, onTypeChange, category = 'services' }: 
   const WantedIcon = icons.wanted;
 
   return (
-    <div className="flex gap-1 bg-muted p-1 rounded-lg w-fit mx-auto my-8">
-      <Button
-        variant={activeType === 'offer' ? 'default' : 'ghost'}
-        size="sm"
+    <div className="flex gap-0.5 bg-muted/60 p-0.5 rounded-xl w-fit mx-auto my-4">
+      <button
         onClick={() => onTypeChange('offer')}
-        className="flex items-center gap-2"
+        className={`flex items-center gap-1.5 px-4 py-2 rounded-[10px] text-sm font-medium transition-all ${
+          activeType === 'offer'
+            ? 'bg-background text-foreground shadow-sm'
+            : 'text-muted-foreground hover:text-foreground'
+        }`}
       >
-        <OfferIcon size={16} />
+        <OfferIcon size={15} />
         {labels.offer}
-      </Button>
-      <Button
-        variant={activeType === 'wanted' ? 'default' : 'ghost'}
-        size="sm"
+      </button>
+      <button
         onClick={() => onTypeChange('wanted')}
-        className="flex items-center gap-2"
+        className={`flex items-center gap-1.5 px-4 py-2 rounded-[10px] text-sm font-medium transition-all ${
+          activeType === 'wanted'
+            ? 'bg-background text-foreground shadow-sm'
+            : 'text-muted-foreground hover:text-foreground'
+        }`}
       >
-        <WantedIcon size={16} />
+        <WantedIcon size={15} />
         {labels.wanted}
-      </Button>
+      </button>
     </div>
   );
 };
