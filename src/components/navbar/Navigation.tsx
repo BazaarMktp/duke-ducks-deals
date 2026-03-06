@@ -24,7 +24,7 @@ const Navigation = () => {
           <Link
             key={item.name}
             to={item.href}
-            className="flex items-center space-x-1 text-gray-600 hover:text-blue-600 transition-colors relative"
+            className="flex items-center space-x-1 text-muted-foreground hover:text-primary transition-colors relative"
           >
             <item.icon size={16} />
             <span>{item.name}</span>

@@ -36,7 +36,7 @@ export const FeaturedItems = ({ featuredListings, isLoading }: FeaturedItemsProp
         </div>
         
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
             {Array.from({ length: 4 }).map((_, i) => (
               <FeaturedItemSkeleton key={i} />
             ))}
@@ -48,11 +48,11 @@ export const FeaturedItems = ({ featuredListings, isLoading }: FeaturedItemsProp
             </CardContent>
           </Card>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
             {featuredListings.map((item) => (
               <Link key={item.id} to={`/marketplace/${item.id}`}>
-                <Card className="hover:shadow-lg transition-shadow cursor-pointer group">
-                  <div className="h-48 bg-muted overflow-hidden rounded-t-lg relative">
+                <Card className="hover:shadow-lg transition-shadow cursor-pointer group overflow-hidden">
+                  <div className="aspect-[4/3] bg-muted overflow-hidden relative">
                     {item.images && item.images.length > 0 ? (
                       <img 
                         src={item.images[0]} 
@@ -67,12 +67,12 @@ export const FeaturedItems = ({ featuredListings, isLoading }: FeaturedItemsProp
                       </div>
                     )}
                   </div>
-                  <CardContent className="p-4">
-                    <h3 className="font-semibold mb-2 line-clamp-1 text-foreground">{item.title}</h3>
-                    <p className="text-primary font-bold mb-1">
+                  <CardContent className="p-3">
+                    <h3 className="font-semibold mb-1 line-clamp-1 text-foreground text-sm">{item.title}</h3>
+                    <p className="text-primary font-bold text-sm mb-0.5">
                       {item.price !== undefined ? `$${item.price.toFixed(2)}` : 'Contact for price'}
                     </p>
-                    <p className="text-sm text-muted-foreground">by {item.seller || 'Unknown'}</p>
+                    <p className="text-xs text-muted-foreground truncate">by {item.seller || 'Unknown'}</p>
                   </CardContent>
                 </Card>
               </Link>

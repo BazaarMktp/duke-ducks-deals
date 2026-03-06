@@ -159,7 +159,7 @@ const Favorites = () => {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-center">
-          <p className="text-gray-500">Please sign in to view your favorites.</p>
+          <p className="text-muted-foreground">Please sign in to view your favorites.</p>
         </div>
       </div>
     );
@@ -174,8 +174,8 @@ const Favorites = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">My Favorites</h1>
+    <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8 max-w-6xl">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">My Favorites</h1>
 
       {favorites.length === 0 ? (
         <div className="text-center py-12">
@@ -187,14 +187,14 @@ const Favorites = () => {
           </Button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {favorites.map((listing) => (
             <Card key={listing.id} className="hover:shadow-lg transition-shadow">
               <CardHeader className="p-0">
                 <img 
                   src={listing.images?.[0] || "/placeholder.svg"} 
                   alt={listing.title}
-                  className="w-full h-48 object-cover rounded-t-lg"
+                  className="w-full aspect-[4/3] object-cover rounded-t-lg"
                   loading="lazy"
                   decoding="async"
                 />
@@ -215,7 +215,7 @@ const Favorites = () => {
                 )}
                 <p className="text-sm mb-3 line-clamp-2">{listing.description}</p>
                 {listing.price && (
-                  <p className="text-xl font-bold text-green-600 mb-3">
+                  <p className="text-lg sm:text-xl font-bold text-primary mb-3">
                     ${listing.price}{listing.category === 'housing' ? '/month' : listing.category === 'services' ? '/hour' : ''}
                   </p>
                 )}
@@ -224,7 +224,7 @@ const Favorites = () => {
                     variant="outline"
                     size="sm"
                     onClick={() => removeFavorite(listing.id)}
-                    className="text-red-500"
+                    className="text-destructive min-h-[44px] min-w-[44px]"
                   >
                     <Heart size={16} className="fill-current" />
                   </Button>
