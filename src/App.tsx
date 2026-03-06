@@ -47,12 +47,20 @@ import DealDetail from "./pages/DealDetail";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Footer from "@/components/Footer";
+import { useCapacitorInit } from "@/hooks/useCapacitor";
+import { usePushNotifications } from "@/hooks/usePushNotifications";
+import { useBackButton } from "@/hooks/useBackButton";
 
 const queryClient = new QueryClient();
 
 function AppContent() {
   const [isAuthProcessing, setIsAuthProcessing] = useState(false);
   const location = useLocation();
+
+  // Native platform initialization
+  useCapacitorInit();
+  usePushNotifications();
+  useBackButton();
   
   // Hide footer on messages page for mobile
   const hideFooterOnMobile = location.pathname === '/messages';
