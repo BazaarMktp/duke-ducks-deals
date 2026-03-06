@@ -194,6 +194,12 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
               
               <div className="flex-1 min-w-0">
                 <h2 className="font-semibold text-base truncate">{partner.name}</h2>
+                {conversationData?.listings?.title && (
+                  <p className="text-[11px] text-muted-foreground truncate">
+                    {conversationData.listings.title}
+                    {conversationData.listings.price != null && ` · $${conversationData.listings.price}`}
+                  </p>
+                )}
               </div>
               
               <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full">
@@ -203,6 +209,9 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
             
             {/* Items Panel */}
             <ConversationItemsPanel conversationId={selectedConversation} />
+            
+            {/* Safety Banner */}
+            <SafetyBanner />
             
             {/* Messages Area - scrollable */}
             <div 
@@ -242,11 +251,20 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
             
             <div className="flex-1 min-w-0">
               <h2 className="font-semibold truncate">{partner.name}</h2>
+              {conversationData?.listings?.title && (
+                <p className="text-xs text-muted-foreground truncate">
+                  {conversationData.listings.title}
+                  {conversationData.listings.price != null && ` · $${conversationData.listings.price}`}
+                </p>
+              )}
             </div>
           </div>
           
           {/* Items Panel */}
           <ConversationItemsPanel conversationId={selectedConversation} />
+          
+          {/* Safety Banner */}
+          <SafetyBanner />
           
           {/* Messages Area */}
           <div 
