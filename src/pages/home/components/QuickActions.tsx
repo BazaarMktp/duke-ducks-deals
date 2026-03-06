@@ -46,7 +46,7 @@ export const QuickActions = () => {
     <section className="py-3 bg-background">
       <div className="container mx-auto px-4">
         <h2 className="text-xl font-bold mb-3 text-center text-foreground">Quick Actions</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 max-w-3xl mx-auto">
+        <div className="grid grid-cols-3 gap-2 sm:gap-3 max-w-3xl mx-auto">
           <FlipCard
             to="/create-listing"
             icon={Plus}

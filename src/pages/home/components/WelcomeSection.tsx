@@ -9,7 +9,7 @@ interface WelcomeSectionProps {
 
 export const WelcomeSection = ({ user }: WelcomeSectionProps) => {
   return (
-    <section className="relative bg-blue-600 py-8 border-b">
+    <section className="relative bg-primary py-6 sm:py-8 border-b">
       <div 
         className="absolute inset-0 bg-cover bg-center"
         style={{
@@ -19,10 +19,10 @@ export const WelcomeSection = ({ user }: WelcomeSectionProps) => {
       <div className="absolute inset-0 bg-black/20" />
       <div className="container relative mx-auto px-4">
         <div>
-          <h1 className="text-3xl font-bold text-white">
+          <h1 className="text-2xl sm:text-3xl font-bold text-white">
             Welcome back, {user.user_metadata?.profile_name || user.email?.split('@')[0]}!
           </h1>
-          <p className="text-blue-100 mt-2">What would you like to do today?</p>
+          <p className="text-white/80 mt-1.5 text-sm sm:text-base">What would you like to do today?</p>
         </div>
       </div>
     </section>

@@ -141,13 +141,13 @@ const MarketplaceItemCard = ({
           <h3 className="text-sm text-foreground line-clamp-1 mb-1">
             {listing.title}
           </h3>
-          <div className="flex items-center gap-1 text-xs text-muted-foreground">
-            <span>{getDisplayName()}</span>
+          <div className="flex items-center gap-1 text-[11px] text-muted-foreground overflow-hidden">
+            <span className="truncate max-w-[60%]">{getDisplayName()}</span>
             {listing.profiles?.is_verified && (
-              <BadgeCheck size={12} className="text-primary" />
+              <BadgeCheck size={11} className="text-primary shrink-0" />
             )}
-            <span className="mx-0.5">·</span>
-            <span>{timeAgo()}</span>
+            <span className="shrink-0">·</span>
+            <span className="shrink-0">{timeAgo()}</span>
           </div>
         </div>
       </div>
