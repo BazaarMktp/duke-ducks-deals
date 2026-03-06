@@ -21,6 +21,7 @@ export type ListingFormData = {
   allowMeetOnCampus: boolean;
   allowDropOff: boolean;
   openToNegotiation: boolean;
+  realPhotoConfirmed: boolean;
 };
 
 export const useCreateListing = () => {
@@ -37,6 +38,7 @@ export const useCreateListing = () => {
     allowMeetOnCampus: false,
     allowDropOff: false,
     openToNegotiation: false,
+    realPhotoConfirmed: false,
   });
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
@@ -68,6 +70,11 @@ export const useCreateListing = () => {
 
     if (formData.listingType === 'offer' && formData.images.length === 0) {
       toast.error("At least one image is required for listings.");
+      return;
+    }
+
+    if (formData.listingType === 'offer' && formData.images.length > 0 && !formData.realPhotoConfirmed) {
+      toast.error("Please confirm the first image is a real photo of your item.");
       return;
     }
 

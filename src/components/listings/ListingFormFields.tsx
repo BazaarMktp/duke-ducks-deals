@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import ImageUpload from "@/components/ImageUpload";
-import { Info } from "lucide-react";
+import { Info, ShieldAlert } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -56,13 +56,52 @@ const ListingFormFields: React.FC<ListingFormFieldsProps> = ({
       </div>
 
       {formData.listingType === 'offer' && (
-        <div>
+        <div className="space-y-3">
           <Label className="text-base font-medium">Images</Label>
+
+          {/* Real photo warning */}
+          <div className="flex items-start gap-2.5 rounded-lg border border-warning/30 bg-warning/5 px-3 py-2.5">
+            <ShieldAlert className="h-5 w-5 text-warning shrink-0 mt-0.5" />
+            <div className="space-y-1">
+              <p className="text-sm">
+                <span className="font-semibold text-foreground">Important: The first image must be a real photo of the item you are selling.</span>
+              </p>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button type="button" className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors">
+                      <Info className="h-3 w-3" />
+                      <span>Why does this matter?</span>
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom" className="max-w-xs">
+                    <p className="text-sm">This helps buyers trust your listing and reduces scams. Listings with real photos get more responses and sell faster.</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+          </div>
+
           <ImageUpload
             images={formData.images}
             onImagesChange={handleImagesChange}
             maxImages={5}
           />
+
+          {/* Real photo confirmation checkbox – shown once images are uploaded */}
+          {formData.images.length > 0 && (
+            <div className="flex items-start space-x-2 rounded-lg border border-border bg-card p-3">
+              <Checkbox
+                id="realPhotoConfirmed"
+                checked={formData.realPhotoConfirmed}
+                onCheckedChange={(checked) => handleInputChange("realPhotoConfirmed", checked as boolean)}
+                className="mt-0.5"
+              />
+              <Label htmlFor="realPhotoConfirmed" className="text-sm font-normal leading-snug cursor-pointer">
+                I confirm the first image is a real photo of the item I am selling.
+              </Label>
+            </div>
+          )}
         </div>
       )}
 
