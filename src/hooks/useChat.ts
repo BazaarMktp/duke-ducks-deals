@@ -32,12 +32,12 @@ export const useChat = (initialConversationId?: string) => {
 
   useEffect(() => {
     if (user) {
-      fetchConversations(showArchived);
+      fetchConversations(showArchived, true);
     }
     
-    // Listen for unread message updates to refresh conversations
+    // Listen for unread message updates to refresh conversation list silently
     const handleUnreadUpdate = () => {
-      fetchConversations(showArchived);
+      fetchConversations(showArchived, false);
     };
     
     window.addEventListener('unread-messages-updated', handleUnreadUpdate);

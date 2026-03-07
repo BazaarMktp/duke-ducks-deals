@@ -1,5 +1,5 @@
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
@@ -12,9 +12,14 @@ export const useConversations = () => {
   const { user } = useAuth();
   const { toast } = useToast();
 
-  const fetchConversations = useCallback(async (isArchivedView: boolean) => {
+  const initialLoadDone = useCallback(() => conversations.length > 0 || !loading, [conversations.length, loading]);
+
+  const fetchConversations = useCallback(async (isArchivedView: boolean, isInitial = false) => {
     if (!user) return;
-    setLoading(true);
+    // Only show loading spinner on initial load, not refetches
+    if (isInitial || conversations.length === 0) {
+      setLoading(true);
+    }
     try {
       let query = supabase
         .from('conversations')
@@ -95,7 +100,7 @@ export const useConversations = () => {
     });
   }, []);
 
-  // Subscribe to real-time updates for conversations
+  // Subscribe to real-time updates for conversations and messages
   useEffect(() => {
     if (!user) return;
 
@@ -127,6 +132,34 @@ export const useConversations = () => {
           if (payload.eventType === 'UPDATE' && payload.new) {
             moveConversationToTop(payload.new.id as string, payload.new.last_message_preview as string);
           }
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'messages',
+        },
+        (payload) => {
+          if (!payload.new) return;
+          const msg = payload.new as any;
+          // Only increment unread for messages from others
+          if (msg.sender_id === user.id) return;
+          
+          // Update unread count for the relevant conversation
+          setConversations(prev => {
+            const idx = prev.findIndex(c => c.id === msg.conversation_id);
+            if (idx === -1) return prev;
+            const conv = prev[idx];
+            const updated = {
+              ...conv,
+              unread_count: (conv.unread_count || 0) + 1,
+              last_message_preview: msg.message?.slice(0, 50),
+              last_message_at: msg.created_at,
+            };
+            return [updated, ...prev.filter(c => c.id !== msg.conversation_id)];
+          });
         }
       )
       .subscribe();
