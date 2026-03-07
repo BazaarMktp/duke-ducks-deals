@@ -100,7 +100,7 @@ export const useConversations = () => {
     });
   }, []);
 
-  // Subscribe to real-time updates for conversations
+  // Subscribe to real-time updates for conversations and messages
   useEffect(() => {
     if (!user) return;
 
@@ -132,6 +132,34 @@ export const useConversations = () => {
           if (payload.eventType === 'UPDATE' && payload.new) {
             moveConversationToTop(payload.new.id as string, payload.new.last_message_preview as string);
           }
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'messages',
+        },
+        (payload) => {
+          if (!payload.new) return;
+          const msg = payload.new as any;
+          // Only increment unread for messages from others
+          if (msg.sender_id === user.id) return;
+          
+          // Update unread count for the relevant conversation
+          setConversations(prev => {
+            const idx = prev.findIndex(c => c.id === msg.conversation_id);
+            if (idx === -1) return prev;
+            const conv = prev[idx];
+            const updated = {
+              ...conv,
+              unread_count: (conv.unread_count || 0) + 1,
+              last_message_preview: msg.message?.slice(0, 50),
+              last_message_at: msg.created_at,
+            };
+            return [updated, ...prev.filter(c => c.id !== msg.conversation_id)];
+          });
         }
       )
       .subscribe();
