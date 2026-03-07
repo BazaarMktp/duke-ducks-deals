@@ -198,38 +198,58 @@ export const useMessages = (selectedConversation: string | null) => {
         .on('postgres_changes',
           { event: 'INSERT', schema: 'public', table: 'messages', filter: `conversation_id=eq.${selectedConversation}` },
            (payload) => {
-             console.log('New message received from:', payload.new?.sender_id, 'current user:', user?.id);
-             // Immediately add the new message to the local state for instant display
              if (payload.new) {
-               const newMessage: any = {
-                 id: payload.new.id,
-                 message: payload.new.message,
-                 sender_id: payload.new.sender_id,
-                 created_at: payload.new.created_at,
-                 is_read: payload.new.is_read,
-                 profiles: { profile_name: 'Loading...' }
-               };
-               setMessages(prev => [...prev, newMessage]);
-               
-               // Fetch complete message details after adding it
-               setTimeout(() => fetchMessages(selectedConversation), 50);
-               
-               // Only mark as read if the message is not from the current user
-               if (payload.new.sender_id !== user?.id) {
-                 setTimeout(() => markMessagesAsRead(selectedConversation), 100);
+               const newMsg = payload.new;
+               // Skip if this is from the current user (already added optimistically)
+               if (newMsg.sender_id === user?.id) {
+                 // Just ensure the optimistic message is replaced with the real one
+                 setMessages(prev => {
+                   const hasReal = prev.some(m => m.id === newMsg.id);
+                   if (hasReal) return prev;
+                   // Replace any temp message with matching text
+                   const tempIndex = prev.findIndex(m => m.id.startsWith('temp_') && m.sender_id === newMsg.sender_id);
+                   if (tempIndex !== -1) return prev; // Already handled by optimistic update
+                   return prev;
+                 });
+                 return;
                }
+
+               // For messages from other users, add to state directly
+               setMessages(prev => {
+                 // Prevent duplicates
+                 if (prev.some(m => m.id === newMsg.id)) return prev;
+                 return [...prev, {
+                   id: newMsg.id,
+                   message: newMsg.message,
+                   sender_id: newMsg.sender_id,
+                   created_at: newMsg.created_at,
+                   is_read: newMsg.is_read,
+                   likes: [],
+                   attachments: [],
+                   profiles: { profile_name: '' }
+                 } as Message];
+               });
+               
+               // Fetch full message details (profile info) without replacing the list
+               fetchMessages(selectedConversation);
+               
+               // Mark as read since user is viewing this conversation
+               markMessagesAsRead(selectedConversation);
              }
            }
          )
          .on('postgres_changes',
            { event: 'UPDATE', schema: 'public', table: 'messages', filter: `conversation_id=eq.${selectedConversation}` },
            (payload) => {
-             console.log('Message updated:', payload);
-             // Refresh messages and trigger unread count refresh when messages are updated (marked as read)
-             fetchMessages(selectedConversation);
-             setTimeout(() => {
+             if (payload.new) {
+               // Update the specific message in-place instead of refetching all
+               setMessages(prev => prev.map(msg => 
+                 msg.id === payload.new.id 
+                   ? { ...msg, is_read: payload.new.is_read, likes: Array.isArray(payload.new.likes) ? payload.new.likes : [] }
+                   : msg
+               ));
                window.dispatchEvent(new CustomEvent('unread-messages-updated'));
-             }, 100);
+             }
            }
          )
         .subscribe();

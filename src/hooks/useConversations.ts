@@ -12,9 +12,14 @@ export const useConversations = () => {
   const { user } = useAuth();
   const { toast } = useToast();
 
-  const fetchConversations = useCallback(async (isArchivedView: boolean) => {
+  const initialLoadDone = useCallback(() => conversations.length > 0 || !loading, [conversations.length, loading]);
+
+  const fetchConversations = useCallback(async (isArchivedView: boolean, isInitial = false) => {
     if (!user) return;
-    setLoading(true);
+    // Only show loading spinner on initial load, not refetches
+    if (isInitial || conversations.length === 0) {
+      setLoading(true);
+    }
     try {
       let query = supabase
         .from('conversations')
