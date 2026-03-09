@@ -173,7 +173,7 @@ const About = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
-              <h3 className="text-xl font-bold mb-4 text-[#003087]">Community First</h3>
+              <h3 className="text-xl font-bold mb-4 text-primary">Community First</h3>
               <p className="text-gray-600">
                 We prioritize building genuine connections and fostering a supportive environment 
                 where students help each other succeed.
