@@ -11,6 +11,7 @@ interface PostingFormData {
   price: string;
   location: string;
   housingType: string;
+  itemTag: string;
   images: string[];
   allowPickup: boolean;
   allowMeetOnCampus: boolean;
