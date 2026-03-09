@@ -40,7 +40,7 @@ export const EndOfSemesterBanner = ({ onDismiss }: EndOfSemesterBannerProps) => 
                 </span>
               </div>
               <h3 className="text-lg sm:text-xl font-bold mb-1">
-                Dorm Cleanout Mode is Here! 🎓
+                Dorm Cleanout Mode is Here
               </h3>
               <p className="text-sm opacity-90 max-w-md">
                 List multiple items at once and sell everything before you leave campus. 

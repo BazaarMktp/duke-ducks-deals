@@ -343,8 +343,8 @@ export const SimpleMarketingPage = ({ stats }: SimpleMarketingPageProps) => {
                   </div>
                   <p className="text-sm text-foreground leading-relaxed">"{t.quote}"</p>
                   <div className="flex items-center gap-3">
-                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-lg">
-                      {t.avatar}
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
+                      {t.initials}
                     </span>
                     <div className="text-xs text-muted-foreground">
                       <span className="font-medium text-foreground block">{t.name}</span>

@@ -141,7 +141,7 @@ export const BulkListingWizard = ({ onClose, onSuccess }: BulkListingWizardProps
       }
 
       if (successCount === items.length) {
-        toast.success(`🎉 All ${successCount} items published successfully!`);
+        toast.success(`All ${successCount} items published successfully!`);
         onSuccess?.();
         onClose();
       } else {

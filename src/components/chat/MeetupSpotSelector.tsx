@@ -47,7 +47,7 @@ const MeetupSpotSelector: React.FC<MeetupSpotSelectorProps> = ({ onSelect, disab
   const [expandedCategory, setExpandedCategory] = useState<string | null>("Popular Spots");
 
   const handleSelect = (spot: string) => {
-    onSelect(`Let's meet at ${spot}! 📍`);
+    onSelect(`Let's meet at ${spot}!`);
     setOpen(false);
   };
 

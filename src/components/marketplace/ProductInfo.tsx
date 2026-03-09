@@ -102,7 +102,7 @@ const ProductInfo = ({
 
       {listingType === 'wanted' && (
         <div className="bg-primary/5 border border-primary/10 rounded-xl p-4">
-          <h4 className="font-medium text-foreground mb-2 text-sm">💡 Responding to this request</h4>
+          <h4 className="font-medium text-foreground mb-2 text-sm">Responding to this request</h4>
           <ul className="text-sm text-muted-foreground space-y-1">
             <li>• Contact the requester if you have what they're looking for</li>
             <li>• Be clear about condition and availability</li>
