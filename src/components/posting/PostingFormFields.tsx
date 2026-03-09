@@ -69,6 +69,25 @@ const PostingFormFields: React.FC<PostingFormFieldsProps> = ({
 }) => {
   return (
     <>
+      {category === 'marketplace' && (
+        <div>
+          <Label htmlFor="itemTag" className="text-base font-medium inline-flex items-center">
+            Item Category
+            <FieldInfo tip="Select the category that best describes your item. This determines how it appears in filters." />
+          </Label>
+          <Select value={formData.itemTag || ''} onValueChange={(v) => onInputChange("itemTag", v)}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select item category" />
+            </SelectTrigger>
+            <SelectContent>
+              {ITEM_TAG_OPTIONS.map(opt => (
+                <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      )}
+
       <div>
         <Label htmlFor="title" className="text-base font-medium inline-flex items-center">
           {listingType === 'wanted' ? 'What are you looking for?' : 'Title'}
