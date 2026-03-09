@@ -6,23 +6,71 @@ import { MarketplaceListing } from "@/components/marketplace/types";
 
 const PAGE_SIZE = 20;
 
-const CATEGORY_KEYWORDS: Record<string, string[]> = {
-  microwave: ['microwave'],
-  fridge: ['fridge', 'refrigerator', 'mini fridge', 'mini-fridge'],
-  furniture: ['furniture', 'desk', 'chair', 'bed', 'fan', 'couch', 'table', 'sofa', 'shelf', 'dresser', 'nightstand', 'bookshelf', 'futon', 'mattress', 'lamp'],
-  'dorm decor': ['dorm decor', 'decor', 'poster', 'tapestry', 'rug', 'curtain', 'mirror', 'wall art', 'fairy lights', 'decoration'],
-  books: ['book', 'books', 'textbook', 'textbooks', 'novel', 'manual', 'guide'],
-  clothes: ['clothes', 'clothing', 'shirt', 'pants', 'jacket', 'hoodie', 'shoes', 'sneakers', 'dress', 'jeans', 'sweater', 'hat', 'cap'],
-  technology: ['technology', 'tech', 'laptop', 'computer', 'monitor', 'keyboard', 'mouse', 'phone', 'tablet', 'ipad', 'macbook', 'headphones', 'speaker', 'charger', 'cable', 'tv', 'television', 'camera', 'console', 'gaming'],
+// Canonical mapping: AI-generated item_tag values → filter category
+// The category filter matches ONLY against item_tag (structured data),
+// never against title or description text.
+const TAG_TO_CATEGORY: Record<string, string> = {
+  microwave: 'microwave',
+  fridge: 'fridge',
+  refrigerator: 'fridge',
+  'mini fridge': 'fridge',
+  furniture: 'furniture',
+  desk: 'furniture',
+  chair: 'furniture',
+  bed: 'furniture',
+  couch: 'furniture',
+  sofa: 'furniture',
+  table: 'furniture',
+  shelf: 'furniture',
+  dresser: 'furniture',
+  nightstand: 'furniture',
+  bookshelf: 'furniture',
+  futon: 'furniture',
+  mattress: 'furniture',
+  lamp: 'furniture',
+  fan: 'furniture',
+  'dorm decor': 'dorm decor',
+  decor: 'dorm decor',
+  poster: 'dorm decor',
+  tapestry: 'dorm decor',
+  rug: 'dorm decor',
+  mirror: 'dorm decor',
+  textbook: 'books',
+  book: 'books',
+  books: 'books',
+  novel: 'books',
+  clothes: 'clothes',
+  clothing: 'clothes',
+  shirt: 'clothes',
+  shoes: 'clothes',
+  sneakers: 'clothes',
+  hoodie: 'clothes',
+  jacket: 'clothes',
+  technology: 'technology',
+  tech: 'technology',
+  laptop: 'technology',
+  computer: 'technology',
+  monitor: 'technology',
+  keyboard: 'technology',
+  mouse: 'technology',
+  phone: 'technology',
+  tablet: 'technology',
+  ipad: 'technology',
+  macbook: 'technology',
+  headphones: 'technology',
+  speaker: 'technology',
+  tv: 'technology',
+  television: 'technology',
+  camera: 'technology',
+  console: 'technology',
+  gaming: 'technology',
 };
 
-function buildCategoryOrClause(category: string): string {
-  const keywords = CATEGORY_KEYWORDS[category] || [category];
-  return keywords.flatMap(kw => [
-    `item_tag.ilike.%${kw}%`,
-    `title.ilike.%${kw}%`,
-    `description.ilike.%${kw}%`,
-  ]).join(',');
+// Build the list of item_tag values that map to a given filter category
+function getTagsForCategory(category: string): string[] {
+  return Object.entries(TAG_TO_CATEGORY)
+    .filter(([, cat]) => cat === category)
+    .map(([tag]) => tag);
 }
 
 interface UseMarketplaceOptions {
