@@ -26,11 +26,11 @@ interface BulkItem {
 }
 
 const QUICK_CATEGORIES = [
-  { id: 'dorm', label: '🛏️ Dorm Essentials', examples: 'Bedding, lamps, storage' },
-  { id: 'textbooks', label: '📚 Textbooks', examples: 'Course books, study materials' },
-  { id: 'electronics', label: '💻 Electronics', examples: 'Cables, accessories, gadgets' },
-  { id: 'clothing', label: '👕 Clothing', examples: 'School gear, formal wear' },
-  { id: 'other', label: '📦 Other', examples: 'Kitchen, decor, misc' },
+  { id: 'dorm', label: 'Dorm Essentials', examples: 'Bedding, lamps, storage' },
+  { id: 'textbooks', label: 'Textbooks', examples: 'Course books, study materials' },
+  { id: 'electronics', label: 'Electronics', examples: 'Cables, accessories, gadgets' },
+  { id: 'clothing', label: 'Clothing', examples: 'School gear, formal wear' },
+  { id: 'other', label: 'Other', examples: 'Kitchen, decor, misc' },
 ] as const;
 
 interface BulkListingWizardProps {
