@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { BadgeCheck } from "lucide-react";
 import { MarketplaceListing } from "./types";
 import { OptimizedImage } from "@/components/ui/optimized-image";
-import { generateBlurDataURL } from "@/utils/imageUtils";
 import AnimatedHeart from "@/components/ui/animated-heart";
 import { Badge } from "@/components/ui/badge";
 
