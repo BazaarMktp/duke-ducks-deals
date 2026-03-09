@@ -51,7 +51,7 @@ export const HeroSection = ({ stats }: HeroSectionProps) => {
       {floatingCards.map((card, index) => (
         <div
           key={index}
-          className={`absolute hidden md:block ${card.position} ${card.rotation} bg-white rounded-lg shadow-lg p-4 max-w-48 z-10`}
+          className={`absolute hidden md:block ${card.position} ${card.rotation} bg-card rounded-lg shadow-lg p-4 max-w-48 z-10`}
         >
           {card.price ? (
             <>
