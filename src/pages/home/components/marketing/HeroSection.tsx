@@ -75,8 +75,8 @@ export const HeroSection = ({ stats }: HeroSectionProps) => {
             </>
           ) : (
             <>
-              <div className="text-sm text-gray-900 mb-2">"{card.text}"</div>
-              <div className="text-xs text-gray-500">— {card.author}</div>
+              <div className="text-sm text-foreground mb-2">"{card.text}"</div>
+              <div className="text-xs text-muted-foreground">— {card.author}</div>
             </>
           )}
         </div>
