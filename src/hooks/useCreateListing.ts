@@ -16,6 +16,7 @@ export type ListingFormData = {
   category: 'marketplace' | 'housing' | 'services';
   listingType: 'offer' | 'wanted';
   housingType: string;
+  itemTag: string;
   images: string[];
   allowPickup: boolean;
   allowMeetOnCampus: boolean;
