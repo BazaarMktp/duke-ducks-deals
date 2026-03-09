@@ -56,6 +56,10 @@ export const useMarketplace = (
       if (categoryFilter) {
         if (categoryFilter === 'free') {
           activeQuery = activeQuery.or('price.eq.0,price.is.null');
+        } else if (categoryFilter === 'furniture') {
+          activeQuery = activeQuery.or(
+            'item_tag.ilike.%furniture%,title.ilike.%furniture%,title.ilike.%desk%,title.ilike.%chair%,title.ilike.%bed%,title.ilike.%fan%,title.ilike.%couch%,title.ilike.%table%'
+          );
         } else {
           activeQuery = activeQuery.or(`item_tag.ilike.%${categoryFilter}%,title.ilike.%${categoryFilter}%`);
         }
@@ -84,7 +88,7 @@ export const useMarketplace = (
 
       if (searchQuery) {
         // Check if search query matches a tag keyword - if so, use item_tag for accurate filtering
-        const tagKeywords = ["microwave", "fridge", "furniture", "textbook", "laptop", "chair", "desk", "bed", "couch", "table", "lamp", "tv", "monitor", "keyboard", "mouse"];
+        const tagKeywords = ["microwave", "fridge", "furniture", "bed", "fan", "desk", "chair", "dorm decor", "books", "textbook", "clothes", "technology", "laptop", "tv", "monitor", "keyboard", "mouse"];
         const isTagSearch = tagKeywords.some(tag => searchQuery.toLowerCase().includes(tag));
         
         if (isTagSearch) {
