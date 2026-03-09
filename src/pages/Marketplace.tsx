@@ -76,6 +76,7 @@ const Marketplace = () => {
           favorites={favorites}
           onToggleFavorite={toggleFavorite}
           activeListingType={activeListingType}
+          categoryFilter={categoryFilter}
         />
       </div>
 

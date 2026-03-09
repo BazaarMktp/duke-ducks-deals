@@ -16,14 +16,14 @@ export const MARKETPLACE_CATEGORIES = [
 interface MarketplaceTagsProps {
   listings: MarketplaceListing[];
   onTagClick: (tag: string) => void;
-  currentQuery?: string;
+  currentCategory?: string | null;
 }
 
-const MarketplaceTags = ({ onTagClick, currentQuery = '' }: MarketplaceTagsProps) => {
+const MarketplaceTags = ({ onTagClick, currentCategory = null }: MarketplaceTagsProps) => {
   return (
     <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
       {MARKETPLACE_CATEGORIES.map(({ key, label, icon: Icon }) => {
-        const isActive = key === '' ? currentQuery === '' : currentQuery.toLowerCase() === key.toLowerCase();
+        const isActive = key === '' ? currentCategory === null : currentCategory === key;
         return (
           <button
             key={key || 'all'}

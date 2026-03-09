@@ -62,7 +62,7 @@ const MarketplaceFilters = ({
   const [showPriceSheet, setShowPriceSheet] = useState(false);
 
   const handleTagClick = (tag: string) => {
-    setSearchQuery(tag === '' ? '' : tag);
+    setCategoryFilter(tag === '' ? null : tag);
   };
 
   const handlePriceRangeSelect = (range: { min: number | null; max: number | null }) => {
@@ -223,7 +223,7 @@ const MarketplaceFilters = ({
         <MarketplaceTags 
           listings={listings} 
           onTagClick={handleTagClick} 
-          currentQuery={searchQuery}
+          currentCategory={categoryFilter}
         />
       )}
     </div>

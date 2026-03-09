@@ -15,6 +15,7 @@ interface MarketplaceGridProps {
   hasMore?: boolean;
   onLoadMore?: () => void;
   activeListingType: 'offer' | 'wanted';
+  categoryFilter?: string | null;
 }
 
 const MarketplaceGrid = ({ 
@@ -26,7 +27,8 @@ const MarketplaceGrid = ({
   loadingMore = false,
   hasMore = false,
   onLoadMore,
-  activeListingType 
+  activeListingType,
+  categoryFilter = null,
 }: MarketplaceGridProps) => {
   const { startConversation } = useConversation();
   const observerRef = useRef<IntersectionObserver | null>(null);
@@ -86,16 +88,26 @@ const MarketplaceGrid = ({
   }
 
   if (listings.length === 0) {
+    const categoryLabels: Record<string, string> = {
+      microwave: 'Microwaves', fridge: 'Fridges', furniture: 'Furniture',
+      'dorm decor': 'Dorm Decor', books: 'Books', clothes: 'Clothes', technology: 'Technology',
+    };
+    const categoryName = categoryFilter ? categoryLabels[categoryFilter] || categoryFilter : null;
+
     return (
       <div className="text-center py-16">
         <PackageOpen className="h-12 w-12 text-muted-foreground/40 mx-auto mb-3" />
         <p className="text-muted-foreground font-medium">
-          {activeListingType === 'offer' 
-            ? "No items found"
-            : "No requests found"
+          {categoryName
+            ? `No items found in ${categoryName}`
+            : activeListingType === 'offer' 
+              ? "No items found"
+              : "No requests found"
           }
         </p>
-        <p className="text-sm text-muted-foreground/60 mt-1">Try adjusting your filters</p>
+        <p className="text-sm text-muted-foreground/60 mt-1">
+          {categoryName ? "Try a different category or check back later" : "Try adjusting your filters"}
+        </p>
       </div>
     );
   }

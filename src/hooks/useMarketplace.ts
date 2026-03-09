@@ -6,6 +6,25 @@ import { MarketplaceListing } from "@/components/marketplace/types";
 
 const PAGE_SIZE = 20;
 
+const CATEGORY_KEYWORDS: Record<string, string[]> = {
+  microwave: ['microwave'],
+  fridge: ['fridge', 'refrigerator', 'mini fridge', 'mini-fridge'],
+  furniture: ['furniture', 'desk', 'chair', 'bed', 'fan', 'couch', 'table', 'sofa', 'shelf', 'dresser', 'nightstand', 'bookshelf', 'futon', 'mattress', 'lamp'],
+  'dorm decor': ['dorm decor', 'decor', 'poster', 'tapestry', 'rug', 'curtain', 'mirror', 'wall art', 'fairy lights', 'decoration'],
+  books: ['book', 'books', 'textbook', 'textbooks', 'novel', 'manual', 'guide'],
+  clothes: ['clothes', 'clothing', 'shirt', 'pants', 'jacket', 'hoodie', 'shoes', 'sneakers', 'dress', 'jeans', 'sweater', 'hat', 'cap'],
+  technology: ['technology', 'tech', 'laptop', 'computer', 'monitor', 'keyboard', 'mouse', 'phone', 'tablet', 'ipad', 'macbook', 'headphones', 'speaker', 'charger', 'cable', 'tv', 'television', 'camera', 'console', 'gaming'],
+};
+
+function buildCategoryOrClause(category: string): string {
+  const keywords = CATEGORY_KEYWORDS[category] || [category];
+  return keywords.flatMap(kw => [
+    `item_tag.ilike.%${kw}%`,
+    `title.ilike.%${kw}%`,
+    `description.ilike.%${kw}%`,
+  ]).join(',');
+}
+
 interface UseMarketplaceOptions {
   searchQuery: string;
   sortBy: string;
@@ -52,16 +71,12 @@ export const useMarketplace = (
         .eq('status', 'active')
         .eq('listing_type', activeListingType);
 
-      // Apply category filter based on item_tag or title
+      // Apply category filter based on item_tag, title, and description
       if (categoryFilter) {
         if (categoryFilter === 'free') {
           activeQuery = activeQuery.or('price.eq.0,price.is.null');
-        } else if (categoryFilter === 'furniture') {
-          activeQuery = activeQuery.or(
-            'item_tag.ilike.%furniture%,title.ilike.%furniture%,title.ilike.%desk%,title.ilike.%chair%,title.ilike.%bed%,title.ilike.%fan%,title.ilike.%couch%,title.ilike.%table%'
-          );
         } else {
-          activeQuery = activeQuery.or(`item_tag.ilike.%${categoryFilter}%,title.ilike.%${categoryFilter}%`);
+          activeQuery = activeQuery.or(buildCategoryOrClause(categoryFilter));
         }
       }
 
@@ -85,6 +100,15 @@ export const useMarketplace = (
         .eq('listing_type', activeListingType)
         .gte('sold_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString())
         .limit(10) : null;
+
+      // Apply category filter to sold query too
+      if (soldQuery && categoryFilter) {
+        if (categoryFilter === 'free') {
+          soldQuery = soldQuery.or('price.eq.0,price.is.null');
+        } else {
+          soldQuery = soldQuery.or(buildCategoryOrClause(categoryFilter));
+        }
+      }
 
       if (searchQuery) {
         // Check if search query matches a tag keyword - if so, use item_tag for accurate filtering
