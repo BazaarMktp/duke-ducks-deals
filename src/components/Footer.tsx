@@ -12,7 +12,7 @@ const Footer = () => {
               <img
                 src="/devils-marketplace-logo.png"
                 alt="Devil's Marketplace logo"
-                className="h-7 w-7"
+                className="h-9 w-9"
               />
               <span className="font-bold text-xl">Devil's Marketplace</span>
             </Link>

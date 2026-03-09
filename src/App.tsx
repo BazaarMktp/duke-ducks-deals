@@ -68,8 +68,13 @@ const queryClient = new QueryClient({
 });
 
 const RouteSpinner = () => (
-  <div className="min-h-[60vh] flex items-center justify-center">
-    <Loader2 className="h-6 w-6 animate-spin text-primary" />
+  <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4">
+    <img
+      src="/devils-marketplace-logo.png"
+      alt="Devil's Marketplace"
+      className="h-12 w-12 animate-pulse"
+    />
+    <Loader2 className="h-5 w-5 animate-spin text-primary" />
   </div>
 );
 

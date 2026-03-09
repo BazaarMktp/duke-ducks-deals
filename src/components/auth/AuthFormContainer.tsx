@@ -109,7 +109,7 @@ export const AuthFormContainer = ({
           </div>
           
           <div className="mt-4 text-center">
-            <Link to="/" className="text-sm text-gray-600 hover:underline">
+            <Link to="/" className="text-sm text-muted-foreground hover:underline">
               Back to Home
             </Link>
           </div>

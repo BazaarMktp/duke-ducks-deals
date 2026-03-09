@@ -84,6 +84,12 @@ export const HeroSection = ({ stats }: HeroSectionProps) => {
 
       {/* Main Content */}
       <div className="text-center max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Logo */}
+        <img
+          src="/devils-marketplace-logo.png"
+          alt="Devil's Marketplace"
+          className="h-16 w-16 md:h-20 md:w-20 mx-auto mb-6"
+        />
         {/* Main Heading */}
         <h1 className="text-5xl lg:text-7xl font-bold text-foreground mb-8 leading-tight">
           Buy and Sell<br />
