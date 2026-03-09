@@ -38,7 +38,7 @@ export const CrossPostDialog = ({
 
   const shareMessage = `🎯 ${listingTitle}
 💰 $${listingPrice}
-📱 Posted by ${userName} on Devils Marketplace
+📱 Posted by ${userName} on Devil's Marketplace
 
 Check it out: ${listingUrl}`;
 
