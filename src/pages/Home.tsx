@@ -14,7 +14,7 @@ const Home = () => {
     return (
       <>
         <Helmet>
-          <title>Devils Marketplace — Home</title>
+          <title>Devil's Marketplace — Home</title>
           <meta name="description" content="Student marketplace connecting students to buy, sell, and trade on campus." />
           <link rel="canonical" href="https://devilsmarketplace.lovable.app/home" />
         </Helmet>
