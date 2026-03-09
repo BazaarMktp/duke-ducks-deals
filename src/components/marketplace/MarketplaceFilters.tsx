@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, X, SlidersHorizontal } from "lucide-react";
+import { Search, X, SlidersHorizontal, ArrowUpDown } from "lucide-react";
 import MarketplaceTags from "./MarketplaceTags";
 import { MarketplaceListing } from "./types";
 import { Button } from "@/components/ui/button";
@@ -38,6 +38,13 @@ const PRICE_RANGES = [
   { label: "$100 – $250", min: 100, max: 250 },
   { label: "$250+", min: 250, max: null },
 ];
+
+const SORT_LABELS: Record<string, string> = {
+  newest: "Newest",
+  oldest: "Oldest",
+  price_low: "Price ↑",
+  price_high: "Price ↓",
+};
 
 const MarketplaceFilters = ({ 
   searchQuery, 
@@ -79,41 +86,45 @@ const MarketplaceFilters = ({
   };
 
   const hasActiveFilters = priceRange.min !== null || priceRange.max !== null;
+  const hasPriceFilter = hasActiveFilters;
 
   return (
     <div className="space-y-3">
-      {/* Search bar */}
-      <div className="relative">
-        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+      {/* Search bar — prominent, full width */}
+      <div className="relative group">
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-[18px] w-[18px] text-muted-foreground transition-colors group-focus-within:text-primary" />
         <Input
-          placeholder={activeListingType === 'offer' ? "Search items..." : "Search requests..."}
+          placeholder={activeListingType === 'offer' ? "Search items for sale..." : "Search wanted requests..."}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-10 pr-10 h-11 rounded-xl bg-muted/50 border-border/60 focus:bg-background"
+          className="pl-11 pr-10 h-12 rounded-2xl bg-card border-border/80 shadow-sm text-sm placeholder:text-muted-foreground/60 focus-visible:ring-primary/30 focus-visible:border-primary/40 focus-visible:shadow-md transition-all"
         />
         {searchQuery && (
           <button
             onClick={() => setSearchQuery('')}
-            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors p-0.5 rounded-full hover:bg-muted"
           >
             <X className="h-4 w-4" />
           </button>
         )}
       </div>
       
-      {/* Filter pills row */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+      {/* Filter controls — unified pill row */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-0.5 scrollbar-none">
+        {/* Price filter */}
         {activeListingType === 'offer' && (
           <Sheet open={showPriceSheet} onOpenChange={setShowPriceSheet}>
             <SheetTrigger asChild>
-              <Button 
-                variant={hasActiveFilters ? "default" : "outline"} 
-                size="sm"
-                className="rounded-full gap-1.5 text-xs shrink-0 h-8"
+              <button 
+                className={`inline-flex items-center gap-1.5 h-9 px-3.5 rounded-full text-xs font-medium border transition-all shrink-0 ${
+                  hasPriceFilter
+                    ? 'bg-primary text-primary-foreground border-primary shadow-sm'
+                    : 'bg-card text-foreground border-border/80 hover:border-primary/40 hover:shadow-sm'
+                }`}
               >
-                <SlidersHorizontal className="h-3 w-3" />
+                <SlidersHorizontal className="h-3.5 w-3.5" />
                 {getCurrentPriceLabel()}
-              </Button>
+              </button>
             </SheetTrigger>
             <SheetContent side="bottom" className="h-[380px] rounded-t-2xl">
               <SheetHeader>
@@ -161,22 +172,29 @@ const MarketplaceFilters = ({
           </Sheet>
         )}
 
-        <Select value={sortBy} onValueChange={setSortBy}>
-          <SelectTrigger className="w-auto min-w-[110px] h-8 rounded-full text-xs border-border/60">
-            <SelectValue placeholder="Sort" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="newest">Newest</SelectItem>
-            <SelectItem value="oldest">Oldest</SelectItem>
-            {activeListingType === 'offer' && (
-              <>
-                <SelectItem value="price_low">Price ↑</SelectItem>
-                <SelectItem value="price_high">Price ↓</SelectItem>
-              </>
-            )}
-          </SelectContent>
-        </Select>
+        {/* Sort — styled as matching pill */}
+        <div className="relative shrink-0">
+          <Select value={sortBy} onValueChange={setSortBy}>
+            <SelectTrigger className="h-9 w-auto min-w-[100px] rounded-full text-xs font-medium bg-card border-border/80 hover:border-primary/40 hover:shadow-sm transition-all gap-1.5 px-3.5 focus:ring-primary/30">
+              <div className="flex items-center gap-1.5">
+                <ArrowUpDown className="h-3.5 w-3.5 text-muted-foreground" />
+                <span>{SORT_LABELS[sortBy] || "Sort"}</span>
+              </div>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="newest">Newest</SelectItem>
+              <SelectItem value="oldest">Oldest</SelectItem>
+              {activeListingType === 'offer' && (
+                <>
+                  <SelectItem value="price_low">Price: Low → High</SelectItem>
+                  <SelectItem value="price_high">Price: High → Low</SelectItem>
+                </>
+              )}
+            </SelectContent>
+          </Select>
+        </div>
 
+        {/* Saved searches */}
         <SaveSearchDialog
           searchQuery={searchQuery}
           categoryFilter={categoryFilter}
@@ -185,23 +203,22 @@ const MarketplaceFilters = ({
           onApplySearch={setSearchQuery}
         />
 
+        {/* Clear filters */}
         {hasActiveFilters && (
-          <Button
-            variant="ghost"
-            size="sm"
+          <button
             onClick={() => {
               setCategoryFilter(null);
               setPriceRange({ min: null, max: null });
             }}
-            className="text-xs text-muted-foreground hover:text-foreground shrink-0 h-8 px-2"
+            className="inline-flex items-center gap-1 h-9 px-3 rounded-full text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors shrink-0"
           >
-            <X className="h-3 w-3 mr-1" />
+            <X className="h-3.5 w-3.5" />
             Clear
-          </Button>
+          </button>
         )}
       </div>
       
-      {/* Tags */}
+      {/* Category tags */}
       {activeListingType === 'offer' && (
         <MarketplaceTags 
           listings={listings} 

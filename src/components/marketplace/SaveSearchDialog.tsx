@@ -54,15 +54,15 @@ const SaveSearchDialog = ({ searchQuery, categoryFilter, priceRange, listingType
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="gap-1.5">
+        <button className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-full text-xs font-medium bg-card text-foreground border border-border/80 hover:border-primary/40 hover:shadow-sm transition-all shrink-0">
           <Bookmark size={14} />
           <span className="hidden sm:inline">Saved</span>
           {savedSearches.length > 0 && (
-            <span className="bg-primary/10 text-primary text-xs font-semibold px-1.5 py-0.5 rounded-full">
+            <span className="bg-primary/10 text-primary text-[10px] font-bold min-w-[18px] h-[18px] inline-flex items-center justify-center rounded-full">
               {savedSearches.length}
             </span>
           )}
-        </Button>
+        </button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
