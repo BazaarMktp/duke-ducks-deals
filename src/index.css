@@ -6,42 +6,42 @@
 
 @layer base {
   :root {
-    --background: 0 0% 96%; /* Light gray for better contrast */
-    --foreground: 221 50% 15%;
+    --background: 0 0% 97%;
+    --foreground: 220 20% 14%;
 
     --card: 0 0% 100%;
-    --card-foreground: 221 50% 15%;
+    --card-foreground: 220 20% 14%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 221 50% 15%;
+    --popover-foreground: 220 20% 14%;
 
-    /* New color scheme */
-    --primary: 225 83% 28%; /* Deep navy blue to match logo */
+    /* New independent brand palette — coral red primary */
+    --primary: 10 78% 57%; /* Coral red #E8503A */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 225 83% 35%; /* Lighter version of logo blue */
+    --secondary: 220 14% 20%; /* Dark charcoal */
     --secondary-foreground: 0 0% 100%;
 
     --muted: 0 0% 92%;
-    --muted-foreground: 221 30% 40%;
+    --muted-foreground: 220 10% 46%;
 
-    --blue-25: 225 83% 97%; /* Very light blue for highlighting */
+    --blue-25: 10 78% 96%; /* Very light coral for highlighting */
 
-    --accent: 81 40% 59%; /* Pistachio */
-    --accent-foreground: 221 50% 15%;
+    --accent: 160 50% 48%; /* Teal green */
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 0 0% 88%;
     --input: 0 0% 96%;
-    --ring: 225 83% 28%;
+    --ring: 10 78% 57%;
 
     /* Brand specific colors */
-    --brand-orange: 25 56% 69%; /* Buff */
-    --brand-blue: 225 83% 28%; /* Deep navy blue to match logo */
-    --hot-deal: 25 56% 69%; /* Buff for deal badges */
-    --success: 81 40% 59%; /* Pistachio for positive actions */
+    --brand-orange: 10 78% 57%; /* Coral */
+    --brand-blue: 220 14% 20%; /* Charcoal */
+    --hot-deal: 38 92% 50%; /* Amber for deal badges */
+    --success: 160 50% 48%; /* Teal green */
     --success-foreground: 0 0% 100%;
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
