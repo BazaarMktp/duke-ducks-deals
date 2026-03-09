@@ -46,7 +46,7 @@ export const HeroSection = ({ stats }: HeroSectionProps) => {
   ];
 
   return (
-    <section className="relative bg-gradient-to-br from-blue-50/30 via-white to-blue-100/20 min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative bg-gradient-to-br from-primary/5 via-background to-accent/5 min-h-screen flex items-center justify-center overflow-hidden">
       {/* Floating Cards */}
       {floatingCards.map((card, index) => (
         <div
