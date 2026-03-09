@@ -1,35 +1,53 @@
-import { BookOpen, Laptop, Home, Tag } from "lucide-react";
+import { Zap, Refrigerator, Sofa, Palette, BookOpen, Shirt, Laptop } from "lucide-react";
+
+const categories = [
+  {
+    icon: Zap,
+    title: "Microwave",
+    description: "Compact microwaves perfect for dorm life",
+    image: "https://images.unsplash.com/photo-1574269909862-7e3d7bc93724?w=300&h=200&fit=crop"
+  },
+  {
+    icon: Refrigerator,
+    title: "Fridge",
+    description: "Mini-fridges and compact refrigerators",
+    image: "https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=300&h=200&fit=crop"
+  },
+  {
+    icon: Sofa,
+    title: "Furniture",
+    description: "Beds, desks, chairs, fans and more",
+    image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=300&h=200&fit=crop"
+  },
+  {
+    icon: Palette,
+    title: "Dorm Decor",
+    description: "Make your space feel like home",
+    image: "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=300&h=200&fit=crop"
+  },
+  {
+    icon: BookOpen,
+    title: "Books",
+    description: "Textbooks and course materials at student prices",
+    image: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=300&h=200&fit=crop"
+  },
+  {
+    icon: Shirt,
+    title: "Clothes",
+    description: "Campus fashion and second-hand finds",
+    image: "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=300&h=200&fit=crop"
+  },
+  {
+    icon: Laptop,
+    title: "Technology",
+    description: "Laptops, tablets, and gadgets from fellow students",
+    image: "https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=300&h=200&fit=crop"
+  }
+];
 
 export const CategoriesSection = () => {
-  const categories = [
-    {
-      icon: BookOpen,
-      title: "Textbooks",
-      description: "Buy or sell used books and rent digital versions",
-      image: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=300&h=200&fit=crop"
-    },
-    {
-      icon: Laptop,
-      title: "Electronics", 
-      description: "Laptops, tablets, and gadgets from fellow students",
-      image: "https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=300&h=200&fit=crop"
-    },
-    {
-      icon: Home,
-      title: "Dorm Essentials",
-      description: "Furniture, decor, and everything you need for your room",
-      image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=300&h=200&fit=crop"
-    },
-    {
-      icon: Tag,
-      title: "Devils Deals",
-      description: "Exclusive student discounts and coupons from local businesses",
-      image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=300&h=200&fit=crop"
-    }
-  ];
-
   return (
-    <section className="py-16 bg-white">
+    <section className="py-16 bg-background">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
@@ -40,7 +58,7 @@ export const CategoriesSection = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
           {categories.map((category, index) => (
             <div key={index} className="bg-card rounded-lg overflow-hidden shadow-sm border border-border hover:shadow-md transition-shadow">
               <div className="relative">
@@ -48,9 +66,10 @@ export const CategoriesSection = () => {
                   src={category.image} 
                   alt={category.title}
                   className="w-full h-48 object-cover"
+                  loading="lazy"
                 />
                 <div className="absolute top-4 left-4">
-                  <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center shadow-sm">
+                  <div className="w-10 h-10 bg-background rounded-lg flex items-center justify-center shadow-sm">
                     <category.icon className="w-5 h-5 text-primary" />
                   </div>
                 </div>

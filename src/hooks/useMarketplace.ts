@@ -84,7 +84,7 @@ export const useMarketplace = (
 
       if (searchQuery) {
         // Check if search query matches a tag keyword - if so, use item_tag for accurate filtering
-        const tagKeywords = ["microwave", "fridge", "furniture", "textbook", "laptop", "chair", "desk", "bed", "couch", "table", "lamp", "tv", "monitor", "keyboard", "mouse"];
+        const tagKeywords = ["microwave", "fridge", "furniture", "bed", "fan", "desk", "chair", "dorm decor", "books", "textbook", "clothes", "technology", "laptop", "tv", "monitor", "keyboard", "mouse"];
         const isTagSearch = tagKeywords.some(tag => searchQuery.toLowerCase().includes(tag));
         
         if (isTagSearch) {
