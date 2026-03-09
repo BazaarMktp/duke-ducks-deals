@@ -70,8 +70,8 @@ export const HeroSection = ({ stats }: HeroSectionProps) => {
             </>
           ) : card.subtitle ? (
             <>
-              <div className="text-2xl font-bold text-gray-900">{card.text}</div>
-              <div className="text-gray-600">{card.subtitle}</div>
+              <div className="text-2xl font-bold text-foreground">{card.text}</div>
+              <div className="text-muted-foreground">{card.subtitle}</div>
             </>
           ) : (
             <>
