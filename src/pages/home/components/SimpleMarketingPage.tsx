@@ -54,16 +54,16 @@ const HOW_IT_WORKS = [
 ];
 
 const TESTIMONIALS = [
-  { quote: "Sold my desk in 2 hours!", name: "Sarah M.", school: "Duke '26", avatar: "🎓" },
-  { quote: "Finally a marketplace only for students — no creepy strangers.", name: "Alex K.", school: "Duke '25", avatar: "📚" },
-  { quote: "Saved $400 on textbooks my first semester.", name: "Jordan P.", school: "Duke '27", avatar: "💰" },
+  { quote: "Sold my desk in 2 hours!", name: "Sarah M.", school: "Duke '26", initials: "SM" },
+  { quote: "Finally a marketplace only for students — no creepy strangers.", name: "Alex K.", school: "Duke '25", initials: "AK" },
+  { quote: "Saved $400 on textbooks my first semester.", name: "Jordan P.", school: "Duke '27", initials: "JP" },
 ];
 
 const SOCIAL_PROOF_ITEMS = [
-  { title: "Mini Fridge", price: "$50", status: "Sold in 3 hours", emoji: "🧊" },
-  { title: "Calculus Textbook", price: "$25", status: "Sold in 1 hour", emoji: "📖" },
-  { title: "Desk Lamp", price: "$15", status: "Sold in 45 min", emoji: "💡" },
-  { title: "Bike Lock", price: "$20", status: "Sold in 2 hours", emoji: "🔒" },
+  { title: "Mini Fridge", price: "$50", status: "Sold in 3 hours" },
+  { title: "Calculus Textbook", price: "$25", status: "Sold in 1 hour" },
+  { title: "Desk Lamp", price: "$15", status: "Sold in 45 min" },
+  { title: "Bike Lock", price: "$20", status: "Sold in 2 hours" },
 ];
 
 /* ------------------------------------------------------------------ */
