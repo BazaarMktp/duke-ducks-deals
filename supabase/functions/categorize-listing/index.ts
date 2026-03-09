@@ -7,6 +7,66 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Map AI-returned specific tags to canonical filter categories
+const TAG_NORMALIZATION: Record<string, string> = {
+  microwave: 'microwave',
+  'microwave oven': 'microwave',
+  fridge: 'fridge',
+  refrigerator: 'fridge',
+  'mini fridge': 'fridge',
+  furniture: 'furniture',
+  desk: 'furniture',
+  chair: 'furniture',
+  bed: 'furniture',
+  couch: 'furniture',
+  sofa: 'furniture',
+  table: 'furniture',
+  shelf: 'furniture',
+  dresser: 'furniture',
+  nightstand: 'furniture',
+  bookshelf: 'furniture',
+  futon: 'furniture',
+  mattress: 'furniture',
+  lamp: 'furniture',
+  fan: 'furniture',
+  'dorm decor': 'dorm decor',
+  decor: 'dorm decor',
+  poster: 'dorm decor',
+  tapestry: 'dorm decor',
+  rug: 'dorm decor',
+  mirror: 'dorm decor',
+  textbook: 'books',
+  book: 'books',
+  books: 'books',
+  novel: 'books',
+  clothes: 'clothes',
+  clothing: 'clothes',
+  shirt: 'clothes',
+  shoes: 'clothes',
+  sneakers: 'clothes',
+  hoodie: 'clothes',
+  jacket: 'clothes',
+  technology: 'technology',
+  tech: 'technology',
+  laptop: 'technology',
+  computer: 'technology',
+  monitor: 'technology',
+  keyboard: 'technology',
+  mouse: 'technology',
+  phone: 'technology',
+  tablet: 'technology',
+  ipad: 'technology',
+  macbook: 'technology',
+  headphones: 'technology',
+  speaker: 'technology',
+  tv: 'technology',
+  television: 'technology',
+  camera: 'technology',
+  console: 'technology',
+  gaming: 'technology',
+  other: 'other',
+};
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -27,11 +87,19 @@ serve(async (req) => {
     // Get listing details
     const { data: listing, error: listingError } = await supabase
       .from('listings')
-      .select('title, description, images, category')
+      .select('title, description, images, category, item_tag')
       .eq('id', listingId)
       .single();
 
     if (listingError) throw listingError;
+
+    // If item_tag is already set by the user, skip AI categorization
+    if (listing.item_tag) {
+      console.log('Listing', listingId, 'already has item_tag:', listing.item_tag);
+      return new Response(JSON.stringify({ tag: listing.item_tag, source: 'user' }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
 
     // Prepare content for Gemini
     const content = [
@@ -48,10 +116,11 @@ CRITICAL INSTRUCTIONS:
 3. ONLY return a specific category tag if the image clearly matches the text description
 4. If the text says "microwave" but the image shows something else (laptop, chair, etc.), return "other"
 5. If there's ANY doubt or mismatch between image and text, return "other"
+6. Do NOT categorize based on incidental mentions in the description (e.g. a room rental mentioning "microwave included" is NOT a microwave listing)
 
-Available tags: "microwave", "fridge", "furniture", "textbook", "laptop", "chair", "desk", "bed", "couch", "table", "lamp", "tv", "monitor", "keyboard", "mouse", or "other"
+Available canonical categories: "microwave", "fridge", "furniture", "dorm decor", "books", "clothes", "technology", "other"
 
-Respond with ONLY the tag, nothing else.`
+Respond with ONLY the category tag, nothing else.`
       }
     ];
 
@@ -92,11 +161,14 @@ Respond with ONLY the tag, nothing else.`
     }
 
     const data = await response.json();
-    const tag = data.choices[0].message.content.trim().toLowerCase();
+    const rawTag = data.choices[0].message.content.trim().toLowerCase();
 
-    console.log('Categorized listing', listingId, 'as:', tag);
+    // Normalize the AI tag to a canonical category
+    const normalizedTag = TAG_NORMALIZATION[rawTag] || 'other';
 
-    return new Response(JSON.stringify({ tag }), {
+    console.log('Categorized listing', listingId, 'raw:', rawTag, 'normalized:', normalizedTag);
+
+    return new Response(JSON.stringify({ tag: normalizedTag, rawTag, source: 'ai' }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {

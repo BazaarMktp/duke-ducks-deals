@@ -6,23 +6,71 @@ import { MarketplaceListing } from "@/components/marketplace/types";
 
 const PAGE_SIZE = 20;
 
-const CATEGORY_KEYWORDS: Record<string, string[]> = {
-  microwave: ['microwave'],
-  fridge: ['fridge', 'refrigerator', 'mini fridge', 'mini-fridge'],
-  furniture: ['furniture', 'desk', 'chair', 'bed', 'fan', 'couch', 'table', 'sofa', 'shelf', 'dresser', 'nightstand', 'bookshelf', 'futon', 'mattress', 'lamp'],
-  'dorm decor': ['dorm decor', 'decor', 'poster', 'tapestry', 'rug', 'curtain', 'mirror', 'wall art', 'fairy lights', 'decoration'],
-  books: ['book', 'books', 'textbook', 'textbooks', 'novel', 'manual', 'guide'],
-  clothes: ['clothes', 'clothing', 'shirt', 'pants', 'jacket', 'hoodie', 'shoes', 'sneakers', 'dress', 'jeans', 'sweater', 'hat', 'cap'],
-  technology: ['technology', 'tech', 'laptop', 'computer', 'monitor', 'keyboard', 'mouse', 'phone', 'tablet', 'ipad', 'macbook', 'headphones', 'speaker', 'charger', 'cable', 'tv', 'television', 'camera', 'console', 'gaming'],
+// Canonical mapping: AI-generated item_tag values → filter category
+// The category filter matches ONLY against item_tag (structured data),
+// never against title or description text.
+const TAG_TO_CATEGORY: Record<string, string> = {
+  microwave: 'microwave',
+  fridge: 'fridge',
+  refrigerator: 'fridge',
+  'mini fridge': 'fridge',
+  furniture: 'furniture',
+  desk: 'furniture',
+  chair: 'furniture',
+  bed: 'furniture',
+  couch: 'furniture',
+  sofa: 'furniture',
+  table: 'furniture',
+  shelf: 'furniture',
+  dresser: 'furniture',
+  nightstand: 'furniture',
+  bookshelf: 'furniture',
+  futon: 'furniture',
+  mattress: 'furniture',
+  lamp: 'furniture',
+  fan: 'furniture',
+  'dorm decor': 'dorm decor',
+  decor: 'dorm decor',
+  poster: 'dorm decor',
+  tapestry: 'dorm decor',
+  rug: 'dorm decor',
+  mirror: 'dorm decor',
+  textbook: 'books',
+  book: 'books',
+  books: 'books',
+  novel: 'books',
+  clothes: 'clothes',
+  clothing: 'clothes',
+  shirt: 'clothes',
+  shoes: 'clothes',
+  sneakers: 'clothes',
+  hoodie: 'clothes',
+  jacket: 'clothes',
+  technology: 'technology',
+  tech: 'technology',
+  laptop: 'technology',
+  computer: 'technology',
+  monitor: 'technology',
+  keyboard: 'technology',
+  mouse: 'technology',
+  phone: 'technology',
+  tablet: 'technology',
+  ipad: 'technology',
+  macbook: 'technology',
+  headphones: 'technology',
+  speaker: 'technology',
+  tv: 'technology',
+  television: 'technology',
+  camera: 'technology',
+  console: 'technology',
+  gaming: 'technology',
 };
 
-function buildCategoryOrClause(category: string): string {
-  const keywords = CATEGORY_KEYWORDS[category] || [category];
-  return keywords.flatMap(kw => [
-    `item_tag.ilike.%${kw}%`,
-    `title.ilike.%${kw}%`,
-    `description.ilike.%${kw}%`,
-  ]).join(',');
+// Build the list of item_tag values that map to a given filter category
+function getTagsForCategory(category: string): string[] {
+  return Object.entries(TAG_TO_CATEGORY)
+    .filter(([, cat]) => cat === category)
+    .map(([tag]) => tag);
 }
 
 interface UseMarketplaceOptions {
@@ -71,12 +119,16 @@ export const useMarketplace = (
         .eq('status', 'active')
         .eq('listing_type', activeListingType);
 
-      // Apply category filter based on item_tag, title, and description
+      // Apply category filter using ONLY the structured item_tag field
+      // Never match on title/description to prevent false positives
+      // (e.g. a housing listing mentioning "microwave" in description)
       if (categoryFilter) {
         if (categoryFilter === 'free') {
           activeQuery = activeQuery.or('price.eq.0,price.is.null');
         } else {
-          activeQuery = activeQuery.or(buildCategoryOrClause(categoryFilter));
+          const tags = getTagsForCategory(categoryFilter);
+          const orClauses = tags.map(tag => `item_tag.ilike.%${tag}%`).join(',');
+          activeQuery = activeQuery.or(orClauses);
         }
       }
 
@@ -101,29 +153,22 @@ export const useMarketplace = (
         .gte('sold_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString())
         .limit(10) : null;
 
-      // Apply category filter to sold query too
+      // Apply category filter to sold query (item_tag only)
       if (soldQuery && categoryFilter) {
         if (categoryFilter === 'free') {
           soldQuery = soldQuery.or('price.eq.0,price.is.null');
         } else {
-          soldQuery = soldQuery.or(buildCategoryOrClause(categoryFilter));
+          const tags = getTagsForCategory(categoryFilter);
+          const orClauses = tags.map(tag => `item_tag.ilike.%${tag}%`).join(',');
+          soldQuery = soldQuery.or(orClauses);
         }
       }
 
       if (searchQuery) {
-        // Check if search query matches a tag keyword - if so, use item_tag for accurate filtering
-        const tagKeywords = ["microwave", "fridge", "furniture", "bed", "fan", "desk", "chair", "dorm decor", "books", "textbook", "clothes", "technology", "laptop", "tv", "monitor", "keyboard", "mouse"];
-        const isTagSearch = tagKeywords.some(tag => searchQuery.toLowerCase().includes(tag));
-        
-        if (isTagSearch) {
-          // For tag searches, prioritize item_tag but also search title as fallback
-          activeQuery = activeQuery.or(`item_tag.ilike.%${searchQuery}%,title.ilike.%${searchQuery}%`);
-          if (soldQuery) soldQuery = soldQuery.or(`item_tag.ilike.%${searchQuery}%,title.ilike.%${searchQuery}%`);
-        } else {
-          // For general searches, search title and description
-          activeQuery = activeQuery.or(`title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`);
-          if (soldQuery) soldQuery = soldQuery.or(`title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`);
-        }
+        // Search is always text-based on title and description only.
+        // Category filtering is handled separately via item_tag above.
+        activeQuery = activeQuery.or(`title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`);
+        if (soldQuery) soldQuery = soldQuery.or(`title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`);
       }
 
       const getOrderOptions = () => {

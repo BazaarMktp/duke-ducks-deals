@@ -11,6 +11,7 @@ interface PostingFormData {
   price: string;
   location: string;
   housingType: string;
+  itemTag: string;
   images: string[];
   allowPickup: boolean;
   allowMeetOnCampus: boolean;
@@ -31,6 +32,7 @@ export const usePostingForm = ({ category, listingType, onSuccess, onClose }: Us
     price: "",
     location: "",
     housingType: "",
+    itemTag: "",
     images: [],
     allowPickup: false,
     allowMeetOnCampus: false,
@@ -160,6 +162,7 @@ export const usePostingForm = ({ category, listingType, onSuccess, onClose }: Us
         location: formData.location || null,
         images: formData.images.length > 0 ? formData.images : null,
         listing_type: listingType,
+        item_tag: category === 'marketplace' && formData.itemTag ? formData.itemTag : null,
       };
 
       // Add transaction methods for marketplace items

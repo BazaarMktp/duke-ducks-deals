@@ -1,6 +1,7 @@
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import ImageUpload from "@/components/ImageUpload";
 import TransactionMethods from "./TransactionMethods";
 import { Info } from "lucide-react";
@@ -12,6 +13,17 @@ import {
 } from "@/components/ui/tooltip";
 import { getTitlePlaceholder, getDescriptionPlaceholder } from "./utils/placeholderText";
 
+const ITEM_TAG_OPTIONS = [
+  { value: "microwave", label: "Microwave" },
+  { value: "fridge", label: "Fridge" },
+  { value: "furniture", label: "Furniture" },
+  { value: "dorm decor", label: "Dorm Decor" },
+  { value: "books", label: "Books" },
+  { value: "clothes", label: "Clothes" },
+  { value: "technology", label: "Technology" },
+  { value: "other", label: "Other" },
+];
+
 interface PostingFormFieldsProps {
   formData: {
     title: string;
@@ -19,6 +31,7 @@ interface PostingFormFieldsProps {
     price: string;
     location: string;
     housingType: string;
+    itemTag?: string;
     images: string[];
     allowPickup: boolean;
     allowMeetOnCampus: boolean;
@@ -56,6 +69,25 @@ const PostingFormFields: React.FC<PostingFormFieldsProps> = ({
 }) => {
   return (
     <>
+      {category === 'marketplace' && (
+        <div>
+          <Label htmlFor="itemTag" className="text-base font-medium inline-flex items-center">
+            Item Category
+            <FieldInfo tip="Select the category that best describes your item. This determines how it appears in filters." />
+          </Label>
+          <Select value={formData.itemTag || ''} onValueChange={(v) => onInputChange("itemTag", v)}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select item category" />
+            </SelectTrigger>
+            <SelectContent>
+              {ITEM_TAG_OPTIONS.map(opt => (
+                <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      )}
+
       <div>
         <Label htmlFor="title" className="text-base font-medium inline-flex items-center">
           {listingType === 'wanted' ? 'What are you looking for?' : 'Title'}
