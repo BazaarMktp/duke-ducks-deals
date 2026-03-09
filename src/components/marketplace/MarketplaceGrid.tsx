@@ -27,7 +27,8 @@ const MarketplaceGrid = ({
   loadingMore = false,
   hasMore = false,
   onLoadMore,
-  activeListingType 
+  activeListingType,
+  categoryFilter = null,
 }: MarketplaceGridProps) => {
   const { startConversation } = useConversation();
   const observerRef = useRef<IntersectionObserver | null>(null);
