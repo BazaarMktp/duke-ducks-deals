@@ -46,15 +46,24 @@ export const AuthFormContainer = ({
   console.log('AuthFormContainer rendering:', { isLogin, loading });
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle className="text-center">
-            {isLogin ? "Sign In" : "Create Account"}
-          </CardTitle>
-          <p className="text-center text-sm text-muted-foreground">
-            {isLogin ? "Welcome back to Devils Marketplace" : "Join Devils Marketplace"}
-          </p>
+        <CardHeader className="space-y-4">
+          <div className="flex justify-center">
+            <img
+              src="/devils-marketplace-logo.png"
+              alt="Devil's Marketplace logo"
+              className="h-14 w-14"
+            />
+          </div>
+          <div>
+            <CardTitle className="text-center text-primary">
+              {isLogin ? "Sign In" : "Create Account"}
+            </CardTitle>
+            <p className="text-center text-sm text-muted-foreground mt-1">
+              {isLogin ? "Welcome back to Devil's Marketplace" : "Join Devil's Marketplace"}
+            </p>
+          </div>
         </CardHeader>
         <CardContent>
           {isLogin ? (
@@ -90,7 +99,7 @@ export const AuthFormContainer = ({
             <button
               type="button"
               onClick={() => setIsLogin(!isLogin)}
-              className="text-sm text-blue-600 hover:underline"
+              className="text-sm text-primary hover:underline"
             >
               {isLogin 
                 ? "Don't have an account? Sign up" 
@@ -100,7 +109,7 @@ export const AuthFormContainer = ({
           </div>
           
           <div className="mt-4 text-center">
-            <Link to="/" className="text-sm text-gray-600 hover:underline">
+            <Link to="/" className="text-sm text-muted-foreground hover:underline">
               Back to Home
             </Link>
           </div>
