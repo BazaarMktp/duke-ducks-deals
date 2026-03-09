@@ -104,6 +104,11 @@
 }
 
 
+/* Brand logo blue tint — matches --primary (#0A2A66) */
+.logo-blue {
+  filter: brightness(0) saturate(100%) invert(12%) sepia(89%) saturate(2847%) hue-rotate(213deg) brightness(92%) contrast(101%);
+}
+
 /* Scrollbar hiding utility */
 .scrollbar-none {
   -ms-overflow-style: none;
