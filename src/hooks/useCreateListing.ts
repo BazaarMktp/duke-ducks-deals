@@ -34,6 +34,7 @@ export const useCreateListing = () => {
     category: "marketplace",
     listingType: "offer",
     housingType: "",
+    itemTag: "",
     images: [],
     allowPickup: false,
     allowMeetOnCampus: false,
