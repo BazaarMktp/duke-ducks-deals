@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HashRouter, Routes, Route, useLocation } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { useState } from "react";
-import { ThemeProvider } from "next-themes";
+
 import { AuthProvider } from "@/contexts/AuthContext";
 import { AdminProvider } from "@/contexts/AdminContext";
 import { AuthRedirectHandler } from "@/components/auth/AuthRedirectHandler";
@@ -197,7 +197,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <HelmetProvider>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <div>
           <TooltipProvider>
             <AuthProvider>
               <AdminProvider>
@@ -212,7 +212,7 @@ function App() {
               </AdminProvider>
             </AuthProvider>
           </TooltipProvider>
-        </ThemeProvider>
+        </div>
       </HelmetProvider>
     </QueryClientProvider>
   );

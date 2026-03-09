@@ -2,7 +2,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { ThemeToggle } from "@/components/ThemeToggle";
 import { 
   Home, 
   ShoppingCart, 
@@ -35,14 +34,6 @@ const MobileMenu = ({ user, isOpen, onClose, onSignOut, unreadMessages }: Mobile
   return (
     <div className="md:hidden border-t border-border bg-background" role="menu">
       <div className="px-4 py-4 space-y-3">
-        {/* Theme Toggle */}
-        <div className="flex items-center justify-between py-2">
-          <span className="text-sm font-medium text-foreground">Theme</span>
-          <ThemeToggle />
-        </div>
-        
-        <Separator />
-        
         {navigation.map((item) => (
           <Link
             key={item.name}
