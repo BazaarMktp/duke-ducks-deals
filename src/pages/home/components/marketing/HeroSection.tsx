@@ -64,7 +64,7 @@ export const HeroSection = ({ stats }: HeroSectionProps) => {
                   />
                 </div>
               )}
-              <div className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full inline-block mb-2">🔥 Hot deal</div>
+              <div className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full inline-block mb-2">Popular</div>
               <div className="font-semibold text-foreground">{card.text}</div>
               <div className="text-lg font-bold text-foreground">{card.price}</div>
             </>
