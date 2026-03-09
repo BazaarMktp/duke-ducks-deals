@@ -119,12 +119,16 @@ export const useMarketplace = (
         .eq('status', 'active')
         .eq('listing_type', activeListingType);
 
-      // Apply category filter based on item_tag, title, and description
+      // Apply category filter using ONLY the structured item_tag field
+      // Never match on title/description to prevent false positives
+      // (e.g. a housing listing mentioning "microwave" in description)
       if (categoryFilter) {
         if (categoryFilter === 'free') {
           activeQuery = activeQuery.or('price.eq.0,price.is.null');
         } else {
-          activeQuery = activeQuery.or(buildCategoryOrClause(categoryFilter));
+          const tags = getTagsForCategory(categoryFilter);
+          const orClauses = tags.map(tag => `item_tag.ilike.%${tag}%`).join(',');
+          activeQuery = activeQuery.or(orClauses);
         }
       }
 
@@ -149,12 +153,14 @@ export const useMarketplace = (
         .gte('sold_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString())
         .limit(10) : null;
 
-      // Apply category filter to sold query too
+      // Apply category filter to sold query (item_tag only)
       if (soldQuery && categoryFilter) {
         if (categoryFilter === 'free') {
           soldQuery = soldQuery.or('price.eq.0,price.is.null');
         } else {
-          soldQuery = soldQuery.or(buildCategoryOrClause(categoryFilter));
+          const tags = getTagsForCategory(categoryFilter);
+          const orClauses = tags.map(tag => `item_tag.ilike.%${tag}%`).join(',');
+          soldQuery = soldQuery.or(orClauses);
         }
       }
 
