@@ -7,7 +7,7 @@ import Logo from "./navbar/Logo";
 import Navigation from "./navbar/Navigation";
 import UserMenu from "./navbar/UserMenu";
 import MobileMenu from "./navbar/MobileMenu";
-import { ThemeToggle } from "./ThemeToggle";
+
 import { useUnreadMessages } from "@/hooks/useUnreadMessages";
 
 const Navbar = () => {
