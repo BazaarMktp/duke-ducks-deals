@@ -15,6 +15,7 @@ interface MarketplaceGridProps {
   hasMore?: boolean;
   onLoadMore?: () => void;
   activeListingType: 'offer' | 'wanted';
+  categoryFilter?: string | null;
 }
 
 const MarketplaceGrid = ({ 

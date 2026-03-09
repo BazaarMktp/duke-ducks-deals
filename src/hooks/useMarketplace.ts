@@ -99,6 +99,30 @@ export const useMarketplace = (
         .gte('sold_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString())
         .limit(10) : null;
 
+      // Apply category filter to sold query too
+      if (soldQuery && categoryFilter) {
+        if (categoryFilter === 'free') {
+          soldQuery = soldQuery.or('price.eq.0,price.is.null');
+        } else {
+          const categoryKeywords: Record<string, string[]> = {
+            microwave: ['microwave'],
+            fridge: ['fridge', 'refrigerator', 'mini fridge', 'mini-fridge'],
+            furniture: ['furniture', 'desk', 'chair', 'bed', 'fan', 'couch', 'table', 'sofa', 'shelf', 'dresser', 'nightstand', 'bookshelf', 'futon', 'mattress', 'lamp'],
+            'dorm decor': ['dorm decor', 'decor', 'poster', 'tapestry', 'rug', 'curtain', 'mirror', 'wall art', 'fairy lights', 'decoration'],
+            books: ['book', 'books', 'textbook', 'textbooks', 'novel', 'manual', 'guide'],
+            clothes: ['clothes', 'clothing', 'shirt', 'pants', 'jacket', 'hoodie', 'shoes', 'sneakers', 'dress', 'jeans', 'sweater', 'hat', 'cap'],
+            technology: ['technology', 'tech', 'laptop', 'computer', 'monitor', 'keyboard', 'mouse', 'phone', 'tablet', 'ipad', 'macbook', 'headphones', 'speaker', 'charger', 'cable', 'tv', 'television', 'camera', 'console', 'gaming'],
+          };
+          const keywords = categoryKeywords[categoryFilter] || [categoryFilter];
+          const orClauses = keywords.flatMap(kw => [
+            `item_tag.ilike.%${kw}%`,
+            `title.ilike.%${kw}%`,
+            `description.ilike.%${kw}%`,
+          ]);
+          soldQuery = soldQuery.or(orClauses.join(','));
+        }
+      }
+
       if (searchQuery) {
         // Check if search query matches a tag keyword - if so, use item_tag for accurate filtering
         const tagKeywords = ["microwave", "fridge", "furniture", "bed", "fan", "desk", "chair", "dorm decor", "books", "textbook", "clothes", "technology", "laptop", "tv", "monitor", "keyboard", "mouse"];
