@@ -12,11 +12,8 @@ export const useConversations = () => {
   const { user } = useAuth();
   const { toast } = useToast();
 
-  const initialLoadDone = useCallback(() => conversations.length > 0 || !loading, [conversations.length, loading]);
-
   const fetchConversations = useCallback(async (isArchivedView: boolean, isInitial = false) => {
     if (!user) return;
-    // Only show loading spinner on initial load, not refetches
     if (isInitial || conversations.length === 0) {
       setLoading(true);
     }
@@ -94,10 +91,15 @@ export const useConversations = () => {
         ...(lastMessagePreview && { last_message_preview: lastMessagePreview })
       };
       
-      // Remove from current position and add to top
-      const newList = [updated, ...prev.filter(c => c.id !== conversationId)];
-      return newList;
+      return [updated, ...prev.filter(c => c.id !== conversationId)];
     });
+  }, []);
+
+  // Clear unread count for a specific conversation (called when user opens it)
+  const clearUnreadCount = useCallback((conversationId: string) => {
+    setConversations(prev =>
+      prev.map(c => c.id === conversationId ? { ...c, unread_count: 0 } : c)
+    );
   }, []);
 
   // Subscribe to real-time updates for conversations and messages
@@ -115,7 +117,10 @@ export const useConversations = () => {
           filter: `buyer_id=eq.${user.id}`
         },
         (payload) => {
-          if (payload.eventType === 'UPDATE' && payload.new) {
+          if (payload.eventType === 'INSERT' && payload.new) {
+            // New conversation created where user is buyer — refetch to get full joined data
+            fetchConversations(showArchived, false);
+          } else if (payload.eventType === 'UPDATE' && payload.new) {
             moveConversationToTop(payload.new.id as string, payload.new.last_message_preview as string);
           }
         }
@@ -129,7 +134,10 @@ export const useConversations = () => {
           filter: `seller_id=eq.${user.id}`
         },
         (payload) => {
-          if (payload.eventType === 'UPDATE' && payload.new) {
+          if (payload.eventType === 'INSERT' && payload.new) {
+            // New conversation created where user is seller — refetch to get full joined data
+            fetchConversations(showArchived, false);
+          } else if (payload.eventType === 'UPDATE' && payload.new) {
             moveConversationToTop(payload.new.id as string, payload.new.last_message_preview as string);
           }
         }
@@ -150,7 +158,11 @@ export const useConversations = () => {
           // Update unread count for the relevant conversation
           setConversations(prev => {
             const idx = prev.findIndex(c => c.id === msg.conversation_id);
-            if (idx === -1) return prev;
+            if (idx === -1) {
+              // Conversation not in list yet (e.g. brand new) — refetch
+              fetchConversations(showArchived, false);
+              return prev;
+            }
             const conv = prev[idx];
             const updated = {
               ...conv,
@@ -167,7 +179,7 @@ export const useConversations = () => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [user, moveConversationToTop]);
+  }, [user, moveConversationToTop, showArchived, fetchConversations]);
 
   const archiveConversation = async (conversationId: string) => {
     if (!user) return;
@@ -218,6 +230,7 @@ export const useConversations = () => {
     deleteConversation,
     toggleShowArchived,
     setConversations,
-    moveConversationToTop
+    moveConversationToTop,
+    clearUnreadCount
   };
 };

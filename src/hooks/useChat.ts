@@ -18,7 +18,8 @@ export const useChat = (initialConversationId?: string) => {
     deleteConversation,
     toggleShowArchived,
     setConversations,
-    moveConversationToTop
+    moveConversationToTop,
+    clearUnreadCount
   } = useConversations();
 
   const {
@@ -34,28 +35,20 @@ export const useChat = (initialConversationId?: string) => {
     if (user) {
       fetchConversations(showArchived, true);
     }
-    
-    // Listen for unread message updates to refresh conversation list silently
-    const handleUnreadUpdate = () => {
-      fetchConversations(showArchived, false);
-    };
-    
-    window.addEventListener('unread-messages-updated', handleUnreadUpdate);
-    
-    return () => {
-      window.removeEventListener('unread-messages-updated', handleUnreadUpdate);
-    };
   }, [user, showArchived, fetchConversations]);
 
-  const handleSelectConversation = (convId: string | null) => {
+  const handleSelectConversation = useCallback((convId: string | null) => {
     setSelectedConversation(convId);
-  };
+    // Immediately clear unread badge in the conversation list
+    if (convId) {
+      clearUnreadCount(convId);
+    }
+  }, [clearUnreadCount]);
 
   // Wrap sendMessage to also move conversation to top
   const sendMessage = useCallback(async (message: string, attachments?: any[]) => {
     await originalSendMessage(message, attachments);
     
-    // Move the current conversation to the top after sending
     if (selectedConversation) {
       moveConversationToTop(selectedConversation, message.slice(0, 50));
     }
