@@ -64,9 +64,9 @@ export const HeroSection = ({ stats }: HeroSectionProps) => {
                   />
                 </div>
               )}
-              <div className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full inline-block mb-2">🔥 Hot deal</div>
-              <div className="font-semibold text-gray-900">{card.text}</div>
-              <div className="text-lg font-bold text-gray-900">{card.price}</div>
+              <div className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full inline-block mb-2">🔥 Hot deal</div>
+              <div className="font-semibold text-foreground">{card.text}</div>
+              <div className="text-lg font-bold text-foreground">{card.price}</div>
             </>
           ) : card.subtitle ? (
             <>
