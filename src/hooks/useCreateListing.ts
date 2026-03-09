@@ -122,6 +122,7 @@ export const useCreateListing = () => {
         moderation_status: moderationStatus,
         moderation_flags: moderationResult.flags || [],
         open_to_negotiation: formData.openToNegotiation,
+        item_tag: formData.category === 'marketplace' && formData.itemTag ? formData.itemTag : null,
       };
 
       // Add transaction methods for marketplace items
