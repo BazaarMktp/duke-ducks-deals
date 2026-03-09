@@ -101,8 +101,8 @@ export const HeroSection = ({ stats }: HeroSectionProps) => {
               Get started
             </Button>
           </Link>
-          <p className="text-sm text-gray-600 mt-3">
-            Buy and sell with fellow Duke students. Safe, verified and made by Duke students.
+          <p className="text-sm text-muted-foreground mt-3">
+            Buy and sell with fellow students. Safe, verified and made by students.
           </p>
         </div>
 
