@@ -96,7 +96,7 @@ export const HeroSection = ({ stats }: HeroSectionProps) => {
           <Link to="/auth?mode=signup">
             <Button 
               size="lg" 
-              className="w-full h-12 bg-[#003087] hover:bg-[#002266] text-white font-medium"
+              className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-medium"
             >
               Get started
             </Button>
