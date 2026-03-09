@@ -10,7 +10,6 @@ import { Listing } from "@/hooks/useMyListings";
 import { differenceInDays, parseISO } from "date-fns";
 import { getPrivacyAwareLocation } from "@/utils/locationPrivacy";
 import { OptimizedImage } from "@/components/ui/optimized-image";
-import { generateBlurDataURL } from "@/utils/imageUtils";
 
 interface ListingCardProps {
   listing: Listing;
@@ -109,10 +108,8 @@ export const ListingCard = ({
           <OptimizedImage 
             src={listing.images?.[0] || "/placeholder.svg"} 
             alt={listing.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+            className="w-full h-full"
             lazy={true}
-            blurDataURL={generateBlurDataURL()}
-            aspectRatio="video"
           />
         </div>
       </CardHeader>

@@ -4,25 +4,21 @@
 let cachedBlurDataURL: string | null = null;
 
 export const generateBlurDataURL = (width: number = 10, height: number = 10): string => {
-  // Return cached version if available
   if (cachedBlurDataURL) return cachedBlurDataURL;
-  
+
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
-  
   canvas.width = width;
   canvas.height = height;
-  
+
   if (ctx) {
-    // Create a simple gradient placeholder
     const gradient = ctx.createLinearGradient(0, 0, width, height);
     gradient.addColorStop(0, '#f3f4f6');
     gradient.addColorStop(1, '#e5e7eb');
-    
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, width, height);
   }
-  
+
   cachedBlurDataURL = canvas.toDataURL('image/jpeg', 0.1);
   return cachedBlurDataURL;
 };
@@ -45,62 +41,79 @@ export const getImageDimensions = (src: string): Promise<{ width: number; height
   });
 };
 
+/**
+ * Multi-step image compression.
+ * When scaling down significantly (>2×), we halve iteratively for sharper results
+ * instead of a single large resize.
+ */
 export const compressImage = async (
-  file: File, 
-  quality: number = 0.8, 
-  maxWidth: number = 1920,
-  maxHeight: number = 1920
+  file: File,
+  quality: number = 0.8,
+  maxWidth: number = 1200,
+  maxHeight: number = 1200,
 ): Promise<Blob> => {
   return new Promise((resolve, reject) => {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
     const img = new Image();
-    
+
     img.onload = () => {
       let { width, height } = img;
-      
-      // Calculate new dimensions while maintaining aspect ratio
+
+      // Calculate target dimensions
       if (width > maxWidth || height > maxHeight) {
         const ratio = Math.min(maxWidth / width, maxHeight / height);
-        width = width * ratio;
-        height = height * ratio;
+        width = Math.round(width * ratio);
+        height = Math.round(height * ratio);
       }
-      
-      canvas.width = width;
-      canvas.height = height;
-      
-      if (ctx) {
-        // Enable image smoothing for better quality
-        ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = 'high';
-        ctx.drawImage(img, 0, 0, width, height);
-        
-        // Revoke the object URL to free memory
-        URL.revokeObjectURL(img.src);
-        
-        canvas.toBlob(
-          (blob) => {
-            if (blob) {
-              resolve(blob);
-            } else {
-              reject(new Error('Failed to compress image'));
-            }
-          },
-          'image/jpeg',
-          quality
-        );
-      } else {
-        URL.revokeObjectURL(img.src);
-        reject(new Error('Failed to get canvas context'));
+
+      // Multi-step downscale: halve iteratively until within 2× of target
+      let srcCanvas = document.createElement('canvas');
+      let srcCtx = srcCanvas.getContext('2d')!;
+      srcCanvas.width = img.naturalWidth;
+      srcCanvas.height = img.naturalHeight;
+      srcCtx.drawImage(img, 0, 0);
+      URL.revokeObjectURL(img.src);
+
+      let currentW = img.naturalWidth;
+      let currentH = img.naturalHeight;
+
+      while (currentW > width * 2 || currentH > height * 2) {
+        const nextW = Math.round(currentW / 2);
+        const nextH = Math.round(currentH / 2);
+        const stepCanvas = document.createElement('canvas');
+        const stepCtx = stepCanvas.getContext('2d')!;
+        stepCanvas.width = nextW;
+        stepCanvas.height = nextH;
+        stepCtx.imageSmoothingEnabled = true;
+        stepCtx.imageSmoothingQuality = 'high';
+        stepCtx.drawImage(srcCanvas, 0, 0, nextW, nextH);
+        srcCanvas = stepCanvas;
+        srcCtx = stepCtx;
+        currentW = nextW;
+        currentH = nextH;
       }
+
+      // Final resize to exact target
+      const finalCanvas = document.createElement('canvas');
+      const finalCtx = finalCanvas.getContext('2d')!;
+      finalCanvas.width = width;
+      finalCanvas.height = height;
+      finalCtx.imageSmoothingEnabled = true;
+      finalCtx.imageSmoothingQuality = 'high';
+      finalCtx.drawImage(srcCanvas, 0, 0, width, height);
+
+      finalCanvas.toBlob(
+        (blob) => (blob ? resolve(blob) : reject(new Error('Failed to compress image'))),
+        'image/jpeg',
+        quality,
+      );
     };
-    
+
     img.onerror = () => {
       URL.revokeObjectURL(img.src);
       reject(new Error('Failed to load image'));
     };
-    const objectUrl = URL.createObjectURL(file);
-    img.src = objectUrl;
+
+    img.src = URL.createObjectURL(file);
   });
 };
 

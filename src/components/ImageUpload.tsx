@@ -43,7 +43,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ images, onImagesChange, maxIm
   const uploadImage = async (file: File) => {
     if (!user) return null;
     try {
-      const compressedBlob = await compressImage(file, 0.85, 1920, 1920);
+      const compressedBlob = await compressImage(file, 0.82, 1200, 1200);
       const fileName = `${user.id}/${Date.now()}_${Math.random().toString(36).substring(7)}.jpg`;
 
       const { data, error } = await supabase.storage
