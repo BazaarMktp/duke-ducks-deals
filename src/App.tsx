@@ -197,7 +197,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <HelmetProvider>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <div>
           <TooltipProvider>
             <AuthProvider>
               <AdminProvider>
