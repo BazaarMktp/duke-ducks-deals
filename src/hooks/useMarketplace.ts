@@ -56,6 +56,10 @@ export const useMarketplace = (
       if (categoryFilter) {
         if (categoryFilter === 'free') {
           activeQuery = activeQuery.or('price.eq.0,price.is.null');
+        } else if (categoryFilter === 'furniture') {
+          activeQuery = activeQuery.or(
+            'item_tag.ilike.%furniture%,title.ilike.%furniture%,title.ilike.%desk%,title.ilike.%chair%,title.ilike.%bed%,title.ilike.%fan%,title.ilike.%couch%,title.ilike.%table%'
+          );
         } else {
           activeQuery = activeQuery.or(`item_tag.ilike.%${categoryFilter}%,title.ilike.%${categoryFilter}%`);
         }
