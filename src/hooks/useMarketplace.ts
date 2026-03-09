@@ -165,19 +165,10 @@ export const useMarketplace = (
       }
 
       if (searchQuery) {
-        // Check if search query matches a tag keyword - if so, use item_tag for accurate filtering
-        const tagKeywords = ["microwave", "fridge", "furniture", "bed", "fan", "desk", "chair", "dorm decor", "books", "textbook", "clothes", "technology", "laptop", "tv", "monitor", "keyboard", "mouse"];
-        const isTagSearch = tagKeywords.some(tag => searchQuery.toLowerCase().includes(tag));
-        
-        if (isTagSearch) {
-          // For tag searches, prioritize item_tag but also search title as fallback
-          activeQuery = activeQuery.or(`item_tag.ilike.%${searchQuery}%,title.ilike.%${searchQuery}%`);
-          if (soldQuery) soldQuery = soldQuery.or(`item_tag.ilike.%${searchQuery}%,title.ilike.%${searchQuery}%`);
-        } else {
-          // For general searches, search title and description
-          activeQuery = activeQuery.or(`title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`);
-          if (soldQuery) soldQuery = soldQuery.or(`title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`);
-        }
+        // Search is always text-based on title and description only.
+        // Category filtering is handled separately via item_tag above.
+        activeQuery = activeQuery.or(`title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`);
+        if (soldQuery) soldQuery = soldQuery.or(`title.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`);
       }
 
       const getOrderOptions = () => {
