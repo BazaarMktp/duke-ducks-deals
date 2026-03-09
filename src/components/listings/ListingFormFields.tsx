@@ -35,6 +35,17 @@ const FieldInfo = ({ tip }: { tip: string }) => (
   </TooltipProvider>
 );
 
+const ITEM_TAG_OPTIONS = [
+  { value: "microwave", label: "Microwave" },
+  { value: "fridge", label: "Fridge" },
+  { value: "furniture", label: "Furniture" },
+  { value: "dorm decor", label: "Dorm Decor" },
+  { value: "books", label: "Books" },
+  { value: "clothes", label: "Clothes" },
+  { value: "technology", label: "Technology" },
+  { value: "other", label: "Other" },
+];
+
 const ListingFormFields: React.FC<ListingFormFieldsProps> = ({
   formData,
   handleInputChange,
@@ -42,6 +53,25 @@ const ListingFormFields: React.FC<ListingFormFieldsProps> = ({
 }) => {
   return (
     <>
+      {formData.category === 'marketplace' && (
+        <div>
+          <Label htmlFor="itemTag" className="text-base font-medium inline-flex items-center">
+            Item Category
+            <FieldInfo tip="Select the category that best describes your item. This determines how it appears in filters." />
+          </Label>
+          <Select value={formData.itemTag || ''} onValueChange={(v) => handleInputChange("itemTag", v)}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select item category" />
+            </SelectTrigger>
+            <SelectContent>
+              {ITEM_TAG_OPTIONS.map(opt => (
+                <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      )}
+
       <div>
         <Label htmlFor="title" className="text-base font-medium inline-flex items-center">
           {formData.listingType === 'wanted' ? 'What are you looking for?' : 'Title'}
