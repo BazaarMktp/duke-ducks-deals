@@ -1,7 +1,6 @@
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { X, Upload, Edit, Camera, Sun, RotateCcw, CheckCircle2, AlertTriangle, XCircle, Image as ImageIcon } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -39,6 +38,9 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ images, onImagesChange, maxIm
   const [showTips, setShowTips] = useState(true);
   const { user } = useAuth();
   const { toast } = useToast();
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
 
   const uploadImage = async (file: File) => {
     if (!user) return null;
@@ -127,7 +129,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ images, onImagesChange, maxIm
         description: `Compressing image ${processedCount} of ${files.length}...`,
       });
 
-      // Run quality analysis in parallel with upload
       const [url, quality] = await Promise.all([
         uploadImage(file),
         analyzeImageQuality(file),
@@ -180,7 +181,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ images, onImagesChange, maxIm
       const newImages = [...images];
       newImages[editingIndex] = uploadedUrl;
       onImagesChange(newImages);
-      // Clear quality result for edited image – it's been modified
       const updated = { ...qualityResults };
       delete updated[editingIndex];
       setQualityResults(updated);
@@ -193,7 +193,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ images, onImagesChange, maxIm
 
   const removeImage = (index: number) => {
     const newImages = images.filter((_, i) => i !== index);
-    // Re-index quality results
     const updated: Record<number, ImageQualityResult> = {};
     Object.entries(qualityResults).forEach(([k, v]) => {
       const num = Number(k);
@@ -205,7 +204,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ images, onImagesChange, maxIm
     if (newImages.length === 0) setShowTips(true);
   };
 
-  // Compute overall quality
   const overallQuality: QualityLevel | null = images.length > 0
     ? Object.values(qualityResults).length > 0
       ? Object.values(qualityResults).some(r => r.level === 'low')
@@ -216,13 +214,40 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ images, onImagesChange, maxIm
       : null
     : null;
 
+  const needsCoverPhoto = images.length === 0;
+
   return (
     <div className="space-y-4">
-      {/* Motivational prompt */}
+      {/* Hidden file inputs */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        multiple={!needsCoverPhoto}
+        accept="image/*"
+        onChange={handleFileUpload}
+        disabled={uploading || images.length >= maxImages}
+        className="hidden"
+        id="image-upload"
+      />
+      <input
+        ref={cameraInputRef}
+        type="file"
+        accept="image/*"
+        capture="environment"
+        onChange={handleFileUpload}
+        disabled={uploading || images.length >= maxImages}
+        className="hidden"
+      />
+
+      {/* Guidance banner */}
       <div className="flex items-center gap-2 rounded-lg bg-primary/5 border border-primary/10 px-3 py-2.5">
         <Camera className="h-4 w-4 text-primary shrink-0" />
         <p className="text-sm text-foreground/80">
-          <span className="font-medium">Listings with clear photos sell 3× faster.</span>
+          <span className="font-medium">
+            {needsCoverPhoto
+              ? 'For best results, upload real photos of your item.'
+              : 'Listings with real photos sell faster.'}
+          </span>
         </p>
       </div>
 
@@ -238,33 +263,99 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ images, onImagesChange, maxIm
               </li>
             ))}
           </ul>
-          <p className="text-xs text-muted-foreground pt-1">Clean background preferred</p>
         </div>
       )}
 
-      {/* Upload input */}
-      <div>
-        <label htmlFor="image-upload" className="block text-sm font-medium mb-1.5">
-          Photos ({images.length}/{maxImages})
-        </label>
-        <div className="relative">
-          <Input
-            id="image-upload"
-            type="file"
-            multiple
-            accept="image/*"
-            onChange={handleFileUpload}
-            disabled={uploading || images.length >= maxImages}
-            className="mb-1"
-          />
-        </div>
-        {uploading && (
-          <div className="flex items-center text-sm text-muted-foreground mt-1">
-            <Upload className="animate-spin mr-2" size={16} />
-            Processing images...
+      {/* Cover photo uploader — prominent when no images yet */}
+      {needsCoverPhoto && (
+        <div className="space-y-3">
+          <label className="block text-sm font-medium text-foreground">
+            Cover Photo <span className="text-destructive">*</span>
+          </label>
+          <div className="rounded-xl border-2 border-dashed border-primary/30 bg-primary/[0.03] p-6 text-center space-y-4">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
+              <Camera className="h-7 w-7 text-primary" />
+            </div>
+            <div className="space-y-1">
+              <p className="text-sm font-medium text-foreground">
+                Take or upload a photo of your item
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Use a real photo — not an image from the internet
+              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-2">
+              <Button
+                type="button"
+                variant="default"
+                size="sm"
+                className="gap-2 w-full sm:w-auto"
+                onClick={() => cameraInputRef.current?.click()}
+                disabled={uploading}
+              >
+                <Camera className="h-4 w-4" />
+                Take Photo
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="gap-2 w-full sm:w-auto"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploading}
+              >
+                <Upload className="h-4 w-4" />
+                Upload from Device
+              </Button>
+            </div>
           </div>
-        )}
-      </div>
+          {uploading && (
+            <div className="flex items-center text-sm text-muted-foreground">
+              <Upload className="animate-spin mr-2" size={16} />
+              Processing image...
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Standard upload controls — shown after cover photo is added */}
+      {!needsCoverPhoto && (
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-foreground">
+            Photos ({images.length}/{maxImages})
+          </label>
+          <div className="flex gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="gap-2"
+              onClick={() => cameraInputRef.current?.click()}
+              disabled={uploading || images.length >= maxImages}
+            >
+              <Camera className="h-4 w-4" />
+              Camera
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="gap-2"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploading || images.length >= maxImages}
+            >
+              <Upload className="h-4 w-4" />
+              Upload
+            </Button>
+          </div>
+          {uploading && (
+            <div className="flex items-center text-sm text-muted-foreground mt-1">
+              <Upload className="animate-spin mr-2" size={16} />
+              Processing images...
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Overall quality indicator */}
       {overallQuality && (
@@ -329,10 +420,10 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ images, onImagesChange, maxIm
                     <X size={12} />
                   </Button>
                 </div>
-                {/* First photo label */}
+                {/* Cover photo label */}
                 {index === 0 && (
                   <span className="absolute top-1.5 left-1.5 bg-primary/80 text-primary-foreground text-[10px] font-semibold px-1.5 py-0.5 rounded backdrop-blur-sm">
-                    Cover
+                    Cover Photo
                   </span>
                 )}
               </div>
@@ -341,13 +432,14 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ images, onImagesChange, maxIm
 
           {/* Add more slot */}
           {images.length < maxImages && (
-            <label
-              htmlFor="image-upload"
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
               className="flex flex-col items-center justify-center h-32 rounded-lg border-2 border-dashed border-border hover:border-primary/40 hover:bg-primary/5 transition-colors cursor-pointer"
             >
               <Upload className="h-5 w-5 text-muted-foreground mb-1" />
               <span className="text-xs text-muted-foreground">Add photo</span>
-            </label>
+            </button>
           )}
         </div>
       )}
