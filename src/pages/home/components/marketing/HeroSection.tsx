@@ -88,7 +88,7 @@ export const HeroSection = ({ stats }: HeroSectionProps) => {
         <img
           src="/devils-marketplace-logo.png"
           alt="Devil's Marketplace"
-          className="h-16 w-16 md:h-20 md:w-20 mx-auto mb-6"
+          className="h-16 w-16 md:h-20 md:w-20 mx-auto mb-6 logo-blue"
         />
         {/* Main Heading */}
         <h1 className="text-5xl lg:text-7xl font-bold text-foreground mb-8 leading-tight">

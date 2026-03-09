@@ -72,7 +72,7 @@ const RouteSpinner = () => (
     <img
       src="/devils-marketplace-logo.png"
       alt="Devil's Marketplace"
-      className="h-12 w-12 animate-pulse"
+      className="h-12 w-12 animate-pulse logo-blue"
     />
     <Loader2 className="h-5 w-5 animate-spin text-primary" />
   </div>
