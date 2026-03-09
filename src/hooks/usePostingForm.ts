@@ -32,6 +32,7 @@ export const usePostingForm = ({ category, listingType, onSuccess, onClose }: Us
     price: "",
     location: "",
     housingType: "",
+    itemTag: "",
     images: [],
     allowPickup: false,
     allowMeetOnCampus: false,
