@@ -39,9 +39,9 @@ const About = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-[#003087] to-[#001a4d] text-white py-16">
+      <section className="bg-gradient-to-br from-primary to-secondary text-primary-foreground py-16">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">About Devils Marketplace</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-6">About Devil's Marketplace</h1>
           <p className="text-xl max-w-3xl mx-auto">
             Connecting students, building community, and making campus life easier through 
             our comprehensive marketplace platform.
