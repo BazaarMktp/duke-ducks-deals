@@ -78,7 +78,7 @@ export const useCreateListing = () => {
       return;
     }
 
-    if (!formData.price) {
+    if (formData.listingType === 'offer' && !formData.price) {
       toast.error("Price is required.");
       return;
     }
