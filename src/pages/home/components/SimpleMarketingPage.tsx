@@ -306,7 +306,7 @@ export const SimpleMarketingPage = ({ stats }: SimpleMarketingPageProps) => {
                   key={i}
                   className="rounded-xl border border-border bg-card p-4 text-center space-y-2 hover:shadow-md transition-shadow"
                 >
-                  <span className="text-3xl">{item.emoji}</span>
+                  <CheckCircle2 className="h-6 w-6 text-primary mx-auto" />
                   <p className="text-sm font-semibold text-foreground">{item.title}</p>
                   <p className="text-base font-bold text-primary">{item.price}</p>
                   <div className="flex items-center justify-center gap-1 text-xs text-accent-foreground">
