@@ -11,10 +11,11 @@ interface MarketplaceHeaderProps {
 
 const MarketplaceHeader = ({ user, activeListingType, onCreateListing, onSelectTemplate }: MarketplaceHeaderProps) => {
   return (
-    <div className="flex items-center justify-between gap-4 mb-2">
-      <h1 className="text-2xl font-bold text-foreground">
-        {activeListingType === 'offer' ? 'Marketplace' : 'Wanted'}
-      </h1>
+    <div className="mb-2 space-y-0.5">
+      <div className="flex items-center justify-between gap-4">
+        <h1 className="text-2xl font-bold text-foreground">
+          {activeListingType === 'offer' ? 'Marketplace' : 'Wanted'}
+        </h1>
       
       {user && (
         <div className="flex items-center gap-2">
