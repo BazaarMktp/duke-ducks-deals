@@ -82,10 +82,9 @@ const MarketplaceItemCard = ({
           <OptimizedImage
             src={listing.images?.[0] || "/placeholder.svg"}
             alt={listing.title}
-            className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300"
+            className="w-full h-full group-hover:scale-[1.03] transition-transform duration-300"
             lazy={true}
-            blurDataURL={generateBlurDataURL()}
-            aspectRatio="square"
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           />
 
           {/* Overlay badges */}
