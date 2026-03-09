@@ -44,7 +44,7 @@ const AdminDashboard = () => {
           <TabsTrigger value="reports" className="whitespace-nowrap">Reports</TabsTrigger>
           <TabsTrigger value="feedback" className="whitespace-nowrap">Feedback</TabsTrigger>
           <TabsTrigger value="performance" className="whitespace-nowrap">Performance</TabsTrigger>
-          <TabsTrigger value="deals" className="whitespace-nowrap">Devils Deals</TabsTrigger>
+          <TabsTrigger value="deals" className="whitespace-nowrap">Devil's Deals</TabsTrigger>
           <TabsTrigger value="ads" className="whitespace-nowrap">Business Ads</TabsTrigger>
           <TabsTrigger value="featuring" className="whitespace-nowrap">Auto-Feature</TabsTrigger>
           <TabsTrigger value="support" className="whitespace-nowrap">Support</TabsTrigger>

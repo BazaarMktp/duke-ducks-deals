@@ -189,7 +189,7 @@ const About = () => {
             </div>
 
             <div className="text-center">
-              <h3 className="text-xl font-bold mb-4 text-[#003087]">Accessibility</h3>
+              <h3 className="text-xl font-bold mb-4 text-primary">Accessibility</h3>
               <p className="text-gray-600">
                 We believe everyone deserves access to affordable resources and opportunities, 
                 regardless of their financial situation.

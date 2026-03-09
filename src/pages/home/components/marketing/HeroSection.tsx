@@ -108,7 +108,7 @@ export const HeroSection = ({ stats }: HeroSectionProps) => {
 
 
         {/* Stats */}
-        <div className="flex items-center justify-center space-x-8 mt-12 text-sm text-gray-600">
+        <div className="flex items-center justify-center space-x-8 mt-12 text-sm text-muted-foreground">
           <div className="flex items-center space-x-2">
             <span className="text-yellow-500">⭐</span>
             <span>4.9/5 Student Rating</span>
