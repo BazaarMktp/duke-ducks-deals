@@ -37,6 +37,8 @@ const MarketplaceHeader = ({ user, activeListingType, onCreateListing, onSelectT
           )}
         </div>
       )}
+      </div>
+      <p className="text-xs tracking-wide text-muted-foreground">Made by students, for students.</p>
     </div>
   );
 };
