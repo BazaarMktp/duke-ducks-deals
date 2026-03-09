@@ -153,24 +153,23 @@ export const useCreateListing = () => {
       );
 
       // Call categorize-listing function for marketplace items with images
-      if (formData.category === 'marketplace' && formData.images.length > 0) {
+      // Only use AI if the user didn't manually select a sub-category
+      if (formData.category === 'marketplace' && formData.images.length > 0 && !formData.itemTag) {
         try {
           const { data: categoryData, error: categoryError } = await supabase.functions.invoke('categorize-listing', {
             body: { listingId: newListing.id }
           });
 
           if (!categoryError && categoryData?.tag) {
-            // Update the listing with the AI-validated tag
             await supabase
               .from('listings')
               .update({ item_tag: categoryData.tag })
               .eq('id', newListing.id);
             
-            console.log('Item categorized as:', categoryData.tag);
+            console.log('Item categorized by AI as:', categoryData.tag);
           }
         } catch (categoryError) {
           console.error('Error categorizing item:', categoryError);
-          // Don't fail the listing creation if categorization fails
         }
       }
 
