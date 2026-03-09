@@ -32,9 +32,6 @@ const Navbar = () => {
             <Navigation />
           </div>
           <div className="flex items-center gap-2">
-            <div className="hidden md:block">
-              <ThemeToggle />
-            </div>
             <UserMenu user={user} onSignOut={handleSignOut} unreadMessages={unreadCount} />
 
             {/* Mobile menu button */}

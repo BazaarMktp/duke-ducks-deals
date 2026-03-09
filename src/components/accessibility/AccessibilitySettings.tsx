@@ -5,11 +5,9 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { toast } from "sonner";
-import { Eye, Type, Sparkles, Moon, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
+import { Eye, Type, Sparkles } from "lucide-react";
 
 const AccessibilitySettings = () => {
-  const { theme, setTheme } = useTheme();
   const [fontSize, setFontSize] = useState(() => {
     const saved = localStorage.getItem('a11y-font-size');
     return saved ? parseInt(saved) : 100;
@@ -21,13 +19,11 @@ const AccessibilitySettings = () => {
     return localStorage.getItem('a11y-high-contrast') === 'true';
   });
 
-  // Apply font size
   useEffect(() => {
     document.documentElement.style.fontSize = `${fontSize}%`;
     localStorage.setItem('a11y-font-size', fontSize.toString());
   }, [fontSize]);
 
-  // Apply reduce motion
   useEffect(() => {
     if (reduceMotion) {
       document.documentElement.classList.add('reduce-motion');
@@ -37,7 +33,6 @@ const AccessibilitySettings = () => {
     localStorage.setItem('a11y-reduce-motion', reduceMotion.toString());
   }, [reduceMotion]);
 
-  // Apply high contrast
   useEffect(() => {
     if (highContrast) {
       document.documentElement.classList.add('high-contrast');
@@ -55,7 +50,6 @@ const AccessibilitySettings = () => {
     setFontSize(100);
     setReduceMotion(false);
     setHighContrast(false);
-    setTheme('system');
     toast.success("Settings reset to defaults");
   };
 
@@ -68,42 +62,6 @@ const AccessibilitySettings = () => {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
-        {/* Theme Selection */}
-        <div className="space-y-3">
-          <Label className="flex items-center gap-2">
-            {theme === 'dark' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
-            Theme
-          </Label>
-          <div className="flex gap-2">
-            <Button
-              variant={theme === 'light' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setTheme('light')}
-              className="flex-1"
-            >
-              <Sun className="h-4 w-4 mr-2" />
-              Light
-            </Button>
-            <Button
-              variant={theme === 'dark' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setTheme('dark')}
-              className="flex-1"
-            >
-              <Moon className="h-4 w-4 mr-2" />
-              Dark
-            </Button>
-            <Button
-              variant={theme === 'system' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setTheme('system')}
-              className="flex-1"
-            >
-              Auto
-            </Button>
-          </div>
-        </div>
-
         {/* Font Size */}
         <div className="space-y-3">
           <Label htmlFor="font-size" className="flex items-center gap-2">

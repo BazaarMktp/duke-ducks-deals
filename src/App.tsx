@@ -212,7 +212,7 @@ function App() {
               </AdminProvider>
             </AuthProvider>
           </TooltipProvider>
-        </ThemeProvider>
+        </div>
       </HelmetProvider>
     </QueryClientProvider>
   );
