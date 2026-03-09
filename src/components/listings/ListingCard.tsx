@@ -10,7 +10,6 @@ import { Listing } from "@/hooks/useMyListings";
 import { differenceInDays, parseISO } from "date-fns";
 import { getPrivacyAwareLocation } from "@/utils/locationPrivacy";
 import { OptimizedImage } from "@/components/ui/optimized-image";
-import { generateBlurDataURL } from "@/utils/imageUtils";
 
 interface ListingCardProps {
   listing: Listing;
