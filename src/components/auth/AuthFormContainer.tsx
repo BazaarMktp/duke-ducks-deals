@@ -53,7 +53,7 @@ export const AuthFormContainer = ({
             <img
               src="/devils-marketplace-logo.png"
               alt="Devil's Marketplace logo"
-              className="h-14 w-14"
+              className="h-14 w-14 logo-blue"
             />
           </div>
           <div>
