@@ -223,7 +223,7 @@ const MarketplaceFilters = ({
         <MarketplaceTags 
           listings={listings} 
           onTagClick={handleTagClick} 
-          currentQuery={searchQuery}
+          currentCategory={categoryFilter}
         />
       )}
     </div>
