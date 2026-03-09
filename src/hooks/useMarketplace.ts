@@ -76,24 +76,7 @@ export const useMarketplace = (
         if (categoryFilter === 'free') {
           activeQuery = activeQuery.or('price.eq.0,price.is.null');
         } else {
-          // Build comprehensive keyword matches per category
-          const categoryKeywords: Record<string, string[]> = {
-            microwave: ['microwave'],
-            fridge: ['fridge', 'refrigerator', 'mini fridge', 'mini-fridge'],
-            furniture: ['furniture', 'desk', 'chair', 'bed', 'fan', 'couch', 'table', 'sofa', 'shelf', 'dresser', 'nightstand', 'bookshelf', 'futon', 'mattress', 'lamp'],
-            'dorm decor': ['dorm decor', 'decor', 'poster', 'tapestry', 'rug', 'curtain', 'mirror', 'wall art', 'fairy lights', 'decoration'],
-            books: ['book', 'books', 'textbook', 'textbooks', 'novel', 'manual', 'guide'],
-            clothes: ['clothes', 'clothing', 'shirt', 'pants', 'jacket', 'hoodie', 'shoes', 'sneakers', 'dress', 'jeans', 'sweater', 'hat', 'cap'],
-            technology: ['technology', 'tech', 'laptop', 'computer', 'monitor', 'keyboard', 'mouse', 'phone', 'tablet', 'ipad', 'macbook', 'headphones', 'speaker', 'charger', 'cable', 'tv', 'television', 'camera', 'console', 'gaming'],
-          };
-
-          const keywords = categoryKeywords[categoryFilter] || [categoryFilter];
-          const orClauses = keywords.flatMap(kw => [
-            `item_tag.ilike.%${kw}%`,
-            `title.ilike.%${kw}%`,
-            `description.ilike.%${kw}%`,
-          ]);
-          activeQuery = activeQuery.or(orClauses.join(','));
+          activeQuery = activeQuery.or(buildCategoryOrClause(categoryFilter));
         }
       }
 
