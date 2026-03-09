@@ -36,9 +36,8 @@ export const CrossPostDialog = ({
     dukeList: false
   });
 
-  const shareMessage = `🎯 ${listingTitle}
-💰 $${listingPrice}
-📱 Posted by ${userName} on Devil's Marketplace
+  const shareMessage = `${listingTitle} — $${listingPrice}
+Posted by ${userName} on Devil's Marketplace
 
 Check it out: ${listingUrl}`;
 

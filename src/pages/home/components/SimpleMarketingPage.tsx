@@ -54,16 +54,16 @@ const HOW_IT_WORKS = [
 ];
 
 const TESTIMONIALS = [
-  { quote: "Sold my desk in 2 hours!", name: "Sarah M.", school: "Duke '26", avatar: "🎓" },
-  { quote: "Finally a marketplace only for students — no creepy strangers.", name: "Alex K.", school: "Duke '25", avatar: "📚" },
-  { quote: "Saved $400 on textbooks my first semester.", name: "Jordan P.", school: "Duke '27", avatar: "💰" },
+  { quote: "Sold my desk in 2 hours!", name: "Sarah M.", school: "Duke '26", initials: "SM" },
+  { quote: "Finally a marketplace only for students — no creepy strangers.", name: "Alex K.", school: "Duke '25", initials: "AK" },
+  { quote: "Saved $400 on textbooks my first semester.", name: "Jordan P.", school: "Duke '27", initials: "JP" },
 ];
 
 const SOCIAL_PROOF_ITEMS = [
-  { title: "Mini Fridge", price: "$50", status: "Sold in 3 hours", emoji: "🧊" },
-  { title: "Calculus Textbook", price: "$25", status: "Sold in 1 hour", emoji: "📖" },
-  { title: "Desk Lamp", price: "$15", status: "Sold in 45 min", emoji: "💡" },
-  { title: "Bike Lock", price: "$20", status: "Sold in 2 hours", emoji: "🔒" },
+  { title: "Mini Fridge", price: "$50", status: "Sold in 3 hours" },
+  { title: "Calculus Textbook", price: "$25", status: "Sold in 1 hour" },
+  { title: "Desk Lamp", price: "$15", status: "Sold in 45 min" },
+  { title: "Bike Lock", price: "$20", status: "Sold in 2 hours" },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -306,7 +306,7 @@ export const SimpleMarketingPage = ({ stats }: SimpleMarketingPageProps) => {
                   key={i}
                   className="rounded-xl border border-border bg-card p-4 text-center space-y-2 hover:shadow-md transition-shadow"
                 >
-                  <span className="text-3xl">{item.emoji}</span>
+                  <CheckCircle2 className="h-6 w-6 text-primary mx-auto" />
                   <p className="text-sm font-semibold text-foreground">{item.title}</p>
                   <p className="text-base font-bold text-primary">{item.price}</p>
                   <div className="flex items-center justify-center gap-1 text-xs text-accent-foreground">
@@ -343,8 +343,8 @@ export const SimpleMarketingPage = ({ stats }: SimpleMarketingPageProps) => {
                   </div>
                   <p className="text-sm text-foreground leading-relaxed">"{t.quote}"</p>
                   <div className="flex items-center gap-3">
-                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-lg">
-                      {t.avatar}
+                    <span className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">
+                      {t.initials}
                     </span>
                     <div className="text-xs text-muted-foreground">
                       <span className="font-medium text-foreground block">{t.name}</span>

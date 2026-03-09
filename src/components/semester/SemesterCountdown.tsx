@@ -61,13 +61,13 @@ export const SemesterCountdown = () => {
 
   const getUrgencyMessage = () => {
     if (isCritical) {
-      return "🚨 Last chance to sell before break!";
+      return "Last chance to sell before break!";
     } else if (isUrgent) {
-      return "⏰ Time's running out - list your items now!";
+      return "Time's running out — list your items now!";
     } else if (countdown.days < 30) {
-      return "📦 Start decluttering - semester ends soon!";
+      return "Start decluttering — semester ends soon!";
     }
-    return "Get ahead - list items early for best prices!";
+    return "Get ahead — list items early for best prices!";
   };
 
   return (

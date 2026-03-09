@@ -116,9 +116,9 @@ const MessagePanelWithInput: React.FC<MessagePanelWithInputProps> = ({
               Say hello and start chatting!
             </p>
             <div className="flex flex-wrap gap-2 justify-center">
-              <span className="px-3 py-1.5 bg-muted rounded-full text-xs">💬 Be friendly</span>
-              <span className="px-3 py-1.5 bg-muted rounded-full text-xs">🤝 Stay safe</span>
-              <span className="px-3 py-1.5 bg-muted rounded-full text-xs">⚡ Respond quickly</span>
+              <span className="px-3 py-1.5 bg-muted rounded-full text-xs">Be friendly</span>
+              <span className="px-3 py-1.5 bg-muted rounded-full text-xs">Stay safe</span>
+              <span className="px-3 py-1.5 bg-muted rounded-full text-xs">Respond quickly</span>
             </div>
           </div>
         </div>

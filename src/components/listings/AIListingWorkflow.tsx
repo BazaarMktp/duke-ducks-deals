@@ -253,7 +253,7 @@ export const AIListingWorkflow: React.FC<AIListingWorkflowProps> = ({
                 />
                 {aiSuggestions && (
                   <p className="text-xs text-muted-foreground mt-1">
-                    ✨ AI suggested based on your images
+                    AI suggested based on your images
                   </p>
                 )}
               </div>

@@ -288,10 +288,10 @@ export const BusinessAdsManagement = () => {
                   </div>
 
                   <div className="flex gap-4 text-sm text-muted-foreground">
-                    <span>👁️ {ad.impressions} views</span>
-                    <span>🖱️ {ad.clicks} clicks</span>
+                    <span>{ad.impressions} views</span>
+                    <span>{ad.clicks} clicks</span>
                     <span>
-                      📈 {ad.impressions > 0 ? ((ad.clicks / ad.impressions) * 100).toFixed(1) : 0}% CTR
+                      {ad.impressions > 0 ? ((ad.clicks / ad.impressions) * 100).toFixed(1) : 0}% CTR
                     </span>
                   </div>
 

@@ -64,7 +64,7 @@ export const HeroSection = ({ stats }: HeroSectionProps) => {
                   />
                 </div>
               )}
-              <div className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full inline-block mb-2">🔥 Hot deal</div>
+              <div className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full inline-block mb-2">Popular</div>
               <div className="font-semibold text-foreground">{card.text}</div>
               <div className="text-lg font-bold text-foreground">{card.price}</div>
             </>
@@ -110,15 +110,12 @@ export const HeroSection = ({ stats }: HeroSectionProps) => {
         {/* Stats */}
         <div className="flex items-center justify-center space-x-8 mt-12 text-sm text-muted-foreground">
           <div className="flex items-center space-x-2">
-            <span className="text-yellow-500">⭐</span>
             <span>4.9/5 Student Rating</span>
           </div>
           <div className="flex items-center space-x-2">
-            <span className="text-blue-500">👥</span>
             <span>{userCount} Students</span>
           </div>
           <div className="flex items-center space-x-2">
-            <span className="text-green-500">🚚</span>
             <span>Same day delivery and pick up</span>
           </div>
         </div>
