@@ -33,11 +33,11 @@ const Marketplace = () => {
   return (
     <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 max-w-6xl">
       <Helmet>
-        <title>Devils Marketplace | Buy & Sell on Campus</title>
+        <title>Devil's Marketplace | Buy & Sell on Campus</title>
         <meta name="description" content="Student marketplace for buying and selling textbooks, electronics, furniture and more." />
         <link rel="canonical" href="https://devilsmarketplace.lovable.app/marketplace" />
       </Helmet>
-      <h1 className="sr-only">Devils Marketplace - Buy and Sell on Campus</h1>
+      <h1 className="sr-only">Devil's Marketplace - Buy and Sell on Campus</h1>
       
       <MarketplaceHeader 
         user={user} 

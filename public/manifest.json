@@ -1,11 +1,11 @@
 {
-  "name": "Devils Marketplace - Student Marketplace",
-  "short_name": "Devils",
+  "name": "Devil's Marketplace — Student Marketplace",
+  "short_name": "Devil's Mkt",
   "description": "Student marketplace for buying and selling textbooks, electronics, furniture, and more",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#F5F5F5",
-  "theme_color": "#003087",
+  "background_color": "#F7F7F7",
+  "theme_color": "#E8503A",
   "orientation": "portrait-primary",
   "scope": "/",
   "icons": [

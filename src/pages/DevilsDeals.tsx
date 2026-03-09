@@ -85,7 +85,7 @@ export default function DevilsDeals() {
   return (
     <>
       <Helmet>
-        <title>Devil's Deals – Exclusive Student Discounts | Devils Marketplace</title>
+        <title>Devil's Deals – Exclusive Student Discounts | Devil's Marketplace</title>
         <meta name="description" content="Discover exclusive student discounts and local deals from businesses around campus." />
         <link rel="canonical" href={`${window.location.origin}/devils-deals`} />
       </Helmet>

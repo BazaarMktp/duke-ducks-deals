@@ -46,12 +46,12 @@ export const HeroSection = ({ stats }: HeroSectionProps) => {
   ];
 
   return (
-    <section className="relative bg-gradient-to-br from-blue-50/30 via-white to-blue-100/20 min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative bg-gradient-to-br from-primary/5 via-background to-accent/5 min-h-screen flex items-center justify-center overflow-hidden">
       {/* Floating Cards */}
       {floatingCards.map((card, index) => (
         <div
           key={index}
-          className={`absolute hidden md:block ${card.position} ${card.rotation} bg-white rounded-lg shadow-lg p-4 max-w-48 z-10`}
+          className={`absolute hidden md:block ${card.position} ${card.rotation} bg-card rounded-lg shadow-lg p-4 max-w-48 z-10`}
         >
           {card.price ? (
             <>
@@ -64,19 +64,19 @@ export const HeroSection = ({ stats }: HeroSectionProps) => {
                   />
                 </div>
               )}
-              <div className="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full inline-block mb-2">🔥 Hot deal</div>
-              <div className="font-semibold text-gray-900">{card.text}</div>
-              <div className="text-lg font-bold text-gray-900">{card.price}</div>
+              <div className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full inline-block mb-2">🔥 Hot deal</div>
+              <div className="font-semibold text-foreground">{card.text}</div>
+              <div className="text-lg font-bold text-foreground">{card.price}</div>
             </>
           ) : card.subtitle ? (
             <>
-              <div className="text-2xl font-bold text-gray-900">{card.text}</div>
-              <div className="text-gray-600">{card.subtitle}</div>
+              <div className="text-2xl font-bold text-foreground">{card.text}</div>
+              <div className="text-muted-foreground">{card.subtitle}</div>
             </>
           ) : (
             <>
-              <div className="text-sm text-gray-900 mb-2">"{card.text}"</div>
-              <div className="text-xs text-gray-500">— {card.author}</div>
+              <div className="text-sm text-foreground mb-2">"{card.text}"</div>
+              <div className="text-xs text-muted-foreground">— {card.author}</div>
             </>
           )}
         </div>
@@ -85,7 +85,7 @@ export const HeroSection = ({ stats }: HeroSectionProps) => {
       {/* Main Content */}
       <div className="text-center max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main Heading */}
-        <h1 className="text-5xl lg:text-7xl font-bold text-gray-900 mb-8 leading-tight">
+        <h1 className="text-5xl lg:text-7xl font-bold text-foreground mb-8 leading-tight">
           Buy and Sell<br />
           Anything<br />
           on Campus
@@ -96,19 +96,19 @@ export const HeroSection = ({ stats }: HeroSectionProps) => {
           <Link to="/auth?mode=signup">
             <Button 
               size="lg" 
-              className="w-full h-12 bg-[#003087] hover:bg-[#002266] text-white font-medium"
+              className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-medium"
             >
               Get started
             </Button>
           </Link>
-          <p className="text-sm text-gray-600 mt-3">
-            Buy and sell with fellow Duke students. Safe, verified and made by Duke students.
+          <p className="text-sm text-muted-foreground mt-3">
+            Buy and sell with fellow students. Safe, verified and made by students.
           </p>
         </div>
 
 
         {/* Stats */}
-        <div className="flex items-center justify-center space-x-8 mt-12 text-sm text-gray-600">
+        <div className="flex items-center justify-center space-x-8 mt-12 text-sm text-muted-foreground">
           <div className="flex items-center space-x-2">
             <span className="text-yellow-500">⭐</span>
             <span>4.9/5 Student Rating</span>

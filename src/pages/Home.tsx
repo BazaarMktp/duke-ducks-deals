@@ -14,7 +14,7 @@ const Home = () => {
     return (
       <>
         <Helmet>
-          <title>Devils Marketplace — Home</title>
+          <title>Devil's Marketplace — Home</title>
           <meta name="description" content="Student marketplace connecting students to buy, sell, and trade on campus." />
           <link rel="canonical" href="https://devilsmarketplace.lovable.app/home" />
         </Helmet>
@@ -32,7 +32,7 @@ const Home = () => {
     return (
       <>
         <Helmet>
-          <title>Devils Marketplace — Dashboard</title>
+          <title>Devil's Marketplace — Dashboard</title>
           <meta name="description" content="Your personalized student marketplace dashboard with featured listings and stats." />
           <link rel="canonical" href="https://devilsmarketplace.lovable.app/home" />
         </Helmet>
@@ -50,7 +50,7 @@ const Home = () => {
   return (
     <>
         <Helmet>
-          <title>Devils Marketplace — Home</title>
+          <title>Devil's Marketplace — Home</title>
           <meta name="description" content="Student marketplace for browsing, buying, and selling with fellow students on campus." />
           <link rel="canonical" href="https://devilsmarketplace.lovable.app/home" />
         </Helmet>

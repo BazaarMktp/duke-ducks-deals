@@ -12,8 +12,13 @@ const Logo = () => {
   }
 
   return (
-    <Link to="/" className="flex items-center">
-      <span className="font-bold text-xl text-primary">Devils Marketplace</span>
+    <Link to="/" className="flex items-center gap-2">
+      <img
+        src="/devils-marketplace-logo.png"
+        alt="Devil's Marketplace logo"
+        className="h-8 w-8"
+      />
+      <span className="font-bold text-xl text-foreground">Devil's Marketplace</span>
     </Link>
   );
 };

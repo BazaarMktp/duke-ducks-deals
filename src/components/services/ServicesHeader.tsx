@@ -12,13 +12,13 @@ const ServicesHeader = ({ user, onPostService, activeListingType = 'offer' }: Se
   return (
     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900">
+        <h1 className="text-3xl font-bold text-foreground">
           {activeListingType === 'offer' ? 'Services' : 'Service Requests'}
         </h1>
-        <p className="text-gray-600 mt-2">
+        <p className="text-muted-foreground mt-2">
           {activeListingType === 'offer' 
-            ? 'Find services offered by Duke students'
-            : 'See what services Duke students are looking for'
+            ? 'Find services offered by students'
+            : 'See what services students are looking for'
           }
         </p>
       </div>

@@ -38,7 +38,7 @@ export const CrossPostDialog = ({
 
   const shareMessage = `🎯 ${listingTitle}
 💰 $${listingPrice}
-📱 Posted by ${userName} on Devils Marketplace
+📱 Posted by ${userName} on Devil's Marketplace
 
 Check it out: ${listingUrl}`;
 
@@ -157,7 +157,7 @@ Check it out: ${listingUrl}`;
           </div>
 
           <p className="text-xs text-muted-foreground text-center">
-            Your listing will always show "Posted by {userName} on Devils Marketplace"
+            Your listing will always show "Posted by {userName} on Devil's Marketplace"
           </p>
         </div>
       </DialogContent>
