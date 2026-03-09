@@ -99,7 +99,7 @@ export const AuthFormContainer = ({
             <button
               type="button"
               onClick={() => setIsLogin(!isLogin)}
-              className="text-sm text-blue-600 hover:underline"
+              className="text-sm text-primary hover:underline"
             >
               {isLogin 
                 ? "Don't have an account? Sign up" 
