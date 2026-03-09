@@ -153,7 +153,7 @@ const About = () => {
                     className="w-24 h-24 rounded-full mx-auto mb-4 object-cover"
                   />
                   <CardTitle className="text-lg">{member.name}</CardTitle>
-                  <p className="text-[#003087] font-medium">{member.role}</p>
+                  <p className="text-primary font-medium">{member.role}</p>
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-600 text-sm">{member.bio}</p>
