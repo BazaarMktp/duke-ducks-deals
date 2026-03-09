@@ -3,8 +3,14 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import ImageUpload from "@/components/ImageUpload";
 import TransactionMethods from "./TransactionMethods";
-import HelpText from "./HelpText";
-import { getTitlePlaceholder, getDescriptionPlaceholder, getLocationPlaceholder } from "./utils/placeholderText";
+import { Info } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { getTitlePlaceholder, getDescriptionPlaceholder } from "./utils/placeholderText";
 
 interface PostingFormFieldsProps {
   formData: {
@@ -25,6 +31,21 @@ interface PostingFormFieldsProps {
   getPricePlaceholder: () => string;
 }
 
+const FieldInfo = ({ tip }: { tip: string }) => (
+  <TooltipProvider delayDuration={0}>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button type="button" className="inline-flex text-muted-foreground hover:text-foreground transition-colors ml-1.5" aria-label="More info">
+          <Info className="h-3.5 w-3.5" />
+        </button>
+      </TooltipTrigger>
+      <TooltipContent side="top" className="max-w-xs text-sm">
+        {tip}
+      </TooltipContent>
+    </Tooltip>
+  </TooltipProvider>
+);
+
 const PostingFormFields: React.FC<PostingFormFieldsProps> = ({
   formData,
   category,
@@ -36,7 +57,7 @@ const PostingFormFields: React.FC<PostingFormFieldsProps> = ({
   return (
     <>
       <div>
-        <Label htmlFor="title" className="text-base font-medium">
+        <Label htmlFor="title" className="text-base font-medium inline-flex items-center">
           {listingType === 'wanted' ? 'What are you looking for?' : 'Title'}
         </Label>
         <Input
@@ -50,8 +71,12 @@ const PostingFormFields: React.FC<PostingFormFieldsProps> = ({
       </div>
 
       <div>
-        <Label htmlFor="description" className="text-base font-medium">
-          {listingType === 'wanted' ? 'Detailed description of your needs' : 'Description'}
+        <Label htmlFor="description" className="text-base font-medium inline-flex items-center">
+          Description
+          <FieldInfo tip={listingType === 'wanted'
+            ? "Be specific about condition, size, color, model, and your timeline."
+            : "Describe the item's condition, features, and any flaws honestly."
+          } />
         </Label>
         <Textarea
           id="description"
@@ -64,30 +89,24 @@ const PostingFormFields: React.FC<PostingFormFieldsProps> = ({
         />
       </div>
 
-      {listingType === 'offer' ? (
-        <div>
-          <Label className="text-base font-medium">Images</Label>
-          <ImageUpload
-            images={formData.images}
-            onImagesChange={onImagesChange}
-            maxImages={2}
-          />
-        </div>
-      ) : (
-        <div>
-          <Label className="text-base font-medium">Images (optional)</Label>
-          <ImageUpload
-            images={formData.images}
-            onImagesChange={onImagesChange}
-            maxImages={2}
-          />
-        </div>
-      )}
+      <div>
+        <Label className="text-base font-medium inline-flex items-center">
+          {listingType === 'offer' ? 'Images' : 'Images'}
+          {listingType === 'wanted' && <FieldInfo tip="Optional. Adding a reference image can help sellers understand what you're looking for." />}
+          {listingType === 'offer' && <FieldInfo tip="The first image must be a real photo of your item." />}
+        </Label>
+        <ImageUpload
+          images={formData.images}
+          onImagesChange={onImagesChange}
+          maxImages={2}
+        />
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <Label htmlFor="price" className="text-base font-medium">
+          <Label htmlFor="price" className="text-base font-medium inline-flex items-center">
             {listingType === 'wanted' ? 'Budget' : getPricePlaceholder()}
+            {listingType === 'wanted' && <FieldInfo tip="Optional. Adding a budget helps sellers know your price range." />}
           </Label>
           <Input
             id="price"
@@ -95,13 +114,16 @@ const PostingFormFields: React.FC<PostingFormFieldsProps> = ({
             step="0.01"
             value={formData.price}
             onChange={(e) => onInputChange("price", e.target.value)}
-            required
+            required={listingType === 'offer'}
             className={listingType === 'wanted' ? "text-lg" : ""}
           />
         </div>
 
         <div>
-          <Label htmlFor="location" className="text-base font-medium">My Location</Label>
+          <Label htmlFor="location" className="text-base font-medium inline-flex items-center">
+            Location
+            <FieldInfo tip="Optional. Helps nearby students find your listing." />
+          </Label>
           <Input
             id="location"
             value={formData.location}
@@ -119,8 +141,6 @@ const PostingFormFields: React.FC<PostingFormFieldsProps> = ({
           onInputChange={onInputChange}
         />
       )}
-
-      <HelpText listingType={listingType} />
     </>
   );
 };

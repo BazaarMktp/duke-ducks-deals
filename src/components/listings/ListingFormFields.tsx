@@ -3,14 +3,14 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import ImageUpload from "@/components/ImageUpload";
-import { Info, ShieldAlert } from "lucide-react";
+import { Info } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { getTitlePlaceholder, getDescriptionPlaceholder, getLocationPlaceholder } from "../posting/utils/placeholderText";
+import { getTitlePlaceholder, getDescriptionPlaceholder } from "../posting/utils/placeholderText";
 import type { ListingFormData } from '@/hooks/useCreateListing';
 
 interface ListingFormFieldsProps {
@@ -18,6 +18,21 @@ interface ListingFormFieldsProps {
   handleInputChange: (field: string, value: string | boolean) => void;
   handleImagesChange: (images: string[]) => void;
 }
+
+const FieldInfo = ({ tip }: { tip: string }) => (
+  <TooltipProvider delayDuration={0}>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button type="button" className="inline-flex text-muted-foreground hover:text-foreground transition-colors ml-1.5" aria-label="More info">
+          <Info className="h-3.5 w-3.5" />
+        </button>
+      </TooltipTrigger>
+      <TooltipContent side="top" className="max-w-xs text-sm">
+        {tip}
+      </TooltipContent>
+    </Tooltip>
+  </TooltipProvider>
+);
 
 const ListingFormFields: React.FC<ListingFormFieldsProps> = ({
   formData,
@@ -27,7 +42,7 @@ const ListingFormFields: React.FC<ListingFormFieldsProps> = ({
   return (
     <>
       <div>
-        <Label htmlFor="title" className="text-base font-medium">
+        <Label htmlFor="title" className="text-base font-medium inline-flex items-center">
           {formData.listingType === 'wanted' ? 'What are you looking for?' : 'Title'}
         </Label>
         <Input
@@ -41,8 +56,12 @@ const ListingFormFields: React.FC<ListingFormFieldsProps> = ({
       </div>
 
       <div>
-        <Label htmlFor="description" className="text-base font-medium">
-          {formData.listingType === 'wanted' ? 'Detailed description of your needs' : 'Description'}
+        <Label htmlFor="description" className="text-base font-medium inline-flex items-center">
+          {formData.listingType === 'wanted' ? 'Description' : 'Description'}
+          <FieldInfo tip={formData.listingType === 'wanted'
+            ? "Be specific about condition, size, color, model, and your timeline."
+            : "Describe the item's condition, features, and any flaws honestly."
+          } />
         </Label>
         <Textarea
           id="description"
@@ -57,30 +76,10 @@ const ListingFormFields: React.FC<ListingFormFieldsProps> = ({
 
       {formData.listingType === 'offer' && (
         <div className="space-y-3">
-          <Label className="text-base font-medium">Images</Label>
-
-          {/* Real photo warning */}
-          <div className="flex items-start gap-2.5 rounded-lg border border-warning/30 bg-warning/5 px-3 py-2.5">
-            <ShieldAlert className="h-5 w-5 text-warning shrink-0 mt-0.5" />
-            <div className="space-y-1">
-              <p className="text-sm">
-                <span className="font-semibold text-foreground">Important: The first image must be a real photo of the item you are selling.</span>
-              </p>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button type="button" className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors">
-                      <Info className="h-3 w-3" />
-                      <span>Why does this matter?</span>
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="bottom" className="max-w-xs">
-                    <p className="text-sm">This helps buyers trust your listing and reduces scams. Listings with real photos get more responses and sell faster.</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
-          </div>
+          <Label className="text-base font-medium inline-flex items-center">
+            Images
+            <FieldInfo tip="The first image must be a real photo of your item. Real photos build trust and help your listing sell faster." />
+          </Label>
 
           <ImageUpload
             images={formData.images}
@@ -88,7 +87,6 @@ const ListingFormFields: React.FC<ListingFormFieldsProps> = ({
             maxImages={5}
           />
 
-          {/* Real photo confirmation checkbox – shown once images are uploaded */}
           {formData.images.length > 0 && (
             <div className="flex items-start space-x-2 rounded-lg border border-border bg-card p-3">
               <Checkbox
@@ -107,8 +105,9 @@ const ListingFormFields: React.FC<ListingFormFieldsProps> = ({
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <Label htmlFor="price" className="text-base font-medium">
-            {formData.listingType === 'wanted' ? 'Budget' : 'Price'} {formData.category === 'services' ? '(per hour)' : formData.category === 'housing' ? '(per month)' : ''}
+          <Label htmlFor="price" className="text-base font-medium inline-flex items-center">
+            {formData.listingType === 'wanted' ? 'Budget' : 'Price'}{formData.category === 'services' ? ' (per hour)' : formData.category === 'housing' ? ' (per month)' : ''}
+            {formData.listingType === 'wanted' && <FieldInfo tip="Optional. Adding a budget helps sellers know your price range." />}
           </Label>
           <Input
             id="price"
@@ -116,13 +115,16 @@ const ListingFormFields: React.FC<ListingFormFieldsProps> = ({
             step="0.01"
             value={formData.price}
             onChange={(e) => handleInputChange("price", e.target.value)}
-            required
+            required={formData.listingType === 'offer'}
             className={formData.listingType === 'wanted' ? "text-lg" : ""}
           />
         </div>
 
         <div>
-          <Label htmlFor="location" className="text-base font-medium">My Location</Label>
+          <Label htmlFor="location" className="text-base font-medium inline-flex items-center">
+            Location
+            <FieldInfo tip="Optional. Helps buyers nearby find your listing." />
+          </Label>
           <Input
             id="location"
             value={formData.location}
@@ -131,7 +133,6 @@ const ListingFormFields: React.FC<ListingFormFieldsProps> = ({
           />
         </div>
       </div>
-
 
       <div className="flex items-center space-x-2">
         <Checkbox
@@ -146,7 +147,10 @@ const ListingFormFields: React.FC<ListingFormFieldsProps> = ({
 
       {formData.category === 'marketplace' && formData.listingType === 'offer' && (
         <div className="space-y-3">
-          <Label className="text-base font-medium">Transaction Methods</Label>
+          <Label className="text-base font-medium inline-flex items-center">
+            Transaction Methods
+            <FieldInfo tip="Select how buyers can get the item from you." />
+          </Label>
           <div className="space-y-2">
             <div className="flex items-center space-x-2">
               <Checkbox
@@ -154,9 +158,7 @@ const ListingFormFields: React.FC<ListingFormFieldsProps> = ({
                 checked={formData.allowPickup}
                 onCheckedChange={(checked) => handleInputChange("allowPickup", checked as boolean)}
               />
-              <Label htmlFor="allowPickup" className="text-sm font-normal">
-                Allow pickup
-              </Label>
+              <Label htmlFor="allowPickup" className="text-sm font-normal">Allow pickup</Label>
             </div>
             <div className="flex items-center space-x-2">
               <Checkbox
@@ -164,33 +166,10 @@ const ListingFormFields: React.FC<ListingFormFieldsProps> = ({
                 checked={formData.allowMeetOnCampus}
                 onCheckedChange={(checked) => handleInputChange("allowMeetOnCampus", checked as boolean)}
               />
-              <Label htmlFor="allowMeetOnCampus" className="text-sm font-normal">
-                Meet on campus
-              </Label>
+              <Label htmlFor="allowMeetOnCampus" className="text-sm font-normal">Meet on campus</Label>
             </div>
           </div>
         </div>
-      )}
-
-      {formData.listingType === 'wanted' && (
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button type="button" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors">
-                <Info className="h-4 w-4" />
-                <span>Tips for better responses</span>
-              </button>
-            </TooltipTrigger>
-            <TooltipContent side="top" className="max-w-xs">
-              <ul className="text-sm space-y-1">
-                <li>• Be specific about what you're looking for</li>
-                <li>• Include your preferred condition (new, used, etc.)</li>
-                <li>• Mention your timeline or urgency</li>
-                <li>• Add any size, color, or model preferences</li>
-              </ul>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
       )}
     </>
   );
