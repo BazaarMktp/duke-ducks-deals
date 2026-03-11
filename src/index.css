@@ -49,19 +49,12 @@
     --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
@@ -103,7 +96,6 @@
   --muted-foreground: 0 0% 30%;
 }
 
-
 /* Brand logo blue tint — matches --primary (#0A2A66) */
 .logo-blue {
   filter: brightness(0) saturate(100%) invert(12%) sepia(89%) saturate(2847%) hue-rotate(213deg) brightness(92%) contrast(101%);
@@ -118,25 +110,31 @@
   display: none;
 }
 
-/* Safe area for mobile bottom navigation */
+/* ===== Native / Capacitor safe-area utilities ===== */
+
 .safe-area-pb {
   padding-bottom: env(safe-area-inset-bottom, 0);
 }
 
-/* Capacitor native safe areas */
 .safe-area-top {
   padding-top: env(safe-area-inset-top, 0);
 }
+
 .safe-area-left {
   padding-left: env(safe-area-inset-left, 0);
 }
+
 .safe-area-right {
   padding-right: env(safe-area-inset-right, 0);
 }
 
-/* When keyboard is open, hide bottom nav */
+/* When keyboard is open, hide bottom nav and reduce main padding */
 body.keyboard-open .bottom-nav {
   display: none !important;
+}
+
+body.keyboard-open main {
+  padding-bottom: 0 !important;
 }
 
 /* Native app overscroll behavior */
@@ -161,5 +159,45 @@ html, body {
 @supports (padding-top: env(safe-area-inset-top)) {
   .native-header {
     padding-top: env(safe-area-inset-top, 0);
+  }
+}
+
+/* ===== iOS-specific native polish ===== */
+
+/* Prevent iOS tap highlight */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Prevent pull-to-refresh in native app */
+html {
+  overflow: hidden;
+  height: 100%;
+}
+
+body {
+  overflow: auto;
+  height: 100%;
+  /* Ensure content doesn't hide behind bottom nav on iOS */
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+/* Ensure inputs don't zoom on iOS (font-size >= 16px) */
+@media screen and (max-width: 768px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Bottom nav fixed positioning with safe area */
+.bottom-nav {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+/* Active state for touch feedback */
+@media (hover: none) and (pointer: coarse) {
+  .touchable:active {
+    opacity: 0.7;
+    transition: opacity 0.1s ease;
   }
 }

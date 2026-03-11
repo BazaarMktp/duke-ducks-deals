@@ -61,8 +61,8 @@ const Footer = () => {
           </p>
         </div>
 
-        <p className="text-secondary-foreground/40 text-xs text-center mt-6">
-          Devil's Marketplace is an independent student marketplace and is not affiliated with or endorsed by Duke University.
+        <p className="text-secondary-foreground/40 text-xs text-center mt-6 max-w-xl mx-auto leading-relaxed">
+          Devil's Marketplace is an independent student marketplace and is not affiliated with, endorsed by, or sponsored by Duke University or any other institution.
         </p>
       </div>
     </footer>
