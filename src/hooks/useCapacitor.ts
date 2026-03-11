@@ -19,20 +19,32 @@ export function useCapacitorInit() {
         // Status Bar
         const { StatusBar, Style } = await import('@capacitor/status-bar');
         await StatusBar.setStyle({ style: Style.Light });
-        await StatusBar.setBackgroundColor({ color: '#003087' });
+        await StatusBar.setBackgroundColor({ color: '#0A2A66' });
+        await StatusBar.setOverlaysWebView({ overlay: false });
 
-        // Splash Screen
+        // Splash Screen — hide after app is ready
         const { SplashScreen } = await import('@capacitor/splash-screen');
-        await SplashScreen.hide();
+        // Small delay to let the first paint happen
+        setTimeout(() => SplashScreen.hide({ fadeOutDuration: 300 }), 500);
 
         // Keyboard
         const { Keyboard } = await import('@capacitor/keyboard');
-        Keyboard.addListener('keyboardWillShow', () => {
+        Keyboard.addListener('keyboardWillShow', (info) => {
           document.body.classList.add('keyboard-open');
+          // Set CSS variable for keyboard height so layouts can adapt
+          document.documentElement.style.setProperty(
+            '--keyboard-height',
+            `${info.keyboardHeight}px`
+          );
         });
         Keyboard.addListener('keyboardWillHide', () => {
           document.body.classList.remove('keyboard-open');
+          document.documentElement.style.setProperty('--keyboard-height', '0px');
         });
+
+        // Add native platform class for CSS targeting
+        document.body.classList.add('capacitor-app');
+        document.body.classList.add(`platform-${getPlatform()}`);
       } catch (e) {
         // Plugins not available on web
         console.log('Capacitor plugin init skipped:', e);
