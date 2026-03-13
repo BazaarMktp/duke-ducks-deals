@@ -92,7 +92,7 @@ function AppContent() {
     <>
       <AuthRedirectHandler onAuthProcessing={setIsAuthProcessing} />
       <SharedLinkWrapper>
-        <div className="min-h-screen bg-background flex flex-col safe-area-top">
+        <div className="min-h-screen bg-background flex flex-col">
           {isAuthProcessing && (
             <div className="fixed inset-0 bg-background/90 flex items-center justify-center z-50">
               <div className="text-center">
@@ -102,7 +102,7 @@ function AppContent() {
             </div>
           )}
           <Navbar />
-          <main className="flex-1 pb-14 md:pb-0">
+          <main className="flex-1 main-content-pb md:pb-0">
             <Suspense fallback={<RouteSpinner />}>
               <Routes>
                 <Route path="/" element={<Index />} />
