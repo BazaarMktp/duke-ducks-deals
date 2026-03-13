@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-This document identifies unused code, duplications, and performance issues in the Bazaar codebase, along with recommended fixes.
+This document identifies unused code, duplications, and performance issues in the Devil's Marketplace codebase, along with recommended fixes.
 
 ---
 

@@ -4,6 +4,7 @@ const config: CapacitorConfig = {
   appId: 'com.william.devilsmarketplace',
   appName: "Devil's Marketplace",
   webDir: 'dist',
+  // No server.url — always load from the local bundled build in dist/
   plugins: {
     SplashScreen: {
       launchAutoHide: false,
