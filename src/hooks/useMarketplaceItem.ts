@@ -58,7 +58,7 @@ export const useMarketplaceItem = (id: string | undefined) => {
                   created_at: d.profiles.created_at,
                 }
               : {
-                  profile_name: 'Bazaar Member',
+                  profile_name: 'Student',
                   email: '',
                   phone_number: undefined,
                   avatar_url: undefined,

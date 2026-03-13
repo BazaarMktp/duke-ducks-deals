@@ -7,7 +7,7 @@ export const FeaturesSection = () => {
     <section className="py-16 bg-gradient-to-br from-blue-50 to-blue-100/50">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Duke Students Choose Bazaar</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Students Choose Devil's Marketplace</h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             The trusted marketplace built specifically for Duke University students and campus life
           </p>
