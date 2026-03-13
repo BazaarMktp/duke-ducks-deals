@@ -180,10 +180,10 @@ body {
   height: 100%;
 }
 
-/* Main content bottom padding: nav height (48px) + safe-area-inset-bottom */
+/* Main content bottom padding: tab-bar (~50px) + FAB overhang (20px) + safe-area */
 @media (max-width: 1023px) {
   .main-content-pb {
-    padding-bottom: calc(3rem + env(safe-area-inset-bottom, 0px));
+    padding-bottom: calc(4.5rem + env(safe-area-inset-bottom, 0px));
   }
 }
 
@@ -194,10 +194,7 @@ body {
   }
 }
 
-/* Bottom nav fixed positioning with safe area */
-.bottom-nav {
-  padding-bottom: env(safe-area-inset-bottom, 0);
-}
+/* Bottom nav – safe-area handled inline via max() in component */
 
 /* Active state for touch feedback */
 @media (hover: none) and (pointer: coarse) {
