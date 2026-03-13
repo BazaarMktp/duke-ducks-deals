@@ -201,9 +201,9 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'Bazaar <info@devilsmarketplace.com>',
+        from: "Devil's Marketplace <info@devilsmarketplace.com>",
         to: [recipientProfile.email],
-        subject: 'You received a new message on Bazaar',
+        subject: "You received a new message on Devil's Marketplace",
         html: emailHtml,
       }),
     });
