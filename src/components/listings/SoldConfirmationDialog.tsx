@@ -68,7 +68,7 @@ export const SoldConfirmationDialog = ({
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="bazaar" id="bazaar" />
               <Label htmlFor="bazaar" className="text-sm font-medium">
-                On Bazaar (through this platform)
+                On Devil's Marketplace (through this platform)
               </Label>
             </div>
             <div className="flex items-center space-x-2">

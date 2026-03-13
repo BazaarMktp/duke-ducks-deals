@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
@@ -12,12 +11,12 @@ const FAQ = () => {
           answer: "Click 'Sign Up' in the top navigation, enter your email address, create a password, and verify your email. You'll need a valid .edu email address to join our community."
         },
         {
-          question: "Is Bazaar free to use?",
+          question: "Is Devil's Marketplace free to use?",
           answer: "Yes! Creating an account and browsing listings is completely free. We only charge small fees for premium features like promoting your listings."
         },
         {
-          question: "Who can use Bazaar?",
-          answer: "Bazaar is exclusively for students with valid .edu email addresses. This ensures a safe, trusted community of verified students."
+          question: "Who can use Devil's Marketplace?",
+          answer: "Devil's Marketplace is exclusively for students with valid .edu email addresses. This ensures a safe, trusted community of verified students."
         }
       ]
     },
@@ -62,24 +61,22 @@ const FAQ = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-blue-600 to-purple-700 text-white py-16">
+    <div className="min-h-screen bg-background">
+      <section className="bg-primary text-primary-foreground py-16">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">Frequently Asked Questions</h1>
-          <p className="text-xl max-w-3xl mx-auto">
-            Find answers to common questions about using Bazaar
+          <p className="text-xl max-w-3xl mx-auto opacity-90">
+            Find answers to common questions about Devil's Marketplace
           </p>
         </div>
       </section>
 
-      {/* FAQ Content */}
       <section className="py-16">
         <div className="container mx-auto px-4 max-w-4xl">
           {faqs.map((category, categoryIndex) => (
             <Card key={categoryIndex} className="mb-8">
               <CardHeader>
-                <CardTitle className="text-2xl text-blue-600">{category.category}</CardTitle>
+                <CardTitle className="text-2xl text-primary">{category.category}</CardTitle>
               </CardHeader>
               <CardContent>
                 <Accordion type="single" collapsible>
@@ -88,7 +85,7 @@ const FAQ = () => {
                       <AccordionTrigger className="text-left">
                         {faq.question}
                       </AccordionTrigger>
-                      <AccordionContent className="text-gray-600">
+                      <AccordionContent className="text-muted-foreground">
                         {faq.answer}
                       </AccordionContent>
                     </AccordionItem>
@@ -100,18 +97,17 @@ const FAQ = () => {
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-card">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-4">Still Have Questions?</h2>
-          <p className="text-xl text-gray-600 mb-8">
+          <p className="text-xl text-muted-foreground mb-8">
             Can't find what you're looking for? We're here to help!
           </p>
           <div className="space-y-4">
-            <p className="text-gray-600">
-              Email us at: <a href="mailto:support@bazaar.edu" className="text-blue-600 hover:underline">support@bazaar.edu</a>
+            <p className="text-muted-foreground">
+              Email us at: <a href="mailto:info@devilsmarketplace.com" className="text-primary hover:underline">info@devilsmarketplace.com</a>
             </p>
-            <p className="text-gray-600">
+            <p className="text-muted-foreground">
               Or reach out through our contact form and we'll get back to you within 24 hours.
             </p>
           </div>

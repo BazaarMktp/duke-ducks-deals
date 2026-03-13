@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
@@ -7,7 +6,6 @@ import Logo from "./navbar/Logo";
 import Navigation from "./navbar/Navigation";
 import UserMenu from "./navbar/UserMenu";
 import MobileMenu from "./navbar/MobileMenu";
-
 import { useUnreadMessages } from "@/hooks/useUnreadMessages";
 
 const Navbar = () => {
@@ -24,9 +22,9 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-background shadow-sm border-b border-border sticky top-0 z-50 native-header safe-area-left safe-area-right" role="navigation" aria-label="Main navigation">
+    <nav className="bg-background shadow-sm border-b border-border sticky top-0 z-50 safe-area-top safe-area-left safe-area-right" role="navigation" aria-label="Main navigation">
       <div className="container mx-auto px-4">
-        <div className="relative flex justify-between items-center h-16">
+        <div className="relative flex justify-between items-center h-14 sm:h-16">
           <Logo />
           <div className="absolute left-1/2 transform -translate-x-1/2 hidden md:block">
             <Navigation />
@@ -38,12 +36,12 @@ const Navbar = () => {
             <Button
               variant="ghost"
               size="sm"
-              className="md:hidden"
+              className="md:hidden h-11 w-11 p-0"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-label={isMenuOpen ? "Close menu" : "Open menu"}
               aria-expanded={isMenuOpen}
             >
-              {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
+              {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
             </Button>
           </div>
         </div>
