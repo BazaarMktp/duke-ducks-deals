@@ -17,7 +17,7 @@ export const CollegesSection = () => {
   }
 
   // Filter out admin college for display
-  const displayColleges = colleges.filter(college => college.domain !== 'thebazaarapp.com');
+  const displayColleges = colleges.filter(college => college.domain !== 'thebazaarapp.com' && college.domain !== 'devilsmarketplace.com');
 
   return (
     <section className="py-16 bg-gray-50">

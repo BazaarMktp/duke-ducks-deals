@@ -205,7 +205,7 @@ const TermsAndConditions = () => {
                   For questions about these Terms and Conditions, please contact us:
                 </p>
                 <div className="text-gray-600">
-                  <p>Email: info@thebazaarapp.com</p>
+                  <p>Email: info@devilsmarketplace.com</p>
                 </div>
               </CardContent>
             </Card>

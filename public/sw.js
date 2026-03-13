@@ -146,15 +146,15 @@ self.addEventListener('push', event => {
   
   const options = {
     body: data.body,
-    icon: '/lovable-uploads/bazaar-app-icon.png',
-    badge: '/lovable-uploads/bazaar-app-icon.png',
-    tag: data.tag || 'bazaar-notification',
+    icon: '/devils-marketplace-logo.png',
+    badge: '/devils-marketplace-logo.png',
+    tag: data.tag || 'dm-notification',
     data: data.data,
     actions: [
       {
         action: 'view',
         title: 'View',
-        icon: '/lovable-uploads/bazaar-app-icon.png'
+        icon: '/devils-marketplace-logo.png'
       },
       {
         action: 'dismiss',

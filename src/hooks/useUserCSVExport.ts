@@ -33,7 +33,7 @@ export const useUserCSVExport = () => {
 
       const csvContent = convertUsersToCSV(users, colleges);
       const currentDate = new Date().toISOString().split('T')[0];
-      const filename = `bazaar_users_export_${currentDate}.csv`;
+      const filename = `devils_marketplace_users_export_${currentDate}.csv`;
       
       downloadCSV(csvContent, filename);
       toast.success(`Exported ${users.length} users to CSV`);
