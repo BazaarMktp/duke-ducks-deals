@@ -78,7 +78,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     // Validate college email or admin email
     const emailDomain = email.substring(email.lastIndexOf('@') + 1);
-    const isAdminEmail = email === 'info@thebazaarapp.com';
+    const isAdminEmail = email === 'info@devilsmarketplace.com';
     
     console.log('Email validation:', { emailDomain, isAdminEmail, email });
     

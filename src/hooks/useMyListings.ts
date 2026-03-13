@@ -137,8 +137,8 @@ export const useMyListings = () => {
     }
   };
 
-  const handleMarkAsSold = async (listingId: string, soldOnBazaar: boolean, soldElsewhereLocation?: string) => {
-    console.log('handleMarkAsSold called with:', { listingId, soldOnBazaar, soldElsewhereLocation, userId: user?.id });
+  const handleMarkAsSold = async (listingId: string, soldOnPlatform: boolean, soldElsewhereLocation?: string) => {
+    console.log('handleMarkAsSold called with:', { listingId, soldOnPlatform, soldElsewhereLocation, userId: user?.id });
     
     if (!user) {
       console.log('No user found, showing login error');
@@ -149,7 +149,7 @@ export const useMyListings = () => {
     try {
       const updateData = {
         status: 'sold' as const,
-        sold_on_bazaar: soldOnBazaar,
+        sold_on_bazaar: soldOnPlatform,
         sold_elsewhere_location: soldElsewhereLocation || null,
         sold_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
@@ -176,7 +176,7 @@ export const useMyListings = () => {
         )
       );
 
-      const location = soldOnBazaar ? "Devil's Marketplace" : soldElsewhereLocation;
+      const location = soldOnPlatform ? "Devil's Marketplace" : soldElsewhereLocation;
       toast.success(`Listing marked as sold on ${location}!`);
     } catch (error) {
       console.error('Error marking listing as sold:', error);

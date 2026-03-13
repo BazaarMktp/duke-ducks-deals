@@ -15,7 +15,7 @@ import { CheckCircle2 } from "lucide-react";
 
 interface SoldConfirmationDialogProps {
   listingTitle: string;
-  onConfirm: (soldOnBazaar: boolean, soldElsewhereLocation?: string) => void;
+  onConfirm: (soldOnPlatform: boolean, soldElsewhereLocation?: string) => void;
   children: React.ReactNode;
 }
 
@@ -25,22 +25,22 @@ export const SoldConfirmationDialog = ({
   children 
 }: SoldConfirmationDialogProps) => {
   const [open, setOpen] = useState(false);
-  const [soldLocation, setSoldLocation] = useState<"bazaar" | "elsewhere">("bazaar");
+  const [soldLocation, setSoldLocation] = useState<"platform" | "elsewhere">("platform");
   const [elsewhereLocation, setElsewhereLocation] = useState("");
 
   const handleConfirm = () => {
-    const soldOnBazaar = soldLocation === "bazaar";
-    const location = soldOnBazaar ? undefined : elsewhereLocation.trim();
+    const soldOnPlatform = soldLocation === "platform";
+    const location = soldOnPlatform ? undefined : elsewhereLocation.trim();
     
     if (soldLocation === "elsewhere" && !location) {
-      return; // Don't proceed if elsewhere is selected but no location provided
+      return;
     }
 
-    onConfirm(soldOnBazaar, location);
+    onConfirm(soldOnPlatform, location);
     setOpen(false);
     
     // Reset form
-    setSoldLocation("bazaar");
+    setSoldLocation("platform");
     setElsewhereLocation("");
   };
 
@@ -63,11 +63,11 @@ export const SoldConfirmationDialog = ({
         <div className="space-y-4">
           <RadioGroup 
             value={soldLocation} 
-            onValueChange={(value) => setSoldLocation(value as "bazaar" | "elsewhere")}
+            onValueChange={(value) => setSoldLocation(value as "platform" | "elsewhere")}
           >
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="bazaar" id="bazaar" />
-              <Label htmlFor="bazaar" className="text-sm font-medium">
+              <RadioGroupItem value="platform" id="platform" />
+              <Label htmlFor="platform" className="text-sm font-medium">
                 On Devil's Marketplace (through this platform)
               </Label>
             </div>

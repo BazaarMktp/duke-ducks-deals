@@ -15,7 +15,7 @@ interface ListingCardProps {
   listing: Listing;
   onDelete: (listingId: string) => void;
   onStatusToggle: (listingId: string, currentStatus: string) => void;
-  onMarkAsSold?: (listingId: string, soldOnBazaar: boolean, soldElsewhereLocation?: string) => void;
+  onMarkAsSold?: (listingId: string, soldOnPlatform: boolean, soldElsewhereLocation?: string) => void;
   userId?: string;
   isAdmin?: boolean;
 }
@@ -172,8 +172,8 @@ export const ListingCard = ({
               {listing.category === 'marketplace' && onMarkAsSold ? (
                 <SoldConfirmationDialog
                   listingTitle={listing.title}
-                  onConfirm={(soldOnBazaar, soldElsewhereLocation) => 
-                    onMarkAsSold(listing.id, soldOnBazaar, soldElsewhereLocation)
+                  onConfirm={(soldOnPlatform, soldElsewhereLocation) => 
+                    onMarkAsSold(listing.id, soldOnPlatform, soldElsewhereLocation)
                   }
                 >
                   <Button

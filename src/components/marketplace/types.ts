@@ -21,7 +21,7 @@ export interface MarketplaceListing {
   allow_pickup?: boolean;
   allow_meet_on_campus?: boolean;
   sold_at?: string;
-  sold_on_bazaar?: boolean;
+  sold_on_bazaar?: boolean; // DB column name — kept for compatibility
   item_tag?: string | null;
   open_to_negotiation?: boolean;
 }

@@ -6,7 +6,7 @@ import { ShoppingCart, TrendingUp, ExternalLink } from "lucide-react";
 
 interface SalesData {
   total_sold: number;
-  bazaar_sales: number;
+  platform_sales: number;
   external_sales: number;
   external_platforms: Array<{
     platform: string;
@@ -33,7 +33,7 @@ const SalesAnalytics = () => {
       if (soldError) throw soldError;
 
       const total_sold = soldItems?.length || 0;
-      const bazaar_sales = soldItems?.filter(item => item.sold_on_bazaar === true)?.length || 0;
+      const platform_sales = soldItems?.filter(item => item.sold_on_bazaar === true)?.length || 0;
       const external_sales = soldItems?.filter(item => item.sold_on_bazaar === false)?.length || 0;
 
       // Count external platforms
@@ -52,7 +52,7 @@ const SalesAnalytics = () => {
 
       setSalesData({
         total_sold,
-        bazaar_sales,
+        platform_sales,
         external_sales,
         external_platforms
       });
@@ -72,12 +72,12 @@ const SalesAnalytics = () => {
   }
 
   const pieData = [
-    { name: 'Platform Sales', value: salesData.bazaar_sales, color: '#22c55e' },
+    { name: 'Platform Sales', value: salesData.platform_sales, color: '#22c55e' },
     { name: 'External Sales', value: salesData.external_sales, color: '#ef4444' }
   ];
 
   const conversionRate = salesData.total_sold > 0 
-    ? ((salesData.bazaar_sales / salesData.total_sold) * 100).toFixed(1)
+    ? ((salesData.platform_sales / salesData.total_sold) * 100).toFixed(1)
     : 0;
 
   return (
@@ -100,7 +100,7 @@ const SalesAnalytics = () => {
             <TrendingUp className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">{salesData.bazaar_sales}</div>
+            <div className="text-2xl font-bold text-green-600">{salesData.platform_sales}</div>
           </CardContent>
         </Card>
 
