@@ -14,7 +14,7 @@
 
 ## Overview
 
-Bazaar is a comprehensive campus marketplace platform designed for college students to buy, sell, and exchange goods and services within their campus community. The platform includes features for marketplace listings, housing, services, deals, roommate matching, and more.
+Devil's Marketplace is a comprehensive campus marketplace platform designed for college students to buy, sell, and exchange goods and services within their campus community. The platform includes features for marketplace listings, housing, services, deals, roommate matching, and more.
 
 ### Key Features
 - **Marketplace**: Buy and sell items within campus
