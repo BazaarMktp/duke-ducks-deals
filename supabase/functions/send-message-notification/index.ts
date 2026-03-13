@@ -223,9 +223,9 @@ serve(async (req) => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            from: 'Bazaar <onboarding@resend.dev>',
+            from: "Devil's Marketplace <onboarding@resend.dev>",
             to: [recipientProfile.email],
-            subject: 'You received a new message on Bazaar',
+            subject: "You received a new message on Devil's Marketplace",
             html: emailHtml,
           }),
         });

@@ -23,7 +23,7 @@ const TermsAndConditions = () => {
             </CardHeader>
             <CardContent className="space-y-6">
               <p className="text-gray-600">
-                By accessing and using Bazaar, you agree to be bound by these Terms and Conditions. 
+                By accessing and using Devil's Marketplace, you agree to be bound by these Terms and Conditions. 
                 If you do not agree to these terms, please do not use our platform.
               </p>
             </CardContent>
