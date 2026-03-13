@@ -149,7 +149,7 @@ export const useMyListings = () => {
     try {
       const updateData = {
         status: 'sold' as const,
-        sold_on_bazaar: soldOnBazaar,
+        sold_on_bazaar: soldOnPlatform,
         sold_elsewhere_location: soldElsewhereLocation || null,
         sold_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
