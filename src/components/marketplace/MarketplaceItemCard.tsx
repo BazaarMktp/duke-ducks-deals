@@ -45,28 +45,28 @@ const MarketplaceItemCard = ({
   if (listing.listing_type === 'wanted') {
     return (
       <Link to={`/marketplace/${listing.id}`} className="block group">
-        <div className="bg-card rounded-xl border border-border/60 p-4 hover:shadow-md transition-all duration-200 hover:border-primary/20 relative">
+        <div className="bg-card rounded-lg border border-border/60 p-3 hover:shadow-md transition-all duration-200 hover:border-primary/20 relative">
           {user && (
-            <div className="absolute top-3 right-3 z-10" onClick={(e) => e.preventDefault()}>
+            <div className="absolute top-2 right-2 z-10" onClick={(e) => e.preventDefault()}>
               <AnimatedHeart
                 isFavorite={isFavorite}
                 onClick={() => onToggleFavorite(listing.id)}
-                size={18}
+                size={16}
               />
             </div>
           )}
-          <Badge className="bg-primary/10 text-primary mb-2 text-xs font-medium">
+          <Badge className="bg-primary/10 text-primary mb-1.5 text-[10px] font-medium px-1.5 py-0">
             Wanted
           </Badge>
-          <h3 className="font-semibold text-sm line-clamp-2 text-foreground mb-1">
+          <h3 className="font-semibold text-xs line-clamp-2 text-foreground mb-0.5">
             {listing.title}
           </h3>
-          <p className="text-xs text-muted-foreground line-clamp-2 mb-3">{listing.description}</p>
+          <p className="text-[11px] text-muted-foreground line-clamp-1 mb-2">{listing.description}</p>
           <div className="flex items-center justify-between">
-            <span className="text-sm font-semibold text-primary">
+            <span className="text-xs font-semibold text-primary">
               {listing.price ? `Budget: $${listing.price}` : 'Negotiable'}
             </span>
-            <span className="text-xs text-muted-foreground">{timeAgo()}</span>
+            <span className="text-[10px] text-muted-foreground">{timeAgo()}</span>
           </div>
         </div>
       </Link>
@@ -75,9 +75,9 @@ const MarketplaceItemCard = ({
 
   return (
     <Link to={`/marketplace/${listing.id}`} className="block group">
-      <div className="bg-card rounded-xl overflow-hidden hover:shadow-lg transition-all duration-200 border border-border/40 hover:border-border relative">
-        {/* Image */}
-        <div className="aspect-square overflow-hidden bg-muted relative">
+      <div className="bg-card rounded-lg overflow-hidden hover:shadow-md transition-all duration-200 border border-border/40 hover:border-border relative">
+        {/* Image — 4:5 aspect for compact cards */}
+        <div className="aspect-[4/5] overflow-hidden bg-muted relative">
           <OptimizedImage
             src={listing.images?.[0] || "/placeholder.svg"}
             alt={listing.title}
@@ -89,7 +89,7 @@ const MarketplaceItemCard = ({
           {/* Overlay badges */}
           {isSold && (
             <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-              <span className="bg-destructive text-destructive-foreground font-bold text-sm px-4 py-1.5 rounded-full">
+              <span className="bg-destructive text-destructive-foreground font-bold text-xs px-3 py-1 rounded-full">
                 SOLD
               </span>
             </div>
@@ -98,51 +98,51 @@ const MarketplaceItemCard = ({
           {/* Favorite button */}
           {user && !isSold && (
             <div
-              className="absolute top-2.5 right-2.5 z-10 bg-background/80 backdrop-blur-sm rounded-full p-1.5 shadow-sm"
+              className="absolute top-2 right-2 z-10 bg-background/80 backdrop-blur-sm rounded-full p-1 shadow-sm"
               onClick={(e) => e.preventDefault()}
             >
               <AnimatedHeart
                 isFavorite={isFavorite}
                 onClick={() => onToggleFavorite(listing.id)}
-                size={18}
+                size={16}
               />
             </div>
           )}
 
           {/* Status badges */}
-          <div className="absolute top-2.5 left-2.5 flex flex-col gap-1">
+          <div className="absolute top-2 left-2 flex flex-col gap-0.5">
             {listing.featured && (
-              <span className="bg-accent text-accent-foreground text-[10px] font-bold px-2 py-0.5 rounded-full">
+              <span className="bg-accent text-accent-foreground text-[9px] font-bold px-1.5 py-0.5 rounded-full">
                 Featured
               </span>
             )}
             {!listing.featured && isNew && !isSold && (
-              <span className="bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 rounded-full">
+              <span className="bg-primary text-primary-foreground text-[9px] font-bold px-1.5 py-0.5 rounded-full">
                 New
               </span>
             )}
           </div>
         </div>
 
-        {/* Info */}
-        <div className="p-3">
-          <div className="flex items-baseline justify-between gap-2 mb-0.5">
-            <span className="text-base font-bold text-foreground">
+        {/* Info — compact */}
+        <div className="px-2.5 py-2">
+          <div className="flex items-baseline justify-between gap-1 mb-0.5">
+            <span className="text-sm font-bold text-foreground">
               {listing.price ? `$${listing.price}` : 'Free'}
             </span>
             {listing.open_to_negotiation && (
-              <span className="text-[10px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded-full whitespace-nowrap">
+              <span className="text-[9px] text-muted-foreground bg-muted px-1 py-px rounded-full whitespace-nowrap">
                 OBO
               </span>
             )}
           </div>
-          <h3 className="text-sm text-foreground line-clamp-1 mb-1">
+          <h3 className="text-xs text-foreground line-clamp-1 leading-tight">
             {listing.title}
           </h3>
-          <div className="flex items-center gap-1 text-[11px] text-muted-foreground overflow-hidden">
-            <span className="truncate max-w-[60%]">{getDisplayName()}</span>
+          <div className="flex items-center gap-1 text-[10px] text-muted-foreground mt-0.5 overflow-hidden">
+            <span className="truncate max-w-[55%]">{getDisplayName()}</span>
             {listing.profiles?.is_verified && (
-              <BadgeCheck size={11} className="text-primary shrink-0" />
+              <BadgeCheck size={10} className="text-primary shrink-0" />
             )}
             <span className="shrink-0">·</span>
             <span className="shrink-0">{timeAgo()}</span>

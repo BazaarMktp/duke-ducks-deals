@@ -89,40 +89,40 @@ const MarketplaceFilters = ({
   const hasPriceFilter = hasActiveFilters;
 
   return (
-    <div className="space-y-3">
-      {/* Search bar — prominent, full width */}
+    <div className="space-y-2 sticky top-11 sm:top-12 md:top-14 z-40 bg-background pb-1 -mx-2 px-2 sm:-mx-3 sm:px-3 md:-mx-4 md:px-4">
+      {/* Search bar */}
       <div className="relative group">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-[18px] w-[18px] text-muted-foreground transition-colors group-focus-within:text-primary" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground transition-colors group-focus-within:text-primary" />
         <Input
-          placeholder={activeListingType === 'offer' ? "Search items for sale..." : "Search wanted requests..."}
+          placeholder={activeListingType === 'offer' ? "Search items..." : "Search requests..."}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-11 pr-10 h-12 rounded-2xl bg-card border-border/80 shadow-sm text-sm placeholder:text-muted-foreground/60 focus-visible:ring-primary/30 focus-visible:border-primary/40 focus-visible:shadow-md transition-all"
+          className="pl-9 pr-8 h-10 rounded-xl bg-card border-border/80 shadow-sm text-sm placeholder:text-muted-foreground/60 focus-visible:ring-primary/30 focus-visible:border-primary/40 transition-all"
         />
         {searchQuery && (
           <button
             onClick={() => setSearchQuery('')}
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors p-0.5 rounded-full hover:bg-muted"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors p-0.5 rounded-full hover:bg-muted"
           >
-            <X className="h-4 w-4" />
+            <X className="h-3.5 w-3.5" />
           </button>
         )}
       </div>
       
-      {/* Filter controls — unified pill row */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-0.5 scrollbar-none">
+      {/* Filter controls */}
+      <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none">
         {/* Price filter */}
         {activeListingType === 'offer' && (
           <Sheet open={showPriceSheet} onOpenChange={setShowPriceSheet}>
             <SheetTrigger asChild>
               <button 
-                className={`inline-flex items-center gap-1.5 h-9 px-3.5 rounded-full text-xs font-medium border transition-all shrink-0 ${
+                className={`inline-flex items-center gap-1 h-7 px-2.5 rounded-full text-[11px] font-medium border transition-all shrink-0 ${
                   hasPriceFilter
                     ? 'bg-primary text-primary-foreground border-primary shadow-sm'
-                    : 'bg-card text-foreground border-border/80 hover:border-primary/40 hover:shadow-sm'
+                    : 'bg-card text-foreground border-border/80 hover:border-primary/40'
                 }`}
               >
-                <SlidersHorizontal className="h-3.5 w-3.5" />
+                <SlidersHorizontal className="h-3 w-3" />
                 {getCurrentPriceLabel()}
               </button>
             </SheetTrigger>
@@ -172,12 +172,12 @@ const MarketplaceFilters = ({
           </Sheet>
         )}
 
-        {/* Sort — styled as matching pill */}
+        {/* Sort */}
         <div className="relative shrink-0">
           <Select value={sortBy} onValueChange={setSortBy}>
-            <SelectTrigger className="h-9 w-auto min-w-[100px] rounded-full text-xs font-medium bg-card border-border/80 hover:border-primary/40 hover:shadow-sm transition-all gap-1.5 px-3.5 focus:ring-primary/30">
-              <div className="flex items-center gap-1.5">
-                <ArrowUpDown className="h-3.5 w-3.5 text-muted-foreground" />
+            <SelectTrigger className="h-7 w-auto min-w-[80px] rounded-full text-[11px] font-medium bg-card border-border/80 hover:border-primary/40 transition-all gap-1 px-2.5 focus:ring-primary/30">
+              <div className="flex items-center gap-1">
+                <ArrowUpDown className="h-3 w-3 text-muted-foreground" />
                 <span>{SORT_LABELS[sortBy] || "Sort"}</span>
               </div>
             </SelectTrigger>
@@ -210,9 +210,9 @@ const MarketplaceFilters = ({
               setCategoryFilter(null);
               setPriceRange({ min: null, max: null });
             }}
-            className="inline-flex items-center gap-1 h-9 px-3 rounded-full text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors shrink-0"
+            className="inline-flex items-center gap-0.5 h-7 px-2 rounded-full text-[11px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors shrink-0"
           >
-            <X className="h-3.5 w-3.5" />
+            <X className="h-3 w-3" />
             Clear
           </button>
         )}

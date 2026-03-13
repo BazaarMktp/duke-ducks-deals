@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { Package, Search, Home, Users } from "lucide-react";
 
 interface ListingTypeToggleProps {
@@ -30,27 +29,27 @@ const ListingTypeToggle = ({ activeType, onTypeChange, category = 'services' }: 
   const WantedIcon = icons.wanted;
 
   return (
-    <div className="flex gap-0.5 bg-muted/60 p-0.5 rounded-xl w-fit mx-auto my-4">
+    <div className="flex gap-0.5 bg-muted/60 p-0.5 rounded-lg w-fit mx-auto my-2">
       <button
         onClick={() => onTypeChange('offer')}
-        className={`flex items-center gap-1.5 px-4 py-2 rounded-[10px] text-sm font-medium transition-all ${
+        className={`flex items-center gap-1 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
           activeType === 'offer'
             ? 'bg-background text-foreground shadow-sm'
             : 'text-muted-foreground hover:text-foreground'
         }`}
       >
-        <OfferIcon size={15} />
+        <OfferIcon size={13} />
         {labels.offer}
       </button>
       <button
         onClick={() => onTypeChange('wanted')}
-        className={`flex items-center gap-1.5 px-4 py-2 rounded-[10px] text-sm font-medium transition-all ${
+        className={`flex items-center gap-1 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
           activeType === 'wanted'
             ? 'bg-background text-foreground shadow-sm'
             : 'text-muted-foreground hover:text-foreground'
         }`}
       >
-        <WantedIcon size={15} />
+        <WantedIcon size={13} />
         {labels.wanted}
       </button>
     </div>
