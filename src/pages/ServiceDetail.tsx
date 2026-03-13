@@ -227,7 +227,7 @@ const ServiceDetail = () => {
 
           <div>
             <ServiceProvider
-              profileName={service.profiles?.profile_name || 'Bazaar Member'}
+              profileName={service.profiles?.profile_name || 'Student'}
               email={service.profiles?.email || ''}
               phoneNumber={service.profiles?.phone_number}
               createdAt={service.created_at}

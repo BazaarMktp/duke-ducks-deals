@@ -176,7 +176,7 @@ export const useMyListings = () => {
         )
       );
 
-      const location = soldOnBazaar ? 'Bazaar' : soldElsewhereLocation;
+      const location = soldOnBazaar ? "Devil's Marketplace" : soldElsewhereLocation;
       toast.success(`Listing marked as sold on ${location}!`);
     } catch (error) {
       console.error('Error marking listing as sold:', error);

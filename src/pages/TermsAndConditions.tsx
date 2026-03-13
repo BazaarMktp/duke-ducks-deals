@@ -187,7 +187,7 @@ const TermsAndConditions = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <ul className="list-disc list-inside text-gray-600 space-y-2">
-                  <li>Bazaar is not responsible for returns, refunds, or exchanges between users</li>
+                  <li>Devil's Marketplace is not responsible for returns, refunds, or exchanges between users</li>
                   <li>All return policies, if any, are at the sole discretion of the individual seller</li>
                   <li>We do not guarantee or enforce any return arrangements made between users</li>
                   <li>Users should clarify return policies directly with sellers before completing transactions</li>

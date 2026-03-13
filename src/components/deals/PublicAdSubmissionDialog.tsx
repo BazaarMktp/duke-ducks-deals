@@ -119,7 +119,7 @@ export const PublicAdSubmissionDialog: React.FC<PublicAdSubmissionDialogProps> =
     onSuccess: () => {
       toast({
         title: 'Success!',
-        description: 'Your ad has been submitted for approval. Bazaar admin will review it shortly.',
+        description: 'Your ad has been submitted for approval. Our admin will review it shortly.',
       });
       form.reset();
       onOpenChange(false);
