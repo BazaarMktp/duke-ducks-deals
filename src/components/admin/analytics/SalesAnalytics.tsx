@@ -6,7 +6,7 @@ import { ShoppingCart, TrendingUp, ExternalLink } from "lucide-react";
 
 interface SalesData {
   total_sold: number;
-  bazaar_sales: number;
+  platform_sales: number;
   external_sales: number;
   external_platforms: Array<{
     platform: string;
