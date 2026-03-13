@@ -22,7 +22,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-background/95 backdrop-blur-sm border-b border-border/60 sticky top-0 z-50 safe-area-left safe-area-right" role="navigation" aria-label="Main navigation">
+    <nav className="bg-background/95 backdrop-blur-sm border-b border-border/60 sticky top-0 z-50 safe-area-top safe-area-left safe-area-right" role="navigation" aria-label="Main navigation">
       <div className="container mx-auto px-3 sm:px-4 md:px-6">
         <div className="relative flex justify-between items-center h-11 sm:h-12 md:h-14">
           <Logo />
