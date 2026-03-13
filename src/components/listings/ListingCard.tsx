@@ -172,8 +172,8 @@ export const ListingCard = ({
               {listing.category === 'marketplace' && onMarkAsSold ? (
                 <SoldConfirmationDialog
                   listingTitle={listing.title}
-                  onConfirm={(soldOnBazaar, soldElsewhereLocation) => 
-                    onMarkAsSold(listing.id, soldOnBazaar, soldElsewhereLocation)
+                  onConfirm={(soldOnPlatform, soldElsewhereLocation) => 
+                    onMarkAsSold(listing.id, soldOnPlatform, soldElsewhereLocation)
                   }
                 >
                   <Button
