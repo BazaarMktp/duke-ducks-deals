@@ -14,9 +14,9 @@ const Logo = () => {
       <img
         src="/devils-marketplace-logo.png"
         alt="Devil's Marketplace logo"
-        className="h-7 w-7 sm:h-8 sm:w-8 md:h-10 md:w-10 logo-blue"
+        className="h-7 w-7 sm:h-8 sm:w-8 lg:h-10 lg:w-10 logo-blue"
       />
-      <span className="font-bold text-sm sm:text-base md:text-xl text-primary tracking-tight leading-tight">
+      <span className="font-bold text-sm sm:text-base lg:text-xl text-primary tracking-tight leading-tight">
         Devil's Marketplace
       </span>
     </Link>
