@@ -179,7 +179,7 @@ serve(async (req) => {
           </div>` : ''}
           <p style="margin: 0 0 16px 0;">Log in to Devil's Marketplace to reply.</p>
           <p style="margin: 16px 0 0 0; text-align: center;">
-            <a href="https://bazaar-marketplace.lovable.app/messages"
+            <a href="https://devils-marketplace.lovable.app/messages"
                style="background: #003087; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: bold;">
               View Message
             </a>
