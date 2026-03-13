@@ -177,7 +177,7 @@ serve(async (req) => {
           <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 16px; margin: 16px 0;">
             <p style="margin: 0; font-style: italic; color: #475569;">"${escapedMessage}"</p>
           </div>` : ''}
-          <p style="margin: 0 0 16px 0;">Log in to Bazaar to reply.</p>
+          <p style="margin: 0 0 16px 0;">Log in to Devil's Marketplace to reply.</p>
           <p style="margin: 16px 0 0 0; text-align: center;">
             <a href="https://bazaar-marketplace.lovable.app/messages"
                style="background: #003087; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: bold;">
