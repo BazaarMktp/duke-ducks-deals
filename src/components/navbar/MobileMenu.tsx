@@ -32,7 +32,7 @@ const MobileMenu = ({ user, isOpen, onClose, onSignOut, unreadMessages }: Mobile
   ];
 
   return (
-    <div className="md:hidden border-t border-border bg-background" role="menu">
+    <div className="lg:hidden border-t border-border bg-background" role="menu">
       <div className="px-4 py-4 space-y-3">
         {navigation.map((item) => (
           <Link

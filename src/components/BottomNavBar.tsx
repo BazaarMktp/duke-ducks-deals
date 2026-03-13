@@ -29,7 +29,7 @@ const BottomNavBar = () => {
 
   return (
     <nav 
-      className="bottom-nav fixed bottom-0 left-0 right-0 z-50 md:hidden bg-background/95 backdrop-blur-md border-t border-border/50 no-select"
+      className="bottom-nav fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-background/95 backdrop-blur-md border-t border-border/50 no-select safe-area-left safe-area-right"
       role="navigation"
       aria-label="Main navigation"
     >

@@ -181,7 +181,7 @@ body {
 }
 
 /* Main content bottom padding: nav height (48px) + safe-area-inset-bottom */
-@media (max-width: 767px) {
+@media (max-width: 1023px) {
   .main-content-pb {
     padding-bottom: calc(3rem + env(safe-area-inset-bottom, 0px));
   }

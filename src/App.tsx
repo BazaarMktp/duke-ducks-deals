@@ -102,7 +102,7 @@ function AppContent() {
             </div>
           )}
           <Navbar />
-          <main className="flex-1 main-content-pb md:pb-0">
+          <main className="flex-1 main-content-pb lg:pb-0">
             <Suspense fallback={<RouteSpinner />}>
               <Routes>
                 <Route path="/" element={<Index />} />
