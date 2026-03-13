@@ -63,11 +63,11 @@ export const SoldConfirmationDialog = ({
         <div className="space-y-4">
           <RadioGroup 
             value={soldLocation} 
-            onValueChange={(value) => setSoldLocation(value as "bazaar" | "elsewhere")}
+            onValueChange={(value) => setSoldLocation(value as "platform" | "elsewhere")}
           >
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="bazaar" id="bazaar" />
-              <Label htmlFor="bazaar" className="text-sm font-medium">
+              <RadioGroupItem value="platform" id="platform" />
+              <Label htmlFor="platform" className="text-sm font-medium">
                 On Devil's Marketplace (through this platform)
               </Label>
             </div>

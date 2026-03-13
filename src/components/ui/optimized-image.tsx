@@ -138,6 +138,8 @@ export const OptimizedImage = memo(({
             'w-full h-full object-cover transition-opacity duration-300',
             isLoaded ? 'opacity-100' : 'opacity-0',
           )}
+          // iOS WebKit: force rasterisation to avoid blank-image rendering bugs
+          style={{ WebkitTransform: 'translateZ(0)' }}
           {...props}
         />
       )}

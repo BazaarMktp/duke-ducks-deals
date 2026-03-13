@@ -100,7 +100,7 @@ const SalesAnalytics = () => {
             <TrendingUp className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">{salesData.bazaar_sales}</div>
+            <div className="text-2xl font-bold text-green-600">{salesData.platform_sales}</div>
           </CardContent>
         </Card>
 
