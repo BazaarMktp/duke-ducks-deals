@@ -53,7 +53,7 @@ const MarketplaceGrid = ({
       created_at: listing.created_at,
       listing_type: listing.listing_type,
       profiles: {
-        profile_name: listing.profiles?.profile_name || 'Bazaar Member',
+        profile_name: listing.profiles?.profile_name || 'Student',
         avatar_url: listing.profiles?.avatar_url,
         created_at: listing.created_at,
       },

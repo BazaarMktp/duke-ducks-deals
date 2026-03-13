@@ -236,7 +236,7 @@ const HousingDetail = () => {
           />
 
           <SellerInfo
-            profileName={listing.profiles?.profile_name || 'Bazaar Member'}
+            profileName={listing.profiles?.profile_name || 'Student'}
             email={listing.profiles?.email || ''}
             phoneNumber={listing.profiles?.phone_number}
             createdAt={listing.profiles?.created_at || listing.created_at}

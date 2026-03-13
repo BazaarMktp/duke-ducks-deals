@@ -168,7 +168,7 @@ serve(async (req) => {
     const emailHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="background: linear-gradient(135deg, #003087, #001a4d); color: white; padding: 20px; border-radius: 8px 8px 0 0; text-align: center;">
-          <h1 style="margin: 0; font-size: 24px;">You received a new message on Bazaar</h1>
+          <h1 style="margin: 0; font-size: 24px;">You received a new message on Devil's Marketplace</h1>
         </div>
         <div style="background: white; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 8px 8px; padding: 20px;">
           <p style="margin: 0 0 16px 0; font-size: 16px;">Hi ${escapedName},</p>
@@ -177,9 +177,9 @@ serve(async (req) => {
           <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 16px; margin: 16px 0;">
             <p style="margin: 0; font-style: italic; color: #475569;">"${escapedMessage}"</p>
           </div>` : ''}
-          <p style="margin: 0 0 16px 0;">Log in to Bazaar to reply.</p>
+          <p style="margin: 0 0 16px 0;">Log in to Devil's Marketplace to reply.</p>
           <p style="margin: 16px 0 0 0; text-align: center;">
-            <a href="https://bazaar-marketplace.lovable.app/messages"
+            <a href="https://devils-marketplace.lovable.app/messages"
                style="background: #003087; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; font-weight: bold;">
               View Message
             </a>
@@ -201,9 +201,9 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'Bazaar <info@devilsmarketplace.com>',
+        from: "Devil's Marketplace <info@devilsmarketplace.com>",
         to: [recipientProfile.email],
-        subject: 'You received a new message on Bazaar',
+        subject: "You received a new message on Devil's Marketplace",
         html: emailHtml,
       }),
     });
@@ -223,9 +223,9 @@ serve(async (req) => {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            from: 'Bazaar <onboarding@resend.dev>',
+            from: "Devil's Marketplace <onboarding@resend.dev>",
             to: [recipientProfile.email],
-            subject: 'You received a new message on Bazaar',
+            subject: "You received a new message on Devil's Marketplace",
             html: emailHtml,
           }),
         });

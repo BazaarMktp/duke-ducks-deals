@@ -20,7 +20,7 @@ const MarketplaceItemCard = ({
   onToggleFavorite, 
 }: MarketplaceItemCardProps) => {
   const getDisplayName = () => {
-    if (!user) return "Bazaar Member";
+    if (!user) return "Student";
     if (!listing.profiles) return "Anonymous";
     const fullName = listing.profiles.full_name;
     if (fullName) return fullName.split(" ")[0];

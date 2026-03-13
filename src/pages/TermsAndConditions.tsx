@@ -23,7 +23,7 @@ const TermsAndConditions = () => {
             </CardHeader>
             <CardContent className="space-y-6">
               <p className="text-gray-600">
-                By accessing and using Bazaar, you agree to be bound by these Terms and Conditions. 
+                By accessing and using Devil's Marketplace, you agree to be bound by these Terms and Conditions. 
                 If you do not agree to these terms, please do not use our platform.
               </p>
             </CardContent>
@@ -79,7 +79,7 @@ const TermsAndConditions = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <ul className="list-disc list-inside text-gray-600 space-y-2">
-                  <li>All transactions are between users; Bazaar is not a party to any transaction</li>
+                  <li>All transactions are between users; Devil's Marketplace is not a party to any transaction</li>
                   <li>We do not process payments or guarantee transaction completion</li>
                   <li>Users are responsible for their own payment arrangements and disputes</li>
                   <li>We recommend meeting in safe, public locations for exchanges</li>
@@ -97,7 +97,7 @@ const TermsAndConditions = () => {
                   <li>You retain ownership of content you post, but grant us license to display it</li>
                   <li>You may not post copyrighted material without permission</li>
                   <li>We reserve the right to remove content that violates these terms</li>
-                  <li>The Bazaar platform and its features are our intellectual property</li>
+                  <li>The Devil's Marketplace platform and its features are our intellectual property</li>
                 </ul>
               </CardContent>
             </Card>
@@ -146,7 +146,7 @@ const TermsAndConditions = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <ul className="list-disc list-inside text-gray-600 space-y-2">
-                  <li>Bazaar is provided "as is" without warranties of any kind</li>
+                  <li>Devil's Marketplace is provided "as is" without warranties of any kind</li>
                   <li>We are not responsible for user-generated content or transactions</li>
                   <li>We do not guarantee the accuracy or quality of listings</li>
                   <li>Our liability is limited to the maximum extent permitted by law</li>
@@ -187,7 +187,7 @@ const TermsAndConditions = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <ul className="list-disc list-inside text-gray-600 space-y-2">
-                  <li>Bazaar is not responsible for returns, refunds, or exchanges between users</li>
+                  <li>Devil's Marketplace is not responsible for returns, refunds, or exchanges between users</li>
                   <li>All return policies, if any, are at the sole discretion of the individual seller</li>
                   <li>We do not guarantee or enforce any return arrangements made between users</li>
                   <li>Users should clarify return policies directly with sellers before completing transactions</li>

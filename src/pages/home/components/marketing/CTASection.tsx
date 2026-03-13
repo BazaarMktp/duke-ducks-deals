@@ -19,7 +19,7 @@ export const CTASection = () => {
             Ready to Get Started?
           </h2>
           <p className="text-xl md:text-2xl mb-10 max-w-3xl mx-auto text-primary-foreground/90 leading-relaxed">
-            Join students already using Bazaar to buy and sell on campus
+            Join students already using Devil's Marketplace to buy and sell on campus
           </p>
         </div>
         

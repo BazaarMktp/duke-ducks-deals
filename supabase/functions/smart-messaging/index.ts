@@ -20,7 +20,7 @@ serve(async (req) => {
     }
 
     let prompt = '';
-    let systemPrompt = 'You are a helpful assistant for a campus marketplace called Bazaar.';
+    let systemPrompt = "You are a helpful assistant for a campus marketplace called Devil's Marketplace.";
 
     switch (type) {
       case 'suggest_reply':
