@@ -89,7 +89,7 @@ const MarketplaceFilters = ({
   const hasPriceFilter = hasActiveFilters;
 
   return (
-    <div className="space-y-2 sticky top-11 sm:top-12 md:top-14 z-40 bg-background pb-1 -mx-2 px-2 sm:-mx-3 sm:px-3 md:-mx-4 md:px-4">
+    <div className="space-y-2 sticky top-[calc(2.75rem+env(safe-area-inset-top,0px))] sm:top-[calc(3rem+env(safe-area-inset-top,0px))] md:top-14 z-40 bg-background pb-1 -mx-2 px-2 sm:-mx-3 sm:px-3 md:-mx-4 md:px-4">
       {/* Search bar */}
       <div className="relative group">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground transition-colors group-focus-within:text-primary" />
