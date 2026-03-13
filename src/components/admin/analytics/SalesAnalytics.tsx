@@ -52,7 +52,7 @@ const SalesAnalytics = () => {
 
       setSalesData({
         total_sold,
-        bazaar_sales,
+        platform_sales,
         external_sales,
         external_platforms
       });
