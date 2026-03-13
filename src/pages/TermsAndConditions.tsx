@@ -97,7 +97,7 @@ const TermsAndConditions = () => {
                   <li>You retain ownership of content you post, but grant us license to display it</li>
                   <li>You may not post copyrighted material without permission</li>
                   <li>We reserve the right to remove content that violates these terms</li>
-                  <li>The Bazaar platform and its features are our intellectual property</li>
+                  <li>The Devil's Marketplace platform and its features are our intellectual property</li>
                 </ul>
               </CardContent>
             </Card>
