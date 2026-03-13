@@ -146,7 +146,7 @@ const TermsAndConditions = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <ul className="list-disc list-inside text-gray-600 space-y-2">
-                  <li>Bazaar is provided "as is" without warranties of any kind</li>
+                  <li>Devil's Marketplace is provided "as is" without warranties of any kind</li>
                   <li>We are not responsible for user-generated content or transactions</li>
                   <li>We do not guarantee the accuracy or quality of listings</li>
                   <li>Our liability is limited to the maximum extent permitted by law</li>
