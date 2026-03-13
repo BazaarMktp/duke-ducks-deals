@@ -28,69 +28,76 @@ const BottomNavBar = () => {
   };
 
   return (
-    <nav 
-      className="bottom-nav fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-background/95 backdrop-blur-md border-t border-border/50 no-select safe-area-left safe-area-right"
+    <nav
+      className="bottom-nav fixed bottom-0 left-0 right-0 z-50 lg:hidden no-select safe-area-left safe-area-right"
       role="navigation"
       aria-label="Main navigation"
     >
-      <div className="flex items-center justify-around h-12 px-1 safe-area-pb">
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          const active = isActive(item.path);
-          const href = item.requiresAuth && !user ? "/auth" : item.path;
-          
-          if (item.isCenter) {
+      {/* Floating center action button – positioned above the bar */}
+      <div className="absolute left-1/2 -translate-x-1/2 -top-5 z-10">
+        <Link
+          to={navItems[2].requiresAuth && !user ? "/auth" : navItems[2].path}
+          aria-label="Sell"
+          className="block"
+        >
+          <div className={cn(
+            "flex items-center justify-center w-12 h-12 rounded-full",
+            "bg-primary text-primary-foreground",
+            "shadow-[0_2px_12px_-2px_hsl(var(--primary)/0.45)]",
+            "transition-transform duration-150 active:scale-90"
+          )}>
+            <Plus size={22} strokeWidth={2.5} />
+          </div>
+        </Link>
+      </div>
+
+      {/* Tab bar surface */}
+      <div className="bg-background/95 backdrop-blur-xl border-t border-border/40 shadow-[0_-1px_3px_0_rgba(0,0,0,0.04)]">
+        <div className="flex items-end justify-around px-2 pt-1.5 pb-[max(0.375rem,env(safe-area-inset-bottom,6px))]">
+          {navItems.map((item) => {
+            if (item.isCenter) {
+              /* Invisible spacer keeping the center slot open */
+              return <div key={item.path} className="flex-1" />;
+            }
+
+            const Icon = item.icon;
+            const active = isActive(item.path);
+            const href = item.requiresAuth && !user ? "/auth" : item.path;
+
             return (
               <Link
                 key={item.path}
                 to={href}
-                className="relative -mt-2.5"
+                className={cn(
+                  "flex flex-col items-center justify-center flex-1 min-h-[44px] relative",
+                  "transition-colors duration-150",
+                  active ? "text-primary" : "text-muted-foreground"
+                )}
                 aria-label={item.label}
+                aria-current={active ? "page" : undefined}
               >
-                <div className={cn(
-                  "flex items-center justify-center w-10 h-10 rounded-full shadow-lg transition-all duration-150",
-                  "bg-primary text-primary-foreground",
-                  "active:scale-90"
-                )}>
-                  <Icon size={18} strokeWidth={2.5} />
+                <div className="relative">
+                  <Icon
+                    size={20}
+                    strokeWidth={active ? 2.2 : 1.6}
+                    className={cn(active && "fill-primary/10")}
+                  />
+                  {typeof item.badge === 'number' && item.badge > 0 && (
+                    <span className="absolute -top-1 -right-2 min-w-[16px] h-4 bg-destructive text-destructive-foreground text-[10px] font-bold rounded-full flex items-center justify-center px-1">
+                      {item.badge > 99 ? "99+" : item.badge}
+                    </span>
+                  )}
                 </div>
+                <span className={cn(
+                  "text-[10px] mt-0.5 leading-none",
+                  active ? "font-semibold" : "font-normal"
+                )}>
+                  {item.label}
+                </span>
               </Link>
             );
-          }
-
-          return (
-            <Link
-              key={item.path}
-              to={href}
-              className={cn(
-                "flex flex-col items-center justify-center flex-1 py-1 relative",
-                "transition-colors duration-150",
-                active ? "text-primary" : "text-muted-foreground"
-              )}
-              aria-label={item.label}
-              aria-current={active ? "page" : undefined}
-            >
-              <div className="relative">
-                <Icon 
-                  size={18} 
-                  strokeWidth={active ? 2.5 : 1.8}
-                  className={cn(active && "fill-primary/10")}
-                />
-                {typeof item.badge === 'number' && item.badge > 0 && (
-                  <span className="absolute -top-1 -right-1.5 min-w-[14px] h-3.5 bg-destructive text-destructive-foreground text-[9px] font-bold rounded-full flex items-center justify-center px-0.5">
-                    {item.badge > 99 ? "99+" : item.badge}
-                  </span>
-                )}
-              </div>
-              <span className={cn(
-                "text-[9px] mt-0.5 leading-none",
-                active ? "font-semibold" : "font-medium"
-              )}>
-                {item.label}
-              </span>
-            </Link>
-          );
-        })}
+          })}
+        </div>
       </div>
     </nav>
   );

@@ -194,10 +194,7 @@ body {
   }
 }
 
-/* Bottom nav fixed positioning with safe area */
-.bottom-nav {
-  padding-bottom: env(safe-area-inset-bottom, 0);
-}
+/* Bottom nav – safe-area handled inline via max() in component */
 
 /* Active state for touch feedback */
 @media (hover: none) and (pointer: coarse) {
