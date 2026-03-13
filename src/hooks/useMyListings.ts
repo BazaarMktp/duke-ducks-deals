@@ -137,8 +137,8 @@ export const useMyListings = () => {
     }
   };
 
-  const handleMarkAsSold = async (listingId: string, soldOnBazaar: boolean, soldElsewhereLocation?: string) => {
-    console.log('handleMarkAsSold called with:', { listingId, soldOnBazaar, soldElsewhereLocation, userId: user?.id });
+  const handleMarkAsSold = async (listingId: string, soldOnPlatform: boolean, soldElsewhereLocation?: string) => {
+    console.log('handleMarkAsSold called with:', { listingId, soldOnPlatform, soldElsewhereLocation, userId: user?.id });
     
     if (!user) {
       console.log('No user found, showing login error');
