@@ -168,7 +168,7 @@ serve(async (req) => {
     const emailHtml = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="background: linear-gradient(135deg, #003087, #001a4d); color: white; padding: 20px; border-radius: 8px 8px 0 0; text-align: center;">
-          <h1 style="margin: 0; font-size: 24px;">You received a new message on Bazaar</h1>
+          <h1 style="margin: 0; font-size: 24px;">You received a new message on Devil's Marketplace</h1>
         </div>
         <div style="background: white; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 8px 8px; padding: 20px;">
           <p style="margin: 0 0 16px 0; font-size: 16px;">Hi ${escapedName},</p>
