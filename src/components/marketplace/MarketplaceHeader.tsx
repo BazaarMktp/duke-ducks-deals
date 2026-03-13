@@ -11,34 +11,36 @@ interface MarketplaceHeaderProps {
 
 const MarketplaceHeader = ({ user, activeListingType, onCreateListing, onSelectTemplate }: MarketplaceHeaderProps) => {
   return (
-    <div className="mb-2 space-y-0.5">
-      <div className="flex items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold text-foreground">
-          {activeListingType === 'offer' ? 'Marketplace' : 'Wanted'}
-        </h1>
-      
-      {user && (
-        <div className="flex items-center gap-2">
-          {activeListingType === 'offer' && onSelectTemplate && (
-            <QuickSellTemplates onSelectTemplate={onSelectTemplate} />
-          )}
-          {onCreateListing && (
-            <Button 
-              size="sm"
-              className="flex items-center gap-1.5 rounded-full px-4"
-              onClick={onCreateListing}
-            >
-              {activeListingType === 'offer' ? (
-                <><Plus size={16} /> Sell</>
-              ) : (
-                <><Search size={16} /> Request</>
-              )}
-            </Button>
-          )}
+    <div className="mb-1">
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <h1 className="text-xl font-bold text-foreground leading-tight">
+            {activeListingType === 'offer' ? 'Marketplace' : 'Wanted'}
+          </h1>
+          <p className="text-[11px] text-muted-foreground leading-tight mt-0.5">Made by students, for students.</p>
         </div>
-      )}
+      
+        {user && (
+          <div className="flex items-center gap-1.5">
+            {activeListingType === 'offer' && onSelectTemplate && (
+              <QuickSellTemplates onSelectTemplate={onSelectTemplate} />
+            )}
+            {onCreateListing && (
+              <Button 
+                size="sm"
+                className="flex items-center gap-1 rounded-full px-3 h-8 text-xs"
+                onClick={onCreateListing}
+              >
+                {activeListingType === 'offer' ? (
+                  <><Plus size={14} /> Sell</>
+                ) : (
+                  <><Search size={14} /> Request</>
+                )}
+              </Button>
+            )}
+          </div>
+        )}
       </div>
-      <p className="text-xs tracking-wide text-muted-foreground">Made by students, for students.</p>
     </div>
   );
 };

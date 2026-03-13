@@ -33,7 +33,7 @@ const BottomNavBar = () => {
       role="navigation"
       aria-label="Main navigation"
     >
-      <div className="flex items-center justify-around h-14 px-1 safe-area-pb">
+      <div className="flex items-center justify-around h-12 px-1 safe-area-pb">
         {navItems.map((item) => {
           const Icon = item.icon;
           const active = isActive(item.path);
@@ -44,15 +44,15 @@ const BottomNavBar = () => {
               <Link
                 key={item.path}
                 to={href}
-                className="relative -mt-3"
+                className="relative -mt-2.5"
                 aria-label={item.label}
               >
                 <div className={cn(
-                  "flex items-center justify-center w-12 h-12 rounded-full shadow-lg transition-all duration-150",
+                  "flex items-center justify-center w-10 h-10 rounded-full shadow-lg transition-all duration-150",
                   "bg-primary text-primary-foreground",
                   "active:scale-90"
                 )}>
-                  <Icon size={22} strokeWidth={2.5} />
+                  <Icon size={18} strokeWidth={2.5} />
                 </div>
               </Link>
             );
@@ -63,7 +63,7 @@ const BottomNavBar = () => {
               key={item.path}
               to={href}
               className={cn(
-                "flex flex-col items-center justify-center flex-1 py-1.5 relative",
+                "flex flex-col items-center justify-center flex-1 py-1 relative",
                 "transition-colors duration-150",
                 active ? "text-primary" : "text-muted-foreground"
               )}
@@ -72,18 +72,18 @@ const BottomNavBar = () => {
             >
               <div className="relative">
                 <Icon 
-                  size={20} 
+                  size={18} 
                   strokeWidth={active ? 2.5 : 1.8}
                   className={cn(active && "fill-primary/10")}
                 />
                 {typeof item.badge === 'number' && item.badge > 0 && (
-                  <span className="absolute -top-1.5 -right-2 min-w-[16px] h-4 bg-destructive text-destructive-foreground text-[10px] font-bold rounded-full flex items-center justify-center px-1">
+                  <span className="absolute -top-1 -right-1.5 min-w-[14px] h-3.5 bg-destructive text-destructive-foreground text-[9px] font-bold rounded-full flex items-center justify-center px-0.5">
                     {item.badge > 99 ? "99+" : item.badge}
                   </span>
                 )}
               </div>
               <span className={cn(
-                "text-[10px] mt-0.5",
+                "text-[9px] mt-0.5 leading-none",
                 active ? "font-semibold" : "font-medium"
               )}>
                 {item.label}

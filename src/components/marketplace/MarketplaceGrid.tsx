@@ -33,7 +33,6 @@ const MarketplaceGrid = ({
   const { startConversation } = useConversation();
   const observerRef = useRef<IntersectionObserver | null>(null);
   
-  // Use refs to avoid stale closures in IntersectionObserver callback
   const hasMoreRef = useRef(hasMore);
   const loadingMoreRef = useRef(loadingMore);
   const onLoadMoreRef = useRef(onLoadMore);
@@ -60,15 +59,12 @@ const MarketplaceGrid = ({
     } as any);
   };
 
-  // Clean up observer on unmount
   useEffect(() => {
     return () => { observerRef.current?.disconnect(); };
   }, []);
 
-  // Callback ref: attaches/detaches the IntersectionObserver when the sentinel mounts/unmounts
   const loadMoreCallbackRef = useCallback((node: HTMLDivElement | null) => {
     if (observerRef.current) observerRef.current.disconnect();
-
     if (!node) return;
 
     observerRef.current = new IntersectionObserver(
@@ -95,9 +91,9 @@ const MarketplaceGrid = ({
     const categoryName = categoryFilter ? categoryLabels[categoryFilter] || categoryFilter : null;
 
     return (
-      <div className="text-center py-16">
-        <PackageOpen className="h-12 w-12 text-muted-foreground/40 mx-auto mb-3" />
-        <p className="text-muted-foreground font-medium">
+      <div className="text-center py-12">
+        <PackageOpen className="h-10 w-10 text-muted-foreground/40 mx-auto mb-2" />
+        <p className="text-sm text-muted-foreground font-medium">
           {categoryName
             ? `No items found in ${categoryName}`
             : activeListingType === 'offer' 
@@ -105,7 +101,7 @@ const MarketplaceGrid = ({
               : "No requests found"
           }
         </p>
-        <p className="text-sm text-muted-foreground/60 mt-1">
+        <p className="text-xs text-muted-foreground/60 mt-0.5">
           {categoryName ? "Try a different category or check back later" : "Try adjusting your filters"}
         </p>
       </div>
@@ -114,7 +110,7 @@ const MarketplaceGrid = ({
 
   return (
     <>
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
         {listings.map((listing) => (
           <MarketplaceItemCard 
             key={listing.id}
@@ -127,15 +123,15 @@ const MarketplaceGrid = ({
         ))}
       </div>
       
-      <div ref={loadMoreCallbackRef} className="w-full py-8 flex justify-center">
+      <div ref={loadMoreCallbackRef} className="w-full py-4 flex justify-center">
         {loadingMore && (
           <div className="flex items-center gap-2 text-muted-foreground">
-            <Loader2 className="h-5 w-5 animate-spin" />
-            <span className="text-sm">Loading more...</span>
+            <Loader2 className="h-4 w-4 animate-spin" />
+            <span className="text-xs">Loading more...</span>
           </div>
         )}
         {!hasMore && listings.length > 0 && (
-          <p className="text-xs text-muted-foreground/50">You've seen all items</p>
+          <p className="text-[10px] text-muted-foreground/50">You've seen all items</p>
         )}
       </div>
     </>

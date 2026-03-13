@@ -31,7 +31,7 @@ const Marketplace = () => {
   };
 
   return (
-    <div className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 max-w-6xl">
+    <div className="container mx-auto px-2 sm:px-3 md:px-4 py-2 sm:py-4 max-w-6xl">
       <Helmet>
         <title>Devil's Marketplace | Buy & Sell on Campus</title>
         <meta name="description" content="Student marketplace for buying and selling textbooks, electronics, furniture and more." />
@@ -65,7 +65,7 @@ const Marketplace = () => {
         setPriceRange={setPriceRange}
       />
 
-      <div className="mt-4">
+      <div className="mt-2">
         <MarketplaceGrid
           listings={listings}
           loading={loading}

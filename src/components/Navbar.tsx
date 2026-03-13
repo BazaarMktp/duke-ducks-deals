@@ -22,26 +22,26 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-background/95 backdrop-blur-sm shadow-sm border-b border-border sticky top-0 z-50 safe-area-left safe-area-right" role="navigation" aria-label="Main navigation">
-      <div className="container mx-auto px-4 sm:px-6">
-        <div className="relative flex justify-between items-center h-16 sm:h-16">
+    <nav className="bg-background/95 backdrop-blur-sm border-b border-border/60 sticky top-0 z-50 safe-area-left safe-area-right" role="navigation" aria-label="Main navigation">
+      <div className="container mx-auto px-3 sm:px-4 md:px-6">
+        <div className="relative flex justify-between items-center h-11 sm:h-12 md:h-14">
           <Logo />
           <div className="absolute left-1/2 transform -translate-x-1/2 hidden md:block">
             <Navigation />
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
             <UserMenu user={user} onSignOut={handleSignOut} unreadMessages={unreadCount} />
 
             {/* Mobile menu button */}
             <Button
               variant="ghost"
               size="sm"
-              className="md:hidden h-11 w-11 p-0"
+              className="md:hidden h-9 w-9 p-0"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-label={isMenuOpen ? "Close menu" : "Open menu"}
               aria-expanded={isMenuOpen}
             >
-              {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
+              {isMenuOpen ? <X size={18} /> : <Menu size={18} />}
             </Button>
           </div>
         </div>
