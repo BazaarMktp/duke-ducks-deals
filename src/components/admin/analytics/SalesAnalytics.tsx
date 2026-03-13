@@ -72,12 +72,12 @@ const SalesAnalytics = () => {
   }
 
   const pieData = [
-    { name: 'Platform Sales', value: salesData.bazaar_sales, color: '#22c55e' },
+    { name: 'Platform Sales', value: salesData.platform_sales, color: '#22c55e' },
     { name: 'External Sales', value: salesData.external_sales, color: '#ef4444' }
   ];
 
   const conversionRate = salesData.total_sold > 0 
-    ? ((salesData.bazaar_sales / salesData.total_sold) * 100).toFixed(1)
+    ? ((salesData.platform_sales / salesData.total_sold) * 100).toFixed(1)
     : 0;
 
   return (
