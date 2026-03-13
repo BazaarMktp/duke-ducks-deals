@@ -25,22 +25,22 @@ export const SoldConfirmationDialog = ({
   children 
 }: SoldConfirmationDialogProps) => {
   const [open, setOpen] = useState(false);
-  const [soldLocation, setSoldLocation] = useState<"bazaar" | "elsewhere">("bazaar");
+  const [soldLocation, setSoldLocation] = useState<"platform" | "elsewhere">("platform");
   const [elsewhereLocation, setElsewhereLocation] = useState("");
 
   const handleConfirm = () => {
-    const soldOnBazaar = soldLocation === "bazaar";
-    const location = soldOnBazaar ? undefined : elsewhereLocation.trim();
+    const soldOnPlatform = soldLocation === "platform";
+    const location = soldOnPlatform ? undefined : elsewhereLocation.trim();
     
     if (soldLocation === "elsewhere" && !location) {
-      return; // Don't proceed if elsewhere is selected but no location provided
+      return;
     }
 
-    onConfirm(soldOnBazaar, location);
+    onConfirm(soldOnPlatform, location);
     setOpen(false);
     
     // Reset form
-    setSoldLocation("bazaar");
+    setSoldLocation("platform");
     setElsewhereLocation("");
   };
 
