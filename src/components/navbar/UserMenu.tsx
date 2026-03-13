@@ -54,7 +54,7 @@ const UserMenu = ({ user, onSignOut, unreadMessages }: UserMenuProps) => {
   }
 
   return (
-    <div className="hidden md:flex items-center space-x-1">
+    <div className="hidden lg:flex items-center space-x-1">
       {user && <NotificationCenter />}
       {user && (
         <Link to="/messages" className="relative">

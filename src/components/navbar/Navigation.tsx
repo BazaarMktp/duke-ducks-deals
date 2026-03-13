@@ -17,7 +17,7 @@ const Navigation = () => {
   ];
 
   return (
-    <div className="hidden md:flex items-center space-x-6">
+    <div className="hidden lg:flex items-center space-x-6">
       {navigation
         .filter(item => user || item.showWhenLoggedOut)
         .map((item) => (
