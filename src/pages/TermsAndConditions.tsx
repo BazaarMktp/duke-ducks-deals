@@ -79,7 +79,7 @@ const TermsAndConditions = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <ul className="list-disc list-inside text-gray-600 space-y-2">
-                  <li>All transactions are between users; Bazaar is not a party to any transaction</li>
+                  <li>All transactions are between users; Devil's Marketplace is not a party to any transaction</li>
                   <li>We do not process payments or guarantee transaction completion</li>
                   <li>Users are responsible for their own payment arrangements and disputes</li>
                   <li>We recommend meeting in safe, public locations for exchanges</li>
