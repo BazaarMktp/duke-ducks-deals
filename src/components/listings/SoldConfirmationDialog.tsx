@@ -15,7 +15,7 @@ import { CheckCircle2 } from "lucide-react";
 
 interface SoldConfirmationDialogProps {
   listingTitle: string;
-  onConfirm: (soldOnBazaar: boolean, soldElsewhereLocation?: string) => void;
+  onConfirm: (soldOnPlatform: boolean, soldElsewhereLocation?: string) => void;
   children: React.ReactNode;
 }
 
