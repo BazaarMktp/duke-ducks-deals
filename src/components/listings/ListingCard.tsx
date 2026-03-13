@@ -15,7 +15,7 @@ interface ListingCardProps {
   listing: Listing;
   onDelete: (listingId: string) => void;
   onStatusToggle: (listingId: string, currentStatus: string) => void;
-  onMarkAsSold?: (listingId: string, soldOnBazaar: boolean, soldElsewhereLocation?: string) => void;
+  onMarkAsSold?: (listingId: string, soldOnPlatform: boolean, soldElsewhereLocation?: string) => void;
   userId?: string;
   isAdmin?: boolean;
 }
