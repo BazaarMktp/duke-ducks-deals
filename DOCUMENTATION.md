@@ -1,4 +1,4 @@
-# Bazaar - Campus Marketplace Platform
+# Devil's Marketplace - Campus Marketplace Platform
 
 ## Table of Contents
 1. [Overview](#overview)
