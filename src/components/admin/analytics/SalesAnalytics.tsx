@@ -33,7 +33,7 @@ const SalesAnalytics = () => {
       if (soldError) throw soldError;
 
       const total_sold = soldItems?.length || 0;
-      const bazaar_sales = soldItems?.filter(item => item.sold_on_bazaar === true)?.length || 0;
+      const platform_sales = soldItems?.filter(item => item.sold_on_bazaar === true)?.length || 0;
       const external_sales = soldItems?.filter(item => item.sold_on_bazaar === false)?.length || 0;
 
       // Count external platforms
